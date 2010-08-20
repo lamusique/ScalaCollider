@@ -57,9 +57,7 @@ object Server {
    @throws( classOf[ IOException ])
    def boot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
              clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : ServerConnection = {
-
-      val addr = new InetSocketAddress( options.host, options.port )
-      val c    = createClient( options.transport, addr )
+      val (addr, c) = prepareConnection( options, clientOptions )
       new BootingImpl( name, c, addr, options, clientOptions, true )
    }
 
@@ -69,9 +67,7 @@ object Server {
    @throws( classOf[ IOException ])
    def connect( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
                 clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : ServerConnection = {
-
-      val addr = new InetSocketAddress( options.host, options.port )
-      val c    = createClient( options.transport, addr )
+      val (addr, c) = prepareConnection( options, clientOptions )
       new ConnectionImpl( name, c, addr, options, clientOptions, true )
    }
 
@@ -97,6 +93,18 @@ object Server {
       b.start
    }
 
+   @throws( classOf[ IOException ])
+   private def prepareConnection( options: ServerOptions, clientOptions: ClientOptions ) : (InetSocketAddress, OSCClient) = {
+      val addr = new InetSocketAddress( options.host, options.port )
+      val clientAddr = clientOptions.addr getOrElse {
+          if( addr.getAddress.isLoopbackAddress )
+             new InetSocketAddress( "127.0.0.1", 0 ) else
+             new InetSocketAddress( InetAddress.getLocalHost, 0 )
+      }
+      val c    = createClient( options.transport, addr, clientAddr )
+      (addr, c)
+   }
+   
    def allocPort( transport: OSCTransport ) : Int = {
       transport match {
          case TCP => {
@@ -147,11 +155,12 @@ object Server {
 
    case class Counts( c: OSCStatusReplyMessage )
 
-   private def createClient( transport: OSCTransport, addr: InetSocketAddress ) : OSCClient = {
-      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
+   private def createClient( transport: OSCTransport, serverAddr: InetSocketAddress,
+                             clientAddr: InetSocketAddress ) : OSCClient = {
+//      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
+      val client        = OSCClient.withAddress( transport, clientAddr, ServerCodec )
       client.bufferSize = 0x10000
-      client.target     = addr
-//      client.action     = OSCReceiverActor.messageReceived
+      client.target     = serverAddr
       client
    }
 
