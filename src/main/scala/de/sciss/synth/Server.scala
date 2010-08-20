@@ -52,15 +52,27 @@ object Server {
    def defaultCmdPath = new File( System.getenv( "SC_HOME" ), "scsynth" ).getAbsolutePath
 
    @throws( classOf[ IOException ])
-   def boot: BootingServer = boot()
+   def boot: ServerConnection = boot()
 
    @throws( classOf[ IOException ])
    def boot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
-             clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : BootingServer = {
+             clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : ServerConnection = {
 
       val addr = new InetSocketAddress( options.host, options.port )
       val c    = createClient( options.transport, addr )
       new BootingImpl( name, c, addr, options, clientOptions, true )
+   }
+
+   @throws( classOf[ IOException ])
+   def connect: ServerConnection = connect()
+
+   @throws( classOf[ IOException ])
+   def connect( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
+                clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : ServerConnection = {
+
+      val addr = new InetSocketAddress( options.host, options.port )
+      val c    = createClient( options.transport, addr )
+      new ConnectionImpl( name, c, addr, options, clientOptions, true )
    }
 
    def test( code: Server => Unit ) : Unit = test()( code )
@@ -75,7 +87,7 @@ object Server {
       val sync = new AnyRef
       var s : Server = null
       b.addListener {
-         case BootingServer.Running( srv ) => sync.synchronized { s = srv }; code( srv )
+         case ServerConnection.Running( srv ) => sync.synchronized { s = srv }; code( srv )
       }
       Runtime.getRuntime().addShutdownHook( new Thread { override def run = sync.synchronized {
          if( s != null ) {
@@ -145,18 +157,118 @@ object Server {
 
    // -------- internal class BootThread --------
 
-   object BootingImpl {
+   private object ConnectionImplLike {
       case object Start
       case object Abort
       case object QueryServer
 //      case object Aborted
    }
-   
+
+   private trait ConnectionImplLike extends ServerConnection {
+      import ConnectionImplLike._
+
+      val actor = new DaemonActor {
+          def act { react { case Start => {
+             dispatch( ServerConnection.Connecting )
+             loop {
+                if( connectionAlive ) {
+                   try {
+                      c.start
+                      c.action = (msg, addr, when) => this ! msg
+                      loop {
+                         c ! OSCServerNotifyMessage( true )
+                         reactWithin( 5000 ) {
+                            case TIMEOUT => // loop is retried
+                            case Abort => abortHandler( None )
+                            case OSCMessage( "/done", "/notify" ) => loop {
+                               c ! OSCStatusMessage
+                               reactWithin( 500 ) {
+                                  case TIMEOUT => // loop is retried
+                                  case Abort => abortHandler( None )
+                                  case counts: OSCStatusReplyMessage => {
+                                     val s = new Server( name, c, addr, options, clientOptions )
+                                     s.counts = counts
+                                     dispatch( ServerConnection.Preparing( s ))
+                                     s.initTree
+                                     dispatch( ServerConnection.Running( s ))
+                                     createAliveThread( s )
+                                     loop { react {
+                                        case QueryServer => reply( s )
+                                        case Abort => abortHandler( Some( s ))
+                                        case ServerConnection.Aborted => {
+                                           s.serverOffline
+                                           dispatch( ServerConnection.Aborted )
+                                           loop { react {
+                                              case Abort => reply ()
+                                              case QueryServer => reply( s )
+                                           }}
+                                        }
+                                     }}
+                                  }
+                               }
+                            }
+                         }
+                      }
+                   }
+                   catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
+                      reactWithin( 500 ) {
+                         case Abort => abortHandler( None )
+                         case TIMEOUT => // println( "---5")
+                      }
+                   }
+                } else loop { react {
+                   case Abort => reply ()
+                }}
+             }
+          }}}
+
+          private def abortHandler( server: Option[ Server ]) {
+              handleAbort
+              val from = sender
+              loop { react {
+                 case ServerConnection.Aborted => {
+                    server.foreach( _.serverOffline )
+                    dispatch( ServerConnection.Aborted )
+                    from ! ()
+                 }
+                 case _ =>
+              }}
+           }
+       }
+
+      def start { actor ! Start }
+      lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
+      lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
+
+      def handleAbort : Unit
+      def connectionAlive : Boolean
+      def c : OSCClient
+      def clientOptions : ClientOptions
+      def createAliveThread( s: Server ) : Unit
+   }
+
+   private class ConnectionImpl @throws( classOf[ IOException ])
+      ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
+        val clientOptions: ClientOptions, aliveThread: Boolean )
+   extends ConnectionImplLike {
+      import ConnectionImplLike._
+
+      actor.start
+
+      override def toString = "connect<" + name + ">"
+
+      def handleAbort {}
+      def connectionAlive = true // XXX could add a timeout?
+      def createAliveThread( s: Server ) {
+         if( aliveThread ) s.startAliveThread( 1.0f, 0.25f, 40 ) // allow for a luxury 10 seconds absence
+      }
+   }
+
    private class BootingImpl @throws( classOf[ IOException ])
-      ( val name: String, c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
-        clientOptions: ClientOptions, createAliveThread: Boolean )
-   extends BootingServer {
-      import BootingImpl._
+      ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
+        val clientOptions: ClientOptions, aliveThread: Boolean )
+   extends ConnectionImplLike {
+      import ConnectionImplLike._
 
       val p = {
          val processArgs   = options.toRealtimeArgs
@@ -185,105 +297,26 @@ object Server {
             p.destroy()
          } finally {
             println( "scsynth terminated (" + p.exitValue +")" )
-            bootActor ! BootingServer.Aborted
+            actor ! ServerConnection.Aborted
          }            
-      }
-
-      val bootActor: DaemonActor = new DaemonActor {
-         def act { react { case Start => {
-            dispatch( BootingServer.Booting )
-            loop {
-//println( "---0")
-               if( processThread.isAlive ) {
-//println( "---1")
-                  try {
-//println( "---2")
-                     c.start
-//println( "---3")
-//                     c.dumpOSC(1)
-                     c.action = (msg, addr, when) => this ! msg
-                     loop {
-                        c ! OSCServerNotifyMessage( true )
-                        reactWithin( 5000 ) {
-                           case TIMEOUT => // loop is retried
-                           case Abort => abortHandler( None )
-                           case OSCMessage( "/done", "/notify" ) => loop {
-                              c ! OSCStatusMessage
-                              reactWithin( 500 ) {
-                                 case TIMEOUT => // loop is retried
-                                 case Abort => abortHandler( None )
-                                 case counts: OSCStatusReplyMessage => {
-//println( "AQUI")
-                                    val s = new Server( name, c, addr, options, clientOptions )
-                                    s.counts = counts
-                                    dispatch( BootingServer.Preparing( s ))
-                                    s.initTree
-                                    dispatch( BootingServer.Running( s ))
-                                    // note that we optimistically assume that if we boot the server, it
-                                    // will not die (exhausting deathBounces). if it crashes, the boot
-                                    // thread's process will know anyway. this way we avoid stupid
-                                    // server offline notifications when using slow asynchronous commands
-                                    if( createAliveThread ) s.startAliveThread( 1.0f, 0.25f, Int.MaxValue )
-                                    loop { react {
-                                       case QueryServer => reply( s )
-                                       case Abort => abortHandler( Some( s ))
-                                       case BootingServer.Aborted => {
-                                          s.bootThreadTerminated
-                                          dispatch( BootingServer.Aborted )
-                                          loop { react {
-                                             case Abort => reply ()
-                                             case QueryServer => reply( s )
-   //                                          case _ =>
-                                          }}
-                                       }
-   //                                    case _ =>
-                                    }}
-                                 }
-                              }
-                           }
-                        }
-                     }
-                  }
-                  catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
-//                     println( "---4")
-                     reactWithin( 500 ) {
-                        case Abort => abortHandler( None )
-                        case TIMEOUT => // println( "---5")
-                     }                 
-//                     case x => println( "YOOOO " + x )
-                  }
-               } else loop { react {
-                  case Abort => reply ()
-   //               case _ =>
-               }}
-            }
-         }}}
-
-         private def abortHandler( server: Option[ Server ]) {
-             processThread.interrupt()
-             val from = sender
-             loop { react {
-                case BootingServer.Aborted => {
-                   server.foreach( _.bootThreadTerminated )
-                   dispatch( BootingServer.Aborted )
-                   from ! ()
-                }
-                case _ =>
-             }}
-          }
       }
 
       // ...and go
       postActor.start
       processThread.start
-      bootActor.start
+      actor.start
 
-      def start { bootActor ! Start }
-      lazy val server : Future[ Server ] = bootActor !! (QueryServer, { case s: Server => s })
-      lazy val abort : Future[ Unit ] = bootActor !! (Abort, { case _ => ()})
-//      def isStopped : Boolean
+      override def toString = "boot<" + name + ">"
 
-      override def toString = "<" + name + ">"
+      def handleAbort { processThread.interrupt() }
+      def connectionAlive = processThread.isAlive
+      def createAliveThread( s: Server ) {
+         // note that we optimistically assume that if we boot the server, it
+         // will not die (exhausting deathBounces). if it crashes, the boot
+         // thread's process will know anyway. this way we avoid stupid
+         // server offline notifications when using slow asynchronous commands
+         if( aliveThread ) s.startAliveThread( 1.0f, 0.25f, Int.MaxValue )
+      }
    }
 }
 
@@ -293,14 +326,14 @@ trait ServerLike extends Model {
    def addr: InetSocketAddress
 }
 
-object BootingServer {
+object ServerConnection {
    sealed abstract class Condition
-   case object Booting extends Condition
+   case object Connecting extends Condition
    case class Preparing( server: Server ) extends Condition
    case class Running( server: Server ) extends Condition
    case object Aborted extends Condition
 }
-trait BootingServer extends ServerLike {
+trait ServerConnection extends ServerLike {
    def start : Unit
    def server : Future[ Server ]
    def abort : Future[ Unit ]
@@ -493,7 +526,7 @@ extends ServerLike {
       OSCReceiverActor.clear
    }
 
-   private def bootThreadTerminated {
+   private def serverOffline {
       condSync.synchronized {
 //         bootThread = None
          stopAliveThread
@@ -533,6 +566,7 @@ extends ServerLike {
 
    def dispose {
       condSync.synchronized {
+         serverOffline
          remove( this )
          c.dispose // = (msg: OSCMessage, sender: SocketAddress, time: Long) => ()
          OSCReceiverActor.dispose
