@@ -31,18 +31,20 @@ package de.sciss.synth
 import java.io.{ ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, File, FileOutputStream }
 import java.nio.ByteBuffer
 import de.sciss.synth.{ Completion => Comp }
+import osc.{OSCSyncedMessage, OSCSynthDefFreeMessage, OSCSynthDefLoadMessage, OSCSynthDefRecvMessage}
 import ugen.Control
-import osc.{ OSCSynthDefFreeMessage, OSCSynthDefLoadMessage, OSCSynthDefRecvMessage }
 import collection.immutable.{ IndexedSeq => IIdxSeq, Iterable => IIterable, Seq => ISeq, Stack, Vector }
 import collection.breakOut
-import de.sciss.osc.{ OSCMessage, OSCPacket }
 import File.{ separator => sep }
+import actors.TIMEOUT
+import de.sciss.osc.{OSCBundle, OSCMessage, OSCPacket}
 
 /**
- *    @version 0.19, 16-Aug-10
+ *    @version 0.19, 24-Aug-10
  *    @todo    should add load and loadDir to companion object
  */
 case class SynthDef( name: String, graph: SynthGraph ) {
+   syndef =>
 
    import SynthDef._
 
@@ -52,13 +54,37 @@ case class SynthDef( name: String, graph: SynthGraph ) {
 
    def recv : Unit = recv()
    def recv( server: Server = Server.default, completion: Completion = NoCompletion ) {
-      if( completion.action.isDefined ) error( "Completion action not yet supported" )
-      server ! recvMsg( completion.message.map( _.apply( this )))
+      sendWithAction( server, recvMsg( _ ), completion, "recv" )
       this
    }
+
+   private def sendWithAction( server: Server, msgFun: Option[ OSCPacket ] => OSCMessage, completion: Completion,
+                               name: String ) {
+      completion.action map { action =>
+         val syncMsg    = server.syncMsg
+         val syncID     = syncMsg.id
+         val compPacket: OSCPacket = completion.message match {
+            case Some( msgFun2 ) => OSCBundle( msgFun2( syndef ), syncMsg )
+            case None            => syncMsg
+         }
+         server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
+            case OSCSyncedMessage( syncID ) => action( syndef )
+            case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
+         })
+      } getOrElse {
+         server ! msgFun( completion.message.map( _.apply( syndef )))
+      }
+   }
+
+//   private def sendWithAction( msg: OSCMessage, syncID: Int, action: SynthDef => Unit, name: String ) {
+//      server !? (6000L, msg, {
+//         case OSCSyncedMessage( syncID ) => action( syndef )
+//         case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
+//      })
+//   }
   
    def recvMsg: OSCSynthDefRecvMessage = recvMsg( None )
-   def recvMsg( completion: Option[ OSCMessage ]) = OSCSynthDefRecvMessage( toBytes, completion )
+   def recvMsg( completion: Option[ OSCPacket ]) = OSCSynthDefRecvMessage( toBytes, completion )
   
   	def toBytes : ByteBuffer = {
     	val baos	= new ByteArrayOutputStream
@@ -82,15 +108,14 @@ case class SynthDef( name: String, graph: SynthGraph ) {
    def load : Unit = load()
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
-      if( completion.action.isDefined ) error( "Completion action not yet supported" )
       writeDefFile( dir )
-      server ! loadMsg( dir, completion.message.map( _.apply( this )))
+      sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
       this
    }
   
    def loadMsg : OSCSynthDefLoadMessage = loadMsg()
   
-   def loadMsg( dir: String = defaultDir, completion: Option[ OSCMessage ] = None ) =
+   def loadMsg( dir: String = defaultDir, completion: Option[ OSCPacket ] = None ) =
 	   OSCSynthDefLoadMessage( dir + sep + name + ".scsyndef", completion )
 
    def play: Synth = play()

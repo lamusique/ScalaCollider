@@ -115,19 +115,27 @@ trait AbstractEnvFactory[ T <: AbstractEnv ] {
    protected def create( startLevel: GE, segments: S* ) : T
 
 	// fixed duration envelopes
+   def triangle : T = triangle()
+
 	def triangle( dur: GE = 1, level: GE = 1 ) : T =  {
 	  val durH = dur * 0.5f
 	  create( 0, S( durH, level ), S( durH, 0 ))
 	}
+
+   def sine : T = sine()
 
 	def sine( dur: GE = 1, level: GE = 1 ) : T = {
 	  val durH = dur * 0.5f
 	  create( 0, S( durH, level, sinShape ), S( durH, 0, sinShape ))
 	}
 
+   def perc : T = perc()
+
 	def perc( attack: GE = 0.01, release: GE = 1, level: GE = 1,
              shape: EnvShape = curveShape( -4 )) : T =
       create( 0, S( attack, level, shape ), S( release, 0, shape ))
+
+   def linen : T = linen()
 
 	def linen( attack: GE = 0.01f, sustain: GE = 1, release: GE = 1,
               level: GE = 1, shape: EnvShape = linShape ) : T =
