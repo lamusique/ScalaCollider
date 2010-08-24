@@ -8,7 +8,17 @@ var s: Server = null
 def boot {
    val booting = Server.boot( options = so.build )
    booting.addListener {
-      case BootingServer.Running( srv ) => s = srv
+      case ServerConnection.Running( srv ) =>
+         s = srv
+         play( fadeTime = None ) {
+            val f0 = XLine.ar(40,0.2,10)
+            val off = PulseCount.ar(Impulse.ar(f0)).madd(1,40)
+            val f = LFPulse.kr(f0,1).madd(24, LFSaw.kr(List(8, 7.23),1).madd(3, off)).midicps // glissando function
+            val env = EnvGen.kr( Env.linen( 0.02, 1, 10 ))
+            val sig = CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) * env
+            DetectSilence.kr( sig, doneAction = freeSelf )
+            sig
+         }
    }
    booting.start
 }

@@ -121,6 +121,19 @@ object LFSaw extends UGen2Args {
    def kr : GE = kr()
    def kr( freq: GE = 440, iphase: GE = 0 ) : GE = krExp( freq, iphase )
 }
+/**
+ * A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
+ * that is it does not use band-limiting. For a band-limited version use
+ * `Saw` instead. The signal range is -1 to +1.
+ *
+ * @param   freq     frequency in Hertz
+ * @param   iphase   initial phase offset. For efficiency reasons this is a
+ *    value ranging from 0 to 2. Note that a phase of zero (default) means
+ *    the wave starts at 0 and rises to +1 before jumping down to -1. Use
+ *    a phase of 1 to have the wave start at -1.
+ *
+ * @see  [[de.sciss.synth.ugen.Saw]]
+ */
 case class LFSaw( rate: Rate, freq: UGenIn, iphase: UGenIn )
 extends SingleOutUGen( freq, iphase )
 
