@@ -64,7 +64,7 @@ class GraphFunction[ T <% GE ]( thunk: => T ) {
 			if( server.isLocal ) {
 				synthDef.load( server, completion = synthMsg )
 			} else {
-				warn( "synthdef may have been too large to send to remote server" )
+				println( "WARNING: synthdef may have been too large to send to remote server" )
 				server ! OSCMessage( "/d_recv", bytes, synthMsg )
 			}
 		} else {

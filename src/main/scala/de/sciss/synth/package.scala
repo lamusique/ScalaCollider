@@ -36,41 +36,34 @@ import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant,
                RichDouble, RichFloat, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
                Synth, UGenInSeq }
 
+package synth {
+   abstract sealed class LowPriorityImplicits {
+      implicit def floatToGE( f: Float ) = Constant( f )
+      implicit def doubleToGE( d: Double ) = Constant( d.toFloat )
+   }
+
+//   abstract sealed class MediumPriorityImplicits extends LowPriorityImplicits {
+//      implicit def enrichInt( i: Int ) = RichFloat( i )
+//      implicit def enrichFloat2( f: Float ) = RichDouble( f )
+//   }
+}
+
 /**
- * 	@version	0.14, 22-May-10
+ * 	@version	0.14, 26-Aug-10
  */
-package object synth {
+package object synth extends de.sciss.synth.LowPriorityImplicits {
    // GEs
-//   implicit def enrichFloat( x: Float ) = RichFloat( x )
-//   implicit def richFloatToConstant[ T <% RichFloat ]( x: T ) = Constant( x.f )
-//   implicit def enrichInt( x: Int ) = RichFloat( x.toFloat )
-//   implicit def enrichDouble( x: Double ) = RichDouble( x )
-//   implicit def richDoubleToFloat[ T <% RichDouble ]( x: T ) = RichFloat( x.d.toFloat )
-
-//   implicit def enrichFloat( x: Float ) = RichFloat( x )
-//   implicit def enrichInt( x: Int ) = RichFloat( x.toFloat )
-//   implicit def enrichDouble( x: Double ) = RichDouble( x )
-//   implicit def numToGE[ T <% Double ]( x: T ) = Constant( x.toFloat )
-
    implicit def enrichFloat( f: Float ) = RichFloat( f )
    implicit def enrichDouble( d: Double ) = RichDouble( d )
-   implicit def floatToGE( f: Float ) = Constant( f )
-   implicit def doubleToGE( d: Double ) = Constant( d.toFloat )
-   implicit def geOps[ T <% GE ]( t: T ) = t.ops
-
-//   implicit def floatToConstant( x: Float ) = Constant( x )
-//   implicit def intToConstant( x: Int ) = Constant( x.toFloat )
-//   implicit def doubleToConstant( x: Double ) = Constant( x.toFloat )
+//   implicit def geOps[ T <% GE ]( t: T ) = t.ops
+   implicit def geOps( ge: GE ) = ge.ops
 
    implicit def seqOfGEToGE( x: Seq[ GE ]) = new UGenInSeq( x.flatMap( _.outputs )( breakOut ))
    implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
-//   // ...und zurueck
-//   implicit def constantToFloat( c: Constant ) = c.value
-
    // why these are necessary now??
-   implicit def seqOfFloatToGE( x: Seq[ Float ]) = new UGenInSeq( x.map( Constant( _ ))( breakOut ))
-   implicit def seqOfIntToGE( x: Seq[ Int ]) = new UGenInSeq( x.map( i => Constant( i.toFloat ))( breakOut ))
+   implicit def seqOfFloatToGE( x: Seq[ Float ])   = new UGenInSeq( x.map( Constant( _ ))( breakOut ))
+   implicit def seqOfIntToGE( x: Seq[ Int ])       = new UGenInSeq( x.map( i => Constant( i.toFloat ))( breakOut ))
    implicit def seqOfDoubleToGE( x: Seq[ Double ]) = new UGenInSeq( x.map( d => Constant( d.toFloat ))( breakOut ))
 
    // control mapping
@@ -129,9 +122,9 @@ package object synth {
              addAction: AddAction = addToHead )( thunk: => GE ) : Synth =
       new GraphFunction( thunk ).play( target, outBus, fadeTime, addAction )
 
-   // String
-   def warn( s: String ) : String = {
-      println( "WARNING:\n" + s )
-      s
-   }
+//   // String
+//   def warn( s: String ) : String = {
+//      println( "WARNING:\n" + s )
+//      s
+//   }
 }

@@ -74,8 +74,18 @@ extends SingleOutUGen( inputs: _* )
  *    @see  BinaryOpUGen
  */
 object UnaryOpUGen {
+   unop =>
+
+   import RichFloat._
+
    sealed abstract class Op( val id: Int ) {
       def make( a: GE ) : GE = UnaryOpUGen.make( this, a )
+      protected[synth] def make1( a: UGenIn ) : GE = a match {
+         case c(a)   => c( make1( a ))
+         case _      => unop.apply( a.rate, this, a )
+      }
+
+      protected def make1( a: Float ) : Float
 
       def name = { val cn = getClass.getName
          val sz   = cn.length
@@ -83,50 +93,119 @@ object UnaryOpUGen {
          cn.charAt( i ).toLower + cn.substring( i + 1, if( cn.charAt( sz - 1 ) == '$' ) sz - 1 else sz )
       }
    }
-   case object Neg         extends Op(  0 )
-   case object Not         extends Op(  1 )
+   
+   case object Neg         extends Op(  0 ) {
+      protected def make1( a: Float ) = -a
+   }
+   case object Not         extends Op(  1 ) {
+      protected def make1( a: Float ) = rf_not( a )
+   }
 // case object IsNil       extends Op(  2 )
 // case object NotNil      extends Op(  3 )
 // case object BitNot      extends Op(  4 )
-   case object Abs         extends Op(  5 )
+   case object Abs         extends Op(  5 ) {
+      protected def make1( a: Float ) = math.abs( a )
+   }
 // case object ToFloat     extends Op(  6 )
 // case object ToInt       extends Op(  7 )
-   case object Ceil        extends Op(  8 )
-   case object Floor       extends Op(  9 )
-   case object Frac        extends Op( 10 )
-   case object Signum      extends Op( 11 )
-   case object Squared     extends Op( 12 )
-   case object Cubed       extends Op( 13 )
-   case object Sqrt        extends Op( 14 )
-   case object Exp         extends Op( 15 )
-   case object Reciprocal  extends Op( 16 )
-   case object Midicps     extends Op( 17 )
-   case object Cpsmidi     extends Op( 18 )
-   case object Midiratio   extends Op( 19 )
-   case object Ratiomidi   extends Op( 20 )
-   case object Dbamp       extends Op( 21 )
-   case object Ampdb       extends Op( 22 )
-   case object Octcps      extends Op( 23 )
-   case object Cpsoct      extends Op( 24 )
-   case object Log         extends Op( 25 )
-   case object Log2        extends Op( 26 )
-   case object Log10       extends Op( 27 )
-   case object Sin         extends Op( 28 )
-   case object Cos         extends Op( 29 )
-   case object Tan         extends Op( 30 )
-   case object Asin        extends Op( 31 )
-   case object Acos        extends Op( 32 )
-   case object Atan        extends Op( 33 )
-   case object Sinh        extends Op( 34 )
-   case object Cosh        extends Op( 35 )
-   case object Tanh        extends Op( 36 )
+   case object Ceil        extends Op(  8 ) {
+      protected def make1( a: Float ) = rf_ceil( a )
+   }
+   case object Floor       extends Op(  9 ) {
+      protected def make1( a: Float ) = rf_floor( a )
+   }
+   case object Frac        extends Op( 10 ) {
+      protected def make1( a: Float ) = rf_frac( a )
+   }
+   case object Signum      extends Op( 11 ) {
+      protected def make1( a: Float ) = math.signum( a )
+   }
+   case object Squared     extends Op( 12 ) {
+      protected def make1( a: Float ) = rf_squared( a )
+   }
+   case object Cubed       extends Op( 13 ) {
+      protected def make1( a: Float ) = rf_cubed( a )
+   }
+   case object Sqrt        extends Op( 14 ) {
+      protected def make1( a: Float ) = rf_sqrt( a )
+   }
+   case object Exp         extends Op( 15 ) {
+      protected def make1( a: Float ) = rf_exp( a )
+   }
+   case object Reciprocal  extends Op( 16 ) {
+      protected def make1( a: Float ) = rf_reciprocal( a )
+   }
+   case object Midicps     extends Op( 17 ) {
+      protected def make1( a: Float ) = rf_midicps( a )
+   }
+   case object Cpsmidi     extends Op( 18 ) {
+      protected def make1( a: Float ) = rf_cpsmidi( a )
+   }
+   case object Midiratio   extends Op( 19 ) {
+      protected def make1( a: Float ) = rf_midiratio( a )
+   }
+   case object Ratiomidi   extends Op( 20 ) {
+      protected def make1( a: Float ) = rf_ratiomidi( a )
+   }
+   case object Dbamp       extends Op( 21 ) {
+      protected def make1( a: Float ) = rf_dbamp( a )
+   }
+   case object Ampdb       extends Op( 22 ) {
+      protected def make1( a: Float ) = rf_ampdb( a )
+   }
+   case object Octcps      extends Op( 23 ) {
+      protected def make1( a: Float ) = rf_octcps( a )
+   }
+   case object Cpsoct      extends Op( 24 ) {
+      protected def make1( a: Float ) = rf_cpsoct( a )
+   }
+   case object Log         extends Op( 25 ) {
+      protected def make1( a: Float ) = rf_log( a )
+   }
+   case object Log2        extends Op( 26 ) {
+      protected def make1( a: Float ) = rf_log2( a )
+   }
+   case object Log10       extends Op( 27 ) {
+      protected def make1( a: Float ) = rf_log10( a )
+   }
+   case object Sin         extends Op( 28 ) {
+      protected def make1( a: Float ) = rf_sin( a )
+   }
+   case object Cos         extends Op( 29 ) {
+      protected def make1( a: Float ) = rf_cos( a )
+   }
+   case object Tan         extends Op( 30 ) {
+      protected def make1( a: Float ) = rf_tan( a )
+   }
+   case object Asin        extends Op( 31 ) {
+      protected def make1( a: Float ) = rf_asin( a )
+   }
+   case object Acos        extends Op( 32 ) {
+      protected def make1( a: Float ) = rf_acos( a )
+   }
+   case object Atan        extends Op( 33 ) {
+      protected def make1( a: Float ) = rf_atan( a )
+   }
+   case object Sinh        extends Op( 34 ) {
+      protected def make1( a: Float ) = rf_sinh( a )
+   }
+   case object Cosh        extends Op( 35 ) {
+      protected def make1( a: Float ) = rf_cosh( a )
+   }
+   case object Tanh        extends Op( 36 ) {
+      protected def make1( a: Float ) = rf_tanh( a )
+   }
 // class Rand              extends Op( 37 )
 // class Rand2             extends Op( 38 )
 // class Linrand           extends Op( 39 )
 // class Bilinrand         extends Op( 40 )
 // class Sum3rand          extends Op( 41 )
-   case object Distort     extends Op( 42 )
-   case object Softclip    extends Op( 43 )
+   case object Distort     extends Op( 42 ) {
+      protected def make1( a: Float ) = rf_distort( a )
+   }
+   case object Softclip    extends Op( 43 ) {
+      protected def make1( a: Float ) = rf_softclip( a )
+   }
 // class Coin              extends Op( 44 )
 // case object DigitValue  extends Op( 45 )
 // case object Silence     extends Op( 46 )
@@ -135,11 +214,15 @@ object UnaryOpUGen {
 // case object HanWindow   extends Op( 49 )
 // case object WelWindow   extends Op( 50 )
 // case object TriWindow   extends Op( 51 )
-   case object Ramp        extends Op( 52 )
-   case object Scurve      extends Op( 53 )
+   case object Ramp        extends Op( 52 ) {
+      protected def make1( a: Float ) = rf_ramp( a )
+   }
+   case object Scurve      extends Op( 53 ) {
+      protected def make1( a: Float ) = rf_scurve( a )
+   }
 
    protected[synth] def make( selector: Op, a: GE ) : GE = {
-      simplify( for( List( ai ) <- expand( a )) yield apply( ai.rate, selector, ai ))
+      simplify( for( List( ai ) <- expand( a )) yield selector.make1( ai ))
    }
 }
 
@@ -384,5 +467,6 @@ extends BasicOpUGen( selector.id, a, b ) {
 case class FirstargUGen( rate: Rate, a: UGenIn, b: UGenIn )
 extends BasicOpUGen( BinaryOpUGen.Firstarg.id, a, b ) with SideEffectUGen {
    override def name = "BinaryOpUGen"
-//   override def displayName = "firstarg"
+   override def displayName = "firstarg"
+   override def toString = a.toString + "." + displayName + "(" + b + ")"
 }
