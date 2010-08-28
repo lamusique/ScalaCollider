@@ -88,13 +88,41 @@ object PanAz {
       yield this( rate, numChannels, i, p, l, w, o ))
 
 	def ar( numChannels: Int, in: GE, pos: GE = 0, level: GE = 1, width: GE = 2,
-            orient: GE = 0.5f ) : GE =
+            orient: GE = 0f ) : GE =
       make( audio, numChannels, in, pos, level, width, orient )
 
 	def kr( numChannels: Int, in: GE, pos: GE = 0, level: GE = 1, width: GE = 2,
-            orient: GE = 0.5f ) : GE =
+            orient: GE = 0f ) : GE =
       make( control, numChannels, in, pos, level, width, orient )
 }
+/**
+ * An azimuth-based panorama UGen. It uses vector-based-amplitude panning where
+ * the arbitrary number of speakers is supposed to be distributed in a circle
+ * with even spacing between them. It uses an equal-power-curve to transition
+ * between adjectant speakers. '''Note''' the different default value for the
+ * `orient` argument!
+ *
+ * @param   numChannels the number of output channels
+ * @param   in          the input signal
+ * @param   pos         the pan position. Channels are evenly spaced over a cyclic period of 2.0.
+ *    the output channel position is `pos / 2 * numChannels + orient`. Thus, assuming an `orient`
+ *    of `0.0`, and `numChannels` being for example `3`, a `pos` of `0*2.0/3 == 0.0` corresponds to the first
+ *    output channel, a `pos` of `1*2.0/3` corresponds to the second output channel,
+ *    a `pos` of `2*2.0/3=4.0/3` corresponds to the third and last output channel, and
+ *    a `pos` of `3*2.0/3=2.0` completes the circle and wraps again to the first channel.
+ *    Using a bipolar pan position, such as a sawtooth that ranges from -1 to +1, all channels will be
+ *    cyclically panned through.
+ * @param   level       a control rate level input (linear multiplier).
+ * @param   width       the width of the panning envelope. The default of 2.0 pans between pairs
+ *    of adjacent speakers. Width values greater than two will spread the pan over greater numbers
+ *    of speakers. Width values less than one will leave silent gaps between speakers.
+ * @param   orient      the offset in the output channels regarding a pan position of zero.
+ *    '''Note''' that ScalaCollider uses a default of zero which means that a pan pos of zero outputs
+ *    the signal exactly on the first output channel. This is different in sclang where the default is
+ *    0.5 which means that a pan position of zero will output the signal inbetween the first and second
+ *    speaker. Accordingly, an `orient` of `1.0` would result in a channel offset of one, where a
+ *    pan position of zero would output the signal exactly on the second output channel, and so forth.
+ */
 case class PanAz( rate: Rate, numChannels: Int, in: UGenIn, pos: UGenIn,
                   level: UGenIn, width: UGenIn, orient: UGenIn )
 extends MultiOutUGen( rate, numChannels, List( in, pos, level, width, orient ))
