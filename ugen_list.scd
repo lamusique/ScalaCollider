@@ -3,7 +3,6 @@
 [ SendReply, LagControl,
 DecodeB2, PanB2, PanB, BiPanB2,
 GrainSin, GrainFM, GrainBuf, GrainIn, Warp1,
-BeatTrack, Loudness, Onsets, KeyTrack, MFCC, BeatTrack2, SpecFlatness, SpecPcile, SpecCentroid,
 ScopeOut, SharedOut, SharedIn,  // mac internal server only
 // DynKlank, DynKlang, HilbertFIR, Tap, IndexL, SelectX, SelectXFocus, TChoose, TWChoose, CompanderD, // fake ugens
 Dpoll,

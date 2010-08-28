@@ -47,6 +47,5 @@ object FreeVerb2 extends UGen5RArgs {
 }
 // note: deterministic
 case class FreeVerb2( left: UGenIn, right: UGenIn, mix: UGenIn, room: UGenIn, damp: UGenIn )
-extends MultiOutUGen( audio, 2, List( left, right, mix, room, damp ))
-with AudioRated
+extends MultiOutUGen( audio, 2, left, right, mix, room, damp ) with AudioRated
 

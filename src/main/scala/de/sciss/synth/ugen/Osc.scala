@@ -35,16 +35,16 @@ import SynthGraph._
  *  @version  0.11, 01-Jan-10
  */
 object Osc extends UGen3Args {
-  def ar( bufID: GE, freq: GE = 440, phase: GE = 0 ) : GE =
-    arExp( bufID, freq, phase )
+  def ar( buf: GE, freq: GE = 440, phase: GE = 0 ) : GE =
+    arExp( buf, freq, phase )
 
-  def kr( bufID: GE, freq: GE = 440, phase: GE = 0 ) : GE =
-    krExp( bufID, freq, phase )
+  def kr( buf: GE, freq: GE = 440, phase: GE = 0 ) : GE =
+    krExp( buf, freq, phase )
 }
-case class Osc( rate: Rate, bufID: UGenIn, freq: UGenIn, phase: UGenIn )
-extends SingleOutUGen( bufID, freq, phase )
+case class Osc( rate: Rate, buf: UGenIn, freq: UGenIn, phase: UGenIn )
+extends SingleOutUGen( buf, freq, phase )
 
-// class Osc private ( r: Rate, val bufID: UGenIn, val freq: UGenIn, val phase: UGenIn )
+// class Osc private ( r: Rate, val buf: UGenIn, val freq: UGenIn, val phase: UGenIn )
 // extends UGen( "Osc", r, List( r ), List( bufID, freq, phase )) {
 // }
 
@@ -67,14 +67,14 @@ case class SinOscFB( rate: Rate, freq: UGenIn, feedback: UGenIn )
 extends SingleOutUGen( freq, feedback )
 
 object OscN extends UGen3Args {
-  def ar( bufID: GE, freq: GE = 440, phase: GE = 0 ) : GE =
-    arExp( bufID, freq, phase )
+  def ar( buf: GE, freq: GE = 440, phase: GE = 0 ) : GE =
+    arExp( buf, freq, phase )
 
-  def kr( bufID: GE, freq: GE = 440, phase: GE = 0 ) : GE =
-    krExp( bufID, freq, phase )
+  def kr( buf: GE, freq: GE = 440, phase: GE = 0 ) : GE =
+    krExp( buf, freq, phase )
 }
-case class OscN( rate: Rate, bufID: UGenIn, freq: UGenIn, phase: UGenIn )
-extends SingleOutUGen( bufID, freq, phase ) // with SideEffectUGen
+case class OscN( rate: Rate, buf: UGenIn, freq: UGenIn, phase: UGenIn )
+extends SingleOutUGen( buf, freq, phase ) // with SideEffectUGen
 
 object VOsc extends UGen3Args {
   def ar( bufPos: GE, freq: GE = 440, phase: GE = 0 ) : GE =
@@ -97,11 +97,11 @@ case class VOsc3( rate: Rate, bufPos: UGenIn, freq1: UGenIn, freq2: UGenIn, freq
 extends SingleOutUGen( bufPos, freq1, freq2, freq3 ) // with SideEffectUGen
 
 object COsc extends UGen3Args {
-  def ar( bufID: GE, freq: GE = 440, beats: GE = 0.5f ) : GE =
-    arExp( bufID, freq, beats )
+  def ar( buf: GE, freq: GE = 440, beats: GE = 0.5f ) : GE =
+    arExp( buf, freq, beats )
 }
-case class COsc( rate: Rate, bufID: UGenIn, freq: UGenIn, beats: UGenIn )
-extends SingleOutUGen( bufID, freq, beats ) // with SideEffectUGen
+case class COsc( rate: Rate, buf: UGenIn, freq: UGenIn, beats: UGenIn )
+extends SingleOutUGen( buf, freq, beats ) // with SideEffectUGen
 
 object Formant extends UGen3Args {
    def ar : GE = ar()
@@ -188,6 +188,27 @@ object LFPulse extends UGen3Args {
    def kr( freq: GE = 440, iphase: GE = 0, width: GE = 0.5f ) : GE =
       krExp( freq, iphase, width )
 }
+/**
+ * A non-band-limited pulse oscillator UGen.
+ * Outputs a high value of one and a low value of zero.
+ *
+ * @param   freq     oscillator frequency in Hertz
+ * @param   iphase   initial phase offset in cycles ( `0..1` ). If you think
+ *    of a buffer of one cycle of the waveform, this is the starting offset
+ *    into this buffer. Hence, an `iphase` of `0.25` means that you will hear
+ *    the first impulse after `0.75` periods! If you prefer to specify the
+ *    perceived delay instead, you could use an `iphase` of `-0.25 + 1` which
+ *    is more intuitive. Note that the phase is not automatically wrapped
+ *    into the range of `0..1`, so putting an `iphase` of `-0.25` currently
+ *    results in a strange initial signal which only stabilizes to the
+ *    correct behaviour after one period!
+ * @param   width    pulse width duty cycle from zero to one. If you want to
+ *    specify the width rather in seconds, you can use the formula
+ *    `width = freq * dur`, e.g. for a single sample impulse use
+ *    `width = freq * SampleDur.ir`.
+ *
+ * @see  [[de.sciss.synth.ugen.Pulse]]
+ */
 case class LFPulse( rate: Rate, freq: UGenIn, iphase: UGenIn, width: UGenIn )
 extends SingleOutUGen( freq, iphase, width )
 
@@ -222,56 +243,55 @@ case class SyncSaw( rate: Rate, syncFreq: UGenIn, sawFreq: UGenIn )
 extends SingleOutUGen( syncFreq, sawFreq )
 
 object Index extends UGen2Args {
-  def ar( bufID: GE, in: GE = 0 ) : GE = arExp( bufID, in )
-  def kr( bufID: GE, in: GE = 0 ) : GE = krExp( bufID, in )
+  def ar( buf: GE, in: GE = 0 ) : GE = arExp( buf, in )
+  def kr( buf: GE, in: GE = 0 ) : GE = krExp( buf, in )
 }
-case class Index( rate: Rate, bufID: UGenIn, in: UGenIn )
-extends SingleOutUGen( bufID, in ) // with SideEffectUGen
+case class Index( rate: Rate, buf: UGenIn, in: UGenIn )
+extends SingleOutUGen( buf, in ) // with SideEffectUGen
 
 object WrapIndex extends UGen2Args {
-  def ar( bufID: GE, in: GE = 0 ) : GE = arExp( bufID, in )
-  def kr( bufID: GE, in: GE = 0 ) : GE = krExp( bufID, in )
+  def ar( buf: GE, in: GE = 0 ) : GE = arExp( buf, in )
+  def kr( buf: GE, in: GE = 0 ) : GE = krExp( buf, in )
 }
-case class WrapIndex( rate: Rate, bufID: UGenIn, in: UGenIn )
-extends SingleOutUGen( bufID, in ) // with SideEffectUGen
+case class WrapIndex( rate: Rate, buf: UGenIn, in: UGenIn )
+extends SingleOutUGen( buf, in ) // with SideEffectUGen
 
 object IndexInBetween extends UGen2Args {
-  def ar( bufID: GE, in: GE = 0 ) : GE = arExp( bufID, in )
-  def kr( bufID: GE, in: GE = 0 ) : GE = krExp( bufID, in )
+  def ar( buf: GE, in: GE = 0 ) : GE = arExp( buf, in )
+  def kr( buf: GE, in: GE = 0 ) : GE = krExp( buf, in )
 }
-case class IndexInBetween( rate: Rate, bufID: UGenIn, in: UGenIn )
-extends SingleOutUGen( bufID, in ) // with SideEffectUGen
+case class IndexInBetween( rate: Rate, buf: UGenIn, in: UGenIn )
+extends SingleOutUGen( buf, in ) // with SideEffectUGen
 
 object DetectIndex extends UGen2Args {
-  def ar( bufID: GE, in: GE = 0 ) : GE = arExp( bufID, in )
-  def kr( bufID: GE, in: GE = 0 ) : GE = krExp( bufID, in )
+  def ar( buf: GE, in: GE = 0 ) : GE = arExp( buf, in )
+  def kr( buf: GE, in: GE = 0 ) : GE = krExp( buf, in )
 }
-case class DetectIndex( rate: Rate, bufID: UGenIn, in: UGenIn )
-extends SingleOutUGen( bufID, in ) // with SideEffectUGen
+case class DetectIndex( rate: Rate, buf: UGenIn, in: UGenIn )
+extends SingleOutUGen( buf, in ) // with SideEffectUGen
 
 object Shaper extends UGen2Args {
-  def ar( bufID: GE, in: GE = 0 ) : GE = arExp( bufID, in )
-  def kr( bufID: GE, in: GE = 0 ) : GE = krExp( bufID, in )
+  def ar( buf: GE, in: GE = 0 ) : GE = arExp( buf, in )
+  def kr( buf: GE, in: GE = 0 ) : GE = krExp( buf, in )
 }
-case class Shaper( rate: Rate, bufID: UGenIn, in: UGenIn )
-extends SingleOutUGen( bufID, in )
+case class Shaper( rate: Rate, buf: UGenIn, in: UGenIn )
+extends SingleOutUGen( buf, in )
 
 // IndexL XXX
 
 object DegreeToKey extends UGen3Args {
-  def ar( bufID: GE, in: GE, octave: GE = 12 ) : GE = arExp( bufID, in, octave )
-  def kr( bufID: GE, in: GE, octave: GE = 12 ) : GE = krExp( bufID, in, octave )
+  def ar( buf: GE, in: GE, octave: GE = 12 ) : GE = arExp( buf, in, octave )
+  def kr( buf: GE, in: GE, octave: GE = 12 ) : GE = krExp( buf, in, octave )
 }
-case class DegreeToKey( rate: Rate, bufID: UGenIn, in: UGenIn, octave: UGenIn )
-extends SingleOutUGen( bufID, in, octave )
+case class DegreeToKey( rate: Rate, buf: UGenIn, in: UGenIn, octave: UGenIn )
+extends SingleOutUGen( buf, in, octave )
 
 object Select {
-  def ar( index: GE, multi: GE ) : GE = make( audio, index, multi )
-  def kr( index: GE, multi: GE ) : GE = make( control, index, multi )
+   def ar( index: GE, multi: GE ) : GE = make( audio, index, multi )
+   def kr( index: GE, multi: GE ) : GE = make( control, index, multi )
 
-  private def make( rate: Rate, index: GE, multi: GE ) : GE =
-    simplify( for( List( i, m @ _* ) <-
-                     expand( (index :: multi.outputs.toList): _* ))
+   private def make( rate: Rate, index: GE, multi: GE ) : GE =
+      simplify( for( List( i, m @ _* ) <- expand( (index +: multi.outputs): _* ))
                 yield this( rate, i, m ))
 }
 /**
@@ -283,10 +303,12 @@ object Select {
  *    is automatically clipped to lie between `0` and `multi.numOutputs - 1`. The index
  *    is truncated to its integer part (not rounded), hence using for instance an
  *    index of `0.9` will still be interpreted as index `0`.
- * @param   multi a graph element which is composed of the channels to be indexed. 
+ * @param   multi a graph element which is composed of the channels to be indexed.
+ *
+ * @see  [[de.sciss.synth.ugen.TWindex]]
  */
 case class Select( rate: Rate, index: UGenIn, multi: Seq[ UGenIn ])
-extends SingleOutUGen( (index :: multi.toList): _* )
+extends SingleOutUGen( (index +: multi): _* )
 
 object Vibrato {
    def ar : GE = ar()

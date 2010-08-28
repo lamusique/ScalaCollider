@@ -136,22 +136,41 @@ case class CoinGate( rate: Rate, prob: UGenIn, in: UGenIn, _indiv: Int )
 extends SingleOutUGen( prob, in )
 
 object TWindex {
-   def ar( trig: GE, list: GE, normalize: GE = 0 ) : GE =
-      make( audio, trig, list, normalize )
+   def ar( trig: GE, prob: GE, normalize: GE = 0 ) : GE =
+      make( audio, trig, prob, normalize )
 
-   def kr( trig: GE, list: GE, normalize: GE = 0 ) : GE =
-      make( control, trig, list, normalize )
+   def kr( trig: GE, prob: GE, normalize: GE = 0 ) : GE =
+      make( control, trig, prob, normalize )
 
-   private def make( rate: Rate, trig: GE, list: GE, normalize: GE ) : GE =
-      simplify( for( List( t, n, l @ _* ) <-
-                  expand( (trig :: normalize :: list.outputs.toList): _* ))
-                     yield this( rate, t, l, n, individuate ))
+   private def make( rate: Rate, trig: GE, prob: GE, normalize: GE ) : GE =
+      simplify( for( List( t, n, p @ _* ) <- expand( (trig +: normalize +: prob.outputs): _* ))
+                     yield this( rate, t, p, n, individuate ))
 
 //   def apply( rate: Rate, trig: UGenIn, list: Seq[ UGenIn ], normalize: UGenIn ) =
 //      new TWindex( rate, trig, list, normalize )
 }
-case class TWindex( rate: Rate, trig: UGenIn, list: Seq[ UGenIn ], normalize: UGenIn, _indiv: Int )
-extends SingleOutUGen( (trig :: normalize :: list.toList): _* )
+/**
+ * A UGen providing a probability-weighted index into a sequence upon receiving a trigger.
+ *
+ * When triggered, returns a random index value based the values of the channels of the
+ * `prob` argument functioning as probabilities. The index is zero based, hence goes from
+ * `0` to `prob.numOutputs - 1`.
+ *
+ * By default the sequence of probabilities should sum to 1.0, however for convenience, this
+ * can be achieved by the ugen when the `normalize` flag is set to 1 (less efficient).
+ *
+ * @param   trig  the trigger used to calculate a new index. a trigger occurs when passing
+ *    from non-positive to positive
+ * @param   prob  a multi-channel graph element, where the output channels correspond to
+ *    to the probabilites of their respective indices being chosen.
+ * @param   normalize   `0` if the seq argument already sums up to 1.0 and thus doesn't need
+ *    normalization, `1` if the sum is not guaranteed to be 1.0 and thus the ugen is asked
+ *    to provide the normalization. 
+ *
+ * @see  [[de.sciss.synth.ugen.Select]] 
+ */
+case class TWindex( rate: Rate, trig: UGenIn, prob: Seq[ UGenIn ], normalize: UGenIn, _indiv: Int )
+extends SingleOutUGen( (trig +: normalize +: prob): _* )
 
 trait NoiseUGen {
    def apply( rate: Rate, _indiv: Int ) : SingleOutUGen

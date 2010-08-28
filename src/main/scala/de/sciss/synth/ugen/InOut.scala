@@ -45,7 +45,7 @@ object In {
    }
 }
 case class In( rate: Rate, bus: UGenIn, numChannels: Int )
-extends MultiOutUGen( rate, numChannels, List( bus ))
+extends MultiOutUGen( rate, numChannels, bus )
 // with SideEffectUGen
 
 object LocalIn {
@@ -53,7 +53,7 @@ object LocalIn {
    def kr( numChannels: Int = 1 ) : GE = this( control, numChannels )
 }
 case class LocalIn( rate: Rate, numChannels: Int )
-extends MultiOutUGen( rate, numChannels, Nil )
+extends MultiOutUGen( rate, numChannels )
 with SideEffectUGen // XXX not sure we need this really
 
 object LagIn {
@@ -63,7 +63,7 @@ object LagIn {
    }
 }
 case class LagIn( rate: Rate, bus: UGenIn, numChannels: Int, lag: UGenIn )
-extends MultiOutUGen( rate, numChannels, List( bus, lag ))
+extends MultiOutUGen( rate, numChannels, bus, lag )
 // with SideEffectUGen
 
 object InFeedback {
@@ -101,7 +101,7 @@ object InFeedback {
  * @see  [[de.sciss.synth.ugen.ControlDur]]
  */
 case class InFeedback( bus: UGenIn, numChannels: Int )
-extends MultiOutUGen( audio, numChannels, List( bus ))
+extends MultiOutUGen( audio, numChannels, bus )
 with AudioRated // with SideEffectUGen
 
 object InTrig {
@@ -127,7 +127,7 @@ object InTrig {
  * @see  [[de.sciss.synth.ugen.In]]
  */
 case class InTrig( bus: UGenIn, numChannels: Int )
-extends MultiOutUGen( control, numChannels, List( bus ))
+extends MultiOutUGen( control, numChannels, bus )
 with ControlRated // with SideEffectUGen
 
 abstract class AbstractOut {

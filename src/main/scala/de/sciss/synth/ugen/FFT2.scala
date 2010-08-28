@@ -112,7 +112,7 @@ object StereoConvolution2L extends UGen6Args {
  */
 case class StereoConvolution2L( rate: Rate, in: UGenIn, kernelL: UGenIn, kernelR: UGenIn, trig: UGenIn,
                                 frameSize: UGenIn, fadePeriods: UGenIn )
-extends MultiOutUGen( rate, 2, List( in, kernelL, kernelR, trig, frameSize, fadePeriods ))
+extends MultiOutUGen( rate, 2, in, kernelL, kernelR, trig, frameSize, fadePeriods )
 
 // triggered convolution in time domain
 object Convolution3 extends UGen4Args {

@@ -39,14 +39,14 @@ object Pan2 extends UGen3Args {
 	def kr( in: GE, pos: GE = 0, level: GE = 1 ) : GE = krExp( in, pos, level )
 }
 case class Pan2( rate: Rate, in: UGenIn, pos: UGenIn, level: UGenIn )
-extends MultiOutUGen( rate, 2, List( in, pos, level ))
+extends MultiOutUGen( rate, 2, in, pos, level )
 
 object LinPan2 extends UGen3Args {
 	def ar( in: GE, pos: GE = 0, level: GE = 1 ) : GE = arExp( in, pos, level )
 	def kr( in: GE, pos: GE = 0, level: GE = 1 ) : GE = krExp( in, pos, level )
 }
 case class LinPan2( rate: Rate, in: UGenIn, pos: UGenIn, level: UGenIn )
-extends MultiOutUGen( rate, 2, List( in, pos, level ))
+extends MultiOutUGen( rate, 2, in, pos, level )
 
 object Pan4 extends UGen4Args {
 	def ar( in: GE, xpos: GE = 0, ypos: GE = 0, level: GE = 1 ) : GE =
@@ -56,7 +56,7 @@ object Pan4 extends UGen4Args {
       krExp( in, xpos, ypos, level )
 }
 case class Pan4( rate: Rate, in: UGenIn, xpos: UGenIn, ypos: UGenIn, level: UGenIn )
-extends MultiOutUGen( rate, 4, List( in, xpos, ypos, level ))
+extends MultiOutUGen( rate, 4, in, xpos, ypos, level )
 
 object Balance2 extends UGen4Args {
 	def ar( left: GE, right: GE, pos: GE = 0, level: GE = 1 ) : GE =
@@ -66,14 +66,14 @@ object Balance2 extends UGen4Args {
       krExp( left, right, pos, level )
 }
 case class Balance2( rate: Rate, left: UGenIn, right: UGenIn, pos: UGenIn, level: UGenIn )
-extends MultiOutUGen( rate, 2, List( left, right, pos, level ))
+extends MultiOutUGen( rate, 2, left, right, pos, level )
 
 object Rotate2 extends UGen3Args {
 	def ar( x: GE, y: GE, pos: GE = 0 ) : GE = arExp( x, y, pos )
 	def kr( x: GE, y: GE, pos: GE = 0 ) : GE = krExp( x, y, pos )
 }
 case class Rotate2( rate: Rate, x: UGenIn, y: UGenIn, pos: UGenIn )
-extends MultiOutUGen( rate, 2, List( x, y, pos ))
+extends MultiOutUGen( rate, 2, x, y, pos )
 
 // XXX PanB missing
 // XXX PanB2 missing
@@ -99,8 +99,15 @@ object PanAz {
  * An azimuth-based panorama UGen. It uses vector-based-amplitude panning where
  * the arbitrary number of speakers is supposed to be distributed in a circle
  * with even spacing between them. It uses an equal-power-curve to transition
- * between adjectant speakers. '''Note''' the different default value for the
- * `orient` argument!
+ * between adjectant speakers. '''Note''' the different default value for
+ * the `orient` argument!
+ *
+ * Use case: To spread an multi-channel input signal across an output bus
+ * with a different number of channels, such that the first input channel is played on the
+ * first output channel (no spread to adjectant channels) and the last input channel is played
+ * to the last output channel (no spread to adjectant channels), you would create a dedicated `PanAz` per
+ * input channel where the pan position
+ * is `inChanIdx * 2f / (inChannels - 1) * (outChannels - 1) / outChannels`.
  *
  * @param   numChannels the number of output channels
  * @param   in          the input signal
@@ -112,12 +119,13 @@ object PanAz {
  *    a `pos` of `3*2.0/3=2.0` completes the circle and wraps again to the first channel.
  *    Using a bipolar pan position, such as a sawtooth that ranges from -1 to +1, all channels will be
  *    cyclically panned through.
+ *
  * @param   level       a control rate level input (linear multiplier).
  * @param   width       the width of the panning envelope. The default of 2.0 pans between pairs
  *    of adjacent speakers. Width values greater than two will spread the pan over greater numbers
  *    of speakers. Width values less than one will leave silent gaps between speakers.
  * @param   orient      the offset in the output channels regarding a pan position of zero.
- *    '''Note''' that ScalaCollider uses a default of zero which means that a pan pos of zero outputs
+ *    Note that ScalaCollider uses a default of zero which means that a pan pos of zero outputs
  *    the signal exactly on the first output channel. This is different in sclang where the default is
  *    0.5 which means that a pan position of zero will output the signal inbetween the first and second
  *    speaker. Accordingly, an `orient` of `1.0` would result in a channel offset of one, where a
@@ -125,7 +133,7 @@ object PanAz {
  */
 case class PanAz( rate: Rate, numChannels: Int, in: UGenIn, pos: UGenIn,
                   level: UGenIn, width: UGenIn, orient: UGenIn )
-extends MultiOutUGen( rate, numChannels, List( in, pos, level, width, orient ))
+extends MultiOutUGen( rate, numChannels, in, pos, level, width, orient )
 
 object XFade2 extends UGen4Args {
 	def ar( inA: GE, inB: GE = 0, pan: GE = 0, level: GE = 1 ) : GE =

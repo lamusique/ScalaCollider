@@ -30,6 +30,7 @@ package de.sciss.synth.ugen
 
 import de.sciss.synth.{ Constant => c, audio, GE, Rate, SingleOutUGen, SynthGraph, UGenIn }
 import SynthGraph._
+import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 /**
  *	@version	0.11, 09-Dec-09
@@ -44,43 +45,37 @@ case class FSinOsc( rate: Rate, freq: UGenIn, iphase: UGenIn )
 extends SingleOutUGen( freq, iphase )
 
 object KlangSpec {
-  def fill( n: Int )( thunk: => (GE, GE, GE) ) : List[ KlangSpec ] = {
-    List.fill[ (GE, GE, GE) ]( n )( thunk ).map(
-      (tup) => KlangSpec( tup._1, tup._2, tup._3 ))
-  }
+   def fill( n: Int )( thunk: => (GE, GE, GE) ) : IIdxSeq[ KlangSpec ] = {
+      Vector.fill[ (GE, GE, GE) ]( n )( thunk ).map( (tup) => KlangSpec( tup._1, tup._2, tup._3 ))
+   }
 
-  def tabulate( n: Int )( func: (Int) => (GE, GE, GE) ) : List[ KlangSpec ] = {
-    List.tabulate[ (GE, GE, GE) ]( n )( func ).map(
-      (tup) => KlangSpec( tup._1, tup._2, tup._3 ))
-  }
+   def tabulate( n: Int )( func: (Int) => (GE, GE, GE) ) : IIdxSeq[ KlangSpec ] = {
+      Vector.tabulate[ (GE, GE, GE) ]( n )( func ).map( (tup) => KlangSpec( tup._1, tup._2, tup._3 ))
+   }
 }
 case class KlangSpec( freq: GE, amp: GE = 1, decay: GE = 0 ) {
-  def toList = List( freq, amp, decay )
+   def toSeq: IIdxSeq[ GE ] = Vector( freq, amp, decay )
 }
 
 object Klang {
-  def ar( specs: Seq[ KlangSpec ], freqScale: GE = 1, freqOffset: GE = 0 ) : GE = {
-    val exp = expand( (List( freqScale, freqOffset ) ++ specs.flatMap( _.toList )): _* )
-    simplify( for( List( fs, fo, sp @ _* ) <- exp) yield this( audio, fs, fo, sp ))
-  }
+   def ar( specs: Seq[ KlangSpec ], freqScale: GE = 1, freqOffset: GE = 0 ) : GE = {
+      val exp = expand( (freqScale +: freqOffset +: specs.flatMap( _.toSeq )): _* )
+      simplify( for( List( fs, fo, sp @ _* ) <- exp) yield this( audio, fs, fo, sp ))
+   }
 }
 case class Klang( rate: Rate, freqScale: UGenIn, freqOffset: UGenIn, specs: Seq[ UGenIn ])
-extends SingleOutUGen( (List( freqScale, freqOffset ) ++ specs): _* )
+extends SingleOutUGen( (freqScale +: freqOffset +: specs): _* )
 
 object Klank {
-  def ar( specs: Seq[ KlangSpec ], in: GE, freqScale: GE = 1, freqOffset: GE = 0,
-          decayScale: GE = 1 ) : GE = {
-    val exp = expand( (List( in, freqScale, freqOffset, decayScale ) ++
-                      specs.flatMap( _.toList )): _* )
-    simplify( for( List( i, fs, fo, ds, sp @ _* ) <- exp) yield this( audio, i, fs, fo, ds, sp ))
+   def ar( specs: Seq[ KlangSpec ], in: GE, freqScale: GE = 1, freqOffset: GE = 0,
+           decayScale: GE = 1 ) : GE = {
+      val exp = expand( (in +: freqScale +: freqOffset +: decayScale +: specs.flatMap( _.toSeq )): _* )
+      simplify( for( List( i, fs, fo, ds, sp @ _* ) <- exp) yield this( audio, i, fs, fo, ds, sp ))
   }
 }
 case class Klank( rate: Rate, in: UGenIn, freqScale: UGenIn, freqOffset: UGenIn,
                   decayScale: UGenIn, specs: Seq[ UGenIn ])
-extends SingleOutUGen( (List( in, freqScale, freqOffset, decayScale ) ++ specs): _* )
-
-// DynKlank XXX missing
-// DynKlang XXX missing
+extends SingleOutUGen( (in +: freqScale +: freqOffset +: decayScale +: specs): _* )
 
 object Blip extends UGen2Args {
    def ar : GE = ar()

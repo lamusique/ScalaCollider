@@ -37,17 +37,17 @@ import SynthGraph._
  */
 object PlayBuf {
    // note: argument 'rate' renamed to 'speed'
-   def ar( numChannels: Int, bufID: GE, speed: GE = 1, trig: GE = 1, startPos: GE = 0, loop: GE = 1,
+   def ar( numChannels: Int, buf: GE, speed: GE = 1, trig: GE = 1, startPos: GE = 0, loop: GE = 1,
            doneAction: GE = doNothing ) : GE =
-      make( audio, numChannels, bufID, speed, trig, startPos, loop, doneAction )
+      make( audio, numChannels, buf, speed, trig, startPos, loop, doneAction )
 
-   def kr( numChannels: Int, bufID: GE, speed: GE = 1, trig: GE = 1, startPos: GE = 0, loop: GE = 1,
+   def kr( numChannels: Int, buf: GE, speed: GE = 1, trig: GE = 1, startPos: GE = 0, loop: GE = 1,
            doneAction: GE = doNothing ) : GE =
-      make( control, numChannels, bufID, speed, trig, startPos, loop, doneAction )
+      make( control, numChannels, buf, speed, trig, startPos, loop, doneAction )
 
-   private def make( rate: Rate, numChannels: Int, bufID: GE, speed: GE, trig: GE, startPos: GE, loop: GE,
+   private def make( rate: Rate, numChannels: Int, buf: GE, speed: GE, trig: GE, startPos: GE, loop: GE,
                        doneAction: GE ) =
-      simplify( for( List( b, s, t, p, l, d ) <- expand( bufID, speed, trig, startPos, loop, doneAction ))
+      simplify( for( List( b, s, t, p, l, d ) <- expand( buf, speed, trig, startPos, loop, doneAction ))
          yield this( rate, numChannels, b, s, t, p, l, d ))
 }
 
@@ -83,31 +83,31 @@ object PlayBuf {
  * @see  [[de.sciss.synth.ugen.BufRateScale]]
  * @see  [[de.sciss.synth.ugen.BufFrames]]  
  */
-case class PlayBuf( rate: Rate, numChannels: Int, bufID: UGenIn, speed: UGenIn, trig: UGenIn, startPos: UGenIn,
+case class PlayBuf( rate: Rate, numChannels: Int, buf: UGenIn, speed: UGenIn, trig: UGenIn, startPos: UGenIn,
                     loop: UGenIn, doneAction: UGenIn )
-extends MultiOutUGen( rate, numChannels, List( bufID, speed, trig, startPos, loop, doneAction ))
+extends MultiOutUGen( rate, numChannels, buf, speed, trig, startPos, loop, doneAction )
 // with SideEffectUGen // side-effect: done flag
 
 object TGrains {
    // note: argument 'rate' renamed to 'speed'
-   def ar( numChannels: Int, trig: GE, bufID: GE, speed: GE = 1, centerPos: GE = 0, dur: GE = 0.1f, pan: GE = 0,
+   def ar( numChannels: Int, trig: GE, buf: GE, speed: GE = 1, centerPos: GE = 0, dur: GE = 0.1f, pan: GE = 0,
            amp: GE = 0.1f, interp: GE = 4 ) : GE =
-      simplify( for( List( b, s, c, d, p, a, i ) <- expand( bufID, speed, centerPos, dur, pan, amp, interp ))
+      simplify( for( List( b, s, c, d, p, a, i ) <- expand( buf, speed, centerPos, dur, pan, amp, interp ))
          yield this( audio, numChannels, b, s, c, d, p, a, i ))
 }
-case class TGrains( rate: Rate, numChannels: Int, bufID: UGenIn, speed: UGenIn, centerPos: UGenIn, dur: UGenIn,
+case class TGrains( rate: Rate, numChannels: Int, buf: UGenIn, speed: UGenIn, centerPos: UGenIn, dur: UGenIn,
                     pan: UGenIn, amp: UGenIn, interp: UGenIn )
-extends MultiOutUGen( rate, numChannels, List( bufID, speed, centerPos, dur, pan, amp, interp ))
+extends MultiOutUGen( rate, numChannels, buf, speed, centerPos, dur, pan, amp, interp )
 
 object BufRd {
-   def ar( numChannels: Int, bufID: GE, phase: GE = 0, loop: GE = 1, interp: GE = 2 ) : GE =
-      make( audio, numChannels, bufID, phase, loop, interp )
+   def ar( numChannels: Int, buf: GE, phase: GE = 0, loop: GE = 1, interp: GE = 2 ) : GE =
+      make( audio, numChannels, buf, phase, loop, interp )
 
-   def kr( numChannels: Int, bufID: GE, phase: GE = 0, loop: GE = 1, interp: GE = 2 ) : GE =
-      make( control, numChannels, bufID, phase, loop, interp )
+   def kr( numChannels: Int, buf: GE, phase: GE = 0, loop: GE = 1, interp: GE = 2 ) : GE =
+      make( control, numChannels, buf, phase, loop, interp )
 
-   private def make( rate: Rate, numChannels: Int, bufID: GE, phase: GE, loop: GE, interp: GE ) =
-      simplify( for( List( b, p, l, i ) <- expand( bufID, phase, loop, interp ))
+   private def make( rate: Rate, numChannels: Int, buf: GE, phase: GE, loop: GE, interp: GE ) =
+      simplify( for( List( b, p, l, i ) <- expand( buf, phase, loop, interp ))
          yield this( rate, numChannels, b, p, l, i ))
 }
 /**
@@ -137,19 +137,19 @@ object BufRd {
  * @see  [[de.sciss.synth.ugen.BufFrames]]
  * @see  [[de.sciss.synth.ugen.BufRateScale]]
  */
-case class BufRd( rate: Rate, numChannels: Int, bufID: UGenIn, phase: UGenIn, loop: UGenIn, interp: UGenIn )
-extends MultiOutUGen( rate, numChannels, List( bufID, phase, loop, interp ))
+case class BufRd( rate: Rate, numChannels: Int, buf: UGenIn, phase: UGenIn, loop: UGenIn, interp: UGenIn )
+extends MultiOutUGen( rate, numChannels, buf, phase, loop, interp )
 // with SideEffectUGen // side-effect: done-flag -- NO, NOT A SIDE-EFFECT!
 
 object BufWr {
-   def ar( multi: GE, bufID: GE, phase: GE = 0, loop: GE = 1 ) : GE =
-      make( audio, multi, bufID, phase, loop )
+   def ar( multi: GE, buf: GE, phase: GE = 0, loop: GE = 1 ) : GE =
+      make( audio, multi, buf, phase, loop )
 
-   def kr( multi: GE, bufID: GE, phase: GE = 0, loop: GE = 1 ) : GE =
-      make( control, multi, bufID, phase, loop )
+   def kr( multi: GE, buf: GE, phase: GE = 0, loop: GE = 1 ) : GE =
+      make( control, multi, buf, phase, loop )
 
-   private def make( rate: Rate, multi: GE, bufID: GE, phase: GE, loop: GE ) =
-      simplify( for( List( b, p, l, m @ _* ) <- expand( (bufID :: phase :: loop :: multi.outputs.toList) :_* ))
+   private def make( rate: Rate, multi: GE, buf: GE, phase: GE, loop: GE ) =
+      simplify( for( List( b, p, l, m @ _* ) <- expand( (buf +: phase +: loop +: multi.outputs): _* ))
          yield this( rate, b, p, l, m ))
 
 //	checkInputs {
@@ -159,32 +159,32 @@ object BufWr {
 // 		^this.checkValidInputs
 // 	}
 }
-case class BufWr( rate: Rate, bufID: UGenIn, phase: UGenIn, loop: UGenIn, multi: Seq[ UGenIn ])
-extends SingleOutUGen( (bufID :: phase :: loop :: multi.toList): _* ) with SideEffectUGen
+case class BufWr( rate: Rate, buf: UGenIn, phase: UGenIn, loop: UGenIn, multi: Seq[ UGenIn ])
+extends SingleOutUGen( (buf +: phase +: loop +: multi): _* ) with SideEffectUGen
 
 object RecordBuf {
-   def ar( multi: GE, bufID: GE, offset: GE = 0, recLevel: GE = 1, preLevel: GE = 0,
+   def ar( multi: GE, buf: GE, offset: GE = 0, recLevel: GE = 1, preLevel: GE = 0,
 			run: GE = 1, loop: GE = 1, trig: GE = 1, doneAction: GE = doNothing ) : GE =
-      make( audio, multi, bufID, offset, recLevel, preLevel, run, loop, trig, doneAction )
+      make( audio, multi, buf, offset, recLevel, preLevel, run, loop, trig, doneAction )
 
-   def kr( multi: GE, bufID: GE, offset: GE = 0, recLevel: GE = 1, preLevel: GE = 0,
+   def kr( multi: GE, buf: GE, offset: GE = 0, recLevel: GE = 1, preLevel: GE = 0,
 			run: GE = 1, loop: GE = 1, trig: GE = 1, doneAction: GE = doNothing ) : GE =
-      make( control, multi, bufID, offset, recLevel, preLevel, run, loop, trig, doneAction )
+      make( control, multi, buf, offset, recLevel, preLevel, run, loop, trig, doneAction )
 
-   private def make( rate: Rate, multi: GE, bufID: GE, offset: GE, recLevel: GE, preLevel: GE, run: GE,
+   private def make( rate: Rate, multi: GE, buf: GE, offset: GE, recLevel: GE, preLevel: GE, run: GE,
                        loop: GE, trig: GE, doneAction: GE ) =
-      simplify( for( List( b, o, r, p, n, l, t, d, m @ _* ) <- expand( (bufID :: offset :: recLevel :: preLevel ::
-                     run :: loop :: trig :: doneAction :: multi.outputs.toList) :_* ))
+      simplify( for( List( b, o, r, p, n, l, t, d, m @ _* ) <- expand( (buf +: offset +: recLevel +: preLevel +:
+                     run +: loop +: trig +: doneAction +: multi.outputs): _* ))
          yield this( rate, b, o, r, p, n, l, t, d, m, SynthGraph.individuate ))
 }
-case class RecordBuf( rate: Rate, bufID: UGenIn, offset: UGenIn, recLevel: UGenIn, preLevel: UGenIn,
+case class RecordBuf( rate: Rate, buf: UGenIn, offset: UGenIn, recLevel: UGenIn, preLevel: UGenIn,
                       run: UGenIn, loop: UGenIn, trig: UGenIn, doneAction: UGenIn, multi: Seq[ UGenIn ], _indiv: Int )
-extends SingleOutUGen( (bufID :: offset :: recLevel :: preLevel :: run :: loop :: trig :: doneAction :: multi.toList): _* )
+extends SingleOutUGen( (buf +: offset +: recLevel +: preLevel +: run +: loop +: trig +: doneAction +: multi): _* )
 with SideEffectUGen
 
 //object Tap {
 //	// Warning: different arg order than sclang!
-//	def ar( numChannels: Int = 1, bufID: GE = 0, delayTime: GE = 0.2f ) : GE = {
+//	def ar( numChannels: Int = 1, buf: GE = 0, delayTime: GE = 0.2f ) : GE = {
 //		val n = delayTime * SampleRate.ir.neg; // this depends on the session sample rate, not buffer.
 //		PlayBuf.ar( numChannels, bufID, 1, 0, n, 1 )
 //	}

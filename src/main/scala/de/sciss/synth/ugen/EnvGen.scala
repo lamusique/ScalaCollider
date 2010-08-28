@@ -36,12 +36,12 @@ import SynthGraph._
  *  @version  0.10, 05-Aug-10
  */
 object Done extends UGen1RArgs {
-  def kr( src: GE ) : GE = make( src )
+   def kr( src: GE ) : GE = make( src )
 }
 case class Done( src: UGenIn ) extends SingleOutUGen( src ) with ControlRated
 
 object FreeSelf extends UGen1RArgs {
-  def kr( in: GE ) : GE = make( in ) // we do not return in like sclang does
+   def kr( in: GE ) : GE = make( in ) // we do not return in like sclang does
 }
 /**
  * @see  [[de.sciss.synth.ugen.Free]]
@@ -50,7 +50,7 @@ object FreeSelf extends UGen1RArgs {
 case class FreeSelf( in: UGenIn ) extends SingleOutUGen( in ) with ControlRated with SideEffectUGen
 
 object PauseSelf extends UGen1RArgs {
-  def kr( in: GE ) : GE = make( in ) // we do not return in like sclang does
+   def kr( in: GE ) : GE = make( in ) // we do not return in like sclang does
 }
 /**
  * @see  [[de.sciss.synth.ugen.Pause]]
@@ -60,14 +60,14 @@ case class PauseSelf( in: UGenIn ) extends SingleOutUGen( in ) with ControlRated
 
 // its output is its input (source)
 object FreeSelfWhenDone extends UGen1RArgs {
-  def kr( src: GE ) : GE = make( src )
+   def kr( src: GE ) : GE = make( src )
 }
 case class FreeSelfWhenDone( src: UGenIn ) extends SingleOutUGen( src )
 with ControlRated with SideEffectUGen
 
 // its output is its input (source)
 object PauseSelfWhenDone extends UGen1RArgs {
-  def kr( src: GE ) : GE = make( src )
+   def kr( src: GE ) : GE = make( src )
 }
 case class PauseSelfWhenDone( src: UGenIn ) extends SingleOutUGen( src )
 with ControlRated with SideEffectUGen
@@ -78,7 +78,7 @@ with ControlRated with SideEffectUGen
  * @see  [[de.sciss.synth.ugen.Free]]
  */
 object Pause extends UGen2RArgs {
-  def kr( gate: GE, nodeID: GE ) : GE = make( gate, nodeID )
+   def kr( gate: GE, nodeID: GE ) : GE = make( gate, nodeID )
 }
 /**
  * A UGen which pauses and resumes another node.
@@ -102,7 +102,7 @@ extends SingleOutUGen( gate, nodeID ) with ControlRated with SideEffectUGen
 // its output is its input (trig)
 
 object Free extends UGen2RArgs {
-  def kr( trig: GE, nodeID: GE ) : GE = make( trig, nodeID )
+   def kr( trig: GE, nodeID: GE ) : GE = make( trig, nodeID )
 }
 /**
  * @see  [[de.sciss.synth.ugen.Pause]]
@@ -112,48 +112,48 @@ case class Free( trig: UGenIn, nodeID: UGenIn )
 extends SingleOutUGen( trig, nodeID ) with ControlRated with SideEffectUGen
 
 object EnvGen {
-  def ar( envelope: Env, gate: GE = 1, levelScale: GE = 1, levelBias: GE = 0,
-          timeScale: GE = 1, doneAction: GE = doNothing ) : GE = {
-    val exp = expand( (List( gate, levelScale, levelBias, timeScale, doneAction ) ::: envelope.toList): _* )
-    simplify( for( List( g, ls, lb, t, d, e @ _* ) <- exp) yield this( audio, g, ls, lb, t, d, e ))
-  }
+   def ar( envelope: Env, gate: GE = 1, levelScale: GE = 1, levelBias: GE = 0,
+           timeScale: GE = 1, doneAction: GE = doNothing ) : GE = {
+      val exp = expand( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envelope.toSeq): _* )
+      simplify( for( List( g, ls, lb, t, d, e @ _* ) <- exp) yield this( audio, g, ls, lb, t, d, e ))
+   }
   
-  def kr( envelope: Env, gate: GE = 1, levelScale: GE = 1, levelBias: GE = 0,
-          timeScale: GE = 1, doneAction: GE = doNothing ) : GE = {
-    val exp = expand( (List( gate, levelScale, levelBias, timeScale, doneAction ) ::: envelope.toList): _* )
-    simplify( for( List( g, ls, lb, t, d, e @ _* ) <- exp) yield this( control, g, ls, lb, t, d, e ))
-  }
+   def kr( envelope: Env, gate: GE = 1, levelScale: GE = 1, levelBias: GE = 0,
+           timeScale: GE = 1, doneAction: GE = doNothing ) : GE = {
+      val exp = expand( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envelope.toSeq): _* )
+      simplify( for( List( g, ls, lb, t, d, e @ _* ) <- exp) yield this( control, g, ls, lb, t, d, e ))
+   }
 }
 
 case class EnvGen( rate: Rate, gate: UGenIn, levelScale: UGenIn, levelBias: UGenIn,
                    timeScale: UGenIn, doneAction: UGenIn, envSeq: Seq[ UGenIn ])
-extends SingleOutUGen( (List( gate, levelScale, levelBias, timeScale, doneAction ) ++ envSeq): _* )
+extends SingleOutUGen( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envSeq): _* )
 with SideEffectUGen  // side-effect: done action
 
 object IEnvGen {
-  def ar( envelope: IEnv, index: GE ) : GE = {
-    val exp = expand( (List( index ) ::: envelope.toList): _* )
-    simplify( for( List( i, e @ _* ) <- exp) yield this( audio, i, e ))
-  }
+   def ar( envelope: IEnv, index: GE ) : GE = {
+      val exp = expand( (index +: envelope.toSeq): _* )
+      simplify( for( List( i, e @ _* ) <- exp) yield this( audio, i, e ))
+   }
 
-  def kr( envelope: IEnv, index: GE ) : GE = {
-    val exp = expand( (List( index ) ::: envelope.toList): _* )
-    simplify( for( List( i, e @ _* ) <- exp) yield this( control, i, e ))
-  }
+   def kr( envelope: IEnv, index: GE ) : GE = {
+      val exp = expand( (index +: envelope.toSeq): _* )
+      simplify( for( List( i, e @ _* ) <- exp) yield this( control, i, e ))
+   }
 }
 
 case class IEnvGen( rate: Rate, index: UGenIn, ienvSeq: Seq[ UGenIn ])
-extends SingleOutUGen( (List( index ) ++ ienvSeq): _* )
+extends SingleOutUGen( (index +: ienvSeq): _* )
 
 object Linen extends UGen5Args {
    def ar : GE = ar()
 	def ar( gate: GE = 1, attack: GE = 0.01f, sustain: GE = 1, release: GE = 1,
-            doneAction: GE = doNothing ) : GE =
+           doneAction: GE = doNothing ) : GE =
       arExp( gate, attack, sustain, release, doneAction )
 
    def kr : GE = ar()
 	def kr( gate: GE = 1, attack: GE = 0.01f, sustain: GE = 1, release: GE = 1,
-            doneAction: GE = doNothing ) : GE =
+           doneAction: GE = doNothing ) : GE =
       krExp( gate, attack, sustain, release, doneAction )
 }
 case class Linen( rate: Rate, gate: UGenIn, attack: UGenIn, sustain: UGenIn,

@@ -56,7 +56,7 @@ object Control {
    }
 }
 case class Control private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( rate, numChannels, Nil ) with SideEffectUGen
+extends MultiOutUGen( rate, numChannels ) with SideEffectUGen
 
 case class ControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ ControlProxy ]( rate, values.size ) {
@@ -71,7 +71,12 @@ object ControlFactory extends ControlFactoryLike[ ControlProxy ] {
    // XXX eventually we should try to factor this out for all controlfactories...
    def build( proxies: ControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
       val b = SynthGraph.builder
-      proxies.toList.groupBy( _.rate ).flatMap( group => { // warning: toList required to ensure collection is strict!
+      // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
+      // which exhibited a problem of not forcing varargs into being strict.
+      // this has probably been fixed, hence we should eventually check if
+      // the force is still necessary or could be removed!
+      // -- DONE
+      proxies.groupBy( _.rate ).flatMap( group => {
          val (rate, ps)    = group
          var numChannels   = 0
          val specialIndex  = ps.map( p => {
@@ -99,7 +104,7 @@ object TrigControl {
    def kr( values: Float* ) : TrigControl = kr( Vector( values: _* ))
 }
 case class TrigControl private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( control, numChannels, Nil ) with ControlRated with SideEffectUGen
+extends MultiOutUGen( control, numChannels ) with ControlRated with SideEffectUGen
 
 case class TrigControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ TrigControlProxy ]( rate, values.size ) {
@@ -138,7 +143,7 @@ object AudioControl {
    def ar( values: Float* ) : AudioControl = ar( Vector( values: _* ))
 }
 case class AudioControl private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( audio, numChannels, Nil ) with AudioRated with SideEffectUGen
+extends MultiOutUGen( audio, numChannels ) with AudioRated with SideEffectUGen
 
 case class AudioControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ AudioControlProxy ]( rate, values.size ) {

@@ -30,6 +30,7 @@
 package de.sciss.synth
 
 import scala.math._
+import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 /**
  *    @version 0.10, 23-Apr-10
@@ -190,16 +191,13 @@ case class Env( startLevel: GE, segments: Seq[ EnvSeg ],
                 releaseNode: GE = -99, loopNode: GE = -99 )
 extends AbstractEnv {
   
-	def toList : List[ GE ] =
-      List[ GE ]( startLevel, segments.size, releaseNode, loopNode ) :::
-      segments.toList.flatMap( seg =>
-         List( seg.targetLevel, seg.dur, seg.shape.idGE, seg.shape.curvatureGE ))
+	def toSeq : IIdxSeq[ GE ] = {
+      val segmIdx    = segments.toIndexedSeq
+      val sizeGE: GE = segmIdx.size
+      startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap( seg =>
+         Vector( seg.targetLevel, seg.dur, seg.shape.idGE, seg.shape.curvatureGE ))
+   }
 	
-//	at { arg time;
-//		^this.asArray.envAt(time)
-//	}
-//	
-
    def isSustained = releaseNode != Constant( -99 )
 }
 
@@ -210,11 +208,12 @@ object IEnv extends AbstractEnvFactory[ IEnv ] {
 
 case class IEnv( startLevel: GE, segments: Seq[ EnvSeg ], offset: GE = 0 )
 extends AbstractEnv {
-	def toList : List[ GE ] = {
-      val totalDur = segments.foldLeft[ GE ]( 0 )( (sum, next) => sum + next.dur )
-      List[ GE ]( offset, startLevel, segments.size, totalDur ) :::
-      segments.toList.flatMap( seg =>
-         List( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
+	def toSeq : IIdxSeq[ GE ] = {
+      val segmIdx    = segments.toIndexedSeq
+      val sizeGE: GE = segmIdx.size
+      val totalDur   = segmIdx.foldLeft[ GE ]( 0 )( (sum, next) => sum + next.dur )
+      offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap( seg =>
+         Vector( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
    }
 
    def isSustained = false

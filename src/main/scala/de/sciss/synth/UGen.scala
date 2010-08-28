@@ -28,7 +28,7 @@
 
 package de.sciss.synth
 
-import collection.immutable.{ IndexedSeq => IIdxSeq }
+import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 
 /**
  *    @version 0.15, 21-May-10
@@ -89,11 +89,11 @@ extends RatedGE with UGenProxy {
 }
 
 // a class for UGens with multiple outputs
-abstract class MultiOutUGen( outputRates: IIdxSeq[ Rate ], val inputs: Seq[ UGenIn ])
+abstract class MultiOutUGen( outputRates: IIdxSeq[ Rate ], val inputs: UGenIn* )
 extends UGen {
    // most multi out ugens use the same rate for all outputs,
    // therefore we have a simpler constructor
-   def this( rate: Rate, numOutputs: Int, inputs: Seq[ UGenIn ]) = this( Vector.fill( numOutputs )( rate ), inputs )
+   def this( rate: Rate, numOutputs: Int, inputs: UGenIn* ) = this( Vector.fill( numOutputs )( rate ), inputs: _* )
    
    final override def numOutputs = outputRates.size
 	final def outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map(
@@ -103,5 +103,5 @@ extends UGen {
 abstract class ZeroOutUGen( val inputs: UGenIn* )
 extends UGen with SideEffectUGen {
    final override def numOutputs = 0
-   final def outputs = Vector.empty
+   final def outputs: IIdxSeq[ UGenIn ] = Vector.empty
 }

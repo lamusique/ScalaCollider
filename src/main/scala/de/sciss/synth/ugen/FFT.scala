@@ -38,38 +38,38 @@ case class FFT( buf: UGenIn, in: UGenIn, hop: UGenIn, winType: UGenIn, active: U
 extends SingleOutUGen( buf, in, hop, winType, active, winSize ) with ControlRated
 
 object IFFT extends UGen3Args {
-   def apply( buf: GE, winType: GE = 0, winSize: GE = 0 ) : GE =
-      arExp( buf, winType, winSize )
+   def apply( chain: GE, winType: GE = 0, winSize: GE = 0 ) : GE =
+      arExp( chain, winType, winSize )
 
-   def ar( buf: GE, winType: GE = 0, winSize: GE = 0 ) : GE =
-      arExp( buf, winType, winSize )
+   def ar( chain: GE, winType: GE = 0, winSize: GE = 0 ) : GE =
+      arExp( chain, winType, winSize )
 
-   def kr( buf: GE, winType: GE = 0, winSize: GE = 0 ) : GE =
-      arExp( buf, winType, winSize )
+   def kr( chain: GE, winType: GE = 0, winSize: GE = 0 ) : GE =
+      arExp( chain, winType, winSize )
 }
-case class IFFT( rate: Rate, buf: UGenIn, winType: UGenIn, winSize: UGenIn )
-extends SingleOutUGen( buf, winType, winSize )
+case class IFFT( rate: Rate, chain: UGenIn, winType: UGenIn, winSize: UGenIn )
+extends SingleOutUGen( chain, winType, winSize )
 
 object PV_MagAbove extends UGen2RArgs {
-   def apply( buf: GE, thresh: GE = 0 ) : GE = make( buf, thresh )
+   def apply( chain: GE, thresh: GE = 0 ) : GE = make( chain, thresh )
 }
-case class PV_MagAbove( buf: UGenIn, thresh: UGenIn )
-extends SingleOutUGen( buf, thresh ) with ControlRated
+case class PV_MagAbove( chain: UGenIn, thresh: UGenIn )
+extends SingleOutUGen( chain, thresh ) with ControlRated
 
 object PV_MagBelow extends UGen2RArgs {
-   def apply( buf: GE, thresh: GE = 0 ) : GE = make( buf, thresh )
+   def apply( chain: GE, thresh: GE = 0 ) : GE = make( chain, thresh )
 }
-case class PV_MagBelow( buf: UGenIn, thresh: UGenIn )
-extends SingleOutUGen( buf, thresh ) with ControlRated
+case class PV_MagBelow( chain: UGenIn, thresh: UGenIn )
+extends SingleOutUGen( chain, thresh ) with ControlRated
 
 object PV_MagClip extends UGen2RArgs {
-   def apply( buf: GE, thresh: GE = 0 ) : GE = make( buf, thresh )
+   def apply( chain: GE, thresh: GE = 0 ) : GE = make( chain, thresh )
 }
-case class PV_MagClip( buf: UGenIn, thresh: UGenIn )
-extends SingleOutUGen( buf, thresh ) with ControlRated
+case class PV_MagClip( chain: UGenIn, thresh: UGenIn )
+extends SingleOutUGen( chain, thresh ) with ControlRated
 
 object PV_LocalMax extends UGen2RArgs {
-   def apply( buf: GE, thresh: GE = 0 ) : GE = make( buf, thresh )
+   def apply( chain: GE, thresh: GE = 0 ) : GE = make( chain, thresh )
 }
-case class PV_LocalMax( buf: UGenIn, thresh: UGenIn )
-extends SingleOutUGen( buf, thresh ) with ControlRated
+case class PV_LocalMax( chain: UGenIn, thresh: UGenIn )
+extends SingleOutUGen( chain, thresh ) with ControlRated

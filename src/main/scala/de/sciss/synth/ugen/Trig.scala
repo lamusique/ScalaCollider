@@ -242,9 +242,8 @@ object Pitch {
 case class Pitch( in: UGenIn, initFreq: UGenIn, minFreq: UGenIn, maxFreq: UGenIn,
 			execFreq: UGenIn, binsPerOct: UGenIn, median: UGenIn,
 			ampThresh: UGenIn, peakThresh: UGenIn, downSample: UGenIn )
-extends MultiOutUGen( control, 2, List( in, initFreq, minFreq,
-                      maxFreq, execFreq, binsPerOct, median, ampThresh,
-                      peakThresh, downSample ))
+extends MultiOutUGen( control, 2, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh,
+                      peakThresh, downSample )
 with ControlRated
 
 object InRange extends UGen3Args {

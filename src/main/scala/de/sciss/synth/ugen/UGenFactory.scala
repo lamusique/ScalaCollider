@@ -234,6 +234,16 @@ private[ugen] trait UGen7Args {
       make( scalar, arg1, arg2, arg3, arg4, arg5, arg6, arg7 )
 }
 
+private[ugen] trait UGen9RArgs {
+   def apply( arg1: UGenIn, arg2: UGenIn, arg3: UGenIn, arg4: UGenIn, arg5: UGenIn, arg6: UGenIn,
+              arg7: UGenIn, arg8: UGenIn, arg9: UGenIn ) : UGen
+   protected def make( arg1: GE, arg2: GE, arg3: GE, arg4: GE, arg5: GE, arg6: GE,
+                       arg7: GE, arg8: GE, arg9: GE ) : GE =
+      simplify( for( List( a1, a2, a3, a4, a5, a6, a7, a8, a9 ) <-
+         expand( arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9 ))
+            yield this( a1, a2, a3, a4, a5, a6, a7, a8, a9 ))
+}
+
 private[ugen] trait UGen9ArgsIndiv {
    def apply( rate: Rate, arg1: UGenIn, arg2: UGenIn, arg3: UGenIn, arg4: UGenIn, arg5: UGenIn,
               arg6: UGenIn, arg7: UGenIn, arg8: UGenIn, arg9: UGenIn, _indiv: Int ) : UGen

@@ -32,6 +32,7 @@ import de.sciss.synth.{ audio, control, demand, doNothing, GE, MultiOutUGen, Rat
                         UGen, UGenIn }
 import SynthGraph._
 import Float.{ PositiveInfinity => inf }
+import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 /**
  *    @version	0.11, 16-Aug-10
@@ -73,8 +74,8 @@ object Demand {
  * @see  [[de.sciss.synth.ugen.Duty]]
  * @see  [[de.sciss.synth.ugen.TDuty]]
  */
-case class Demand( rate: Rate, trig: UGenIn, multi: IndexedSeq[ UGenIn ], reset: UGenIn )
-extends MultiOutUGen( rate, multi.size, trig +: reset +: multi )   // ! WARNING ! different order
+case class Demand( rate: Rate, trig: UGenIn, multi: Seq[ UGenIn ], reset: UGenIn )
+extends MultiOutUGen( rate, multi.size, (trig +: reset +: multi): _* ) // ! WARNING ! different order
 
 object Duty extends UGen4Args {
 	def ar( dur: GE = 1, reset: GE = 0, level: GE, doneAction: GE = doNothing ) :  GE =
@@ -231,9 +232,8 @@ case class Dgeom( start: UGenIn, grow: UGenIn, length: UGenIn, _indiv: Int )
 extends SingleOutUGen( length, start, grow ) with DemandRateUGen  // ! WARNING ! different order
 
 object Dbufrd extends UGen3RArgsIndiv {
-	def apply( bufID: GE, phase: GE = 0, loop: GE = 1 ) : GE = make( bufID, phase, loop )
+	def apply( buf: GE, phase: GE = 0, loop: GE = 1 ) : GE = make( buf, phase, loop )
 }
-
 /**
  * A demand-rate UGen that reads out a buffer. All inputs can be either demand ugen or any other ugen.
  *
@@ -244,18 +244,18 @@ object Dbufrd extends UGen3RArgsIndiv {
  * @see  [[de.sciss.synth.ugen.BufRd]]
  * @see  [[de.sciss.synth.ugen.Dbufwr]] 
  */
-case class Dbufrd( bufID: UGenIn, phase: UGenIn, loop: UGenIn, _indiv: Int )
-extends SingleOutUGen( bufID, phase, loop ) with DemandRateUGen
+case class Dbufrd( buf: UGenIn, phase: UGenIn, loop: UGenIn, _indiv: Int )
+extends SingleOutUGen( buf, phase, loop ) with DemandRateUGen
 
 /**
  * @see  [[de.sciss.synth.ugen.BufWd]]
  * @see  [[de.sciss.synth.ugen.Dbufrd]] 
  */
 object Dbufwr extends UGen4RArgsIndiv {
-	def apply( input: GE, bufID: GE, phase: GE = 0, loop: GE = 1 ) : GE = make( input, bufID, phase, loop )
+	def apply( input: GE, buf: GE, phase: GE = 0, loop: GE = 1 ) : GE = make( input, buf, phase, loop )
 }
-case class Dbufwr( input: UGenIn, bufID: UGenIn, phase: UGenIn, loop: UGenIn, _indiv: Int )
-extends SingleOutUGen( bufID, phase, input, loop ) with DemandRateUGen // ! WARNING ! different order
+case class Dbufwr( input: UGenIn, buf: UGenIn, phase: UGenIn, loop: UGenIn, _indiv: Int )
+extends SingleOutUGen( buf, phase, input, loop ) with DemandRateUGen // ! WARNING ! different order
 
 trait AbstractSeqDemand {
    def apply( seq: GE, repeats: GE = 1 ) : GE = make( seq, repeats )

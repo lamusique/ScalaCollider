@@ -144,12 +144,12 @@ object DC {
 	def ar( in: GE ) : GE = this( audio, in.outputs )
 	def kr( in: GE ) : GE = this( control, in.outputs )
 }
-case class DC( rate: Rate, multi: IIdxSeq[ UGenIn ])
-extends MultiOutUGen( rate, multi.size, multi )
+case class DC( rate: Rate, multi: Seq[ UGenIn ])
+extends MultiOutUGen( rate, multi.size, multi: _* )
 
 object Silent {
    def ar : GE = ar()
 	def ar( numChannels: Int = 1 ) : GE = this( numChannels )
 }
 case class Silent( numChannels: Int )
-extends MultiOutUGen( audio, numChannels, Nil ) with AudioRated
+extends MultiOutUGen( audio, numChannels ) with AudioRated

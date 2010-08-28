@@ -38,6 +38,6 @@ object GVerb extends UGen10RArgs {
 // deterministic?
 case class GVerb( in: UGenIn, roomSize: UGenIn, revTime: UGenIn, damping: UGenIn, inputBW: UGenIn, spread: UGenIn,
                   dryLevel: UGenIn, earlyRefLevel: UGenIn, tailLevel: UGenIn, maxRoomSize: UGenIn )
-extends MultiOutUGen( audio, 2, List( in, roomSize, revTime, damping, inputBW, spread, dryLevel, earlyRefLevel,
-                                      tailLevel, maxRoomSize ))
+extends MultiOutUGen( audio, 2, in, roomSize, revTime, damping, inputBW, spread, dryLevel, earlyRefLevel,
+                                tailLevel, maxRoomSize )
 with AudioRated
