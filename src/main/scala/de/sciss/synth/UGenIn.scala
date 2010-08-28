@@ -28,16 +28,18 @@
 
 package de.sciss.synth
 
+import collection.immutable.{ IndexedSeq => IIdxSeq }
+
 /**
  *    An element that can be used as an input to a UGen.
  *    This is after multi-channel-expansion, hence implementing
  *    classes are SingleOutUGen, UGenOutProxy, ControlOutProxy, and Constant.
  *
- *    @version 0.11, 26-Aug-10
+ *    @version 0.11, 28-Aug-10
  */
 sealed trait UGenIn extends RatedGE {
    final override def numOutputs = 1
-   final def outputs = Vector( this )
+   final def outputs: IIdxSeq[ UGenIn ] = Vector( this )
 }
 
 object Constant {

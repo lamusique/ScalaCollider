@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="01886865-ff38-4eb7-a79d-92e783f03245" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala" />
     </list>
     <ignored path=".idea/workspace.xml" />
     <ignored path="ScalaCollider.iws" />
@@ -80,14 +80,20 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Filter.scala" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Filter.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="513" column="29" selection-start="18442" selection-end="18442" vertical-scroll-proportion="0.8807947">
-              <folding>
-                <marker date="1283028009000" expanded="true" signature="9319:9986" placeholder="/**...*/" />
-                <marker date="1283028009000" expanded="true" signature="10350:11043" placeholder="/**...*/" />
-              </folding>
+            <state line="469" column="21" selection-start="16670" selection-end="16683" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UGenIn.scala" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="57" column="65" selection-start="1928" selection-end="1928" vertical-scroll-proportion="0.615894">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -106,7 +112,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Trig.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/BufIO.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/GVerb.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Control.scala" />
@@ -122,6 +127,7 @@
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/FFT2.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala" />
       </list>
     </option>
   </component>
@@ -886,13 +892,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="54" selection-start="5631" selection-end="5631" vertical-scroll-proportion="0.9353448">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="40" column="28" selection-start="1566" selection-end="1575" vertical-scroll-proportion="0.0">
@@ -951,11 +950,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="513" column="29" selection-start="18442" selection-end="18442" vertical-scroll-proportion="0.8807947">
-          <folding>
-            <marker date="1283028009000" expanded="true" signature="9319:9986" placeholder="/**...*/" />
-            <marker date="1283028009000" expanded="true" signature="10350:11043" placeholder="/**...*/" />
-          </folding>
+        <state line="469" column="21" selection-start="16670" selection-end="16683" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="65" selection-start="1928" selection-end="1928" vertical-scroll-proportion="0.615894">
+          <folding />
         </state>
       </provider>
     </entry>
