@@ -129,5 +129,15 @@ object RunningSum extends UGen2Args {
   def rms( in: GE, numSamples: GE = 400 ) : GE =
     (ar( in.squared, numSamples ) * numSamples.reciprocal).sqrt
 }
+/**
+ * A UGen calculating the running sum of an input signal over a given number of samples.
+ * '''Warning''': The input signal should run at the same rate as this ugen, e.g. something
+ * like `RunningSum.ar( SinOsc.kr.abs )` yields strange and wrong results. 
+ *
+ * @param   in          the input signal to sum up
+ * @param   numSamples  the length of the sliding window over the input signal.
+ *    these are the number of audio sample-frames for audio-rate calculation,
+ *    or the number of blocks for control-rate calculation summed up.
+ */
 case class RunningSum( rate: Rate, in: UGenIn, numSamples: UGenIn )
 extends SingleOutUGen( in, numSamples )
