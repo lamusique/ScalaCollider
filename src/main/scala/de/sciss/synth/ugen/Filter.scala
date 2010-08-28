@@ -52,7 +52,7 @@ object OnePole extends UGen2Args {
  * }}}
  *
  * @param   in    input signal to be processed
- * @param   coef  feedback coefficient. Should be between -1 and +1
+ * @param   coeff feedback coefficient. Should be between -1 and +1
  *
  * @see  [[de.sciss.synth.ugen.OneZero]]
  * @see  [[de.sciss.synth.ugen.Lag]]
@@ -72,7 +72,7 @@ object OneZero extends UGen2Args {
  * }}}
  *
  * @param   in    input signal to be processed
- * @param   coef  feed forward coefficient. +0.5 makes a two point averaging filter (see also `LPZ1`),
+ * @param   coeff feed forward coefficient. +0.5 makes a two point averaging filter (see also `LPZ1`),
  *    -0.5 makes a differentiator (see also `HPZ1`),  +1 makes a single sample delay (see also `Delay1`),
  *    -1 makes an inverted single sample delay.
  *
@@ -118,7 +118,7 @@ object Integrator extends UGen2Args {
  * }}}
  *
  * @param   in    input signal to be processed
- * @param   coef  the leak coefficient. Should be between -1 and +1
+ * @param   coeff the leak coefficient. Should be between -1 and +1
  *
  * @see  [[de.sciss.synth.ugen.OnePole]]
  * @see  [[de.sciss.synth.ugen.HPZ1]]
@@ -153,7 +153,7 @@ object Lag extends UGen2Args {
  * it is calculated from a 60 dB lag time. This is the time required for the filter to converge to
  * within 0.01 % of a value. This is useful for smoothing out control signals.
  *
- * @param   in    input signal
+ * @param   in    input signal.
  * @param   time  60 dB lag time in seconds.  
  *
  * @see  [[de.sciss.synth.ugen.OnePole]]
@@ -169,12 +169,12 @@ object Lag2 extends UGen2Args {
 	def kr( in: GE, time: GE = 0.1f ) : GE = krExp( in, time )
 }
 /**
- * A cascaded exponential lag UGen.
- * `Lag2.kr(in, time)` is equivalent to `Lag.kr(Lag.kr(in, time), time)`,
+ * A cascaded exponential lag
+ * UGen. `Lag2.kr(in, time)` is equivalent to `Lag.kr(Lag.kr(in, time), time)`,
  * thus resulting in a smoother transition. This saves on CPU as you only have to
  * calculate the decay factor once instead of twice.
  *
- * @param   in    input signal
+ * @param   in    input signal.
  * @param   time  60 dB lag time in seconds.  
  *
  * @see  [[de.sciss.synth.ugen.Lag]]
@@ -189,12 +189,12 @@ object Lag3 extends UGen2Args {
 	def kr( in: GE, time: GE = 0.1f ) : GE = krExp( in, time )
 }
 /**
- * A cascaded exponential lag UGen.
- * `Lag3.kr(in, time)` is equivalent to `Lag.kr(Lag.kr(Lag.kr(Lag.kr(in, time), time), time)`,
+ * A cascaded exponential lag
+ * UGen. `Lag3.kr(in, time)` is equivalent to `Lag.kr(Lag.kr(Lag.kr(Lag.kr(in, time), time), time)`,
  * thus resulting in a smoother transition. This saves on CPU as you only have to
  * calculate the decay factor once instead of three times.
  *
- * @param   in    input signal
+ * @param   in    input signal.
  * @param   time  60 dB lag time in seconds.  
  *
  * @see  [[de.sciss.synth.ugen.Lag]]
@@ -254,8 +254,8 @@ object Lag2UD extends UGen3Args {
       krExp( in, timeUp, timeDown )
 }
 /**
- * A cascaded exponential lag UGen with separate inputs for up and down slope.
- * `Lag2UD.kr(in, up, down)` is equivalent to `LagUD.kr(LagUD.kr(in, up, down), up, down)`,
+ * A cascaded exponential lag UGen with separate inputs for up and down
+ * slope. `Lag2UD.kr(in, up, down)` is equivalent to `LagUD.kr(LagUD.kr(in, up, down), up, down)`,
  * thus resulting in a smoother transition. This saves on CPU as you only have to
  * calculate the decay factors once instead of twice.
  *
@@ -277,8 +277,8 @@ object Lag3UD extends UGen3Args {
       krExp( in, timeUp, timeDown )
 }
 /**
- * A cascaded exponential lag UGen with separate inputs for up and down slope.
- * `Lag3UD.kr(in, up, down)` is equivalent to `LagUD.kr(LagUD.kr(LagUD.kr(in, up, down), up, down), up, down)`,
+ * A cascaded exponential lag UGen with separate inputs for up and down
+ * slope. `Lag3UD.kr(in, up, down)` is equivalent to `LagUD.kr(LagUD.kr(LagUD.kr(in, up, down), up, down), up, down)`,
  * thus resulting in a smoother transition. This saves on CPU as you only have to
  * calculate the decay factors once instead of three times.
  *

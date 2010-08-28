@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="01886865-ff38-4eb7-a79d-92e783f03245" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/FFT2.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/FFT2.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala" />
     </list>
     <ignored path=".idea/workspace.xml" />
@@ -70,8 +69,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="exception_breakpoints_groupByClasses" value="true" />
+      <property name="field_breakpoints_viewId" value="TABLE" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -80,7 +79,20 @@
   </component>
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="Filter.scala" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="513" column="29" selection-start="18442" selection-end="18442" vertical-scroll-proportion="0.8807947">
+              <folding>
+                <marker date="1283028009000" expanded="true" signature="9319:9986" placeholder="/**...*/" />
+                <marker date="1283028009000" expanded="true" signature="10350:11043" placeholder="/**...*/" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -148,8 +160,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
@@ -470,6 +480,40 @@
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="synth" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ugen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Filter.scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScalaCollider" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ScalaCollider" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -505,6 +549,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -520,9 +566,9 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -875,13 +921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="255" column="46" selection-start="9319" selection-end="9319" vertical-scroll-proportion="0.2821192">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="271" column="37" selection-start="16881" selection-end="16881" vertical-scroll-proportion="0.60264903">
@@ -907,6 +946,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="52" column="7" selection-start="1942" selection-end="1942" vertical-scroll-proportion="0.42384106">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Filter.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="513" column="29" selection-start="18442" selection-end="18442" vertical-scroll-proportion="0.8807947">
+          <folding>
+            <marker date="1283028009000" expanded="true" signature="9319:9986" placeholder="/**...*/" />
+            <marker date="1283028009000" expanded="true" signature="10350:11043" placeholder="/**...*/" />
+          </folding>
         </state>
       </provider>
     </entry>
