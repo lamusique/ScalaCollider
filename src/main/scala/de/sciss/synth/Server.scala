@@ -52,23 +52,36 @@ object Server {
    def defaultCmdPath = new File( System.getenv( "SC_HOME" ), "scsynth" ).getAbsolutePath
 
    @throws( classOf[ IOException ])
-   def boot: ServerConnection = boot()
+   def boot: ServerConnection = boot()()
 
    @throws( classOf[ IOException ])
    def boot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
-             clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : ServerConnection = {
+             clientOptions: ClientOptions = (new ClientOptionsBuilder).build )
+           ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
+      val sc = initBoot( name, options, clientOptions )
+      if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
+      sc.start
+      sc
+   }
+
+   private def initBoot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
+             clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) = {
       val (addr, c) = prepareConnection( options, clientOptions )
       new BootingImpl( name, c, addr, options, clientOptions, true )
    }
 
    @throws( classOf[ IOException ])
-   def connect: ServerConnection = connect()
+   def connect: ServerConnection = connect()()
 
    @throws( classOf[ IOException ])
    def connect( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
-                clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : ServerConnection = {
+                clientOptions: ClientOptions = (new ClientOptionsBuilder).build )
+              ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
       val (addr, c) = prepareConnection( options, clientOptions )
-      new ConnectionImpl( name, c, addr, options, clientOptions, true )
+      val sc = new ConnectionImpl( name, c, addr, options, clientOptions, true )
+      if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
+      sc.start
+      sc
    }
 
    def test( code: Server => Unit ) : Unit = test()( code )
@@ -79,18 +92,19 @@ object Server {
     *    hook is registered to make sure the server is destroyed when the VM exits.
     */
    def test( options: ServerOptions = (new ServerOptionsBuilder).build )( code: Server => Unit ) {
-      val b = boot( options = options )
+//      val b = boot( options = options )
       val sync = new AnyRef
       var s : Server = null
-      b.addListener {
+      val sc = initBoot( options = options )
+      sc.addListener {
          case ServerConnection.Running( srv ) => sync.synchronized { s = srv }; code( srv )
       }
       Runtime.getRuntime().addShutdownHook( new Thread { override def run = sync.synchronized {
          if( s != null ) {
             if( s.condition != Server.Offline ) s.quit
-         } else b.abort
+         } else sc.abort
       }})
-      b.start
+      sc.start
    }
 
    @throws( classOf[ IOException ])
@@ -167,7 +181,6 @@ object Server {
    // -------- internal class BootThread --------
 
    private object ConnectionImplLike {
-      case object Start
       case object Abort
       case object QueryServer
 //      case object Aborted
@@ -177,7 +190,7 @@ object Server {
       import ConnectionImplLike._
 
       val actor = new DaemonActor {
-          def act { react { case Start => {
+          def act {
              dispatch( ServerConnection.Connecting )
              loop {
                 if( connectionAlive ) {
@@ -229,7 +242,7 @@ object Server {
                    case Abort => reply ()
                 }}
              }
-          }}}
+          }
 
           private def abortHandler( server: Option[ Server ]) {
               handleAbort
@@ -245,7 +258,7 @@ object Server {
            }
        }
 
-      def start { actor ! Start }
+//      def start { actor ! Start }
       lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
       lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
 
@@ -262,7 +275,7 @@ object Server {
    extends ConnectionImplLike {
       import ConnectionImplLike._
 
-      actor.start
+      def start { actor.start }
 
       override def toString = "connect<" + name + ">"
 
@@ -279,7 +292,7 @@ object Server {
    extends ConnectionImplLike {
       import ConnectionImplLike._
 
-      val p = {
+      lazy val p = {
          val processArgs   = options.toRealtimeArgs
          val directory     = new File( options.programPath ).getParentFile
          val pb            = new ProcessBuilder( processArgs: _* )
@@ -287,19 +300,8 @@ object Server {
             .redirectErrorStream( true )
          pb.start    // throws IOException if command not found or not executable
       }
-      val inReader   = new BufferedReader( new InputStreamReader( p.getInputStream ))
-      val postActor  = new DaemonActor {
-         def act {
-            var isOpen = true
-            loopWhile( isOpen ) {
-               val line = inReader.readLine
-               isOpen = line != null
-               if( isOpen ) println( line )
-            }
-         }
-      }
 
-      val processThread = new Thread {
+      lazy val processThread = new Thread {
          override def run = try {
             p.waitFor()
          } catch { case e: InterruptedException =>
@@ -307,13 +309,27 @@ object Server {
          } finally {
             println( "scsynth terminated (" + p.exitValue +")" )
             actor ! ServerConnection.Aborted
-         }            
+         }
       }
 
-      // ...and go
-      postActor.start
-      processThread.start
-      actor.start
+      def start {
+         val inReader   = new BufferedReader( new InputStreamReader( p.getInputStream ))
+         val postActor  = new DaemonActor {
+            def act {
+               var isOpen = true
+               loopWhile( isOpen ) {
+                  val line = inReader.readLine
+                  isOpen = line != null
+                  if( isOpen ) println( line )
+               }
+            }
+         }
+
+         // ...and go
+         postActor.start
+         processThread.start
+         actor.start
+      }
 
       override def toString = "boot<" + name + ">"
 
@@ -343,7 +359,7 @@ object ServerConnection {
    case object Aborted extends Condition
 }
 trait ServerConnection extends ServerLike {
-   def start : Unit
+//   def start : Unit
    def server : Future[ Server ]
    def abort : Future[ Unit ]
 }

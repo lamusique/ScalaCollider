@@ -34,6 +34,8 @@ package de.sciss.synth
 object Rate {
    def highest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
    def highest( ge: GE ) : Rate = highest( ge.outputs.map( _.rate ): _* )
+   def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
+   def lowest( ge: GE ) : Rate = lowest( ge.outputs.map( _.rate ): _* )
 }
 
 /**

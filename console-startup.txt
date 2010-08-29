@@ -6,8 +6,7 @@ import de.sciss.synth.ugen._
 val so = new ServerOptionsBuilder()
 var s: Server = null
 def boot {
-   val booting = Server.boot( options = so.build )
-   booting.addListener {
+   Server.boot( options = so.build ) {
       case ServerConnection.Running( srv ) =>
          s = srv
          play( fadeTime = None ) {
@@ -20,5 +19,4 @@ def boot {
             sig
          }
    }
-   booting.start
 }

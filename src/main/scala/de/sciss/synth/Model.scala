@@ -39,10 +39,14 @@ import scala.collection.immutable.{ Queue }
  *    defined for the given message. Dispatching is
  *    synchronous, but exceptions are caught. 
  *
- *    @version 0.11, 23-May-10
+ *    @version 0.11, 29-Aug-10
  */
 object Model {
    type Listener = PartialFunction[ AnyRef, Unit ]
+   object EmptyListener extends Listener {
+      def isDefinedAt( v: AnyRef ) = false
+      def apply( v: AnyRef ) = throw new MatchError( v ) 
+   }
 }
 trait Model {
    import Model._
