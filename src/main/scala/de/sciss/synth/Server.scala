@@ -183,80 +183,134 @@ object Server {
    private object ConnectionImplLike {
       case object Abort
       case object QueryServer
+      case class AddListener( l: Model.Listener )
+      case class RemoveListener( l: Model.Listener )
 //      case object Aborted
    }
 
+   // XXX TODO : CLEAN UP THIS MESS
    private trait ConnectionImplLike extends ServerConnection {
       import ConnectionImplLike._
+      import ServerConnection.{ Running => SCRunning, _ }
 
       val actor = new DaemonActor {
-          def act {
-             dispatch( ServerConnection.Connecting )
-             loop {
-                if( connectionAlive ) {
-                   try {
-                      c.start
-                      c.action = (msg, addr, when) => this ! msg
-                      loop {
-                         c ! OSCServerNotifyMessage( true )
-                         reactWithin( 5000 ) {
-                            case TIMEOUT => // loop is retried
-                            case Abort => abortHandler( None )
-                            case OSCMessage( "/done", "/notify" ) => loop {
-                               c ! OSCStatusMessage
-                               reactWithin( 500 ) {
-                                  case TIMEOUT => // loop is retried
-                                  case Abort => abortHandler( None )
-                                  case counts: OSCStatusReplyMessage => {
-                                     val s = new Server( name, c, addr, options, clientOptions )
-                                     s.counts = counts
-                                     dispatch( ServerConnection.Preparing( s ))
-                                     s.initTree
-                                     dispatch( ServerConnection.Running( s ))
-                                     createAliveThread( s )
-                                     loop { react {
-                                        case QueryServer => reply( s )
-                                        case Abort => abortHandler( Some( s ))
-                                        case ServerConnection.Aborted => {
-                                           s.serverOffline
-                                           dispatch( ServerConnection.Aborted )
-                                           loop { react {
-                                              case Abort => reply ()
-                                              case QueryServer => reply( s )
-                                           }}
-                                        }
-                                     }}
-                                  }
-                               }
-                            }
-                         }
-                      }
-                   }
-                   catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
-                      reactWithin( 500 ) {
-                         case Abort => abortHandler( None )
-                         case TIMEOUT => // println( "---5")
-                      }
-                   }
-                } else loop { react {
-                   case Abort => reply ()
-                }}
-             }
-          }
+//         var state: Condition = Connecting
+         def act {
+//            dispatch( Connecting )
+            loop {
+               if( connectionAlive ) {
+                  try {
+                     c.start
+                     c.action = (msg, addr, when) => this ! msg
+                     var tnotify = 0L
+                     def snotify {
+                        tnotify = System.currentTimeMillis + 5000
+                        c ! OSCServerNotifyMessage( true )
+                     }
+                     snotify
+                     loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
+                        case TIMEOUT            => snotify // loop is retried
+                        case AddListener( l )   => actAddList( l )
+                        case RemoveListener( l )=> actRemoveList( l )
+                        case Abort              => abortHandler( None )
+                        case OSCMessage( "/done", "/notify" ) => {
+                           var tstatus = 0L
+                           def sstatus {
+                              tstatus = System.currentTimeMillis + 500
+                              c ! OSCStatusMessage
+                           }
+                           sstatus
+                           loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
+                              case TIMEOUT            => sstatus // loop is retried
+                              case AddListener( l )   => actAddList( l )
+                              case RemoveListener( l )=> actRemoveList( l )
+                              case Abort              => abortHandler( None )
+                              case counts: OSCStatusReplyMessage => {
+                                 val s = new Server( name, c, addr, options, clientOptions )
+                                 s.counts = counts
+                                 dispatch( Preparing( s ))
+                                 s.initTree
+                                 dispatch( SCRunning( s ))
+                                 createAliveThread( s )
+                                 loop { react {
+                                    case QueryServer        => reply( s )
+                                    case AddListener( l )   => actAddList( l ); actDispatch( l, SCRunning( s ))
+                                    case RemoveListener( l )=> actRemoveList( l )
+                                    case Abort              => abortHandler( Some( s ))
+                                    case ServerConnection.Aborted => {
+                                       s.serverOffline
+                                       dispatch( Aborted )
+                                       loop { react {
+                                          case AddListener( l )   => actAddList( l ); actDispatch( l, Aborted )
+                                          case RemoveListener( l )=> actRemoveList( l )
+                                          case Abort              => reply ()
+                                          case QueryServer        => reply( s )
+                                       }}
+                                    }
+                                 }}
+                              }
+                           }}
+                        }
+                     }}
+                  }
+                  catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
+                     val tretry  = System.currentTimeMillis + 500
+                     var looping = true
+                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
+                        case TIMEOUT            => looping = false
+                        case AddListener( l )   => actAddList( l )
+                        case RemoveListener( l )=> actRemoveList( l )
+                        case Abort              => abortHandler( None )
+                     }}
+                  }
+               } else loop { react {
+                  case Abort  => reply ()
+                  case _      =>
+               }}
+            }
+         }
 
-          private def abortHandler( server: Option[ Server ]) {
-              handleAbort
-              val from = sender
-              loop { react {
-                 case ServerConnection.Aborted => {
-                    server.foreach( _.serverOffline )
-                    dispatch( ServerConnection.Aborted )
-                    from ! ()
-                 }
-                 case _ =>
-              }}
-           }
-       }
+         private def abortHandler( server: Option[ Server ]) {
+            handleAbort
+            val from = sender
+            loop { react {
+               case ServerConnection.Aborted => {
+                  server.foreach( _.serverOffline )
+                  dispatch( ServerConnection.Aborted )
+                  from ! ()
+               }
+               case AddListener( l )   => actAddList( l )
+               case RemoveListener( l )=> actRemoveList( l )
+               case _                  => // XXX ?
+            }}
+         }
+      }
+
+      private def actDispatch( l: Model.Listener, change: AnyRef ) {
+         try {
+            if( l.isDefinedAt( change )) l( change )
+         } catch {
+            case e => e.printStackTrace() // catch, but print
+         }
+      }
+
+      private def actAddList( l: Model.Listener ) {
+         super.addListener( l )
+      }
+
+      private def actRemoveList( l: Model.Listener ) {
+         super.removeListener( l )
+      }
+
+      override def addListener( l: Model.Listener ) : Model.Listener = {
+         actor ! AddListener( l )
+         l
+      }
+
+      override def removeListener( l: Model.Listener ) : Model.Listener = {
+         actor ! RemoveListener( l )
+         l
+      }
 
 //      def start { actor ! Start }
       lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
@@ -353,7 +407,7 @@ trait ServerLike extends Model {
 
 object ServerConnection {
    sealed abstract class Condition
-   case object Connecting extends Condition
+//   case object Connecting extends Condition
    case class Preparing( server: Server ) extends Condition
    case class Running( server: Server ) extends Condition
    case object Aborted extends Condition
