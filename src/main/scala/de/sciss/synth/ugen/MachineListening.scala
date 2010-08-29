@@ -245,9 +245,12 @@ object SpecFlatness extends UGen1RArgs {
  * to approx 1 for white noise.
  *
  * The measure is calculated linearly. For some applications you may wish to convert the value to a decibel
- * scale.
+ * scale. '''Note''' that this UGen may output NaN when the input is zero (probably due to division by zero).
+ * In that case, `CheckBadValues` can be used to prevent further problems.
  *
  * @param   chain    the fft signal (buffer) to analyze
+ *
+ * @see  [[de.sciss.synth.ugen.CheckBadValues]]
  */
 case class SpecFlatness( chain: UGenIn ) extends SingleOutUGen( chain ) with ControlRated
 
@@ -279,6 +282,12 @@ object SpecCentroid extends UGen1RArgs {
  * the "centre of mass" of the spectrum. (DC is ignored.) This can be a useful indicator of the perceptual
  * brightness of a signal.
  *
+ * Note that the output frequency is pretty close to the correct value when feeding in a
+ * sine signal, but the estimate is usually too high when using for example filtered noise.
+ * In that case, you will get better results using `SpecPcile` at 50%.
+ *
  * @param   chain    the fft signal (buffer) to analyze
+ *
+ * @see  [[de.sciss.synth.ugen.SpecPcile]]
  */
 case class SpecCentroid( chain: UGenIn ) extends SingleOutUGen( chain ) with ControlRated

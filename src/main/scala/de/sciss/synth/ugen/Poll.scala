@@ -36,19 +36,13 @@ import SynthGraph._
  */
 object Poll {
    def ar( trig: GE, in: GE, label: String, trigID: GE = -1 ) : GE =
-      arExp( trig, in, label, trigID )
+      make( audio, trig, in, label, trigID )
 
    def kr( trig: GE, in: GE, label: String, trigID: GE = -1 ) : GE =
-      krExp( trig, in, label, trigID )
+      make( control, trig, in, label, trigID )
 
    private def make( rate: Rate, trig: GE, in: GE, label: String, trigID: GE ) : GE =
       for( Seq( t, i, d ) <- expand( trig, in, trigID )) yield this( rate, t, i, label, d )
-
-   private def krExp( trig: GE, in: GE, label: String, trigID: GE ) : GE =
-      make( control, trig, in, label, trigID )
-
-   private def arExp( trig: GE, in: GE, label: String, trigID: GE ) : GE =
-      make( audio, trig, in, label, trigID )
 }
 /**
  * A UGen for printing the current output value of its input to the console.

@@ -321,5 +321,6 @@ class ServerOptionsBuilder extends ServerOptionsLike {
                        val nrtSampleFormat: SampleFormat )
    extends ServerOptions {
       def toRealtimeArgs : List[ String ] = ServerOptionsBuilder.toRealtimeArgs( this )
+      override def toString = "ServerOptions"
    }
 }

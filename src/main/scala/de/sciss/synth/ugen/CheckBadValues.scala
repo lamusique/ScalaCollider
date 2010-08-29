@@ -38,5 +38,16 @@ object CheckBadValues extends UGen3Args {
    def kr( in: GE, id: GE = 0, post: GE = 2 ) : GE = krExp( in, id, post )
    def ir( in: GE, id: GE = 0, post: GE = 2 ) : GE = irExp( in, id, post )
 }
+/**
+ * A UGen to test for infinity, not-a-number (NaN), and denormals.
+ * Its output is as follows: 0 = a normal float, 1 = NaN, 2 = infinity, and 3 = a denormal.
+ * According to the post settings it will print the information to the console along
+ * with a given identifier.
+ *
+ * @param   in    the signal to be tested
+ * @param   id    an identifier showing up with the values in the console
+ * @param   post  One of three post modes: 0 = no posting; 1 = post a line for every bad value;
+ *    2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
+ */
 case class CheckBadValues( rate: Rate, in: UGenIn, id: UGenIn, post: UGenIn )
 extends SingleOutUGen( in, id, post ) with SideEffectUGen

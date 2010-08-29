@@ -28,8 +28,8 @@
 
 package de.sciss.synth.ugen
 
-import de.sciss.synth.{ control, ControlRated, GE, MultiOutUGen, Rate, SingleOutUGen, SynthGraph, UGenIn,
-                        ZeroOutUGen }
+import de.sciss.synth.{ audio, control, Constant => c, ControlRated, GE, MultiOutUGen, Rate,
+   SideEffectUGen, SingleOutUGen, SynthGraph, UGenIn, ZeroOutUGen }
 import SynthGraph._
 
 /**
@@ -57,25 +57,87 @@ case class Trig1( rate: Rate, in: UGenIn, dur: UGenIn )
 extends SingleOutUGen( in, dur )
 
 object Trig extends UGen2Args {
-  def ar( in: GE, dur: GE = 0.1f ) : GE = arExp( in, dur )
-  def kr( in: GE, dur: GE = 0.1f ) : GE = krExp( in, dur )
+   def ar( in: GE, dur: GE = 0.1f ) : GE = arExp( in, dur )
+   def kr( in: GE, dur: GE = 0.1f ) : GE = krExp( in, dur )
 }
 case class Trig( rate: Rate, in: UGenIn, dur: UGenIn )
 extends SingleOutUGen( in, dur )
 
-// XXX writeOutputSpecs?
 object SendTrig extends UGen3Args {
-  def ar( in: GE, id: GE = 0, value: GE = 0 ) : GE = arExp( in, id, value )
-  def kr( in: GE, id: GE = 0, value: GE = 0 ) : GE = krExp( in, id, value )
+   def ar( trig: GE, value: GE = 0, id: GE = 0 ) : GE = arExp( trig, value, id )
+   def kr( trig: GE, value: GE = 0, id: GE = 0 ) : GE = krExp( trig, value, id )
 }
-case class SendTrig( rate: Rate, in: UGenIn, id: UGenIn, value: UGenIn )
-extends ZeroOutUGen( in, id, value )
+/**
+ * A UGen that sends a value from the server to all notified clients upon receiving triggers.
+ * The message sent is `OSCMessage( "/tr", <(Int) nodeID>, <(Int) trigID>, <(Float) value> )`.
+ *
+ * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
+ *
+ * '''Warning''': We have changed the argument order. While in sclang, `id` precedes `value`,
+ * we are using them in reverse order here!
+ *
+ * @param   trig  the trigger signal causing the value to be read and sent. A trigger occurs
+ *    when passing from non-positive to positive.
+ * @param   value a changing signal or constant that will be polled at the time of trigger,
+ *	   and its value passed with the trigger message
+ * @param   id    an arbitrary integer that will be sent along with the `"/tr"` message.
+ *    This is useful to distinguish between several SendTrig instances per SynthDef.
+ *
+ * @see  [[de.sciss.synth.ugen.SendReply]]
+ */
+case class SendTrig( rate: Rate, trig: UGenIn, value: UGenIn, id: UGenIn )
+extends ZeroOutUGen( trig, id, value ) // warning: different order!
 
-// XXX SendReply
+object SendReply {
+   def ar( trig: GE, values: GE, msgName: String = "/reply", id: GE = 0 ) : GE =
+      make( audio, trig, values, msgName, id )
+
+   def kr( trig: GE, values: GE, msgName: String = "/reply", id: GE = 0 ) : GE =
+      make( control, trig, values, msgName, id )
+
+   private def make( rate: Rate, trig: GE, values: GE, msgName: String, id: GE ) : GE =
+      for( Seq( t, i, v @ _* ) <- expand( (trig +: id +: values.outputs): _* )) yield this( rate, t, v, msgName, i )
+}
+/**
+ * A UGen which sends an sequence of values from the server to all notified clients upon receiving triggers.
+ * The message sent is `OSCMessage( <(String) msgName>, <(Int) nodeID>, <(Int) replyID>, <(Float) values>* )`.
+ *
+ * For sending a single value, `SendTrig` provides an alternative.
+ *
+ * '''Warning''': We have changed the argument order. While in sclang, `name` precedes `values`,
+ * we are using them in reverse order here!
+ *
+ * '''Note''': ScalaCollider currently doesn't support multi-channel (un)bubbling, that
+ * is, you cannot create a multi-channel-expansion of the `values` argument. This may
+ * change in the future though, and we discourage from passing in a Seq of multi-channel
+ * values. It anyway complicates reasoning, and there is no problem for these rare cases
+ * to explicitly create multiple `SendReply` instances iteratively.
+ *
+ * Often you want the automatic flattening though. For
+ * instance `Pitch.kr( In.ar( NumOutputBuses.ir, 2 ))` produces in
+ * sclang `[[ Pitch-L-freq-proxy, Pitch-L-has-freq ], [ Pitch-R-freq-proxy, Pitch-R-has-freq ]]`, hence
+ * would result in two `SendReply` ugens being created, while in ScalaCollider
+ * you get `UGenInSeq( Pitch-L-freq-proxy, Pitch-L-has-freq, Pitch-R-freq-proxy, Pitch-R-has-freq )`
+ * resulting in a single instance of `SendReply` (sending those four values). 
+ *
+ * @param   trig     a non-positive to positive transition triggers a message
+ * @param   values   a graph element comprising the signal channels to be polled
+ * @param   msgName  a string specifying the OSCMessage's name. by convention, this should
+ *    start with  a forward slash and contain only 7-bit ascii characters.
+ * @param   id       an integer identifier which is contained in the reply message. While you can
+ *    distinguish different `SendReply` instances from the same Synth by choosing different
+ *    OSCMessage names, depending on the application you may use the same message name but
+ *    different ids (similar to SendTrig).
+ *
+ * @see  [[de.sciss.synth.ugen.SendTrig]]
+ */
+case class SendReply( rate: Rate, trig: UGenIn, values: Seq[ UGenIn ], msgName: String, id: UGenIn )
+extends ZeroOutUGen( (trig +: id +: c( msgName.length ) +:
+   (msgName.getBytes().map( c( _ )) ++ values)): _* ) with SideEffectUGen // warning: different order!
 
 object TDelay extends UGen2Args {
-  def ar( in: GE, dur: GE = 0.1f ) : GE = arExp( in, dur )
-  def kr( in: GE, dur: GE = 0.1f ) : GE = krExp( in, dur )
+   def ar( in: GE, dur: GE = 0.1f ) : GE = arExp( in, dur )
+   def kr( in: GE, dur: GE = 0.1f ) : GE = krExp( in, dur )
 }
 case class TDelay( rate: Rate, in: UGenIn, dur: UGenIn )
 extends SingleOutUGen( in, dur )
@@ -99,14 +161,22 @@ case class Latch( rate: Rate, in: UGenIn, trig: UGenIn )
 extends SingleOutUGen( in, trig )
 
 object Gate extends UGen2Args {
-  def ar( in: GE, trig: GE ) : GE = arExp( in, trig )
-  def kr( in: GE, trig: GE ) : GE = krExp( in, trig )
+  def ar( in: GE, gate: GE ) : GE = arExp( in, gate )
+  def kr( in: GE, gate: GE ) : GE = krExp( in, gate )
 }
 /**
+ * A gate or hold UGen.
+ * It allows the input signal value to pass when the `gate` argument is positive,
+ * otherwise it holds last value.
+ *
+ * @param   in    the input signal to gate
+ * @param   gate  the signal specifying whether to pass the input signal (when greater than zero) or
+ *    whether to close the gate and hold the last value (when less than or equal to zero)
+ * 
  * @see  [[de.sciss.synth.ugen.Latch]]
  */
-case class Gate( rate: Rate, in: UGenIn, trig: UGenIn )
-extends SingleOutUGen( in, trig )
+case class Gate( rate: Rate, in: UGenIn, gate: UGenIn )
+extends SingleOutUGen( in, gate )
 
 object PulseCount extends UGen2Args {
   def ar( trig: GE, reset: GE = 0 ) : GE = arExp( trig, reset )

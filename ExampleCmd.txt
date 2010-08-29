@@ -411,7 +411,7 @@ x.set("trig" -> 1, "freq" -> 880)
 // waiting for SendTrig replies
 
 val x = {
-    SendTrig.kr( MouseButton.kr( lag = 0 ), 0, MouseX.kr( lag = 0 ))
+    SendTrig.kr( MouseButton.kr( lag = 0 ), MouseX.kr( lag = 0 )) // warning: different arg order!
 }.play
 val r = OSCResponder.add {
     case OSCMessage( "/tr", x.id, _, mouseX ) => println( "Dang! " + mouseX )

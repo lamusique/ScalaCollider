@@ -49,5 +49,7 @@ class ClientOptionsBuilder extends ClientOptionsLike {
    def build : ClientOptions = new Impl( clientID, nodeIDOffset, addr )
 
    private class Impl( val clientID: Int, val nodeIDOffset: Int, val addr: Option[ InetSocketAddress ])
-   extends ClientOptions
+   extends ClientOptions {
+      override def toString = "ClientOptions"
+   }
 }
