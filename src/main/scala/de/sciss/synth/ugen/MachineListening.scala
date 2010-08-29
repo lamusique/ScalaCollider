@@ -163,8 +163,7 @@ extends SingleOutUGen( chain, keyDecay, chromaLeak ) with ControlRated
 
 object MFCC {
    // why the fuck is numCoeffs a ugen input?!
-   def kr( chain: GE, numCoeffs: Int = 13 ) : GE =
-      simplify( for( List( c ) <- expand( chain )) yield this( c, numCoeffs ))
+   def kr( chain: GE, numCoeffs: Int = 13 ) : GE = for( Seq( c ) <- expand( chain )) yield this( c, numCoeffs )
 }
 /**
  * A UGen for extracting mel frequency cepstral coefficients.

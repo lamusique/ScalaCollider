@@ -291,8 +291,7 @@ object Select {
    def kr( index: GE, multi: GE ) : GE = make( control, index, multi )
 
    private def make( rate: Rate, index: GE, multi: GE ) : GE =
-      simplify( for( List( i, m @ _* ) <- expand( (index +: multi.outputs): _* ))
-                yield this( rate, i, m ))
+      for( Seq( i, m @ _* ) <- expand( (index +: multi.outputs): _* )) yield this( rate, i, m )
 }
 /**
  * A UGen which selects among a sequence of inputs, according to an index signal.
@@ -310,26 +309,16 @@ object Select {
 case class Select( rate: Rate, index: UGenIn, multi: Seq[ UGenIn ])
 extends SingleOutUGen( (index +: multi): _* )
 
-object Vibrato {
+object Vibrato extends UGen8Args {
    def ar : GE = ar()
    def ar( freq: GE = 440, beat: GE = 6, depth: GE = 0.02f, delay: GE = 0, onset: GE = 0,
            rateVar: GE = 0.04f, depthVar: GE = 0.1f, iphase: GE = 0 ) : GE =
-      make( audio, freq, beat, depth, delay, onset, rateVar, depthVar, iphase )
+      arExp( freq, beat, depth, delay, onset, rateVar, depthVar, iphase )
 
    def kr : GE = kr()
    def kr( freq: GE = 440, beat: GE = 6, depth: GE = 0.02f, delay: GE = 0, onset: GE = 0,
            rateVar: GE = 0.04f, depthVar: GE = 0.1f, iphase: GE = 0 ) : GE =
-      make( control, freq, beat, depth, delay, onset, rateVar, depthVar, iphase )
-
-   // note: 'rate' argument already taken, using 'beat' instead
-   private def make( rate: Rate, freq: GE = 440, beat: GE = 6, depth: GE = 0.02f,
-                     delay: GE = 0, onset: GE = 0, rateVar: GE = 0.04f,
-                     depthVar: GE = 0.1f, iphase: GE = 0 ) : GE = {
-
-      simplify( for( List( f, b, d, dly, o, rv, dv, p ) <-
-            expand( freq, beat, depth, delay, onset, rateVar, depthVar, iphase ))
-         yield this( rate, f, b, d, dly, o, rv, dv, p ))
-   }
+      krExp( freq, beat, depth, delay, onset, rateVar, depthVar, iphase )
 }
 case class Vibrato( rate: Rate, freq: UGenIn, beat: UGenIn, depth: UGenIn,
                     delay: UGenIn, onset: UGenIn, rateVar: UGenIn,

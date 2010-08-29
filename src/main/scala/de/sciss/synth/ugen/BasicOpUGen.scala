@@ -41,7 +41,7 @@ object MulAdd extends UGen3Args {
    def ir( in: GE, mul: GE, add: GE ) : GE = irExp( in, mul, add )
 
    protected[synth] def make( in: GE, mul: GE, add: GE ) : GE = {
-      simplify( for( List( i, m, a ) <- expand( in, mul, add )) yield make1( i, m, a ))
+      for( Seq( i, m, a ) <- expand( in, mul, add )) yield make1( i, m, a )
    }
 
    private def make1( in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
@@ -222,7 +222,7 @@ object UnaryOpUGen {
    }
 
    protected[synth] def make( selector: Op, a: GE ) : GE = {
-      simplify( for( List( ai ) <- expand( a )) yield selector.make1( ai ))
+      for( Seq( ai ) <- expand( a )) yield selector.make1( ai )
    }
 }
 
@@ -434,7 +434,7 @@ object BinaryOpUGen {
 // case object ExpRRand       extends Op( 48 )
 
    protected[synth] def make( selector: Op, a: GE, b: GE ) : GE = {
-      simplify( for( List( ai, bi ) <- expand( a, b )) yield selector.make1( ai, bi ))
+      for( Seq( ai, bi ) <- expand( a, b )) yield selector.make1( ai, bi )
    }
 
 /*

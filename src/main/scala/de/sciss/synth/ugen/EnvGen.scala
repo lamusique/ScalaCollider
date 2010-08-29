@@ -114,14 +114,16 @@ extends SingleOutUGen( trig, nodeID ) with ControlRated with SideEffectUGen
 object EnvGen {
    def ar( envelope: Env, gate: GE = 1, levelScale: GE = 1, levelBias: GE = 0,
            timeScale: GE = 1, doneAction: GE = doNothing ) : GE = {
-      val exp = expand( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envelope.toSeq): _* )
-      simplify( for( List( g, ls, lb, t, d, e @ _* ) <- exp) yield this( audio, g, ls, lb, t, d, e ))
+      for( Seq( g, ls, lb, t, d, e @ _* ) <-
+         expand( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envelope.toSeq): _* ))
+            yield this( audio, g, ls, lb, t, d, e )
    }
   
    def kr( envelope: Env, gate: GE = 1, levelScale: GE = 1, levelBias: GE = 0,
            timeScale: GE = 1, doneAction: GE = doNothing ) : GE = {
-      val exp = expand( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envelope.toSeq): _* )
-      simplify( for( List( g, ls, lb, t, d, e @ _* ) <- exp) yield this( control, g, ls, lb, t, d, e ))
+      for( Seq( g, ls, lb, t, d, e @ _* ) <-
+         expand( (gate +: levelScale +: levelBias +: timeScale +: doneAction +: envelope.toSeq): _* ))
+            yield this( control, g, ls, lb, t, d, e )
    }
 }
 
@@ -132,13 +134,11 @@ with SideEffectUGen  // side-effect: done action
 
 object IEnvGen {
    def ar( envelope: IEnv, index: GE ) : GE = {
-      val exp = expand( (index +: envelope.toSeq): _* )
-      simplify( for( List( i, e @ _* ) <- exp) yield this( audio, i, e ))
+      for( Seq( i, e @ _* ) <- expand( (index +: envelope.toSeq): _* )) yield this( audio, i, e )
    }
 
    def kr( envelope: IEnv, index: GE ) : GE = {
-      val exp = expand( (index +: envelope.toSeq): _* )
-      simplify( for( List( i, e @ _* ) <- exp) yield this( control, i, e ))
+      for( Seq( i, e @ _* ) <- expand( (index +: envelope.toSeq): _* )) yield this( control, i, e )
    }
 }
 

@@ -31,7 +31,7 @@ package de.sciss.synth.ugen
 import de.sciss.synth.{ AudioRated, GE, SingleOutUGen, UGenIn }
 
 object BLowPass extends UGen3RArgs {
-   def ar( in: GE, freq: GE = 1200, rq: GE = 1 ) : GE =
+   def ar( in: GE, freq: GE = 440, rq: GE = 1 ) : GE =
       make( in, freq, rq )
 }
 /**
@@ -51,7 +51,7 @@ case class BLowPass( in: UGenIn, freq: UGenIn, rq: UGenIn )
 extends SingleOutUGen( in, freq, rq ) with AudioRated
 
 object BHiPass extends UGen3RArgs {
-   def ar( in: GE, freq: GE = 1200, rq: GE = 1 ) : GE =
+   def ar( in: GE, freq: GE = 440, rq: GE = 1 ) : GE =
       make( in, freq, rq )
 }
 /**
@@ -71,7 +71,7 @@ case class BHiPass( in: UGenIn, freq: UGenIn, rq: UGenIn )
 extends SingleOutUGen( in, freq, rq ) with AudioRated
 
 object BAllPass extends UGen3RArgs {
-   def ar( in: GE, freq: GE = 1200, rq: GE = 1 ) : GE =
+   def ar( in: GE, freq: GE = 440, rq: GE = 1 ) : GE =
       make( in, freq, rq )
 }
 /**
@@ -91,7 +91,7 @@ case class BAllPass( in: UGenIn, freq: UGenIn, rq: UGenIn )
 extends SingleOutUGen( in, freq, rq ) with AudioRated
 
 object BBandPass extends UGen3RArgs {
-   def ar( in: GE, freq: GE = 1200, bw: GE = 1 ) : GE =
+   def ar( in: GE, freq: GE = 440, bw: GE = 1 ) : GE =
       make( in, freq, bw )
 }
 /**
@@ -111,7 +111,7 @@ case class BBandPass( in: UGenIn, freq: UGenIn, bw: UGenIn )
 extends SingleOutUGen( in, freq, bw ) with AudioRated
 
 object BBandStop extends UGen3RArgs {
-   def ar( in: GE, freq: GE = 1200, bw: GE = 1 ) : GE =
+   def ar( in: GE, freq: GE = 440, bw: GE = 1 ) : GE =
       make( in, freq, bw )
 }
 /**
@@ -131,7 +131,7 @@ case class BBandStop( in: UGenIn, freq: UGenIn, bw: UGenIn )
 extends SingleOutUGen( in, freq, bw ) with AudioRated
 
 object BPeakEQ extends UGen4RArgs {
-   def ar( in: GE, freq: GE = 1200, rq: GE = 1, gain: GE = 0 ) : GE =
+   def ar( in: GE, freq: GE = 440, rq: GE = 1, gain: GE = 0 ) : GE =
       make( in, freq, rq, gain )
 }
 /**
@@ -152,7 +152,7 @@ case class BPeakEQ( in: UGenIn, freq: UGenIn, rq: UGenIn, gain: UGenIn )
 extends SingleOutUGen( in, freq, rq, gain ) with AudioRated
 
 object BLowShelf extends UGen4RArgs {
-   def ar( in: GE, freq: GE = 1200, rs: GE = 1, gain: GE = 0 ) : GE =
+   def ar( in: GE, freq: GE = 440, rs: GE = 1, gain: GE = 0 ) : GE =
       make( in, freq, rs, gain )
 }
 /**
@@ -176,7 +176,7 @@ case class BLowShelf( in: UGenIn, freq: UGenIn, rs: UGenIn, gain: UGenIn )
 extends SingleOutUGen( in, freq, rs, gain ) with AudioRated
 
 object BHiShelf extends UGen4RArgs {
-   def ar( in: GE, freq: GE = 1200, rs: GE = 1, gain: GE = 0 ) : GE =
+   def ar( in: GE, freq: GE = 440, rs: GE = 1, gain: GE = 0 ) : GE =
       make( in, freq, rs, gain )
 }
 /**

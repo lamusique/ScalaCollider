@@ -30,7 +30,7 @@ package de.sciss.synth
 
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{ BinaryOpUGen, LinExp, LinLin, MulAdd, Poll, UnaryOpUGen }
+import ugen.{ BinaryOpUGen, Impulse, LinExp, LinLin, MulAdd, Poll, UnaryOpUGen }
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -42,6 +42,8 @@ import ugen.{ BinaryOpUGen, LinExp, LinLin, MulAdd, Poll, UnaryOpUGen }
  *    @version 0.11, 26-Aug-10
  */
 trait GE {
+   ge =>
+
    /**
     * Decomposes the graph element into its distinct outputs. For a single-output UGen
     * or a Constant,  this will just return that UGen or Constant (wrapped in a Vector),
@@ -68,30 +70,50 @@ trait GE {
       }
    }
 
-   def poll( trig: GE, label: String, trigID: GE = -1 ) : GE = {
+   def poll: GE = poll()
+
+   /**
+    * Polls the output values of this graph element, and prints the result to the console.
+    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
+    *
+    * @param   trig     a signal to trigger the printing. If this is a constant, it is
+    *    interpreted as a frequency value and an `Impulse` generator of that frequency
+    *    is used instead.
+    * @param   label    a string to print along with the values, in order to identify
+    *    different polls. Using the special label `"#auto"` (default) will generated
+    *    automatic useful labels using information from the polled graph element
+    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
+    *    (similar to `SendTrig`)
+    *
+    * @see  [[de.sciss.synth.ugen.Poll]]
+    */
+   def poll( trig: GE = 10, label: String = "#auto", trigID: GE = -1 ) : GE = {
       import SynthGraph._
 
-      val inputs  = this.outputs
-      val numIns  = inputs.size
-      val trigs   = trig.outputs
-      val ids     = trigID.outputs
-      val labels  = if( label != null ) {
-         Vector.fill( numIns )( label )
-      } else {
-         val multi = numIns > 1
-         inputs.zipWithIndex.map( tup => {
-            val (in, ch) = tup
-            (if( multi ) ch.toString + " -> " else "") + (in match {
-               case p: UGenProxy => if( p.source.numOutputs > 1 ) "(" + p.outputIndex + ")" else ""
-               case x            => x.toString
-            })
-         })
+      val trig0 = trig match {
+         case Constant( freq ) => {
+            val res: GE = outputs.map( in => Impulse( in.rate match {
+               case `scalar`  => control
+               case _         => in.rate
+            }, freq, 0 ))
+            res
+         }
+         case _ => trig
       }
-      val numExp = math.max( numIns, math.max( trigs.size, math.max( labels.size, ids.size )))
-      seq( (0 until numExp).flatMap[ UGenIn, IIdxSeq[ UGenIn ]]( ch => (inputs( ch ).rate match {
-         case `audio` => Poll.ar( trigs( ch ), inputs( ch ), labels( ch ), ids( ch ))
-         case _ =>       Poll.kr( trigs( ch ), inputs( ch ), labels( ch ), ids( ch ))
-      }).outputs )( breakOut ))
+      val labels: IIdxSeq[ String ] = if( label == "#auto" ) {
+         ge match {
+            case seq: UGenInSeq => outputs.zipWithIndex.map( tup => "#" + tup._2 + " " + tup._1.displayName )
+            case _ => outputs.map( _.displayName )
+         }
+      } else {
+         if( numOutputs == 1 ) Vector( label ) else Vector.tabulate( numOutputs )( "#" + _ + " " + label )
+      }
+
+      for( (Seq( t, g, i ), ch) <- expand( trig0, ge, trigID ).zipWithIndex )
+         yield Poll( g.rate match {
+               case `audio`   => audio
+               case _         => g.rate
+            }, t, g, labels( ch ), i )
    }
 
    import UnaryOpUGen._

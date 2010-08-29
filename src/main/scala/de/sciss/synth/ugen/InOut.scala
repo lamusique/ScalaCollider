@@ -41,7 +41,7 @@ object In {
    def ir( bus: GE, numChannels: Int = 1 ) : GE = make( scalar,  bus, numChannels )
 
    protected def make( rate: Rate, bus: GE, numChannels: Int ) : GE = {
-      simplify( for( List( b ) <- expand( bus )) yield this( rate, b, numChannels ))
+      for( Seq( b ) <- expand( bus )) yield this( rate, b, numChannels )
    }
 }
 case class In( rate: Rate, bus: UGenIn, numChannels: Int )
@@ -58,8 +58,7 @@ with SideEffectUGen // XXX not sure we need this really
 
 object LagIn {
    def kr( bus: GE, numChannels: Int = 1, lag: GE = 0.1f ) : GE = {
-      simplify( for( List( b, l ) <- expand( bus, lag ))
-         yield this( control, b, numChannels, l ))
+      for( Seq( b, l ) <- expand( bus, lag )) yield this( control, b, numChannels, l )
    }
 }
 case class LagIn( rate: Rate, bus: UGenIn, numChannels: Int, lag: UGenIn )
@@ -68,7 +67,7 @@ extends MultiOutUGen( rate, numChannels, bus, lag )
 
 object InFeedback {
   def ar( bus: GE, numChannels: Int = 1 ) : GE = {
-    simplify( for( List( b ) <- expand( bus )) yield this( b, numChannels ))
+    for( Seq( b ) <- expand( bus )) yield this( b, numChannels )
   }
 }
 /**
@@ -106,7 +105,7 @@ with AudioRated // with SideEffectUGen
 
 object InTrig {
    def kr( bus: GE, numChannels: Int = 1 ) : GE = {
-      simplify( for( List( b ) <- expand( bus )) yield this( b, numChannels ))
+      for( Seq( b ) <- expand( bus )) yield this( b, numChannels )
    }
 }
 
@@ -136,8 +135,7 @@ abstract class AbstractOut {
 
    protected def make( rate: Rate, bus: GE, multi: GE ) : GE = {
       val args = bus +: replaceZeroesWithSilence( multi ).outputs
-      simplify( for( b :: m <- expand( args: _* ))
-         yield this( rate, b, m, SynthGraph.individuate ))
+      for( Seq( b, m @ _* ) <- expand( args: _* )) yield this( rate, b, m, individuate )
    }
 
    def apply( rate: Rate, bus: UGenIn, multi: Seq[ UGenIn ], _indiv: Int ) : UGen
@@ -156,8 +154,7 @@ extends ZeroOutUGen( (bus +: multi): _* )
 object OffsetOut {
    def ar( bus: GE, multi: GE ) : GE = {
       val args = bus +: replaceZeroesWithSilence( multi ).outputs
-      simplify( for( b :: m <- expand( args: _* ))
-         yield this( b, m, SynthGraph.individuate ))
+      for( Seq( b, m @ _* ) <- expand( args: _* )) yield this( b, m, individuate )
    }
 }
 case class OffsetOut( bus: UGenIn, multi: Seq[ UGenIn ], _indiv: Int )
@@ -181,8 +178,7 @@ object XOut {
 
    private def make( rate: Rate, bus: GE, xfade: GE, multi: GE ) : GE = {
       val args = bus +: xfade +: replaceZeroesWithSilence( multi ).outputs
-      simplify( for( b :: x :: m <- expand( args: _* ))
-         yield this( rate, b, x, m, SynthGraph.individuate ))
+      for( Seq( b, x, m @ _* ) <- expand( args: _* )) yield this( rate, b, x, m, individuate )
    }
 }
 case class XOut( rate: Rate, bus: UGenIn, xfade: UGenIn, multi: Seq[ UGenIn ], _indiv: Int )

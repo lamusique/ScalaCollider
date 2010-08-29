@@ -56,6 +56,7 @@ case class Constant( value: Float ) extends UGenIn with ScalarRated {
    import Constant._
    
    override def toString = value.toString
+   def displayName = value.toString
 
    override private[synth] def ops = new ConstantOps( this )
 
@@ -118,7 +119,8 @@ abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenIn
  */
 case class UGenOutProxy( source: UGen, outputIndex: Int, rate: Rate )
 extends UGenIn with UGenProxy {
-   override def toString = "(" + source + " \\ " + outputIndex + ")"
+   override def toString = source.toString + ".\\(" + outputIndex + ")"
+   def displayName = source.displayName + " \\ " + outputIndex
 }
 
 /**
@@ -132,5 +134,6 @@ extends UGenIn with UGenProxy {
  */
 case class ControlOutProxy( source: ControlProxyLike[ _ ], outputIndex: Int, rate: Rate )
 extends UGenIn {
-   override def toString = "(" + source + " \\ " + outputIndex + ")"
+   override def toString = source.toString + ".\\(" + outputIndex + ")"
+   def displayName = source.displayName + " \\ " + outputIndex 
 }

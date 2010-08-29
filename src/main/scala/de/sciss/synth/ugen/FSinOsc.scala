@@ -59,8 +59,8 @@ case class KlangSpec( freq: GE, amp: GE = 1, decay: GE = 0 ) {
 
 object Klang {
    def ar( specs: Seq[ KlangSpec ], freqScale: GE = 1, freqOffset: GE = 0 ) : GE = {
-      val exp = expand( (freqScale +: freqOffset +: specs.flatMap( _.toSeq )): _* )
-      simplify( for( List( fs, fo, sp @ _* ) <- exp) yield this( audio, fs, fo, sp ))
+      for( Seq( fs, fo, sp @ _* ) <- expand( (freqScale +: freqOffset +: specs.flatMap( _.toSeq )): _* ))
+         yield this( audio, fs, fo, sp )
    }
 }
 case class Klang( rate: Rate, freqScale: UGenIn, freqOffset: UGenIn, specs: Seq[ UGenIn ])
@@ -69,9 +69,10 @@ extends SingleOutUGen( (freqScale +: freqOffset +: specs): _* )
 object Klank {
    def ar( specs: Seq[ KlangSpec ], in: GE, freqScale: GE = 1, freqOffset: GE = 0,
            decayScale: GE = 1 ) : GE = {
-      val exp = expand( (in +: freqScale +: freqOffset +: decayScale +: specs.flatMap( _.toSeq )): _* )
-      simplify( for( List( i, fs, fo, ds, sp @ _* ) <- exp) yield this( audio, i, fs, fo, ds, sp ))
-  }
+      for( Seq( i, fs, fo, ds, sp @ _* ) <-
+         expand( (in +: freqScale +: freqOffset +: decayScale +: specs.flatMap( _.toSeq )): _* ))
+            yield this( audio, i, fs, fo, ds, sp )
+   }
 }
 case class Klank( rate: Rate, in: UGenIn, freqScale: UGenIn, freqOffset: UGenIn,
                   decayScale: UGenIn, specs: Seq[ UGenIn ])

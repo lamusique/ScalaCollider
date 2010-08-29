@@ -228,20 +228,15 @@ object PeakFollower extends UGen2Args {
 case class PeakFollower( rate: Rate, in: UGenIn, decay: UGenIn )
 extends SingleOutUGen( in, decay )
 
-object Pitch {
-  def kr( in: GE, initFreq: GE = 440, minFreq: GE = 60, maxFreq: GE = 4000,
-			execFreq: GE = 100, binsPerOct: GE = 16, median: GE = 1,
-			ampThresh: GE = 0.01f, peakThresh: GE = 0.5f, downSample: GE = 1 ) : GE = {
-
-    simplify( for( List( i, inf, mif, maf, exf, b, m, a, p, d ) <-
-                   expand( in, initFreq, minFreq, maxFreq, execFreq, binsPerOct,
-                           median, ampThresh, peakThresh, downSample ))
-      yield this( i, inf, mif, maf, exf, b, m, a, p, d ))
-  }
+object Pitch extends UGen10RArgs {
+   def kr( in: GE, initFreq: GE = 440, minFreq: GE = 60, maxFreq: GE = 4000,
+			  execFreq: GE = 100, binsPerOct: GE = 16, median: GE = 1,
+			  ampThresh: GE = 0.01f, peakThresh: GE = 0.5f, downSample: GE = 1 ) : GE =
+      make( in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample )
 }
 case class Pitch( in: UGenIn, initFreq: UGenIn, minFreq: UGenIn, maxFreq: UGenIn,
-			execFreq: UGenIn, binsPerOct: UGenIn, median: UGenIn,
-			ampThresh: UGenIn, peakThresh: UGenIn, downSample: UGenIn )
+			         execFreq: UGenIn, binsPerOct: UGenIn, median: UGenIn,
+			         ampThresh: UGenIn, peakThresh: UGenIn, downSample: UGenIn )
 extends MultiOutUGen( control, 2, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh,
                       peakThresh, downSample )
 with ControlRated

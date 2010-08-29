@@ -43,8 +43,7 @@ object Demand {
 
    private def make( rate: Rate, trig: GE, multi: GE, reset: GE ) : GE = {
       val args = trig +: reset +: multi.outputs
-      simplify( for( t :: r :: m <- expand( args: _* ))
-         yield this( rate, t, m.toIndexedSeq, r ))  // careful!
+      for( Seq( t, r, m @ _* ) <- expand( args: _* )) yield this( rate, t, m.toIndexedSeq, r )  // careful!
    }
 }
 
@@ -265,7 +264,7 @@ trait AbstractSeqDemand {
       // be ware careful here with the fucked up argument order of
       // constructor versus underlying ugen!
       val args = repeats +: seq.outputs
-      simplify( for( r :: s <- expand( args: _* )) yield this( s, r, individuate ))
+      for( Seq( r, s @ _* ) <- expand( args: _* )) yield this( s, r, individuate )
    }
 }
 
@@ -299,7 +298,12 @@ object Dswitch1 {
       // be ware careful here with the fucked up argument order of
       // constructor versus underlying ugen!
       val args = index +: seq.outputs
-      simplify( for( i :: s <- expand( args: _* )) yield this( s, i, individuate ))
+      // note: performance measurement 28-aug-10: both
+      //    for( a :: b :: c :: Nil <- expand( ... ))  ...
+      // and
+      //    for( List( a, b, c ) <- expand( ... )) ...
+      // are equally fast
+      for( Seq( i, s @ _* ) <- expand( args: _* )) yield this( s, i, individuate )
    }
 }
 case class Dswitch1( seq: Seq[ UGenIn ], index: UGenIn, _indiv: Int )
@@ -312,7 +316,7 @@ object Dswitch {
       // be ware careful here with the fucked up argument order of
       // constructor versus underlying ugen!
       val args = index +: seq.outputs
-      simplify( for( i :: s <- expand( args: _* )) yield this( s, i, individuate ))
+      for( Seq( i, s @ _* ) <- expand( args: _* )) yield this( s, i, individuate )
    }
 }
 case class Dswitch( seq: Seq[ UGenIn ], index: UGenIn, _indiv: Int )

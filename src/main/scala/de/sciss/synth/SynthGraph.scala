@@ -86,9 +86,9 @@ case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Floa
 }
 
 object SynthGraph {
-   def seq( elements: IIdxSeq[ UGenIn ]) : GE = {
-      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
-   }
+//   def seq( elements: IIdxSeq[ UGenIn ]) : GE = {
+//      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
+//   }
 
    def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) =
       SynthGraph {
@@ -112,64 +112,48 @@ object SynthGraph {
       // this is slightly more costly than what sclang does
       // (using non-linear shape plus an extra unary op),
       // but it fadeout is much smoother this way...
-		EnvGen.kr( Env( startVal, List( EnvSeg( 1, 1, curveShape( -4 )), EnvSeg( 1, 0, sinShape )), 1 ),
+		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
          gate, timeScale = dt, doneAction = freeSelf ).squared
 	}
 
-   def expand( args: GE* ): Seq[ List[ UGenIn ]] = {
-      var chanExp = 0
-      var allOne  = true
-      var hasZero = false
-      for( arg <- args ) {
-         chanExp = math.max( chanExp, arg.numOutputs ) // shitty implicits don't work properly
-         allOne  = allOne && (arg.numOutputs == 1)
-         hasZero = hasZero || (arg.numOutputs == 0)
+   def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
+      val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
+         val (min, max) = tup
+         val numOuts    = arg.numOutputs
+         (if( numOuts < min ) numOuts else min, if( numOuts > max) numOuts else max)
       }
-//    println( "chanExp " + chanExp + "; allOne " + allOne + "; hasZero " + hasZero )
-      if( allOne ) {
-         List( args.toList.flatMap( _.outputs.toList ))
-      } else if( hasZero ) {
+      if( (min == 1) && (max == 1) ) {
+         args.flatMap( _.outputs.toList ) :: Nil
+      } else if( min == 0 ) {
          Nil	// cannot wrap zero size seq
       } else {
-         val exp = args.toList.map( _.outputs.toArray )
-         val test1 = exp.toList
-//         val res = for( ch <- 0 until chanExp ) yield exp.map( (arr) => arr.apply( ch % arr.size ))
-         val res = for( ch <- 0 until chanExp ) yield {
-            exp.map(
-               (arr) => {
-                  val res = arr.apply( ch % arr.size )
-                  res
-               }
-            )
-         }
-         res
+         for( ch <- 0 until max ) yield args.map( arg => arg \ (ch % arg.numOutputs) )
       }
    }
 
-   def simplify( res: Seq[ GE ]) : GE = { // UGenIn
-//    println( "simplify : " + res )
-      if( res.size == 1 ) {
-         res.head
-      } else {
-         seqOfGEToGE( res )
-      }
-   }
+//   def simplify( res: Seq[ GE ]) : GE = { // UGenIn
+////    println( "simplify : " + res )
+//      if( res.size == 1 ) {
+//         res.head
+//      } else {
+//         seqOfGEToGE( res )
+//      }
+//   }
 
    def replaceZeroesWithSilence( ge: GE ) : GE = {
-      val ins = ge.outputs
-      val numZeroes = ins.foldLeft( 0 )( (sum, in) => in match {
-         case Constant( 0 ) => sum + 1
-         case _ => sum
+      val ins        = ge.outputs
+      val numZeroes  = ins.foldLeft( 0 )( (sum, in) => in match {
+         case Constant( 0 )   => sum + 1
+         case _               => sum
       })
       if( numZeroes == 0 ) {
          ge
       } else {
          val silent = Silent.ar( numZeroes ).outputs.iterator
-         val res = ins map (in => in match {
-            case Constant( 0 ) => silent.next
-            case _ => in
+         ins map (in => in match {
+            case Constant( 0 )   => silent.next
+            case _               => in
          })
-         simplify( res )
       }
    }
 

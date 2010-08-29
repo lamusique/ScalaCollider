@@ -35,8 +35,8 @@ import SynthGraph._
  * 	@version	0.12, 16-Apr-10
  */
 object DiskOut {
-  def ar( buf: GE, multi: GE ) : GE =
-    simplify( for( List( b, m @ _* ) <- expand( (buf +: multi.outputs): _* )) yield this( b, m ))
+   def ar( buf: GE, multi: GE ) : GE =
+      for( Seq( b, m @ _* ) <- expand( (buf +: multi.outputs): _* )) yield this( b, m )
 }
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
@@ -56,18 +56,17 @@ case class DiskOut( buf: UGenIn, multi: Seq[ UGenIn ])
 extends SingleOutUGen( (buf +: multi): _* ) with AudioRated with SideEffectUGen
 
 object DiskIn {
-  def ar( numChannels: Int, buf: GE, loop: GE = 0 ) =
-    simplify( for( List( b, l ) <- expand( buf, loop ))
-      yield this( numChannels, b, l ))
+   def ar( numChannels: Int, buf: GE, loop: GE = 0 ) =
+      for( Seq( b, l ) <- expand( buf, loop )) yield this( numChannels, b, l )
 }
 case class DiskIn( numChannels: Int, buf: UGenIn, loop: UGenIn )
 extends MultiOutUGen( audio, numChannels, buf, loop ) with AudioRated with SideEffectUGen // side-effect: advancing sf offset
 
 object VDiskIn {
-  // note: argument 'rate' renamed to 'speed'
-  def ar( numChannels: Int, buf: GE, speed: GE = 1, loop: GE = 0, sendID: GE = 0 ) =
-    simplify( for( List( b, s, l, i ) <- expand( buf, speed, loop, sendID ))
-      yield this( numChannels, b, s, l, i ))
+   // note: argument 'rate' renamed to 'speed'
+   def ar( numChannels: Int, buf: GE, speed: GE = 1, loop: GE = 0, sendID: GE = 0 ) =
+      for( Seq( b, s, l, i ) <- expand( buf, speed, loop, sendID ))
+         yield this( numChannels, b, s, l, i )
 }
 case class VDiskIn( numChannels: Int, buf: UGenIn, speed: UGenIn,
                     loop: UGenIn, sendID: UGenIn )

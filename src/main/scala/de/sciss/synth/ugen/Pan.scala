@@ -83,9 +83,8 @@ extends MultiOutUGen( rate, 2, x, y, pos )
 object PanAz {
   private def make( rate: Rate, numChannels: Int, in: GE, pos: GE, level: GE,
                     width: GE, orient: GE ) : GE =
-    simplify( for( List( i, p, l, w, o ) <-
-                  expand( in, pos, level, width, orient ))
-      yield this( rate, numChannels, i, p, l, w, o ))
+    for( Seq( i, p, l, w, o ) <- expand( in, pos, level, width, orient ))
+      yield this( rate, numChannels, i, p, l, w, o )
 
 	def ar( numChannels: Int, in: GE, pos: GE = 0, level: GE = 1, width: GE = 2,
             orient: GE = 0f ) : GE =

@@ -28,11 +28,11 @@
 
 package de.sciss.synth.ugen
 
-import de.sciss.synth.{ audio, control, Constant, GE, Rate, SideEffectUGen, SingleOutUGen, SynthGraph, UGenIn }
+import de.sciss.synth.{ audio, control, Constant => c, GE, Rate, SideEffectUGen, SingleOutUGen, SynthGraph, UGenIn }
 import SynthGraph._
 
 /**
- *    @version 0.10, 28-Apr-10
+ *    @version 0.10, 28-Aug-10
  */
 object Poll {
    def ar( trig: GE, in: GE, label: String, trigID: GE = -1 ) : GE =
@@ -42,11 +42,7 @@ object Poll {
       krExp( trig, in, label, trigID )
 
    private def make( rate: Rate, trig: GE, in: GE, label: String, trigID: GE ) : GE =
-      simplify( for( List( t, i, d ) <- expand( trig, in, trigID ))
-         yield this( rate, t, i, if( label != null ) label else {
-            val c = label.getClass.getName
-            c.substring( c.lastIndexOf( '.' ))
-         }, d ))
+      for( Seq( t, i, d ) <- expand( trig, in, trigID )) yield this( rate, t, i, label, d )
 
    private def krExp( trig: GE, in: GE, label: String, trigID: GE ) : GE =
       make( control, trig, in, label, trigID )
@@ -54,6 +50,17 @@ object Poll {
    private def arExp( trig: GE, in: GE, label: String, trigID: GE ) : GE =
       make( audio, trig, in, label, trigID )
 }
+/**
+ * A UGen for printing the current output value of its input to the console.
+ *
+ * @param   trig     a non-positive to positive transition telling Poll to return a value
+ * @param   in	      the signal you want to poll
+ * @param   label    a string or symbol to be printed with the polled value
+ * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
+ *    (similar to `SendTrig`)
+ *
+ * @see  [[de.sciss.synth.ugen.SendTrig]]
+ */
 case class Poll( rate: Rate, trig: UGenIn, in: UGenIn, label: String, trigID: UGenIn )
-extends SingleOutUGen( (Vector( trig, in, trigID, Constant( label.length )) ++
-   label.getBytes( "ISO-8859-1" ).map( Constant( _ ))): _* ) with SideEffectUGen
+extends SingleOutUGen( (trig +: in +: trigID +: c( label.length ) +:
+   label.getBytes().map( c( _ ))): _* ) with SideEffectUGen // not: "ISO-8859-1" but platform default

@@ -87,6 +87,7 @@ trait ControlFactoryLike[ T ] {
 
 trait ControlProxyLike[ Impl ] extends RatedGE {
    def factory: ControlFactoryLike[ Impl ]
+   def name: Option[ String ]
 }
 
 abstract class AbstractControlProxy[ Impl ]( outputRates: IIdxSeq[ Rate ])

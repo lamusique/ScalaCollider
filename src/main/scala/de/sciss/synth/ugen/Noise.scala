@@ -143,8 +143,8 @@ object TWindex {
       make( control, trig, prob, normalize )
 
    private def make( rate: Rate, trig: GE, prob: GE, normalize: GE ) : GE =
-      simplify( for( List( t, n, p @ _* ) <- expand( (trig +: normalize +: prob.outputs): _* ))
-                     yield this( rate, t, p, n, individuate ))
+      for( Seq( t, n, p @ _* ) <- expand( (trig +: normalize +: prob.outputs): _* ))
+         yield this( rate, t, p, n, individuate )
 
 //   def apply( rate: Rate, trig: UGenIn, list: Seq[ UGenIn ], normalize: UGenIn ) =
 //      new TWindex( rate, trig, list, normalize )
@@ -178,15 +178,8 @@ trait NoiseUGen {
    def ar: SingleOutUGen = this( audio,   individuate )
    def kr: SingleOutUGen = this( control, individuate )
 
-   private def make( make1: => SingleOutUGen, mul: GE ) : GE = {
-//      val numOutputs = mul.numOutputs
-//      val outputs    = mul.outputs
-//      if( numOutputs == 1 ) make1 * outputs.head
-//      else UGenInSeq( outputs.map( m => BinaryOpUGen.make1( BinaryOpUGen.Times, make1, m )))
-//      val zipped = Vector.fill[ UGenIn ]( mul.numOutputs )( make1 ).zip( mul.outputs )
-//      seq( zipped.flatMap( p => (p._1 * p._2).outputs ))
-      seq( mul.outputs.flatMap( m => (make1 * m).outputs )( breakOut ))
-   }
+   private def make( make1: => SingleOutUGen, mul: GE ) : GE =
+      mul.outputs.flatMap( m => (make1 * m).outputs )
 
    def ar( mul: GE ): GE = make( ar, mul )
    def kr( mul: GE ): GE = make( kr, mul )

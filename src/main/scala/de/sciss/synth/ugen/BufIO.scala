@@ -47,8 +47,8 @@ object PlayBuf {
 
    private def make( rate: Rate, numChannels: Int, buf: GE, speed: GE, trig: GE, startPos: GE, loop: GE,
                        doneAction: GE ) =
-      simplify( for( List( b, s, t, p, l, d ) <- expand( buf, speed, trig, startPos, loop, doneAction ))
-         yield this( rate, numChannels, b, s, t, p, l, d ))
+      for( Seq( b, s, t, p, l, d ) <- expand( buf, speed, trig, startPos, loop, doneAction ))
+         yield this( rate, numChannels, b, s, t, p, l, d )
 }
 
 /**
@@ -92,8 +92,8 @@ object TGrains {
    // note: argument 'rate' renamed to 'speed'
    def ar( numChannels: Int, trig: GE, buf: GE, speed: GE = 1, centerPos: GE = 0, dur: GE = 0.1f, pan: GE = 0,
            amp: GE = 0.1f, interp: GE = 4 ) : GE =
-      simplify( for( List( b, s, c, d, p, a, i ) <- expand( buf, speed, centerPos, dur, pan, amp, interp ))
-         yield this( audio, numChannels, b, s, c, d, p, a, i ))
+      for( Seq( b, s, c, d, p, a, i ) <- expand( buf, speed, centerPos, dur, pan, amp, interp ))
+         yield this( audio, numChannels, b, s, c, d, p, a, i )
 }
 case class TGrains( rate: Rate, numChannels: Int, buf: UGenIn, speed: UGenIn, centerPos: UGenIn, dur: UGenIn,
                     pan: UGenIn, amp: UGenIn, interp: UGenIn )
@@ -107,8 +107,8 @@ object BufRd {
       make( control, numChannels, buf, phase, loop, interp )
 
    private def make( rate: Rate, numChannels: Int, buf: GE, phase: GE, loop: GE, interp: GE ) =
-      simplify( for( List( b, p, l, i ) <- expand( buf, phase, loop, interp ))
-         yield this( rate, numChannels, b, p, l, i ))
+      for( Seq( b, p, l, i ) <- expand( buf, phase, loop, interp ))
+         yield this( rate, numChannels, b, p, l, i )
 }
 /**
  * A UGen which reads the content of a buffer, using an index pointer.
@@ -149,8 +149,8 @@ object BufWr {
       make( control, multi, buf, phase, loop )
 
    private def make( rate: Rate, multi: GE, buf: GE, phase: GE, loop: GE ) =
-      simplify( for( List( b, p, l, m @ _* ) <- expand( (buf +: phase +: loop +: multi.outputs): _* ))
-         yield this( rate, b, p, l, m ))
+      for( Seq( b, p, l, m @ _* ) <- expand( (buf +: phase +: loop +: multi.outputs): _* ))
+         yield this( rate, b, p, l, m )
 
 //	checkInputs {
 // 		if (rate == audio' and: {inputs.at(1).rate != audio'}, {
@@ -173,9 +173,9 @@ object RecordBuf {
 
    private def make( rate: Rate, multi: GE, buf: GE, offset: GE, recLevel: GE, preLevel: GE, run: GE,
                        loop: GE, trig: GE, doneAction: GE ) =
-      simplify( for( List( b, o, r, p, n, l, t, d, m @ _* ) <- expand( (buf +: offset +: recLevel +: preLevel +:
-                     run +: loop +: trig +: doneAction +: multi.outputs): _* ))
-         yield this( rate, b, o, r, p, n, l, t, d, m, SynthGraph.individuate ))
+      for( Seq( b, o, r, p, n, l, t, d, m @ _* ) <- expand( (buf +: offset +: recLevel +: preLevel +:
+         run +: loop +: trig +: doneAction +: multi.outputs): _* ))
+            yield this( rate, b, o, r, p, n, l, t, d, m, SynthGraph.individuate )
 }
 case class RecordBuf( rate: Rate, buf: UGenIn, offset: UGenIn, recLevel: UGenIn, preLevel: UGenIn,
                       run: UGenIn, loop: UGenIn, trig: UGenIn, doneAction: UGenIn, multi: Seq[ UGenIn ], _indiv: Int )

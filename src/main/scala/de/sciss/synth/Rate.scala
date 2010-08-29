@@ -49,7 +49,8 @@ case object audio   extends Rate( 2 ) { val methodName = "ar" }
 case object demand  extends Rate( 3 ) { val methodName = "dr" }
 
 trait RatedGE extends GE {
-  def rate : Rate
+   def rate : Rate
+   def displayName: String
 }
 
 trait ScalarRated  { def rate = scalar }

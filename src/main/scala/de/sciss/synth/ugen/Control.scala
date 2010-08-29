@@ -63,8 +63,10 @@ extends AbstractControlProxy[ ControlProxy ]( rate, values.size ) {
    def factory = ControlFactory
 
    override def toString: String = {
-      name.getOrElse( "Control" ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
+      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
    }
+
+   def displayName = "Control"
 }
 
 object ControlFactory extends ControlFactoryLike[ ControlProxy ] {
@@ -111,8 +113,10 @@ extends AbstractControlProxy[ TrigControlProxy ]( rate, values.size ) {
    def factory = TrigControlFactory
 
    override def toString: String = {
-      name.getOrElse( "TrigControl" ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
+      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
    }
+
+   def displayName = "TrigControl"
 }
 
 object TrigControlFactory extends ControlFactoryLike[ TrigControlProxy ] {
@@ -150,8 +154,10 @@ extends AbstractControlProxy[ AudioControlProxy ]( rate, values.size ) {
    def factory = AudioControlFactory
 
    override def toString: String = {
-      name.getOrElse( "AudioControl" ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
+      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
    }
+
+   def displayName = "AudioControl"
 }
 
 object AudioControlFactory extends ControlFactoryLike[ AudioControlProxy ] {

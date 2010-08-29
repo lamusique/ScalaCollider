@@ -34,7 +34,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant, ControlProxyFactory, DoneAction, GE,
                GraphFunction, Group, MultiControlSetMap, MultiControlABusMap, MultiControlKBusMap, Node,
                RichDouble, RichFloat, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
-               Synth, UGenInSeq }
+               Synth, UGenIn, UGenInSeq }
 
 package synth {
    abstract sealed class LowPriorityImplicits {
@@ -49,7 +49,7 @@ package synth {
 }
 
 /**
- * 	@version	0.14, 26-Aug-10
+ * 	@version	0.14, 28-Aug-10
  */
 package object synth extends de.sciss.synth.LowPriorityImplicits {
    // GEs
@@ -58,7 +58,13 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
 //   implicit def geOps[ T <% GE ]( t: T ) = t.ops
    implicit def geOps( ge: GE ) = ge.ops
 
-   implicit def seqOfGEToGE( x: Seq[ GE ]) = new UGenInSeq( x.flatMap( _.outputs )( breakOut ))
+   implicit def seqOfGEToGE( x: Seq[ GE ]) : GE = {
+      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.outputs )( breakOut )
+      outputs match {
+         case IIdxSeq( mono ) => mono
+         case _               => new UGenInSeq( outputs )
+      }
+   }
    implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
    // why these are necessary now??
