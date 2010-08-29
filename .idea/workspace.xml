@@ -3,14 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="01886865-ff38-4eb7-a79d-92e783f03245" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ExampleCmd.txt" afterPath="$PROJECT_DIR$/ExampleCmd.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/CheckBadValues.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/CheckBadValues.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ClientOptions.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ClientOptions.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Trig.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Trig.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ServerOptions.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ServerOptions.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ugen_list.scd" afterPath="$PROJECT_DIR$/ugen_list.scd" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Poll.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Poll.scala" />
     </list>
     <ignored path="ScalaCollider.iws" />
     <ignored path=".idea/workspace.xml" />

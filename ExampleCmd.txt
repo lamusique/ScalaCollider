@@ -416,7 +416,24 @@ val x = {
 val r = OSCResponder.add {
     case OSCMessage( "/tr", x.id, _, mouseX ) => println( "Dang! " + mouseX )
 }
+
 r.remove
+x.free
+
+// using SendReply
+
+val x = play {
+    SendReply.kr( Impulse.kr( 10 ), Pitch.kr( In.ar( NumOutputBuses.ir, 2 )))
+}
+val resp = OSCResponder.add {
+    case OSCMessage( "/reply", x.id, _, freqL: Float, hasFreqL: Float, freqR: Float, hasFreqR: Float ) =>
+        if( hasFreqL > 0 || hasFreqR > 0 )
+        println( "GOT : " + (if( hasFreqL > 0 ) freqL.cpsmidi else "?") + " / " +
+            (if( hasFreqR > 0 ) freqR.cpsmidi else "?") )
+}
+x.onEnd { resp.remove }
+
+x.free
 
 //////////////////////////////////////////////////////////////////////////
 
