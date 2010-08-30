@@ -29,7 +29,7 @@
 package de.sciss.synth.ugen
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import de.sciss.synth.{ enrichFloat, floatToGE, audio, control, doNothing, AudioRated, GE, MultiOutUGen, Rate,
+import de.sciss.synth.{ floatWrapper, floatToGE, audio, control, doNothing, AudioRated, GE, MultiOutUGen, Rate,
                         SideEffectUGen, SingleOutUGen, UGenIn }
 
 /**

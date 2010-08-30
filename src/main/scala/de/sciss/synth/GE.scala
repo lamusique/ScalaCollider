@@ -59,7 +59,7 @@ trait GE {
    def numOutputs : Int = outputs.size
    def `\\`( idx: Int ) : UGenIn = outputs( idx )
 
-   private[synth] def ops = new GEOps( this )
+//   private[synth] def ops = new GEOps( this )
 
    def madd( mul: GE, add: GE ) : GE = {
       Rate.highest( outputs.map( _.rate ): _* ) match {
@@ -121,8 +121,11 @@ trait GE {
    // unary ops
    def unary_- : GE           = Neg.make( this )
 // def bitNot : GE	         = BitNot.make( this )
+   def abs : GE	            = Abs.make( this )
 // def toFloat : GE	         = UnOp.make( 'asFloat, this )
 // def toInteger : GE	      = UnOp.make( 'asInteger, this )
+   def ceil : GE	            = Ceil.make( this )
+   def floor : GE	            = Floor.make( this )
    def frac : GE	            = Frac.make( this )
    def signum : GE	         = Signum.make( this )
    def squared : GE           = Squared.make( this )
@@ -175,11 +178,6 @@ trait GE {
    import BinaryOpUGen._
 
    // binary ops
-  // NOTE: we need to put + directly in GE because
-  // sucky scalac otherwise things it is as likely a
-  // conversion as toString !!! and since + is
-  // anyway defined for Float, Double, Int, there is
-  // no need to lower its priority in GE
    def +( b: GE ) : GE        = Plus.make( this, b )
    def -( b: GE ) : GE        = Minus.make( this, b )
    def *( b: GE ) : GE        = Times.make( this, b )
@@ -192,14 +190,14 @@ trait GE {
    def >( b: GE ) : GE	      = Gt.make( this, b )
    def <=( b: GE ) : GE	      = Leq.make( this, b )
    def >=( b: GE ) : GE	      = Geq.make( this, b )
-//   def min( b: GE ) : GE      = Min.make( this, b )
-//   def max( b: GE ) : GE      = Max.make( this, b )
+   def min( b: GE ) : GE      = Min.make( this, b )
+   def max( b: GE ) : GE      = Max.make( this, b )
    def &( b: GE ) : GE	      = BitAnd.make( this, b )
    def |( b: GE ) : GE	      = BitOr.make( this, b )
    def ^( b: GE ) : GE	      = BitXor.make( this, b )
 // def Lcm( b: GE ) : GE      = Lcm.make( this, b )
 // def Gcd( b: GE ) : GE      = Gcd.make( this, b )
-//   def round( b: GE ) : GE    = Round.make( this, b )
+   def round( b: GE ) : GE    = Round.make( this, b )
    def roundup( b: GE ) : GE  = Roundup.make( this, b ) // sclang uses camel case instead
    def trunc( b: GE ) : GE    = Trunc.make( this, b )
    def atan2( b: GE ) : GE    = Atan2.make( this, b )

@@ -86,9 +86,9 @@ case class Loudness( chain: UGenIn, smask: UGenIn, tmask: UGenIn )
 extends SingleOutUGen( chain, smask, tmask ) with ControlRated
 
 object Onsets extends UGen9RArgs {
-   def kr( chain: GE, thresh: GE = 0.5, fun: GE = 3, decay: GE = 1, floor: GE = 0.1f,
+   def kr( chain: GE, thresh: GE = 0.5, fun: GE = 3, decay: GE = 1, noiseFloor: GE = 0.1f,
            minGap: GE = 10, medianSpan: GE = 11, whType: GE = 1, raw: GE = 0 ) : GE =
-      make( chain, thresh, fun, decay, floor, minGap, medianSpan, whType, raw )
+      make( chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw )
 }
 /**
  * An onset detecting UGen for musical audio signals.
@@ -125,7 +125,7 @@ object Onsets extends UGen9RArgs {
  * @param   decay       (advanced setting) Specifies the time (in seconds) for the normalisation to "forget"
  *    about a recent onset. If you find too much re-triggering (e.g. as a note dies away unevenly) then
  *    you might wish to increase this value. Not used with "mkl".
- * @param   floor       (advanced setting) This is a lower limit, connected to the idea of how quiet the
+ * @param   noiseFloor  (advanced setting) This is a lower limit, connected to the idea of how quiet the
  *    sound is expected to get without becoming indistinguishable from noise. For some cleanly-recorded
  *    classical music with wide dynamic variations, it was found helpful to go down as far as 1e-6.
  *    Not used with "mkl".
@@ -136,9 +136,9 @@ object Onsets extends UGen9RArgs {
  * @param   whType      (advanced setting) ?
  * @param   raw         (advanced setting) ?
  */
-case class Onsets( chain: UGenIn, thresh: UGenIn, fun: UGenIn, decay: UGenIn, floor: UGenIn,
+case class Onsets( chain: UGenIn, thresh: UGenIn, fun: UGenIn, decay: UGenIn, noiseFloor: UGenIn,
                    minGap: UGenIn, medianSpan: UGenIn, whType: UGenIn, raw: UGenIn )
-extends SingleOutUGen( chain, thresh, fun, decay, floor, minGap, medianSpan, whType, raw ) with ControlRated
+extends SingleOutUGen( chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw ) with ControlRated
 
 object KeyTrack extends UGen3RArgs {
    def kr( chain: GE, keyDecay: GE = 2, chromaLeak: GE = 0.5 ) : GE =

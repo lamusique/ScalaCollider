@@ -58,21 +58,21 @@ case class Constant( value: Float ) extends UGenIn with ScalarRated {
    override def toString = value.toString
    def displayName = value.toString
 
-   override private[synth] def ops = new ConstantOps( this )
+//   override private[synth] def ops = new ConstantOps( this )
 
-   // special binop handling
-   override def +( b: GE ) : GE        = b match {
-      case Constant( bval ) => Constant( value + bval )
-      case _ => super.+( b )
-   }
+//   // special binop handling
+//   override def +( b: GE ) : GE        = b match {
+//      case Constant( bval ) => Constant( value + bval )
+//      case _ => super.+( b )
+//   }
 
    // unary ops. note: there is no sense in changing the
    // result type to Constant, as the class seen from outside
    // is always GEOps.
    override def unary_- : GE     = cn( -value )
-//   override def abs : GE	      = cn( math.abs( value ))
-//   override def ceil : GE	      = cn( math.ceil( value ))
-//   override def floor : GE	      = cn( math.floor( value ))
+   override def abs : GE	      = cn( math.abs( value ))
+   override def ceil : GE	      = cn( math.ceil( value ))
+   override def floor : GE	      = cn( math.floor( value ))
    override def frac : GE	      = cn( value - math.floor( value )) // according to jmc
    override def signum : GE      = cn( math.signum( value ))
    override def squared : GE     = cn( value * value )

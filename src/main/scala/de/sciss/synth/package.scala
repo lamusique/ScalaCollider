@@ -33,7 +33,7 @@ import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant, ControlProxyFactory, DoneAction, GE,
                GraphFunction, Group, MultiControlSetMap, MultiControlABusMap, MultiControlKBusMap, Node,
-               RichDouble, RichFloat, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
+               RichDouble, RichFloat, RichInt, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
                Synth, UGenIn, UGenInSeq }
 
 package synth {
@@ -49,11 +49,6 @@ package synth {
       implicit def floatToGE( f: Float )  = Constant( f )
       implicit def doubleToGE( d: Double )= Constant( d.toFloat )
    }
-
-//   abstract sealed class MediumPriorityImplicits extends LowPriorityImplicits {
-//      implicit def enrichInt( i: Int ) = RichFloat( i )
-//      implicit def enrichFloat2( f: Float ) = RichDouble( f )
-//   }
 }
 
 /**
@@ -75,13 +70,24 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
     * This conversion is particularly important to balance priorities,
     * as the plain pair of `intToGE` and `enrichFloat` have equal
     * priorities for an Int despite being in sub/superclass relationship,
-    * probably due to the numeric widening which would be needed. 
+    * probably due to the numeric widening which would be needed.
+    *
+    * Note that we use the same name as scala.Predef.intWrapper. That
+    * way the original conversion is hidden!
     */
-   implicit def enrichInt( i: Int )       = RichFloat( i.toFloat ) // RichInt( i )
-   implicit def enrichFloat( f: Float )   = RichFloat( f )
-   implicit def enrichDouble( d: Double ) = RichDouble( d )
-//   implicit def geOps[ T <% GE ]( t: T ) = t.ops
-   implicit def geOps( ge: GE ) = ge.ops
+   implicit def intWrapper( i: Int ) = new RichInt( i )
+   /**
+    * Note that we use the same name as scala.Predef.floatWrapper. That
+    * way the original conversion is hidden!
+    */
+   implicit def floatWrapper( f: Float ) = new RichFloat( f )
+   /**
+    * Note that we use the same name as scala.Predef.doubleWrapper. That
+    * way the original conversion is hidden!
+    */
+   implicit def doubleWrapper( d: Double ) = new RichDouble( d )
+
+//   implicit def geOps( ge: GE ) = ge.ops
 
    implicit def seqOfGEToGE( x: Seq[ GE ]) : GE = {
       val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.outputs )( breakOut )
@@ -92,7 +98,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
    }
    implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
-   // why these are necessary now??
+   // or should we add a view bound to seqOfGEToGE?
    implicit def seqOfFloatToGE( x: Seq[ Float ])   = new UGenInSeq( x.map( Constant( _ ))( breakOut ))
    implicit def seqOfIntToGE( x: Seq[ Int ])       = new UGenInSeq( x.map( i => Constant( i.toFloat ))( breakOut ))
    implicit def seqOfDoubleToGE( x: Seq[ Double ]) = new UGenInSeq( x.map( d => Constant( d.toFloat ))( breakOut ))
