@@ -38,8 +38,16 @@ import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant,
 
 package synth {
    abstract sealed class LowPriorityImplicits {
-      implicit def floatToGE( f: Float ) = Constant( f )
-      implicit def doubleToGE( d: Double ) = Constant( d.toFloat )
+      /**
+       * This conversion is needed because while generally we
+       * can rely on the numeric-widening of Int -> Float, this
+       * widening is not taken into consideration when using
+       * view bounds, e.g. `implicit def[ T <% GE ]( ... )`
+       * will not work on Ints.
+       */
+      implicit def intToGE( i: Int )      = Constant( i.toFloat )
+      implicit def floatToGE( f: Float )  = Constant( f )
+      implicit def doubleToGE( d: Double )= Constant( d.toFloat )
    }
 
 //   abstract sealed class MediumPriorityImplicits extends LowPriorityImplicits {
@@ -49,11 +57,28 @@ package synth {
 }
 
 /**
- * 	@version	0.14, 28-Aug-10
+ * Pay good attention to this preamble: Read this thread:
+ * http://www.scala-lang.org/node/6607
+ * and then this one:
+ * http://www.scala-lang.org/node/7474
+ * And after that, wait a bit. And then read them again, better three times.
+ * And then think before changing anything in here. Pray at least once in
+ * a while to the god of implicit magic (even if magic doesn't exist, since
+ * "it's all the in spec"), it might help!
+ *
+ * @version	0.14, 28-Aug-10
  */
 package object synth extends de.sciss.synth.LowPriorityImplicits {
    // GEs
-   implicit def enrichFloat( f: Float ) = RichFloat( f )
+
+   /**
+    * This conversion is particularly important to balance priorities,
+    * as the plain pair of `intToGE` and `enrichFloat` have equal
+    * priorities for an Int despite being in sub/superclass relationship,
+    * probably due to the numeric widening which would be needed. 
+    */
+   implicit def enrichInt( i: Int )       = RichFloat( i.toFloat ) // RichInt( i )
+   implicit def enrichFloat( f: Float )   = RichFloat( f )
    implicit def enrichDouble( d: Double ) = RichDouble( d )
 //   implicit def geOps[ T <% GE ]( t: T ) = t.ops
    implicit def geOps( ge: GE ) = ge.ops
