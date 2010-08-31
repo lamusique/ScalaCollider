@@ -522,17 +522,25 @@ extends ServerLike {
    def !![ A ]( p: OSCPacket, handler: PartialFunction[ OSCMessage, A ]) : RevocableFuture[ A ] = {
       val c    = new Channel[ A ]( Actor.self )
       val a = new FutureActor[ A ]( c ) {
-         lazy val futCh   = new Channel[ A ]( Actor.self )
-         lazy val oh      = new OSCInfHandler( handler, futCh )
+         val sync    = new AnyRef
+         var revoked = false
+         var oh: Option[ OSCHandler ] = None
+
          def body( res: SyncVar[ A ]) {
-            OSCReceiverActor.addHandler( oh )
-            server ! p // only after addHandler!
-            futCh.react {
-//            case TIMEOUT   => OSCReceiverActor.timeOutHandler( oh )
-               case r         => res.set( r )
-            }
+            val futCh   = new Channel[ A ]( Actor.self )
+            sync.synchronized { if( !revoked ) {
+               val h = new OSCInfHandler( handler, futCh )
+               oh = Some( h )
+               OSCReceiverActor.addHandler( h )
+               server ! p // only after addHandler!
+            }}
+            futCh.react { case r => res.set( r )}
          }
-         def revoke { OSCReceiverActor.removeHandler( oh )}
+         def revoke { sync.synchronized {
+            revoked = true
+            oh.foreach( OSCReceiverActor.removeHandler( _ ))
+            oh = None
+         }}
       }
       a.start()
 // NOTE: race condition, addHandler might take longer than
