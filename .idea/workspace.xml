@@ -2,15 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="01886865-ff38-4eb7-a79d-92e783f03245" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ConstantOps.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ConstantOps.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/FutureActor.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/FutureActor.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/GEOps.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/GEOps.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Line.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Line.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/RichNumber.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/RichNumber.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/GE.scala" afterPath="$PROJECT_DIR$/src/main/scala/de/sciss/synth/GE.scala" />
     </list>
     <ignored path="ScalaCollider.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,8 +71,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="field_breakpoints_viewId" value="TABLE" />
+      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -87,91 +82,37 @@
   <component name="FileColors" enabled="true" enabledForTabs="true" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="RichNumber.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/RichNumber.scala">
+      <file leaf-file-name="Server.scala" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="58" selection-start="2354" selection-end="2354" vertical-scroll-proportion="0.0">
+            <state line="511" column="42" selection-start="20357" selection-end="20357" vertical-scroll-proportion="0.56953645">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MachineListening.scala" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala">
+      <file leaf-file-name="BufferManager.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/BufferManager.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="90" column="49" selection-start="4743" selection-end="4743" vertical-scroll-proportion="0.21768707">
+            <state line="51" column="7" selection-start="1454" selection-end="1454" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConstantOps.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ConstantOps.scala">
+      <file leaf-file-name="NodeManager.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/NodeManager.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="84" selection-start="2714" selection-end="2714" vertical-scroll-proportion="0.0">
+            <state line="64" column="7" selection-start="2144" selection-end="2144" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UGenIn.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala">
+      <file leaf-file-name="OSCResponder.scala" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="61" column="44" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GEOps.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/GEOps.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="30" selection-start="1169" selection-end="1169" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GE.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/GE.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="67" column="12" selection-start="2618" selection-end="2618" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BasicOpUGen.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/BasicOpUGen.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="332" column="20" selection-start="11831" selection-end="11880" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="47" selection-start="1384" selection-end="1384" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Line.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Line.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="36" selection-start="1096" selection-end="1096" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Model.scala" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Model.scala">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="68" column="0" selection-start="1947" selection-end="2296" vertical-scroll-proportion="0.0">
+            <state line="5" column="13" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -191,14 +132,11 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/CheckBadValues.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ServerOptions.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ClientOptions.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Poll.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Trig.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/Rate.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/Model.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Line.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/GEOps.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala" />
@@ -207,6 +145,9 @@
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/RichNumber.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/FutureActor.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala" />
       </list>
     </option>
   </component>
@@ -246,7 +187,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Favorites" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -695,6 +635,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Favorites" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -711,9 +652,9 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -931,25 +872,25 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="22" width="1396" height="878" extended-state="0" />
+    <frame x="0" y="22" width="1396" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286445" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39795917" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32908162" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286445" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24698795" sideWeight="0.24040921" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25983667" sideWeight="0.6619898" order="0" side_tool="false" content_ui="tabs" x="508" y="69" width="387" height="782" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25389755" sideWeight="0.6594388" order="0" side_tool="false" content_ui="tabs" x="508" y="69" width="387" height="782" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39795917" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23469388" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33163264" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32908162" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24981357" sideWeight="0.6608108" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -989,102 +930,108 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ServerOptions.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="323" column="37" selection-start="11958" selection-end="12004" vertical-scroll-proportion="0.821192" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/CheckBadValues.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="18" selection-start="1421" selection-end="1421" vertical-scroll-proportion="0.6423841" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/InOut.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="136" column="48" selection-start="5797" selection-end="5821" vertical-scroll-proportion="0.01986755" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Poll.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="102" selection-start="975" selection-end="975" vertical-scroll-proportion="0.205298" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Rate.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="48" column="12" selection-start="1640" selection-end="1640" vertical-scroll-proportion="0.4370861" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="311" column="10" selection-start="12576" selection-end="12576" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Model.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="68" column="0" selection-start="1947" selection-end="2296" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Line.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="36" selection-start="1096" selection-end="1096" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/BasicOpUGen.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="332" column="20" selection-start="11831" selection-end="11880" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/GEOps.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="30" selection-start="1169" selection-end="1169" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="61" column="44" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ConstantOps.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="84" selection-start="2714" selection-end="2714" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/GE.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="12" selection-start="2618" selection-end="2618" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="47" selection-start="1384" selection-end="1384" vertical-scroll-proportion="0.0">
+        <state line="104" column="64" selection-start="5435" selection-end="5435" vertical-scroll-proportion="0.020408163">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/RichNumber.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="58" selection-start="2354" selection-end="2354" vertical-scroll-proportion="0.0">
+        <state line="63" column="58" selection-start="2354" selection-end="2354" vertical-scroll-proportion="0.020833334">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/MachineListening.scala">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ConstantOps.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="90" column="49" selection-start="4743" selection-end="4743" vertical-scroll-proportion="0.21768707">
+        <state line="77" column="84" selection-start="2714" selection-end="2714" vertical-scroll-proportion="0.104166664" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/UGenIn.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="61" column="44" selection-start="2029" selection-end="2029" vertical-scroll-proportion="0.01986755">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/GEOps.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="30" selection-start="1169" selection-end="1169" vertical-scroll-proportion="0.6821192" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/GE.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="67" column="12" selection-start="2618" selection-end="2618" vertical-scroll-proportion="0.01986755">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/BasicOpUGen.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="332" column="20" selection-start="11831" selection-end="11880" vertical-scroll-proportion="0.01986755">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/package.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="47" selection-start="1384" selection-end="1384" vertical-scroll-proportion="0.02027027">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ugen/Line.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="36" selection-start="1096" selection-end="1096" vertical-scroll-proportion="0.01986755">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Model.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="68" column="0" selection-start="1947" selection-end="2296" vertical-scroll-proportion="0.5231788">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/FutureActor.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="28" column="24" selection-start="730" selection-end="730" vertical-scroll-proportion="0.33333334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/BufferManager.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="7" selection-start="1454" selection-end="1454" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/NodeManager.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="7" selection-start="2144" selection-end="2144" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="13" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="511" column="42" selection-start="20357" selection-end="20357" vertical-scroll-proportion="0.56953645">
           <folding />
         </state>
       </provider>

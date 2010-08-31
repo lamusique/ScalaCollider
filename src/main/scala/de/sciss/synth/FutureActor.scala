@@ -3,12 +3,16 @@ package de.sciss.synth
 import concurrent.SyncVar
 import actors.{ Channel, DaemonActor, Future, InputChannel }
 
+trait RevocableFuture[ T ] extends Future[ T ] {
+   def revoke : Unit
+}
+
 /*
  *    FutureActor in scala.actors is not very accessible...
  *    We need our own implementation of Future is seems
  */
-private[synth] class FutureActor[ T ]( fun: SyncVar[ T ] => Unit, channel: Channel[ T ])
-extends Future[ T ] with DaemonActor {
+private[synth] abstract class FutureActor[ T ]( channel: Channel[ T ])
+extends RevocableFuture[ T ] with DaemonActor {
    @volatile private var v: Option[T] = None
 
    private case object Eval
@@ -31,10 +35,12 @@ extends Future[ T ] with DaemonActor {
 
    def inputChannel: InputChannel[ T ] = channel
 
+   protected def body( v: SyncVar[ T ]) 
+
    def act() {
       val syncVar = new SyncVar[ T ]
 
-      { fun( syncVar )} andThen {
+      { body( syncVar )} andThen {
          val syncVal = syncVar.get
          v = Some( syncVal )
          channel ! syncVal

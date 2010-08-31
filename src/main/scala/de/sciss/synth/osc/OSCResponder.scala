@@ -6,6 +6,7 @@ import de.sciss.synth.Server
 trait OSCHandler {
    private[synth] def handle( msg: OSCMessage ) : Boolean
    private[synth] def removed : Unit
+//   private[synth] def timedOut : Unit
 }
 
 object OSCResponder {
@@ -32,6 +33,7 @@ object OSCResponder {
       }
 
       private[synth] def removed {}
+//      private[synth] def timedOut {}
    }
 }
 

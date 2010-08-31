@@ -491,20 +491,73 @@ extends ServerLike {
 
    def !( p: OSCPacket ) { c ! p }
 
-   def !![ A ]( p: OSCPacket, handler: PartialFunction[ OSCMessage, A ]) : Future[ A ] = {
+   /**
+    * Sends out an OSC packet that generates some kind of reply, and
+    * returns immediately a `RevocableFuture` representing the parsed reply.
+    * This parsing is done by a handler which is registered.
+    * The handler is tested for each incoming OSC message (using its
+    * `isDefinedAt` method) and invoked and removed in case of a
+    * match. Note that the caller is responsible for timing out
+    * the handler after a reasonable time. To do this, the
+    * method `revoke` on the returned future must be called, which
+    * will silently unregister the handler.
+    *
+    * '''Warning''': It is crucial that the Future is awaited
+    * only within a dedicated actor thread. In particular you must
+    * be careful and aware of the fact that the handler is executed
+    * on the OSC receiver actor's body, and that you must not
+    * try to await the future from ''any'' handler function
+    * registered with OSC reception, because it would not be
+    * possible to pull the reply message of the OSC receiver's
+    * mailbox while the actor body blocks. 
+    *
+    * @param   p        the packet to send out
+    * @param   handler  the handler to match against incoming messages
+    *    or timeout
+    * @return  the future representing the parsed reply, and providing
+    *    a `revoke` method to issue a timeout.
+    *
+    * @see  [[scala.actors.Futures]]
+    */
+   def !![ A ]( p: OSCPacket, handler: PartialFunction[ OSCMessage, A ]) : RevocableFuture[ A ] = {
       val c    = new Channel[ A ]( Actor.self )
-      val fun  = (res: SyncVar[ A ]) => {
-         val futCh   = new Channel[ A ]( Actor.self )
-         val oh      = new OSCInfHandler( handler, futCh )
-         OSCReceiverActor.addHandler( oh )
-         futCh.react { case r => res.set( r )}
+      val a = new FutureActor[ A ]( c ) {
+         lazy val futCh   = new Channel[ A ]( Actor.self )
+         lazy val oh      = new OSCInfHandler( handler, futCh )
+         def body( res: SyncVar[ A ]) {
+            OSCReceiverActor.addHandler( oh )
+            server ! p // only after addHandler!
+            futCh.react {
+//            case TIMEOUT   => OSCReceiverActor.timeOutHandler( oh )
+               case r         => res.set( r )
+            }
+         }
+         def revoke { OSCReceiverActor.removeHandler( oh )}
       }
-      val a = new FutureActor[ A ]( fun, c )
       a.start()
-      this ! p
+// NOTE: race condition, addHandler might take longer than
+// the /done, notify!
+//      this ! p
       a
    }
 
+   /**
+    * Sends out an OSC packet that generates some kind of reply, and
+    * returns immediately. It registers a handler to parse that reply.
+    * The handler is tested for each incoming OSC message (using its
+    * `isDefinedAt` method) and invoked and removed in case of a
+    * match. If the handler doesn't match in the given timeout period,
+    * it is invoked with message `TIMEOUT` and removed. If the handler
+    * wishes not to do anything particular in the case of a timeout,
+    * it simply should not add a case for `TIMEOUT`.
+    *
+    * @param   timeOut  the timeout in milliseconds
+    * @param   p        the packet to send out
+    * @param   handler  the handler to match against incoming messages
+    *    or timeout 
+    *
+    * @see  [[scala.actors.TIMEOUT]]
+    */
    def !?( timeOut: Long, p: OSCPacket, handler: PartialFunction[ Any, Unit ]) {
       val a = new DaemonActor {
          def act {
@@ -513,7 +566,7 @@ extends ServerLike {
             OSCReceiverActor.addHandler( oh )
             server ! p // only after addHandler!
             futCh.reactWithin( timeOut ) {
-               case TIMEOUT   => OSCReceiverActor.removeHandler( oh )
+               case TIMEOUT   => OSCReceiverActor.timeOutHandler( oh )
                case r         =>
             }
          }
@@ -727,6 +780,7 @@ extends ServerLike {
       private case class  ReceivedMessage( msg: OSCMessage, sender: SocketAddress, time: Long )
       private case class  AddHandler( h: OSCHandler )
       private case class  RemoveHandler( h: OSCHandler )
+      private case class  TimeOutHandler( h: OSCTimeOutHandler )
 
       def clear {
          this ! Clear
@@ -743,6 +797,10 @@ extends ServerLike {
 
       def removeHandler( handler: OSCHandler ) {
          this ! RemoveHandler( handler )
+      }
+
+      def timeOutHandler( handler: OSCTimeOutHandler ) {
+         this ! TimeOutHandler( handler )
       }
 
       // ------------ OSCListener interface ------------
@@ -769,6 +827,7 @@ extends ServerLike {
             }
             case AddHandler( h )    => handlers += h
             case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed }
+            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut }
             case Clear              => handlers.foreach( _.removed ); handlers = Set.empty
             case Dispose            => running = false
             case m                  => println( "Received illegal message " + m )
@@ -812,7 +871,8 @@ extends ServerLike {
          } catch { case e => e.printStackTrace() }
          handled
       }
-      def removed {
+      def removed {}
+      def timedOut {
          if( fun.isDefinedAt( TIMEOUT )) try {
             fun.apply( TIMEOUT )
          } catch { case e => e.printStackTrace() }
