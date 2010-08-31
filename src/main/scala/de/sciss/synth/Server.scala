@@ -821,6 +821,7 @@ extends ServerLike {
       def act {
          var running    = true
          var handlers   = Set.empty[ OSCHandler ]
+//         while( running )( receive { })
          loopWhile( running )( react {
             case ReceivedMessage( msg, sender, time ) => debug( msg ) {
 //if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : received : " + msg )

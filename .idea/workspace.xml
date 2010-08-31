@@ -69,8 +69,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="field_breakpoints_viewId" value="TABLE" />
+      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -83,7 +83,7 @@
       <file leaf-file-name="Server.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="529" column="21" selection-start="21026" selection-end="21031" vertical-scroll-proportion="0.4410596">
+            <state line="840" column="12" selection-start="30797" selection-end="30797" vertical-scroll-proportion="0.6200274">
               <folding />
             </state>
           </provider>
@@ -672,8 +672,8 @@
         </subPane>
       </pane>
       <pane id="Favorites" />
-      <pane id="Scope" />
       <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -689,9 +689,9 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -909,7 +909,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1396" height="878" extended-state="0" />
+    <frame x="283" y="132" width="1396" height="878" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286445" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1022,21 +1022,6 @@
         <state line="68" column="0" selection-start="1947" selection-end="2296" vertical-scroll-proportion="0.5231788" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/BufferManager.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="7" selection-start="1454" selection-end="1454" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/NodeManager.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="64" column="7" selection-start="2144" selection-end="2144" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/FutureActor.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="6" selection-start="118" selection-end="118" vertical-scroll-proportion="0.0">
@@ -1044,9 +1029,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/BufferManager.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="51" column="7" selection-start="1454" selection-end="1454" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/OSCResponder.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="13" selection-start="102" selection-end="102" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/NodeManager.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="64" column="7" selection-start="2144" selection-end="2144" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Server.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="529" column="21" selection-start="21026" selection-end="21031" vertical-scroll-proportion="0.4410596">
+        <state line="840" column="12" selection-start="30797" selection-end="30797" vertical-scroll-proportion="0.6200274">
           <folding />
         </state>
       </provider>
