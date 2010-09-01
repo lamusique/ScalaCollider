@@ -255,6 +255,16 @@ object Timer extends UGen1Args {
   def ar( trig: GE ) : GE = arExp( trig )
   def kr( trig: GE ) : GE = krExp( trig )
 }
+/**
+ * A UGen that returns time since last triggered.
+ * The time returned is in seconds and is measured from the last received trigger.
+ * Note that currently it seems the initial memory is at -1 sample, so for
+ * `Impulse.ar(1)` the result (at 44.1 kHz) is 2.26757e-05, followed strangely
+ * by 1.00002, and then (as expected) 1.0.
+ *
+ * @param   trig  the trigger to update the output signal.
+ *    A trigger occurs when trig signal crosses from non-positive to positive.
+ */
 case class Timer( rate: Rate, trig: UGenIn ) extends SingleOutUGen( trig )
 
 object Sweep extends UGen2Args {
