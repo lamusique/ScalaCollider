@@ -91,6 +91,22 @@ trait ServerOptionsLike {
 abstract class ServerOptions extends ServerOptionsLike
 
 object ServerOptionsBuilder {
+   private def toNonRealtimeArgs( o: ServerOptionsLike ): List[ String ] = {
+      val result = new ListBuffer[ String ]()
+
+      // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
+      result += o.programPath
+      result += o.nrtCommandPath
+      result += o.nrtInputPath.getOrElse( "_" )
+      result += o.nrtOutputPath
+      result += o.sampleRate.toString
+      result += o.nrtHeaderFormat.id
+      result += o.nrtSampleFormat.id
+
+      addCommonArgs( o, result )
+      result.toList
+   }
+
    private def toRealtimeArgs( o: ServerOptionsLike ): List[ String ] = {
       val result = new ListBuffer[ String ]()
 
@@ -105,6 +121,56 @@ object ServerOptionsBuilder {
             result += o.port.toString
          }
       }
+
+      addCommonArgs( o, result )
+
+      if( o.hardwareBlockSize != 0 ) {
+          result += "-Z"
+          result += o.hardwareBlockSize.toString
+      }
+      if( o.sampleRate != 0 ) {
+         result += "-S"
+         result += o.sampleRate.toString
+      }
+      if( o.maxLogins != 64 ) {
+         result += "-l"
+         result += o.maxLogins.toString
+      }
+      o.sessionPassword.foreach( pwd => {
+         result += "-p"
+         result += pwd
+      })
+      o.inputStreamsEnabled.foreach( stream => {
+         result += "-I"
+         result += stream
+      })
+      o.outputStreamsEnabled.foreach( stream => {
+         result += "-O"
+         result += stream
+      })
+      if( !o.zeroConf ) {
+         result += "-R"
+         result += "0"
+      }
+      o.deviceNames.foreach( tup => {
+         val (inDev, outDev) = tup
+         result += "-H"
+         result += tup._1
+         result += tup._2
+      })
+      o.deviceName.foreach( n => {
+         result += "-H"
+         result += n
+      })
+      o.restrictedPath.foreach( path => {
+         result += "-P"
+         result += path
+      })
+
+      result.toList
+   }
+
+   private def addCommonArgs( o: ServerOptionsLike, result: ListBuffer[ String ]) = {
       if( o.controlBusChannels != 4096 ) {
          result += "-c"
          result += o.controlBusChannels.toString
@@ -124,14 +190,6 @@ object ServerOptionsBuilder {
       if( o.blockSize != 64 ) {
           result += "-z"
           result += o.blockSize.toString
-      }
-      if( o.hardwareBlockSize != 0 ) {
-          result += "-Z"
-          result += o.hardwareBlockSize.toString
-      }
-      if( o.sampleRate != 0 ) {
-         result += "-S"
-         result += o.sampleRate.toString
       }
       if( o.audioBuffers != 1024 ) {
          result += "-b"
@@ -161,40 +219,10 @@ object ServerOptionsBuilder {
          result += "-D"
          result += "0"
       }
-      if( !o.zeroConf ) {
-         result += "-R"
-         result += "0"
-      }
-      if( o.maxLogins != 64 ) {
-         result += "-l"
-         result += o.maxLogins.toString
-      }
-      o.sessionPassword.foreach( pwd => {
-         result += "-p"
-         result += pwd
-      })
-      o.inputStreamsEnabled.foreach( stream => {
-         result += "-I"
-         result += stream
-      })
-      o.outputStreamsEnabled.foreach( stream => {
-         result += "-O"
-         result += stream
-      })
       o.machPortName.foreach( tup => {
          result += "-M"
          result += tup._1
          result += tup._2
-      })
-      o.deviceNames.foreach( tup => {
-         val (inDev, outDev) = tup
-         result += "-H"
-         result += tup._1
-         result += tup._2
-      })
-      o.deviceName.foreach( n => {
-         result += "-H"
-         result += n
       })
       if( o.verbosity != 0 ) {
          result += "-v"
@@ -204,15 +232,9 @@ object ServerOptionsBuilder {
          result += "-U"
          result += o.plugInsPaths.mkString( ":" )
       }
-      o.restrictedPath.foreach( path => {
-         result += "-P"
-         result += path
-      })
       if( o.memoryLocking ) {
          result += "-L"
       }
-
-      result.toList
    }
 }
 
@@ -274,7 +296,9 @@ class ServerOptionsBuilder extends ServerOptionsLike {
    var nrtHeaderFormat:       AudioFileType              = AudioFileType.AIFF
    var nrtSampleFormat:       SampleFormat               = SampleFormat.Float
 
-   def toRealtimeArgs : List[ String ] = ServerOptionsBuilder.toRealtimeArgs( this )
+   def toRealtimeArgs : List[ String ]    = ServerOptionsBuilder.toRealtimeArgs( this )
+   def toNonRealtimeArgs : List[ String ] = ServerOptionsBuilder.toNonRealtimeArgs( this )
+
    def build : ServerOptions = new Impl(
       programPath, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
       maxNodes, maxSynthDefs, memorySize, wireBuffers, randomSeeds, loadSynthDefs, machPortName, verbosity,
@@ -282,28 +306,6 @@ class ServerOptionsBuilder extends ServerOptionsLike {
       deviceNames, deviceName, inputBusChannels, hardwareBlockSize, zeroConf, maxLogins, sessionPassword,
       nrtCommandPath,
       nrtInputPath, nrtOutputPath, nrtHeaderFormat, nrtSampleFormat )
-
-//   def toNonRealtimeArgs : List[ String ] = {
-//      val result = new ListBuffer[String]()
-//
-//      result += programPath.stringValue
-//      result += "-N"
-//      result += nrtCmdPath.stringValue
-//      result += nrtInputPath.stringValue
-//      result += nrtOutputPath.stringValue
-//      result += sampleRate.stringValue
-//      result += nrtHeaderFormat.stringValue
-//      result += nrtSampleFormat.stringValue
-//
-//      switchOptions.foreach { option =>
-//         if( option.value != option.default ) {
-//            result += "-" + option.switch
-//            result += option.stringValue
-//         }
-//      }
-//
-//      result.toList
-//   }
 
    private class Impl( val programPath: String, val controlBusChannels: Int, val audioBusChannels: Int,
                        val outputBusChannels: Int, val blockSize: Int, val sampleRate: Int, val audioBuffers: Int,
@@ -321,6 +323,7 @@ class ServerOptionsBuilder extends ServerOptionsLike {
                        val nrtSampleFormat: SampleFormat )
    extends ServerOptions {
       def toRealtimeArgs : List[ String ] = ServerOptionsBuilder.toRealtimeArgs( this )
+      def toNonRealtimeArgs : List[ String ] = ServerOptionsBuilder.toNonRealtimeArgs( this )
       override def toString = "ServerOptions"
    }
 }
