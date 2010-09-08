@@ -83,7 +83,7 @@ trait ServerOptionsLike {
    def nrtSampleFormat:       SampleFormat
 
    def toRealtimeArgs:        List[ String ]
-//   def toNonRealtimeArgs:     List[ String ]
+   def toNonRealtimeArgs:     List[ String ]
 
    def firstPrivateBus: Int = outputBusChannels + inputBusChannels
 }
