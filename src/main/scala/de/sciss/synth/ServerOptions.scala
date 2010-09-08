@@ -95,8 +95,8 @@ object ServerOptionsBuilder {
       val result = new ListBuffer[ String ]()
 
       // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
-      result += "-N"
       result += o.programPath
+      result += "-N"
       result += o.nrtCommandPath
       result += o.nrtInputPath.getOrElse( "_" )
       result += o.nrtOutputPath

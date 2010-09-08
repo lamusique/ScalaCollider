@@ -70,8 +70,8 @@
       <property name="field_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByClasses" value="true" />
       <property name="exception_breakpoints_viewId" value="TABLE" />
-      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="field_breakpoints_viewId" value="TABLE" />
+      <property name="exception_breakpoints_groupByClasses" value="true" />
       <property name="method_breakpoints_groupByMethods" value="false" />
     </ui_properties>
   </component>
@@ -84,7 +84,7 @@
       <file leaf-file-name="ServerOptions.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ServerOptions.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="101" column="31" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.17421603">
+            <state line="99" column="0" selection-start="3345" selection-end="3345" vertical-scroll-proportion="0.10452962">
               <folding />
             </state>
           </provider>
@@ -93,7 +93,7 @@
       <file leaf-file-name="Buffer.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Buffer.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="171" column="3" selection-start="6170" selection-end="6170" vertical-scroll-proportion="-16.461538">
+            <state line="171" column="3" selection-start="6170" selection-end="6170" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -177,6 +177,7 @@
     </navigator>
     <panes>
       <pane id="Favorites" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -379,7 +380,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -396,9 +396,9 @@
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="dynamic.classpath" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -739,6 +739,13 @@
         <state line="376" column="65" selection-start="14028" selection-end="14028" vertical-scroll-proportion="0.45430464" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Buffer.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="171" column="3" selection-start="6170" selection-end="6170" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/osc/ServerMessages.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="340" column="11" selection-start="12991" selection-end="12991" vertical-scroll-proportion="0.0">
@@ -746,16 +753,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/Buffer.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="171" column="3" selection-start="6170" selection-end="6170" vertical-scroll-proportion="-16.461538">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/de/sciss/synth/ServerOptions.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="31" selection-start="3457" selection-end="3457" vertical-scroll-proportion="0.17421603">
+        <state line="99" column="0" selection-start="3345" selection-end="3345" vertical-scroll-proportion="0.10452962">
           <folding />
         </state>
       </provider>
