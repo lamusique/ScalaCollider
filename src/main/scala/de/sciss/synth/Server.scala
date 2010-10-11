@@ -108,6 +108,20 @@ object Server {
    }
 
    @throws( classOf[ IOException ])
+   def dummy: Server = dummy()
+
+   /**
+    * Creates an unconnected server proxy. This may be usefull for creating NRT command files.
+    * Any attempt to try to send messages to the server will fail.
+    */
+   @throws( classOf[ IOException ])
+   def dummy( name: String = "dummy", options: ServerOptions = (new ServerOptionsBuilder).build,
+                clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : Server = {
+      val (addr, c) = prepareConnection( options, clientOptions )
+      new Server( name, c, addr, options, clientOptions )
+   }
+
+   @throws( classOf[ IOException ])
    private def prepareConnection( options: ServerOptions, clientOptions: ClientOptions ) : (InetSocketAddress, OSCClient) = {
       val addr = new InetSocketAddress( options.host, options.port )
       val clientAddr = clientOptions.addr getOrElse {
@@ -466,7 +480,7 @@ extends ServerLike {
 
       def nextID = allocator.alloc
    }
-  
+
    object busses {
       private var controlAllocator = new ContiguousBlockAllocator( options.controlBusChannels )
       private var audioAllocator = new ContiguousBlockAllocator( options.audioBusChannels, options.firstPrivateBus )
