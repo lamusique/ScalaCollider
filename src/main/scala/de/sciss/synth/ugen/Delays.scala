@@ -28,7 +28,7 @@
 
 package de.sciss.synth.ugen
 
-import de.sciss.synth.{ GE, Rate, SingleOutUGen, UGenIn }
+import de.sciss.synth.{SideEffectUGen, GE, Rate, SingleOutUGen, UGenIn}
 
 /**
  * 	@version	0.12, 08-Aug-10
@@ -216,3 +216,17 @@ object BufAllpassC extends UGen4Args {
 }
 case class BufAllpassC( rate: Rate, buf: UGenIn, in: UGenIn, delayTime: UGenIn, decayTime: UGenIn )
 extends SingleOutUGen( buf, in, delayTime, decayTime )
+
+object DelTapWr extends UGen2Args {
+	def ar( buf: GE, in: GE ) : GE = arExp( buf, in )
+   def kr( buf: GE, in: GE ) : GE = krExp( buf, in )
+}
+case class DelTapWr( rate: Rate, buf: UGenIn, in: UGenIn )
+extends SingleOutUGen( buf, in ) with SideEffectUGen
+
+object DelTapRd extends UGen4Args {
+	def ar( buf: GE, phase: GE, delayTime: GE, interp: GE = 1 ) : GE = arExp( buf, phase, delayTime, interp )
+   def kr( buf: GE, phase: GE, delayTime: GE, interp: GE = 1 ) : GE = krExp( buf, phase, delayTime, interp )
+}
+case class DelTapRd( rate: Rate, buf: UGenIn, phase: UGenIn, delayTime: UGenIn, interp: UGenIn )
+extends SingleOutUGen( buf, phase, delayTime, interp )
