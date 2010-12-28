@@ -34,8 +34,15 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
  *    A collection of UGenIn objects, wrapped as a graph element.
  *    This is mainly used in multi-channel expansion.
  */
-case class UGenInSeq( outputs: IIdxSeq[ UGenIn ]) extends GE {
-   override def toString = outputs.mkString( "[", ", ", "]" )
+//case class UGenInSeq( outputs: IIdxSeq[ UGenIn ]) extends GE {
+//   override def toString = outputs.mkString( "[", ", ", "]" )
+//
+////   override private[synth] def ops = new UGenInSeqOps( this )
+//}
 
-//   override private[synth] def ops = new UGenInSeqOps( this )
+case class UGenInSeq[ +U <: AnyUGenIn ]( elems: IIdxSeq[ U ]) extends /* IIdxSeq[ U ] with */ GE[ U ] {
+//   def expand = this
+   def expand = elems // this
+//   def apply( idx: Int ) = elems( idx )
+//   def length : Int = elems.length
 }

@@ -42,7 +42,7 @@ object GraphFunction {
    }
 }
 
-class GraphFunction[ T <% GE ]( thunk: => T ) {
+class GraphFunction[ T <% GE[ _ ]]( thunk: => T ) {
    import GraphFunction._
    
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )

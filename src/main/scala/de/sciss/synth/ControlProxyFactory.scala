@@ -32,28 +32,28 @@ import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 import ugen.{ AudioControlProxy, ControlProxy, TrigControlProxy }
 
 /**
- *    @version	0.13, 17-May-10
+ *    @version	0.14, 28-Dec-10
  */
 class ControlProxyFactory( name: String ) {
-   def ir : GE = ir( Vector( 0f ))
-   def ir( value: Double, values: Double* ) : GE = ir( Vector( (value.toFloat +: values.map( _.toFloat )): _* ))
-   def ir( value: Float, values: Float* ) : GE = ir( Vector( (value +: values): _* ))
-   def kr : GE = kr( Vector( 0f ))
-   def kr( value: Double, values: Double* ) : GE = kr( Vector( (value.toFloat +: values.map( _.toFloat )): _* ))
-   def kr( value: Float, values: Float* ) : GE = kr( Vector( (value +: values): _* ))
-   def tr : GE = tr( Vector( 0f ))
-   def tr( value: Double, values: Double* ) : GE = tr( Vector( (value.toFloat +: values.map( _.toFloat )): _* ))
-   def tr( value: Float, values: Float* ) : GE = tr( Vector( (value +: values): _* ))
-   def ar : GE = ar( Vector( 0f ))
-   def ar( value: Double, values: Double* ) : GE = ar( Vector( (value.toFloat +: values.map( _.toFloat )): _* ))
-   def ar( value: Float, values: Float* ) : GE = ar( Vector( (value +: values): _* ))
+   def ir : ControlProxy = ir( IIdxSeq( 0f ))
+   def ir( value: Double, values: Double* ) : ControlProxy = ir( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
+   def ir( value: Float, values: Float* ) : ControlProxy = ir( IIdxSeq( (value +: values): _* ))
+   def kr : ControlProxy = kr( IIdxSeq( 0f ))
+   def kr( value: Double, values: Double* ) : ControlProxy = kr( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
+   def kr( value: Float, values: Float* ) : ControlProxy = kr( IIdxSeq( (value +: values): _* ))
+   def tr : TrigControlProxy = tr( IIdxSeq( 0f ))
+   def tr( value: Double, values: Double* ) : TrigControlProxy = tr( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
+   def tr( value: Float, values: Float* ) : TrigControlProxy = tr( IIdxSeq( (value +: values): _* ))
+   def ar : AudioControlProxy = ar( IIdxSeq( 0f ))
+   def ar( value: Double, values: Double* ) : AudioControlProxy = ar( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
+   def ar( value: Float, values: Float* ) : AudioControlProxy = ar( IIdxSeq( (value +: values): _* ))
 //   def kr[ T <% GE ]( spec: (T, Double), specs: (T, Double)* ) : GE = kr( Vector( (spec._1, spec._2.toFloat) ))
 //   def kr[ T <% GE ]( spec: (T, Float), specs: (T, Float)* ) : GE = kr( Vector( spec ))
 
-   @inline private def ir( values: IIdxSeq[ Float ]) : GE  = ControlProxy( scalar, values, Some( name ))
-   @inline private def kr( values: IIdxSeq[ Float ]) : GE  = ControlProxy( control, values, Some( name ))
-   @inline private def tr( values: IIdxSeq[ Float ]) : GE  = TrigControlProxy( control, values, Some( name ))
-   @inline private def ar( values: IIdxSeq[ Float ]) : GE  = AudioControlProxy( control, values, Some( name ))
+   @inline private def ir( values: IIdxSeq[ Float ]) = ControlProxy( scalar, values, Some( name ))
+   @inline private def kr( values: IIdxSeq[ Float ]) = ControlProxy( control, values, Some( name ))
+   @inline private def tr( values: IIdxSeq[ Float ]) = TrigControlProxy( control, values, Some( name ))
+   @inline private def ar( values: IIdxSeq[ Float ]) = AudioControlProxy( control, values, Some( name ))
 //   @inline private def kr( specs: IIdxSeq[ (GE, Float) ]) : GE = {
 //
 //      LagControlProxy( control, values, Some( name ))
@@ -65,7 +65,7 @@ class ControlProxyFactory( name: String ) {
 //      val numCh = max( lags.size, inits.size )
 //      new ControlProxy( Some( name ), control, wrapExtend( values._2, numCh ), Some( wrapExtend( lags, numCh )))
 //   }
-  
+
 //   private def wrapExtend[T]( coll: IIdxSeq[T], size: Int ) : IIdxSeq[T] = {
 //      if( coll.size == size ) coll
 //      else if( coll.size > size ) coll.take( size )
@@ -85,9 +85,10 @@ trait ControlFactoryLike[ T ] {
    def build( proxies: Proxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ]
 }
 
-trait ControlProxyLike[ Impl ] extends RatedGE {
+trait ControlProxyLike[ Impl ] extends GE[ AnyUGenIn ] /* extends RatedGE[ U ] */ {
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
+   def displayName: String // YYY
 }
 
 abstract class AbstractControlProxy[ Impl ]( outputRates: IIdxSeq[ Rate ])
@@ -97,9 +98,12 @@ extends ControlProxyLike[ Impl ] {
       SynthGraph.builder.addControlProxy( this )
    }
 
-   def this( rate: Rate, numOutputs: Int ) =  this( Vector.fill( numOutputs )( rate ))
+   def this( rate: Rate, numOutputs: Int ) =  this( IIdxSeq.fill( numOutputs )( rate ))
 
-   final override def numOutputs = outputRates.size
-	final def outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map(
+// YYY
+//   final override def numOutputs = outputRates.size
+	final def outputs: IIdxSeq[ AnyUGenIn ] = outputRates.zipWithIndex.map(
       tup => ControlOutProxy( this, tup._2, tup._1 ))
+
+   final def expand: IIdxSeq[ AnyUGenIn ] = outputs   // YYY
 }

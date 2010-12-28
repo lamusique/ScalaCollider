@@ -85,6 +85,7 @@ case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Floa
 }
 
 object SynthGraph {
+   private[synth] def max( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
 //   def seq( elements: IIdxSeq[ UGenIn ]) : GE = {
 //      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
 //   }
@@ -115,28 +116,19 @@ object SynthGraph {
 //		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
 //         gate, timeScale = dt, doneAction = freeSelf ).squared
 //	}
-
-   def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
-      val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
-         val (min, max) = tup
-         val numOuts    = arg.numOutputs
-         (if( numOuts < min ) numOuts else min, if( numOuts > max) numOuts else max)
-      }
-      if( (min == 1) && (max == 1) ) {
-         args.flatMap( _.outputs.toList ) :: Nil
-      } else if( min == 0 ) {
-         Nil	// cannot wrap zero size seq
-      } else {
-         for( ch <- 0 until max ) yield args.map( arg => arg \ (ch % arg.numOutputs) )
-      }
-   }
-
-//   def simplify( res: Seq[ GE ]) : GE = { // UGenIn
-////    println( "simplify : " + res )
-//      if( res.size == 1 ) {
-//         res.head
+//
+//   def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
+//      val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
+//         val (min, max) = tup
+//         val numOuts    = arg.numOutputs
+//         (if( numOuts < min ) numOuts else min, if( numOuts > max) numOuts else max)
+//      }
+//      if( (min == 1) && (max == 1) ) {
+//         args.flatMap( _.outputs.toList ) :: Nil
+//      } else if( min == 0 ) {
+//         Nil	// cannot wrap zero size seq
 //      } else {
-//         seqOfGEToGE( res )
+//         for( ch <- 0 until max ) yield args.map( arg => arg \ (ch % arg.numOutputs) )
 //      }
 //   }
 
@@ -220,13 +212,13 @@ object SynthGraph {
          var numIneff      = ugens.size
          val indexedUGens  = ugens.zipWithIndex.map( tup => {
             val (ugen, idx) = tup
-            val eff        = ugen.isInstanceOf[ SideEffectUGen ]
+            val eff        = ugen.isInstanceOf[ HasSideEffect ]
             if( eff ) numIneff -= 1
             new IndexedUGen( ugen, idx, eff )
          })
          val ugenMap: Map[ UGen, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen, iu))( breakOut )
          indexedUGens.foreach( iu => {
-            iu.richInputs = iu.ugen.inputs.map({
+            iu.richInputs = iu.ugen.inputs.map({   // YYY Warning: match not exhaustive
                case Constant( value ) => constantMap.get( value ) getOrElse {
                   val rc         = new RichConstant( constants.size )
                   constantMap   += value -> rc

@@ -49,26 +49,26 @@ trait UGenProxy {
  *    orphaned non-side-effect ugens are
  *    automatically removed from the graph.
  */
-trait SideEffectUGen {
-   me: UGen =>
+trait HasSideEffect
 
-//   // ---- constructor ----
-//   {
-//      SynthGraph.builder.addUGen( this )
-//   }
-}
+trait HasDoneFlag
 
 abstract class UGen
-extends RatedGE with UGenProxy {
+extends /* YYY RatedGE with */ UGenProxy {
    // ---- constructor ----
    {
       SynthGraph.builder.addUGen( this )
    }
 
-   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1 )}
+   def rate: Rate // YYY
+   def numOutputs: Int // YYY
+   def outputs: IIdxSeq[ AnyUGenIn ] // YYY
+
+//   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1 )}
+   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1, cn.length - 4 )}
    def displayName = name
 //   def outputRates: Seq[ Rate ]
-   def inputs: Seq[ UGenIn ]
+   def inputs: Seq[ AnyUGenIn ]
    def numInputs = inputs.size
    def source = this
    def specialIndex = 0
@@ -89,19 +89,22 @@ extends RatedGE with UGenProxy {
 }
 
 // a class for UGens with multiple outputs
-abstract class MultiOutUGen( outputRates: IIdxSeq[ Rate ], val inputs: UGenIn* )
-extends UGen {
-   // most multi out ugens use the same rate for all outputs,
-   // therefore we have a simpler constructor
-   def this( rate: Rate, numOutputs: Int, inputs: UGenIn* ) = this( Vector.fill( numOutputs )( rate ), inputs: _* )
+abstract class MultiOutUGen[ R <: Rate ]( outputRates: IIdxSeq[ R ], val inputs: IIdxSeq[ AnyUGenIn ])
+extends UGen with GE[UGenIn[ R ]]{
+// YYY
+//   // most multi out ugens use the same rate for all outputs,
+//   // therefore we have a simpler constructor
+//   def this( rate: Rate, numOutputs: Int, inputs: UGenIn* ) = this( Vector.fill( numOutputs )( rate ), inputs: _* )
    
    final override def numOutputs = outputRates.size
-	final def outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map(
-      tup => UGenOutProxy( this, tup._2, tup._1 ))
+//	final def outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map(
+//      tup => UGenOutProxy( this, tup._2, tup._1 ))
+
+   final def expand: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map( tup => UGenOutProxy( this, tup._2, tup._1 ))
+   final def outputs: IIdxSeq[ UGenIn[ R ]] = expand
 }
 
-abstract class ZeroOutUGen( val inputs: UGenIn* )
-extends UGen with SideEffectUGen {
+abstract class ZeroOutUGen( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with HasSideEffect {
    final override def numOutputs = 0
-   final def outputs: IIdxSeq[ UGenIn ] = Vector.empty
+   final def outputs = IIdxSeq.empty
 }

@@ -28,32 +28,46 @@
 
 package de.sciss.synth
 
+import ugen.MulAdd
+
 /**
- *    @version 0.11, 16-Aug-10
+ *    @version 0.12, 28-Dec-10
  */
 object Rate {
    def highest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
-   def highest( ge: GE ) : Rate = highest( ge.outputs.map( _.rate ): _* )
+   def highest( ge: GE[ AnyUGenIn ]) : Rate = highest( ge.expand.map( _.rate ): _* )
    def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
-   def lowest( ge: GE ) : Rate = lowest( ge.outputs.map( _.rate ): _* )
+   def lowest( ge: GE[ AnyUGenIn ]) : Rate = lowest( ge.expand.map( _.rate ): _* )
 }
 
 /**
  *    The calculation rate of a UGen or a UGen output.
  */
-sealed abstract class Rate( val id: Int ) {
+sealed abstract class Rate {
+   val id: Int
    val methodName: String
 }
 
-case object scalar  extends Rate( 0 ) { val methodName = "ir" }
-case object control extends Rate( 1 ) { val methodName = "kr" }
-case object audio   extends Rate( 2 ) { val methodName = "ar" }
-case object demand  extends Rate( 3 ) { val methodName = "dr" }
+sealed trait scalar  extends Rate { final val id = 0; final val methodName = "ir" }
+sealed trait control extends Rate { final val id = 1; final val methodName = "kr" }
+sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
+sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
+case object scalar  extends scalar
+case object control extends control
+case object audio   extends audio
+case object demand  extends demand
 
-trait RatedGE extends GE {
-   def rate : Rate
-   def displayName: String
-}
+//trait RatedGE[ +R <: Rate, +U <: UGenIn[ R ]] extends GE[ U ] {
+//   def rate : Rate // R
+//   def madd( mul: RatedGE[ Rate, AnyUGenIn ], add: RatedGE[ Rate, AnyUGenIn ]) : RatedGE[ R, UGenIn[ R ]] = {
+//      (rate match {
+//         case `audio`   => MulAdd.ar( this, mul, add )
+//         case `control` => MulAdd.kr( this, mul, add )
+//         case `scalar`  => this * mul + add
+//         case r         => error( "Illegal rate " + r )
+//      }).asInstanceOf[ RatedGE[ R, UGenIn[ R ]]]
+//   }
+//}
 
 trait ScalarRated  { def rate = scalar }
 trait ControlRated { def rate = control }

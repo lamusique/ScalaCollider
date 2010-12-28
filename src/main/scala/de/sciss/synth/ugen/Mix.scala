@@ -30,20 +30,21 @@ package de.sciss.synth.ugen
 
 import de.sciss.synth.{ GE }
 
-/**
- *	@version	0.10, 09-Dec-09
- */
-object Mix {
-	def apply( elements: GE ) : GE = elements.outputs.foldLeft[ GE ]( 0 )( (a, b) => a + b )
-
-	// support this common idiom
-    // (corresponds to fill in sclang)
-	def tabulate( n: Int )( func: (Int) => GE ) : GE = {
-      (0 until n).foldLeft[ GE ]( 0 )( (sum, i) => sum + func( i ))
-	}
-
-   def fill( n: Int )( thunk: => GE ) : GE = {
-      def func() = thunk
-      (0 until n).foldLeft[ GE ]( 0 )( (sum, i) => sum + func() )
-   }
-}
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+///**
+// *	@version	0.10, 09-Dec-09
+// */
+//object Mix {
+//	def apply( elements: GE ) : GE = elements.outputs.foldLeft[ GE ]( 0 )( (a, b) => a + b )
+//
+//	// support this common idiom
+//    // (corresponds to fill in sclang)
+//	def tabulate( n: Int )( func: (Int) => GE ) : GE = {
+//      (0 until n).foldLeft[ GE ]( 0 )( (sum, i) => sum + func( i ))
+//	}
+//
+//   def fill( n: Int )( thunk: => GE ) : GE = {
+//      def func() = thunk
+//      (0 until n).foldLeft[ GE ]( 0 )( (sum, i) => sum + func() )
+//   }
+//}

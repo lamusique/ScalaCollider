@@ -32,7 +32,7 @@ import de.sciss.osc.{ OSCMessage }
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant, ControlProxyFactory, DoneAction, GE,
-               GraphFunction, Group, MultiControlSetMap, MultiControlABusMap, MultiControlKBusMap, Node,
+               GraphFunction, Group, MultiControlSetMap, MultiControlABusMap, MultiControlKBusMap, Node, Rate,
                RichDouble, RichFloat, RichInt, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
                Synth, UGenIn, UGenInSeq }
 
@@ -66,6 +66,8 @@ package synth {
 package object synth extends de.sciss.synth.LowPriorityImplicits {
    // GEs
 
+   type AnyUGenIn = UGenIn[ _ <: Rate ]
+
    /**
     * This conversion is particularly important to balance priorities,
     * as the plain pair of `intToGE` and `enrichFloat` have equal
@@ -89,19 +91,21 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
 
 //   implicit def geOps( ge: GE ) = ge.ops
 
-   implicit def seqOfGEToGE( x: Seq[ GE ]) : GE = {
-      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.outputs )( breakOut )
-      outputs match {
-         case IIdxSeq( mono ) => mono
-         case _               => new UGenInSeq( outputs )
-      }
-   }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   implicit def seqOfGEToGE( x: Seq[ GE ]) : GE = {
+//      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.outputs )( breakOut )
+//      outputs match {
+//         case IIdxSeq( mono ) => mono
+//         case _               => new UGenInSeq( outputs )
+//      }
+//   }
    implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
-   // or should we add a view bound to seqOfGEToGE?
-   implicit def seqOfFloatToGE( x: Seq[ Float ])   = new UGenInSeq( x.map( Constant( _ ))( breakOut ))
-   implicit def seqOfIntToGE( x: Seq[ Int ])       = new UGenInSeq( x.map( i => Constant( i.toFloat ))( breakOut ))
-   implicit def seqOfDoubleToGE( x: Seq[ Double ]) = new UGenInSeq( x.map( d => Constant( d.toFloat ))( breakOut ))
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   // or should we add a view bound to seqOfGEToGE?
+//   implicit def seqOfFloatToGE( x: Seq[ Float ])   = new UGenInSeq( x.map( Constant( _ ))( breakOut ))
+//   implicit def seqOfIntToGE( x: Seq[ Int ])       = new UGenInSeq( x.map( i => Constant( i.toFloat ))( breakOut ))
+//   implicit def seqOfDoubleToGE( x: Seq[ Double ]) = new UGenInSeq( x.map( d => Constant( d.toFloat ))( breakOut ))
 
    // control mapping
    implicit def intFloatControlSet( tup: (Int, Float) )                    = SingleControlSetMap( tup._1, tup._2 )
@@ -126,7 +130,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
 
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
-   implicit def thunkToGraphFunction[ T <% GE ]( thunk: => T ) = new GraphFunction( thunk )
+   implicit def thunkToGraphFunction[ T <% GE[ _ ]]( thunk: => T ) = new GraphFunction( thunk )
 
 //   // Misc
 //   implicit def stringToOption( x: String ) = Some( x )
