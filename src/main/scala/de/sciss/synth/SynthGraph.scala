@@ -29,7 +29,6 @@
 package de.sciss.synth
 
 import java.io.DataOutputStream
-import ugen.{ EnvGen, Out, Silent }
 import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
 import collection.immutable.{ IndexedSeq => IIdxSeq }
@@ -90,31 +89,32 @@ object SynthGraph {
 //      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
 //   }
 
-   def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) =
-      SynthGraph {
-         val res1 = thunk
-         val rate = Rate.highest( res1.outputs.map( _.rate ): _* )
-         if( (rate == audio) || (rate == control) ) {
-            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
-            val out = "out".kr
-            if( rate == audio ) {
-               Out.ar( out, res2 )
-            } else {
-               Out.kr( out, res2 )
-            }
-         } else res1
-      }
-
-	def makeFadeEnv( fadeTime: Float ) : GE = {
-		val dt			= "fadeTime".kr( fadeTime )
-		val gate       = "gate".kr( 1 )
-		val startVal	= (dt <= 0)
-      // this is slightly more costly than what sclang does
-      // (using non-linear shape plus an extra unary op),
-      // but it fadeout is much smoother this way...
-		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
-         gate, timeScale = dt, doneAction = freeSelf ).squared
-	}
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) =
+//      SynthGraph {
+//         val res1 = thunk
+//         val rate = Rate.highest( res1.outputs.map( _.rate ): _* )
+//         if( (rate == audio) || (rate == control) ) {
+//            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
+//            val out = "out".kr
+//            if( rate == audio ) {
+//               Out.ar( out, res2 )
+//            } else {
+//               Out.kr( out, res2 )
+//            }
+//         } else res1
+//      }
+//
+//	def makeFadeEnv( fadeTime: Float ) : GE = {
+//		val dt			= "fadeTime".kr( fadeTime )
+//		val gate       = "gate".kr( 1 )
+//		val startVal	= (dt <= 0)
+//      // this is slightly more costly than what sclang does
+//      // (using non-linear shape plus an extra unary op),
+//      // but it fadeout is much smoother this way...
+//		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+//         gate, timeScale = dt, doneAction = freeSelf ).squared
+//	}
 
    def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
       val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
@@ -140,22 +140,23 @@ object SynthGraph {
 //      }
 //   }
 
-   def replaceZeroesWithSilence( ge: GE ) : GE = {
-      val ins        = ge.outputs
-      val numZeroes  = ins.foldLeft( 0 )( (sum, in) => in match {
-         case Constant( 0 )   => sum + 1
-         case _               => sum
-      })
-      if( numZeroes == 0 ) {
-         ge
-      } else {
-         val silent = Silent.ar( numZeroes ).outputs.iterator
-         ins map (in => in match {
-            case Constant( 0 )   => silent.next
-            case _               => in
-         })
-      }
-   }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def replaceZeroesWithSilence( ge: GE ) : GE = {
+//      val ins        = ge.outputs
+//      val numZeroes  = ins.foldLeft( 0 )( (sum, in) => in match {
+//         case Constant( 0 )   => sum + 1
+//         case _               => sum
+//      })
+//      if( numZeroes == 0 ) {
+//         ge
+//      } else {
+//         val silent = Silent.ar( numZeroes ).outputs.iterator
+//         ins map (in => in match {
+//            case Constant( 0 )   => silent.next
+//            case _               => in
+//         })
+//      }
+//   }
 
 //   private val sync        = new AnyRef
    // java.lang.ThreadLocal is around 30% faster than

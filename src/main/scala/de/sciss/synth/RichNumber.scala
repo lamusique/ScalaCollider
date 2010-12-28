@@ -545,11 +545,12 @@ sealed trait NAryGEOps {
    def wrap2( b: GE ) : GE             = cn.wrap2( b )
    def firstarg( b: GE ) : GE          = cn.firstarg( b )
 
-   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
-      cn.linlin( srcLo, srcHi, dstLo, dstHi )
-
-   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
-      cn.linexp( srcLo, srcHi, dstLo, dstHi )
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
+//      cn.linlin( srcLo, srcHi, dstLo, dstHi )
+//
+//   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
+//      cn.linexp( srcLo, srcHi, dstLo, dstHi )
 }
 
 sealed trait NAryGEOps2 extends NAryGEOps {

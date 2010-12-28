@@ -35,34 +35,35 @@ import SynthGraph._
 /**
  *    @version 0.12, 02-Aug-10
  */
-object MulAdd extends UGen3Args {
-   def ar( in: GE, mul: GE, add: GE ) : GE = arExp( in, mul, add )
-   def kr( in: GE, mul: GE, add: GE ) : GE = krExp( in, mul, add )
-   def ir( in: GE, mul: GE, add: GE ) : GE = irExp( in, mul, add )
-
-   protected[synth] def make( in: GE, mul: GE, add: GE ) : GE = {
-      for( Seq( i, m, a ) <- expand( in, mul, add )) yield make1( i, m, a )
-   }
-
-   private def make1( in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
-      make1( Rate.highest( in.rate, mul.rate, add.rate ), in, mul, add )
-
-   private def make1( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
-      (mul, add) match {
-         case (c(0),  _)    => add
-         case (c(1),  c(0)) => in
-         case (c(1),  _)    => in + add
-         case (c(-1), c(0)) => -in
-         case (_,     c(0)) => in * mul
-         case (c(-1), _)    => add - in
-         case _             => this( rate, in, mul, add )
-      }
-}
-
-case class MulAdd( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn )
-extends SingleOutUGen( in, mul, add ) {
-   override def toString = in.toString + ".madd(" + mul + ", " + add + ")"
-}
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//object MulAdd extends UGen3Args {
+//   def ar( in: GE, mul: GE, add: GE ) : GE = arExp( in, mul, add )
+//   def kr( in: GE, mul: GE, add: GE ) : GE = krExp( in, mul, add )
+//   def ir( in: GE, mul: GE, add: GE ) : GE = irExp( in, mul, add )
+//
+//   protected[synth] def make( in: GE, mul: GE, add: GE ) : GE = {
+//      for( Seq( i, m, a ) <- expand( in, mul, add )) yield make1( i, m, a )
+//   }
+//
+//   private def make1( in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
+//      make1( Rate.highest( in.rate, mul.rate, add.rate ), in, mul, add )
+//
+//   private def make1( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
+//      (mul, add) match {
+//         case (c(0),  _)    => add
+//         case (c(1),  c(0)) => in
+//         case (c(1),  _)    => in + add
+//         case (c(-1), c(0)) => -in
+//         case (_,     c(0)) => in * mul
+//         case (c(-1), _)    => add - in
+//         case _             => this( rate, in, mul, add )
+//      }
+//}
+//
+//case class MulAdd( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn )
+//extends SingleOutUGen( in, mul, add ) {
+//   override def toString = in.toString + ".madd(" + mul + ", " + add + ")"
+//}
 
 private[ugen] abstract class BasicOpUGen( override val specialIndex: Int, inputs: UGenIn* )
 extends SingleOutUGen( inputs: _* )

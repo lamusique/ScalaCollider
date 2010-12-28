@@ -29,9 +29,8 @@
 package de.sciss.synth
 
 import de.sciss.osc.{ OSCBundle, OSCMessage, OSCPacket }
-import de.sciss.synth.{ Completion => Comp, play => scplay }
+import de.sciss.synth.{ Completion => Comp /*, play => scplay */ }
 import de.sciss.synth.io.{ AudioFileType, SampleFormat }
-import ugen.{ BufRateScale, FreeSelfWhenDone, PlayBuf }
 import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferAllocReadMessage,
              OSCBufferCloseMessage, OSCBufferFreeMessage, OSCBufferReadChannelMessage, OSCBufferReadMessage,
              OSCBufferQueryMessage, OSCBufferSetMessage, OSCBufferSetnMessage, OSCBufferWriteMessage,
@@ -317,13 +316,14 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    // ---- utility methods ----
-   def play : Synth = play()
-   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
-      scplay( server, out ) { // working around nasty compiler bug
-         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
-         if( !loop ) FreeSelfWhenDone.kr( ply )
-         ply * "amp".kr( amp )
-      }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def play : Synth = play()
+//   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
+//      scplay( server, out ) { // working around nasty compiler bug
+//         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
+//         if( !loop ) FreeSelfWhenDone.kr( ply )
+//         ply * "amp".kr( amp )
+//      }
 
    private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ OSCPacket ] = {
       val a = completion.action

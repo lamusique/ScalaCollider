@@ -30,7 +30,7 @@ package de.sciss.synth
 
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{ BinaryOpUGen, Impulse, LinExp, LinLin, MulAdd, Poll, UnaryOpUGen }
+import ugen.{ BinaryOpUGen, UnaryOpUGen }
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -61,16 +61,18 @@ trait GE {
 
 //   private[synth] def ops = new GEOps( this )
 
-   def madd( mul: GE, add: GE ) : GE = {
-      Rate.highest( outputs.map( _.rate ): _* ) match {
-         case `audio`   => MulAdd.ar( this, mul, add )
-         case `control` => MulAdd.kr( this, mul, add )
-         case `scalar`  => this * mul + add
-         case r         => error( "Illegal rate " + r )
-      }
-   }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def madd( mul: GE, add: GE ) : GE = {
+//      Rate.highest( outputs.map( _.rate ): _* ) match {
+//         case `audio`   => MulAdd.ar( this, mul, add )
+//         case `control` => MulAdd.kr( this, mul, add )
+//         case `scalar`  => this * mul + add
+//         case r         => error( "Illegal rate " + r )
+//      }
+//   }
 
-   def poll: GE = poll()
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def poll: GE = poll()
 
    /**
     * Polls the output values of this graph element, and prints the result to the console.
@@ -87,34 +89,35 @@ trait GE {
     *
     * @see  [[de.sciss.synth.ugen.Poll]]
     */
-   def poll( trig: GE = 10, label: String = "#auto", trigID: GE = -1 ) : GE = {
-      import SynthGraph._
-
-      val trig0 = trig match {
-         case Constant( freq ) => {
-            val res: GE = outputs.map( in => Impulse( in.rate match {
-               case `scalar`  => control
-               case _         => in.rate
-            }, freq, 0 ))
-            res
-         }
-         case _ => trig
-      }
-      val labels: IIdxSeq[ String ] = if( label == "#auto" ) {
-         ge match {
-            case seq: UGenInSeq => outputs.zipWithIndex.map( tup => "#" + tup._2 + " " + tup._1.displayName )
-            case _ => outputs.map( _.displayName )
-         }
-      } else {
-         if( numOutputs == 1 ) Vector( label ) else Vector.tabulate( numOutputs )( "#" + _ + " " + label )
-      }
-
-      for( (Seq( t, g, i ), ch) <- expand( trig0, ge, trigID ).zipWithIndex )
-         yield Poll( g.rate match {
-               case `audio`   => audio
-               case _         => g.rate
-            }, t, g, labels( ch ), i )
-   }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def poll( trig: GE = 10, label: String = "#auto", trigID: GE = -1 ) : GE = {
+//      import SynthGraph._
+//
+//      val trig0 = trig match {
+//         case Constant( freq ) => {
+//            val res: GE = outputs.map( in => Impulse( in.rate match {
+//               case `scalar`  => control
+//               case _         => in.rate
+//            }, freq, 0 ))
+//            res
+//         }
+//         case _ => trig
+//      }
+//      val labels: IIdxSeq[ String ] = if( label == "#auto" ) {
+//         ge match {
+//            case seq: UGenInSeq => outputs.zipWithIndex.map( tup => "#" + tup._2 + " " + tup._1.displayName )
+//            case _ => outputs.map( _.displayName )
+//         }
+//      } else {
+//         if( numOutputs == 1 ) Vector( label ) else Vector.tabulate( numOutputs )( "#" + _ + " " + label )
+//      }
+//
+//      for( (Seq( t, g, i ), ch) <- expand( trig0, ge, trigID ).zipWithIndex )
+//         yield Poll( g.rate match {
+//               case `audio`   => audio
+//               case _         => g.rate
+//            }, t, g, labels( ch ), i )
+//   }
 
    import UnaryOpUGen._
 
@@ -234,13 +237,15 @@ trait GE {
 //      simplify( for( List( ax, sl, sh, dl, dh ) <- expand( a, srcLo, srcHi, dstLo, dstHi ))
 //         yield LinLin( rate, ax, sl, sh, dl, dh ))
 //   }
-   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = Rate.highest( this ) match {
-      case `demand` => (this - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
-      case r => LinLin.make( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-   }
 
-   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = Rate.highest( this ) match {
-      case `demand` => (dstHi / dstLo).pow( (this - srcLo) / (srcHi - srcLo) ) * dstLo
-      case r => LinExp.make( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-   }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = Rate.highest( this ) match {
+//      case `demand` => (this - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
+//      case r => LinLin.make( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+//   }
+//
+//   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = Rate.highest( this ) match {
+//      case `demand` => (dstHi / dstLo).pow( (this - srcLo) / (srcHi - srcLo) ) * dstLo
+//      case r => LinExp.make( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+//   }
 }

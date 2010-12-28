@@ -2,8 +2,8 @@ import sbt._
 import java.io.{ IOException, RandomAccessFile }
 
 class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) { 
-   val dep1 = "de.sciss" %% "scalaosc" % "0.20"
-   val dep2 = "de.sciss" %% "scalaaudiofile" % "0.14"
+   val dep1 = "de.sciss" %% "scalaosc" % "0.21"
+   val dep2 = "de.sciss" %% "scalaaudiofile" % "0.15"
    lazy val demo = demoAction
 
    protected def demoAction = {
@@ -15,6 +15,6 @@ class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) {
            new String( buf, "UTF-8" )
        }
        catch { case e: IOException => { e.printStackTrace(); "" }}
-       consoleTask( consoleClasspath, consoleInit ) describedAs "Starts a ScalaCollider REPL, initializing from file \"console-startup.txt\"."
+       consoleTask( consoleClasspath, Nil, consoleInit ) describedAs "Starts a ScalaCollider REPL, initializing from file \"console-startup.txt\"."
    }
 }

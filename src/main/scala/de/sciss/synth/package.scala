@@ -153,15 +153,10 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
 //  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
   
    // explicit methods
-   def play( thunk: => GE ) : Synth = play()( thunk )
-   def play( target: Node = Server.default.defaultGroup, outBus: Int = 0,
-             fadeTime: Option[Float] = Some( 0.02f ),
-             addAction: AddAction = addToHead )( thunk: => GE ) : Synth =
-      new GraphFunction( thunk ).play( target, outBus, fadeTime, addAction )
-
-//   // String
-//   def warn( s: String ) : String = {
-//      println( "WARNING:\n" + s )
-//      s
-//   }
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def play( thunk: => GE ) : Synth = play()( thunk )
+//   def play( target: Node = Server.default.defaultGroup, outBus: Int = 0,
+//             fadeTime: Option[Float] = Some( 0.02f ),
+//             addAction: AddAction = addToHead )( thunk: => GE ) : Synth =
+//      new GraphFunction( thunk ).play( target, outBus, fadeTime, addAction )
 }
