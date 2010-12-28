@@ -66,7 +66,6 @@ trait GE[ +U ] {
 
 //   private[synth] def ops = new GEOps( this )
 
-// YYY
 //   def madd( mul: GE[ AnyUGenIn ], add: GE[ AnyUGenIn ]) : GE[ AnyUGenIn ] = {
 //      Rate.highest( outputs.map( _.rate ): _* ) match {
 //         case `audio`   => MulAdd.ar( this, mul, add )

@@ -1,11 +1,11 @@
 /*
- * Line.scala
- * (ScalaCollider-UGens)
- *
- * This is a synthetically generated file.
- * Created: Tue Dec 28 22:21:21 CET 2010
- * ScalaCollider-UGen version: 0.10
- */
+* Line.scala
+* (ScalaCollider-UGens)
+*
+* This is a synthetically generated file.
+* Created: Tue Dec 28 22:21:21 CET 2010
+* ScalaCollider-UGen version: 0.10
+*/
 
 package de.sciss.synth
 package ugen
