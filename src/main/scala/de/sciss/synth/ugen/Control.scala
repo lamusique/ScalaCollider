@@ -58,43 +58,71 @@ object Control {
 case class ControlUGen private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty ) with HasSideEffect
 
-case class ControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ ControlProxy ]( IIdxSeq.fill( values.size )( rate )) {
-   def factory = ControlFactory
+case class ControlProxy[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ R, ControlProxy[ R ]]( IIdxSeq.fill( values.size )( rate )) {
+//   def factory = ControlFactory
+   def factory : ControlFactoryLike[ ControlProxy[ R ]] = ControlFactory
 
    override def toString: String = {
       name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
    }
 
    def displayName = "Control"
-}
 
-object ControlFactory extends ControlFactoryLike[ ControlProxy ] {
-   // XXX eventually we should try to factor this out for all controlfactories...
-   def build( proxies: ControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
-      val b = SynthGraph.builder
-      // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
-      // which exhibited a problem of not forcing varargs into being strict.
-      // this has probably been fixed, hence we should eventually check if
-      // the force is still necessary or could be removed!
-      // -- DONE
-      proxies.groupBy( _.rate ).flatMap( group => {
-         val (rate, ps)    = group
-         var numChannels   = 0
-         val specialIndex  = ps.map( p => {
-            numChannels += p.values.size
-            b.addControl( p.values, p.name )
-         }).head
-         val ugen: UGen = ControlUGen( rate, numChannels, specialIndex )
-         var offset = 0
-         ps.map( p => {
-            val res = p -> (ugen, offset)
-            offset += p.values.size
-            res
-         })
-      })( breakOut )
+   private object ControlFactory extends ControlFactoryLike[ ControlProxy[ R ]] {
+      // XXX eventually we should try to factor this out for all controlfactories...
+      def build( proxies: ControlProxy[ R ]* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+         val b = SynthGraph.builder
+         // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
+         // which exhibited a problem of not forcing varargs into being strict.
+         // this has probably been fixed, hence we should eventually check if
+         // the force is still necessary or could be removed!
+         // -- DONE
+         proxies.groupBy( _.rate ).flatMap( group => {
+            val (rate, ps)    = group
+            var numChannels   = 0
+            val specialIndex  = ps.map( p => {
+               numChannels += p.values.size
+               b.addControl( p.values, p.name )
+            }).head
+            val ugen: UGen = ControlUGen( rate, numChannels, specialIndex )
+            var offset = 0
+            ps.map( p => {
+               val res = p -> (ugen, offset)
+               offset += p.values.size
+               res
+            })
+         })( breakOut )
+      }
    }
 }
+
+//object ControlFactory extends ControlFactoryLike[ ControlProxy[ _ ]] {
+//   // XXX eventually we should try to factor this out for all controlfactories...
+//   def build( proxies: ControlProxy[ _ ]* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+//      val b = SynthGraph.builder
+//      // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
+//      // which exhibited a problem of not forcing varargs into being strict.
+//      // this has probably been fixed, hence we should eventually check if
+//      // the force is still necessary or could be removed!
+//      // -- DONE
+//      proxies.groupBy( _.rate ).flatMap( group => {
+//         val (rate, ps)    = group
+//         var numChannels   = 0
+//         val specialIndex  = ps.map( p => {
+//            numChannels += p.values.size
+//            b.addControl( p.values, p.name )
+//         }).head
+//         val ugen: UGen = ControlUGen( rate, numChannels, specialIndex )
+//         var offset = 0
+//         ps.map( p => {
+//            val res = p -> (ugen, offset)
+//            offset += p.values.size
+//            res
+//         })
+//      })( breakOut )
+//   }
+//}
 
 // ---------- TrigControl ----------
 
@@ -108,8 +136,8 @@ object TrigControl {
 case class TrigControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) with ControlRated with HasSideEffect
 
-case class TrigControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ TrigControlProxy ]( rate, values.size ) {
+case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill( values.size )( control )) with ControlRated {
    def factory = TrigControlFactory
 
    override def toString: String = {
@@ -120,7 +148,7 @@ extends AbstractControlProxy[ TrigControlProxy ]( rate, values.size ) {
 }
 
 object TrigControlFactory extends ControlFactoryLike[ TrigControlProxy ] {
-   def build( proxies: TrigControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
+   def build( proxies: TrigControlProxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
       val b = SynthGraph.builder
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {
@@ -149,8 +177,8 @@ object AudioControl {
 case class AudioControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
 
-case class AudioControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ AudioControlProxy ]( rate, values.size ) {
+case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill( values.size )( audio )) with AudioRated {
    def factory = AudioControlFactory
 
    override def toString: String = {
@@ -161,7 +189,7 @@ extends AbstractControlProxy[ AudioControlProxy ]( rate, values.size ) {
 }
 
 object AudioControlFactory extends ControlFactoryLike[ AudioControlProxy ] {
-   def build( proxies: AudioControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
+   def build( proxies: AudioControlProxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
       val b = SynthGraph.builder
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {

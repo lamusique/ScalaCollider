@@ -37,7 +37,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
  *
  *    @version 0.12, 28-Dec-10
  */
-sealed trait UGenIn[ +R <: Rate ] extends /* RatedGE */ GE[ UGenIn[ R ]] {
+sealed trait UGenIn[ R <: Rate ] extends /* RatedGE */ GE[ R, UGenIn[ R ]] {
    type Rate = R
 // YYY
 //   final override def numOutputs = 1
@@ -148,7 +148,7 @@ extends UGenIn[ R ] with UGenProxy {
  *    returned from the ControlProxyFactory class, that is, using the package
  *    implicits, from calls such as "myControl".kr.
  */
-case class ControlOutProxy[ R <: Rate ]( source: ControlProxyLike[ _ ], outputIndex: Int, rate: R )
+case class ControlOutProxy[ R <: Rate ]( source: ControlProxyLike[ R, _ ], outputIndex: Int, rate: R )
 extends UGenIn[ R ] {
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex 

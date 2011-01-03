@@ -85,7 +85,7 @@ case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Floa
 }
 
 object SynthGraph {
-   private[synth] def max( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
+   private[synth] def maxInt( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
 //   def seq( elements: IIdxSeq[ UGenIn ]) : GE = {
 //      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
 //   }
@@ -182,7 +182,7 @@ object SynthGraph {
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
-      def addControlProxy( proxy: ControlProxyLike[ _ ]) {}
+      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
       def addUGen( ugen: UGen ) {}
    }
 
@@ -192,7 +192,7 @@ object SynthGraph {
       private var ugenSet        = MSet.empty[ UGen ]
       private var controlValues  = IIdxSeq.empty[ Float ]
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
-      private var controlProxies = MSet.empty[ ControlProxyLike[ _ ]]
+      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
       def build = {
          val ctrlProxyMap        = buildControls
@@ -204,7 +204,7 @@ object SynthGraph {
          SynthGraph( constants, controlValues, controlNames, richUGens )
       }
 
-      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _ ], (UGen, Int)]) :
+      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _, _ ], (UGen, Int)]) :
          (MBuffer[ IndexedUGen ], IIdxSeq[ Float ]) = {
 
          val constantMap   = MMap.empty[ Float, RichConstant ]
@@ -290,7 +290,7 @@ object SynthGraph {
          specialIndex
       }
 
-      def addControlProxy( proxy: ControlProxyLike[ _ ]) {
+      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
          controlProxies += proxy
       }
 
@@ -298,7 +298,7 @@ object SynthGraph {
        *    Manita, how simple things can get as soon as you
        *    clean up the sclang mess...
        */
-      private def buildControls: Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
+      private def buildControls: Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
          controlProxies.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
             factory.build( proxies.toSeq: _* )

@@ -90,7 +90,7 @@ extends /* YYY RatedGE with */ UGenProxy {
 
 // a class for UGens with multiple outputs
 abstract class MultiOutUGen[ R <: Rate ]( outputRates: IIdxSeq[ R ], val inputs: IIdxSeq[ AnyUGenIn ])
-extends UGen with GE[UGenIn[ R ]]{
+extends UGen with GE[R, UGenIn[ R ]]{
 // YYY
 //   // most multi out ugens use the same rate for all outputs,
 //   // therefore we have a simpler constructor

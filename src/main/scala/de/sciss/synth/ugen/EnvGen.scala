@@ -12,13 +12,13 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import SynthGraph._
 object Done {
-   def kr(src: GE[AnyUGenIn with HasDoneFlag]) = apply(src)
+   def kr(src: GE[ R, UGenIn[ R ] with HasDoneFlag ] forSome { type R <: Rate }) = apply(src)
 }
-case class Done(src: GE[AnyUGenIn with HasDoneFlag]) extends GE[DoneUGen] with ControlRated {
+case class Done(src: GE[ R, UGenIn[ R ] with HasDoneFlag ] forSome { type R <: Rate }) extends GE[control, DoneUGen] with ControlRated {
    def expand = {
-      val _src = src.expand
+      val _src: IIdxSeq[ AnyUGenIn with HasDoneFlag ] = src.expand
       val _sz_src = _src.size
-      val _exp_ = max(_sz_src)
+      val _exp_ = maxInt(_sz_src)
       IIdxSeq.tabulate(_exp_)(i => DoneUGen(_src(i.%(_sz_src))))
    }
 }

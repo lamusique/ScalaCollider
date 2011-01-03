@@ -19,10 +19,10 @@ object TestPimp {
    implicit val scalarImp  = scalar
    implicit val demandImp  = demand
 
-   implicit def enrichGE[ R <: Rate ]( ge: GE[ UGenIn[ R ]])( implicit rate: R ) = new RichGE( rate, ge )
+   implicit def enrichGE[ R <: Rate ]( ge: GE[ R, UGenIn[ R ]])( implicit rate: R ) = new RichGE( rate, ge )
 
-   class RichGE[ R <: Rate ]( rate: R, ge: GE[ UGenIn[ R ]]) {
-      def madd( mul: GE[ AnyUGenIn ], add: GE[ AnyUGenIn ]) = MulAdd[ R ]( rate, ge, mul, add )
+   class RichGE[ R <: Rate ]( rate: R, ge: GE[ R, UGenIn[ R ]]) {
+      def madd( mul: AnyGE, add: AnyGE ) = MulAdd[ R ]( rate, ge, mul, add )
    }
 
 //   class RichGE[ R <: Rate ]( rate: R, ge: GE[ UGenIn[ R ]]) {

@@ -63,10 +63,11 @@ package synth {
  *
  * @version	0.14, 28-Aug-10
  */
-package object synth extends de.sciss.synth.LowPriorityImplicits {
+package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.synth.RateRelations {
    // GEs
 
    type AnyUGenIn = UGenIn[ _ <: Rate ]
+   type AnyGE     = GE[ R, _ <: UGenIn[ R ]] forSome { type R <: Rate }
 
    /**
     * This conversion is particularly important to balance priorities,
@@ -130,7 +131,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
 
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
-   implicit def thunkToGraphFunction[ T <% GE[ _ ]]( thunk: => T ) = new GraphFunction( thunk )
+   implicit def thunkToGraphFunction[ T <% AnyGE ]( thunk: => T ) = new GraphFunction( thunk )
 
 //   // Misc
 //   implicit def stringToOption( x: String ) = Some( x )

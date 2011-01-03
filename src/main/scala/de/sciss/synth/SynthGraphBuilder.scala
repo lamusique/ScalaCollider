@@ -32,7 +32,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 trait SynthGraphBuilder {
    def addUGen( ugen: UGen ) : Unit
-   def addControlProxy( proxy: ControlProxyLike[ _ ]) : Unit
+   def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
    def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
    def build : SynthGraph
 

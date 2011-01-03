@@ -35,9 +35,9 @@ import ugen.MulAdd
  */
 object Rate {
    def highest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
-   def highest( ge: GE[ AnyUGenIn ]) : Rate = highest( ge.expand.map( _.rate ): _* )
+   def highest( ge: AnyGE ) : Rate = highest( ge.expand.map( _.rate ): _* )
    def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
-   def lowest( ge: GE[ AnyUGenIn ]) : Rate = lowest( ge.expand.map( _.rate ): _* )
+   def lowest( ge: AnyGE ) : Rate = lowest( ge.expand.map( _.rate ): _* )
 }
 
 /**
@@ -73,3 +73,23 @@ trait ScalarRated  { def rate = scalar }
 trait ControlRated { def rate = control }
 trait AudioRated   { def rate = audio }
 
+sealed trait HigherRate[ R <: Rate, S <: Rate ] {
+   def rate1: R
+   def rate2: S
+}
+sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] {
+   def rate: T
+}
+trait RateRelations {
+   private class HigherRateImpl[ R <: Rate, S <: Rate ]( val rate1: R, val rate2: S ) extends HigherRate[ R, S ]
+   private class RateOrderImpl[ R <: Rate, S <: Rate, T <: Rate ]( val rate: T ) extends RateOrder[ R, S, T ]
+   implicit val demandGtAudio:   HigherRate[ demand,  audio   ] = new HigherRateImpl( demand,  audio   )
+   implicit val demandGtControl: HigherRate[ demand,  control ] = new HigherRateImpl( demand,  control )
+   implicit val demandGtScalar:  HigherRate[ demand,  scalar  ] = new HigherRateImpl( demand,  scalar  )
+   implicit val audioGtControl:  HigherRate[ audio,   control ] = new HigherRateImpl( audio,   control )
+   implicit val audioGtScalar:   HigherRate[ audio,   scalar  ] = new HigherRateImpl( audio,   scalar  )
+   implicit val controlGtScalar: HigherRate[ control, scalar  ] = new HigherRateImpl( control, scalar  )
+
+   implicit def rateOrder1[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrderImpl[ R, S, R ]( rel.rate1 )
+   implicit def rateOrder2[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrderImpl[ R, S, S ]( rel.rate1 )
+}
