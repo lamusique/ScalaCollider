@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 02 21:13:58 GMT 2011
+ * Created: Mon Jan 03 21:16:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -17,10 +17,10 @@ object CombN {
 }
 case class CombN[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends GE[R, CombNUGen[R]] {
    def expand = {
-      val _in: IIdxSeq[ AnyUGenIn ] = in.expand
-      val _maxDelayTime: IIdxSeq[ AnyUGenIn ] = maxDelayTime.expand
-      val _delayTime: IIdxSeq[ AnyUGenIn ] = delayTime.expand
-      val _decayTime: IIdxSeq[ AnyUGenIn ] = decayTime.expand
+      val _in: IIdxSeq[AnyUGenIn] = in.expand
+      val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
+      val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
+      val _decayTime: IIdxSeq[AnyUGenIn] = decayTime.expand
       val _sz_in = _in.size
       val _sz_maxDelayTime = _maxDelayTime.size
       val _sz_delayTime = _delayTime.size
@@ -36,10 +36,10 @@ object CombL {
 }
 case class CombL[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends GE[R, CombLUGen[R]] {
    def expand = {
-      val _in: IIdxSeq[ AnyUGenIn ] = in.expand
-      val _maxDelayTime: IIdxSeq[ AnyUGenIn ] = maxDelayTime.expand
-      val _delayTime: IIdxSeq[ AnyUGenIn ] = delayTime.expand
-      val _decayTime: IIdxSeq[ AnyUGenIn ] = decayTime.expand
+      val _in: IIdxSeq[AnyUGenIn] = in.expand
+      val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
+      val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
+      val _decayTime: IIdxSeq[AnyUGenIn] = decayTime.expand
       val _sz_in = _in.size
       val _sz_maxDelayTime = _maxDelayTime.size
       val _sz_delayTime = _delayTime.size
@@ -55,10 +55,10 @@ object CombC {
 }
 case class CombC[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends GE[R, CombCUGen[R]] {
    def expand = {
-      val _in: IIdxSeq[ AnyUGenIn ] = in.expand
-      val _maxDelayTime: IIdxSeq[ AnyUGenIn ] = maxDelayTime.expand
-      val _delayTime: IIdxSeq[ AnyUGenIn ] = delayTime.expand
-      val _decayTime: IIdxSeq[ AnyUGenIn ] = decayTime.expand
+      val _in: IIdxSeq[AnyUGenIn] = in.expand
+      val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
+      val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
+      val _decayTime: IIdxSeq[AnyUGenIn] = decayTime.expand
       val _sz_in = _in.size
       val _sz_maxDelayTime = _maxDelayTime.size
       val _sz_delayTime = _delayTime.size

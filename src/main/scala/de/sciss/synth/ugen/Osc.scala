@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 02 21:13:58 GMT 2011
+ * Created: Mon Jan 03 21:16:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,15 +12,15 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import SynthGraph._
 object LFSaw {
-//   def ar: LFSaw[audio] = ar( )
-//   def kr: LFSaw[control] = kr( )
+   def ar: LFSaw[audio] = ar( )
+   def kr: LFSaw[control] = kr( )
    def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
 case class LFSaw[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, LFSawUGen[R]] {
    def expand = {
-      val _freq: IIdxSeq[ AnyUGenIn ] = freq.expand
-      val _phase: IIdxSeq[ AnyUGenIn ] = phase.expand
+      val _freq: IIdxSeq[AnyUGenIn] = freq.expand
+      val _phase: IIdxSeq[AnyUGenIn] = phase.expand
       val _sz_freq = _freq.size
       val _sz_phase = _phase.size
       val _exp_ = maxInt(_sz_freq, _sz_phase)
@@ -36,8 +36,8 @@ object SinOsc {
 }
 case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, SinOscUGen[R]] {
    def expand = {
-      val _freq: IIdxSeq[ AnyUGenIn ] = freq.expand
-      val _phase: IIdxSeq[ AnyUGenIn ] = phase.expand
+      val _freq: IIdxSeq[AnyUGenIn] = freq.expand
+      val _phase: IIdxSeq[AnyUGenIn] = phase.expand
       val _sz_freq = _freq.size
       val _sz_phase = _phase.size
       val _exp_ = maxInt(_sz_freq, _sz_phase)

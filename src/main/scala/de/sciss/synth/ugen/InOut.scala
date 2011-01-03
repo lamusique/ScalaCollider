@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 02 21:13:58 GMT 2011
+ * Created: Mon Jan 03 21:16:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -18,8 +18,8 @@ object Out {
 }
 case class Out[R <: Rate](rate: R, bus: AnyGE, in: Expands[AnyGE]) extends Expands[OutUGen[R]] {
    def expand = {
-      val _bus: IIdxSeq[ AnyUGenIn ] = bus.expand
-      val _in = in.expand
+      val _bus: IIdxSeq[AnyUGenIn] = bus.expand
+      val _in: IIdxSeq[AnyGE] = in.expand
       val _sz_bus = _bus.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_bus, _sz_in)

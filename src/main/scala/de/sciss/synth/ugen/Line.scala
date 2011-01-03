@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 02 21:13:58 GMT 2011
+ * Created: Mon Jan 03 21:16:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -19,10 +19,10 @@ object Line {
 }
 case class Line[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, LineUGen[R]] {
    def expand = {
-      val _start: IIdxSeq[ AnyUGenIn ] = start.expand
-      val _end: IIdxSeq[ AnyUGenIn ] = end.expand
-      val _dur: IIdxSeq[ AnyUGenIn ] = dur.expand
-      val _doneAction: IIdxSeq[ AnyUGenIn ] = doneAction.expand
+      val _start: IIdxSeq[AnyUGenIn] = start.expand
+      val _end: IIdxSeq[AnyUGenIn] = end.expand
+      val _dur: IIdxSeq[AnyUGenIn] = dur.expand
+      val _doneAction: IIdxSeq[AnyUGenIn] = doneAction.expand
       val _sz_start = _start.size
       val _sz_end = _end.size
       val _sz_dur = _dur.size
