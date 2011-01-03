@@ -40,7 +40,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 ////   override private[synth] def ops = new UGenInSeqOps( this )
 //}
 
-case class UGenInSeq[ +U <: AnyUGenIn ]( elems: IIdxSeq[ U ]) extends /* IIdxSeq[ U ] with */ GE[ U ] {
+case class UGenInSeq[ +U <: AnyUGenIn ]( elems: IIdxSeq[ U ]) extends /* IIdxSeq[ U ] with */ Expands[ U ] { //
 //   def expand = this
    def expand = elems // this
 //   def apply( idx: Int ) = elems( idx )

@@ -30,7 +30,11 @@ package de.sciss.synth
 
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.MulAdd
+import ugen.{UnaryOp, UnaryOpUGen, MulAdd}
+
+trait Expands[ +R ] {
+   def expand: IIdxSeq[ R ]
+}
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -41,10 +45,12 @@ import ugen.MulAdd
  *
  *    @version 0.11, 26-Aug-10
  */
-trait GE[ +U ] {
+trait GE[ +U <: UGenIn[ _ <: Rate ]] extends Expands[ U ] {
    ge =>
 
-   def expand: IIdxSeq[ U ]
+   def rate: U#Rate
+
+//   def expand: IIdxSeq[ U ]
 
    /**
     * Decomposes the graph element into its distinct outputs. For a single-output UGen
@@ -123,66 +129,65 @@ trait GE[ +U ] {
 //            }, t, g, labels( ch ), i )
 //   }
 
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   import UnaryOpUGen._
-//
-//   // unary ops
-//   def unary_- : GE           = Neg.make( this )
-//// def bitNot : GE	         = BitNot.make( this )
-//   def abs : GE	            = Abs.make( this )
-//// def toFloat : GE	         = UnOp.make( 'asFloat, this )
-//// def toInteger : GE	      = UnOp.make( 'asInteger, this )
-//   def ceil : GE	            = Ceil.make( this )
-//   def floor : GE	            = Floor.make( this )
-//   def frac : GE	            = Frac.make( this )
-//   def signum : GE	         = Signum.make( this )
-//   def squared : GE           = Squared.make( this )
-//   def cubed : GE             = Cubed.make( this )
-//   def sqrt : GE              = Sqrt.make( this )
-//   def exp : GE               = Exp.make( this )
-//   def reciprocal : GE        = Reciprocal.make( this )
-//   def midicps : GE           = Midicps.make( this )
-//   def cpsmidi : GE           = Cpsmidi.make( this )
-//   def midiratio : GE         = Midiratio.make( this )
-//   def ratiomidi : GE         = Ratiomidi.make( this )
-//   def dbamp : GE             = Dbamp.make( this )
-//   def ampdb : GE             = Ampdb.make( this )
-//   def octcps : GE            = Octcps.make( this )
-//   def cpsoct : GE            = Cpsoct.make( this )
-//   def log : GE               = Log.make( this )
-//   def log2 : GE              = Log2.make( this )
-//   def log10 : GE             = Log10.make( this )
-//   def sin : GE               = Sin.make( this )
-//   def cos : GE               = Cos.make( this )
-//   def tan : GE               = Tan.make( this )
-//   def asin : GE              = Asin.make( this )
-//   def acos : GE              = Acos.make( this )
-//   def atan : GE              = Atan.make( this )
-//   def sinh : GE              = Sinh.make( this )
-//   def cosh : GE              = Cosh.make( this )
-//   def tanh : GE              = Tanh.make( this )
-//// def rand : GE              = UnOp.make( 'rand, this )
-//// def rand2 : GE             = UnOp.make( 'rand2, this )
-//// def linrand : GE           = UnOp.make( 'linrand, this )
-//// def bilinrand : GE         = UnOp.make( 'bilinrand, this )
-//// def sum3rand : GE          = UnOp.make( 'sum3rand, this )
-//   def distort : GE           = Distort.make( this )
-//   def softclip : GE          = Softclip.make( this )
-//// def coin : GE              = UnOp.make( 'coin, this )
-//// def even : GE              = UnOp.make( 'even, this )
-//// def odd : GE               = UnOp.make( 'odd, this )
-//// def rectWindow : GE        = UnOp.make( 'rectWindow, this )
-//// def hanWindow : GE         = UnOp.make( 'hanWindow, this )
-//// def welWindow : GE         = UnOp.make( 'sum3rand, this )
-//// def triWindow : GE         = UnOp.make( 'triWindow, this )
-//   def ramp : GE              = Ramp.make( this )
-//   def scurve : GE            = Scurve.make( this )
-//// def isPositive : GE        = UnOp.make( 'isPositive, this )
-//// def isNegative : GE        = UnOp.make( 'isNegative, this )
-//// def isStrictlyPositive : GE= UnOp.make( 'isStrictlyPositive, this )
-//// def rho : GE               = UnOp.make( 'rho, this )
-//// def theta : GE             = UnOp.make( 'theta, this )
-//
+   import UnaryOp._
+
+   // unary ops
+   def unary_-    = Neg.make[ U#Rate ]( rate, this )
+// def bitNot : GE	         = BitNot.make( this )
+   def abs        = Abs.make[ U#Rate ]( rate, this )
+// def toFloat : GE	         = UnOp.make( 'asFloat, this )
+// def toInteger : GE	      = UnOp.make( 'asInteger, this )
+   def ceil       = Ceil.make[ U#Rate ]( rate, this )
+   def floor      = Floor.make[ U#Rate ]( rate, this )
+   def frac       = Frac.make[ U#Rate ]( rate, this )
+   def signum     = Signum.make[ U#Rate ]( rate, this )
+   def squared    = Squared.make[ U#Rate ]( rate, this )
+   def cubed      = Cubed.make[ U#Rate ]( rate, this )
+   def sqrt       = Sqrt.make[ U#Rate ]( rate, this )
+   def exp        = Exp.make[ U#Rate ]( rate, this )
+   def reciprocal = Reciprocal.make[ U#Rate ]( rate, this )
+   def midicps    = Midicps.make[ U#Rate ]( rate, this )
+   def cpsmidi    = Cpsmidi.make[ U#Rate ]( rate, this )
+   def midiratio  = Midiratio.make[ U#Rate ]( rate, this )
+   def ratiomidi  = Ratiomidi.make[ U#Rate ]( rate, this )
+   def dbamp      = Dbamp.make[ U#Rate ]( rate, this )
+   def ampdb      = Ampdb.make[ U#Rate ]( rate, this )
+   def octcps     = Octcps.make[ U#Rate ]( rate, this )
+   def cpsoct     = Cpsoct.make[ U#Rate ]( rate, this )
+   def log        = Log.make[ U#Rate ]( rate, this )
+   def log2       = Log2.make[ U#Rate ]( rate, this )
+   def log10      = Log10.make[ U#Rate ]( rate, this )
+   def sin        = Sin.make[ U#Rate ]( rate, this )
+   def cos        = Cos.make[ U#Rate ]( rate, this )
+   def tan        = Tan.make[ U#Rate ]( rate, this )
+   def asin       = Asin.make[ U#Rate ]( rate, this )
+   def acos       = Acos.make[ U#Rate ]( rate, this )
+   def atan       = Atan.make[ U#Rate ]( rate, this )
+   def sinh       = Sinh.make[ U#Rate ]( rate, this )
+   def cosh       = Cosh.make[ U#Rate ]( rate, this )
+   def tanh       = Tanh.make[ U#Rate ]( rate, this )
+// def rand : GE              = UnOp.make( 'rand, this )
+// def rand2 : GE             = UnOp.make( 'rand2, this )
+// def linrand : GE           = UnOp.make( 'linrand, this )
+// def bilinrand : GE         = UnOp.make( 'bilinrand, this )
+// def sum3rand : GE          = UnOp.make( 'sum3rand, this )
+   def distort    = Distort.make[ U#Rate ]( rate, this )
+   def softclip   = Softclip.make[ U#Rate ]( rate, this )
+// def coin : GE              = UnOp.make( 'coin, this )
+// def even : GE              = UnOp.make( 'even, this )
+// def odd : GE               = UnOp.make( 'odd, this )
+// def rectWindow : GE        = UnOp.make( 'rectWindow, this )
+// def hanWindow : GE         = UnOp.make( 'hanWindow, this )
+// def welWindow : GE         = UnOp.make( 'sum3rand, this )
+// def triWindow : GE         = UnOp.make( 'triWindow, this )
+   def ramp       = Ramp.make[ U#Rate ]( rate, this )
+   def scurve     = Scurve.make[ U#Rate ]( rate, this )
+// def isPositive : GE        = UnOp.make( 'isPositive, this )
+// def isNegative : GE        = UnOp.make( 'isNegative, this )
+// def isStrictlyPositive : GE= UnOp.make( 'isStrictlyPositive, this )
+// def rho : GE               = UnOp.make( 'rho, this )
+// def theta : GE             = UnOp.make( 'theta, this )
+
 //   import BinaryOpUGen._
 //
 //   // binary ops

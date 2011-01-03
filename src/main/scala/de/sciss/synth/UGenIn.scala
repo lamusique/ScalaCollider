@@ -38,6 +38,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
  *    @version 0.12, 28-Dec-10
  */
 sealed trait UGenIn[ +R <: Rate ] extends /* RatedGE */ GE[ UGenIn[ R ]] {
+   type Rate = R
 // YYY
 //   final override def numOutputs = 1
 
