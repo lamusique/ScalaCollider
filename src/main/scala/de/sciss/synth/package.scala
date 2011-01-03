@@ -31,11 +31,7 @@ package de.sciss
 import de.sciss.osc.{ OSCMessage }
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant, ControlProxyFactory, DoneAction, GE,
-               GraphFunction, Group, MultiControlSetMap, MultiControlABusMap, MultiControlKBusMap, Node, Rate,
-               RichDouble, RichFloat, RichInt, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
-               Synth, UGenIn, UGenInSeq }
-
+import synth._
 package synth {
    abstract sealed class LowPriorityImplicits {
       /**
@@ -92,12 +88,20 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 
 //   implicit def geOps( ge: GE ) = ge.ops
 
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   implicit def seqOfGEToGE( x: Seq[ GE ]) : GE = {
-//      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.outputs )( breakOut )
+   implicit def mce[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R, UGenIn[ R ]], rate: R ) : GE[ R, UGenIn[ R ]] = {
+      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
+      outputs match {
+         case IIdxSeq( mono ) => mono
+         case _               => new RatedUGenInSeq( rate, outputs )
+//         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+      }
+   }
+//   implicit def seqOfGEToGE[ R <: Rate ]( x: Seq[ GE[ R, UGenIn[ R ]]])( implicit rate: R ) : GE[ R, UGenIn[ R ]] = {
+//      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
 //      outputs match {
 //         case IIdxSeq( mono ) => mono
-//         case _               => new UGenInSeq( outputs )
+//         case _               => new RatedUGenInSeq( rate, outputs )
+////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
 //   }
    implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )

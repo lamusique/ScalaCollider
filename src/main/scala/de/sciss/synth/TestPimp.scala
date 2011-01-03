@@ -14,10 +14,10 @@ object TestPimp {
 //      def madd( mul: GE[ AnyUGenIn ], add: GE[ AnyUGenIn ]) = MulAdd.kr( ge, mul, add )
 //   }
 
-   implicit val audioImp   = audio
-   implicit val controlImp = control
-   implicit val scalarImp  = scalar
-   implicit val demandImp  = demand
+//   implicit val audioImp   = audio
+//   implicit val controlImp = control
+//   implicit val scalarImp  = scalar
+//   implicit val demandImp  = demand
 
    implicit def enrichGE[ R <: Rate ]( ge: GE[ R, UGenIn[ R ]])( implicit rate: R ) = new RichGE( rate, ge )
 

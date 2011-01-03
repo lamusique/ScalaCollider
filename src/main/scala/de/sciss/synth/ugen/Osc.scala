@@ -12,8 +12,8 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import SynthGraph._
 object LFSaw {
-   def ar: LFSaw[audio] = ar( )
-   def kr: LFSaw[control] = kr( )
+//   def ar: LFSaw[audio] = ar( )
+//   def kr: LFSaw[control] = kr( )
    def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
