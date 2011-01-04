@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 01:35:44 GMT 2011
+ * Created: Tue Jan 04 20:18:48 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -13,8 +13,8 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object LFSaw {
    def ar: LFSaw[audio] = ar( )
-   def kr: LFSaw[control] = kr( )
    def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
+   def kr: LFSaw[control] = kr( )
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
 case class LFSaw[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, LFSawUGen[R]] {
@@ -30,8 +30,8 @@ case class LFSaw[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, LF
 case class LFSawUGen[R <: Rate](rate: R, freq: AnyUGenIn, phase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, phase))
 object SinOsc {
    def ar: SinOsc[audio] = ar( )
-   def kr: SinOsc[control] = kr( )
    def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
+   def kr: SinOsc[control] = kr( )
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
 case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, SinOscUGen[R]] {

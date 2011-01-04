@@ -162,10 +162,11 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
   
    // explicit methods
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def play( thunk: => GE ) : Synth = play()( thunk )
-//   def play( target: Node = Server.default.defaultGroup, outBus: Int = 0,
-//             fadeTime: Option[Float] = Some( 0.02f ),
-//             addAction: AddAction = addToHead )( thunk: => GE ) : Synth =
-//      new GraphFunction( thunk ).play( target, outBus, fadeTime, addAction )
+   def play( thunk: => AnyGE ) : Synth = play()( thunk )
+   def play( target: Node = Server.default.defaultGroup, outBus: Int = 0,
+             fadeTime: Option[Float] = Some( 0.02f ),
+             addAction: AddAction = addToHead )( thunk: => AnyGE ) : Synth = {
+      val fun = new GraphFunction( thunk )
+      fun.play( target, outBus, fadeTime, addAction )
+   }
 }

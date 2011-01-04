@@ -29,13 +29,14 @@
 package de.sciss.synth
 
 import de.sciss.osc.{ OSCBundle, OSCMessage, OSCPacket }
-import de.sciss.synth.{ Completion => Comp /*, play => scplay */ }
+import de.sciss.synth.{ Completion => Comp, play => scplay }
 import de.sciss.synth.io.{ AudioFileType, SampleFormat }
 import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferAllocReadMessage,
              OSCBufferCloseMessage, OSCBufferFreeMessage, OSCBufferReadChannelMessage, OSCBufferReadMessage,
              OSCBufferQueryMessage, OSCBufferSetMessage, OSCBufferSetnMessage, OSCBufferWriteMessage,
              OSCBufferZeroMessage }
 import Model._
+import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
 
 /**
  * 	@version	0.18, 17-May-10
@@ -320,7 +321,8 @@ case class Buffer( server: Server, id: Int ) extends Model {
 //   def play : Synth = play()
 //   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
 //      scplay( server, out ) { // working around nasty compiler bug
-//         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
+//         val ply0 = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
+//         val ply  = ply0.expand.head // YYY
 //         if( !loop ) FreeSelfWhenDone.kr( ply )
 //         ply * "amp".kr( amp )
 //      }

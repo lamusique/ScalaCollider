@@ -32,6 +32,7 @@ import java.io.DataOutputStream
 import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
 import collection.immutable.{ IndexedSeq => IIdxSeq }
+import ugen.Out
 
 /**
  *    @version 0.12, 02-Aug-10
@@ -93,23 +94,25 @@ object SynthGraph {
 //      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
 //   }
 
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) =
-//      SynthGraph {
-//         val res1 = thunk
-//         val rate = Rate.highest( res1.outputs.map( _.rate ): _* )
-//         if( (rate == audio) || (rate == control) ) {
+   def wrapOut( thunk: => AnyGE, fadeTime: Option[Float] = Some(0.02f) ) =
+      SynthGraph {
+         val res1 = thunk
+         val rate = res1.rate // .highest( res1.outputs.map( _.rate ): _* )
+         if( (rate == audio) || (rate == control) ) {
+// YYY
 //            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
-//            val out = "out".kr
-//            if( rate == audio ) {
-//               Out.ar( out, res2 )
-//            } else {
-//               Out.kr( out, res2 )
-//            }
-//         } else res1
-//      }
-//
-//	def makeFadeEnv( fadeTime: Float ) : GE = {
+            val res2 = res1
+            val out = "out".kr
+            if( rate == audio ) {
+               Out.ar( out, res2 )
+            } else {
+               Out.kr( out, res2 )
+            }
+         } else res1
+      }
+
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//	def makeFadeEnv( fadeTime: Float ) : EnvGen = {
 //		val dt			= "fadeTime".kr( fadeTime )
 //		val gate       = "gate".kr( 1 )
 //		val startVal	= (dt <= 0)
@@ -119,7 +122,7 @@ object SynthGraph {
 //		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
 //         gate, timeScale = dt, doneAction = freeSelf ).squared
 //	}
-//
+
 //   def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
 //      val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
 //         val (min, max) = tup
@@ -221,7 +224,10 @@ object SynthGraph {
          })
          val ugenMap: Map[ UGen, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen, iu))( breakOut )
          indexedUGens.foreach( iu => {
-            iu.richInputs = iu.ugen.inputs.map({   // YYY Warning: match not exhaustive
+            // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
+            // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
+            // might be http://lampsvn.epfl.ch/trac/scala/ticket/4020
+            iu.richInputs = iu.ugen.inputs.map({ // don't worry -- the match _is_ exhaustive
                case Constant( value ) => constantMap.get( value ) getOrElse {
                   val rc         = new RichConstant( constants.size )
                   constantMap   += value -> rc

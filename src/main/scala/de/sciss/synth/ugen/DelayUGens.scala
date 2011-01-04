@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 01:35:40 GMT 2011
+ * Created: Tue Jan 04 20:18:38 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -176,7 +176,7 @@ case class RecordBuf[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, offset:
       IIdxSeq.tabulate(_exp_)(i => RecordBufUGen(rate, _in(i.%(_sz_in)), _buf(i.%(_sz_buf)), _offset(i.%(_sz_offset)), _recLevel(i.%(_sz_recLevel)), _preLevel(i.%(_sz_preLevel)), _run(i.%(_sz_run)), _loop(i.%(_sz_loop)), _trig(i.%(_sz_trig)), _doneAction(i.%(_sz_doneAction))))
    }
 }
-case class RecordBufUGen[R <: Rate](rate: R, in: AnyGE, buf: AnyUGenIn, offset: AnyUGenIn, recLevel: AnyUGenIn, preLevel: AnyUGenIn, run: AnyUGenIn, loop: AnyUGenIn, trig: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, offset, recLevel, preLevel, run, loop, trig, doneAction).++(in.expand))
+case class RecordBufUGen[R <: Rate](rate: R, in: AnyGE, buf: AnyUGenIn, offset: AnyUGenIn, recLevel: AnyUGenIn, preLevel: AnyUGenIn, run: AnyUGenIn, loop: AnyUGenIn, trig: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, offset, recLevel, preLevel, run, loop, trig, doneAction).++(in.expand)) with HasSideEffect
 object BufRd {
    def kr(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[control](control, numChannels, buf, phase, loop, interp)
    def ar(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[audio](audio, numChannels, buf, phase, loop, interp)
@@ -214,11 +214,11 @@ case class BufWr[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, phase: AnyG
       IIdxSeq.tabulate(_exp_)(i => BufWrUGen(rate, _in(i.%(_sz_in)), _buf(i.%(_sz_buf)), _phase(i.%(_sz_phase)), _loop(i.%(_sz_loop))))
    }
 }
-case class BufWrUGen[R <: Rate](rate: R, in: AnyGE, buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, phase, loop).++(in.expand))
+case class BufWrUGen[R <: Rate](rate: R, in: AnyGE, buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, phase, loop).++(in.expand)) with HasSideEffect
 object Pitch {
-   def kr(in: AnyGE, initFreq: AnyGE = 440.0f, minFreq: AnyGE = 60.0f, maxFreq: AnyGE = 4000.0f, execFreq: AnyGE = 100.0f, binsPerOct: AnyGE = 16.0f, median: AnyGE = 1.0f, ampThresh: AnyGE = 0.01f, peakThresh: AnyGE = 0.5f, downSample: AnyGE = 1.0f) = apply(in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)
+   def kr(in: AnyGE, initFreq: AnyGE = 440.0f, minFreq: AnyGE = 60.0f, maxFreq: AnyGE = 4000.0f, execFreq: AnyGE = 100.0f, binsPerOct: AnyGE = 16.0f, median: AnyGE = 1.0f, ampThresh: AnyGE = 0.01f, peakThresh: AnyGE = 0.5f, downSample: AnyGE = 1.0f) = apply[control](control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)
 }
-case class Pitch(in: AnyGE, initFreq: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, execFreq: AnyGE, binsPerOct: AnyGE, median: AnyGE, ampThresh: AnyGE, peakThresh: AnyGE, downSample: AnyGE) extends Expands[PitchUGen] with ControlRated {
+case class Pitch[R <: Rate](rate: R, in: AnyGE, initFreq: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, execFreq: AnyGE, binsPerOct: AnyGE, median: AnyGE, ampThresh: AnyGE, peakThresh: AnyGE, downSample: AnyGE) extends Expands[PitchUGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _initFreq: IIdxSeq[AnyUGenIn] = initFreq.expand
@@ -241,10 +241,10 @@ case class Pitch(in: AnyGE, initFreq: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, exe
       val _sz_peakThresh = _peakThresh.size
       val _sz_downSample = _downSample.size
       val _exp_ = maxInt(_sz_in, _sz_initFreq, _sz_minFreq, _sz_maxFreq, _sz_execFreq, _sz_binsPerOct, _sz_median, _sz_ampThresh, _sz_peakThresh, _sz_downSample)
-      IIdxSeq.tabulate(_exp_)(i => PitchUGen(_in(i.%(_sz_in)), _initFreq(i.%(_sz_initFreq)), _minFreq(i.%(_sz_minFreq)), _maxFreq(i.%(_sz_maxFreq)), _execFreq(i.%(_sz_execFreq)), _binsPerOct(i.%(_sz_binsPerOct)), _median(i.%(_sz_median)), _ampThresh(i.%(_sz_ampThresh)), _peakThresh(i.%(_sz_peakThresh)), _downSample(i.%(_sz_downSample))))
+      IIdxSeq.tabulate(_exp_)(i => PitchUGen(rate, _in(i.%(_sz_in)), _initFreq(i.%(_sz_initFreq)), _minFreq(i.%(_sz_minFreq)), _maxFreq(i.%(_sz_maxFreq)), _execFreq(i.%(_sz_execFreq)), _binsPerOct(i.%(_sz_binsPerOct)), _median(i.%(_sz_median)), _ampThresh(i.%(_sz_ampThresh)), _peakThresh(i.%(_sz_peakThresh)), _downSample(i.%(_sz_downSample))))
    }
 }
-case class PitchUGen(in: AnyUGenIn, initFreq: AnyUGenIn, minFreq: AnyUGenIn, maxFreq: AnyUGenIn, execFreq: AnyUGenIn, binsPerOct: AnyUGenIn, median: AnyUGenIn, ampThresh: AnyUGenIn, peakThresh: AnyUGenIn, downSample: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(2)(control), IIdxSeq(in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)) with ControlRated
+case class PitchUGen[R <: Rate](rate: R, in: AnyUGenIn, initFreq: AnyUGenIn, minFreq: AnyUGenIn, maxFreq: AnyUGenIn, execFreq: AnyUGenIn, binsPerOct: AnyUGenIn, median: AnyUGenIn, ampThresh: AnyUGenIn, peakThresh: AnyUGenIn, downSample: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(2)(rate), IIdxSeq(in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample))
 object BufDelayN {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f) = apply[audio](audio, buf, in, delayTime)
 }
