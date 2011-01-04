@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Mon Jan 03 21:35:10 GMT 2011
+ * Created: Tue Jan 04 00:27:14 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import SynthGraph._
+import UGenHelper._
 object Done {
    def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }

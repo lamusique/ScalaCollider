@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Mon Jan 03 21:16:33 GMT 2011
+ * Created: Tue Jan 04 00:27:14 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import SynthGraph._
+import UGenHelper._
 object Line {
    def ar: Line[audio] = ar( )
    def kr: Line[control] = kr( )

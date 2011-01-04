@@ -84,8 +84,11 @@ case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Floa
    }
 }
 
+private[synth] object UGenHelper {
+   def maxInt( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
+}
+
 object SynthGraph {
-   private[synth] def maxInt( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
 //   def seq( elements: IIdxSeq[ UGenIn ]) : GE = {
 //      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
 //   }

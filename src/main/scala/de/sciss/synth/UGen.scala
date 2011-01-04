@@ -65,7 +65,12 @@ extends /* YYY RatedGE with */ UGenProxy {
    def outputs: IIdxSeq[ AnyUGenIn ] // YYY
 
 //   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1 )}
-   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1, cn.length - 4 )}
+   def name = {
+      val cn = getClass.getName
+      // account for non-expandable ugens such as SampleRate.ir which doesn't have both
+      // SampleRate and SampleRateUGen ...
+      cn.substring( cn.lastIndexOf( '.' ) + 1, if( cn.endsWith( "UGen" )) cn.length - 4 else cn.length )
+   }
    def displayName = name
 //   def outputRates: Seq[ Rate ]
    def inputs: Seq[ AnyUGenIn ]
