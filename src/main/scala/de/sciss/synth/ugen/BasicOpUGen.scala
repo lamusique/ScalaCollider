@@ -28,10 +28,10 @@
 
 package de.sciss.synth.ugen
 
-import de.sciss.synth.{ AnyUGenIn, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, SynthGraph,
+import de.sciss.synth.{ AnyUGenIn, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper,
                         UGenIn }
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import SynthGraph._
+import UGenHelper._
 
 /**
  *    @version 0.13, 03-Jan-11

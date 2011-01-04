@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 00:27:14 GMT 2011
+ * Created: Tue Jan 04 01:35:44 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -26,4 +26,4 @@ case class Out[R <: Rate](rate: R, bus: AnyGE, in: Expands[AnyGE]) extends Expan
       IIdxSeq.tabulate(_exp_)(i => OutUGen(rate, _bus(i.%(_sz_bus)), _in(i.%(_sz_in))))
    }
 }
-case class OutUGen[R <: Rate](rate: R, bus: AnyUGenIn, in: AnyGE) extends ZeroOutUGen(in.expand.+:(bus))
+case class OutUGen[R <: Rate](rate: R, bus: AnyUGenIn, in: AnyGE) extends ZeroOutUGen(IIdxSeq[AnyUGenIn](bus).++(in.expand))

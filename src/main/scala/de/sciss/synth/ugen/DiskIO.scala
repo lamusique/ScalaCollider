@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 00:27:14 GMT 2011
+ * Created: Tue Jan 04 01:35:44 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -38,7 +38,7 @@ case class DiskOut(buf: AnyGE, in: Expands[GE[audio, UGenIn[audio]]]) extends GE
       IIdxSeq.tabulate(_exp_)(i => DiskOutUGen(_buf(i.%(_sz_buf)), _in(i.%(_sz_in))))
    }
 }
-case class DiskOutUGen(buf: AnyUGenIn, in: GE[audio, UGenIn[audio]]) extends SingleOutUGen[audio](in.expand.+:(buf)) with AudioRated with HasSideEffect
+case class DiskOutUGen(buf: AnyUGenIn, in: GE[audio, UGenIn[audio]]) extends SingleOutUGen[audio](IIdxSeq[AnyUGenIn](buf).++(in.expand)) with AudioRated with HasSideEffect
 object VDiskIn {
    def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, loop: AnyGE = 0.0f, sendID: AnyGE = 0.0f) = apply(numChannels, buf, speed, loop, sendID)
 }
