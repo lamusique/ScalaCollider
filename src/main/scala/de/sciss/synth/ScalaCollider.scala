@@ -60,7 +60,6 @@ object ScalaCollider {
 
    def test( s: Server ) {
       import ugen._
-      import TestPimp._
 
       val df = SynthDef( "AnalogBubbles" ) {
          val f1  = "freq1".kr( 0.4 )

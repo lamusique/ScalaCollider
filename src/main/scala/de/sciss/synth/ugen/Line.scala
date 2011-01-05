@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 20:18:48 GMT 2011
+ * Created: Wed Jan 05 01:09:09 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -17,7 +17,7 @@ object Line {
    def kr: Line[control] = kr( )
    def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, start, end, dur, doneAction)
 }
-case class Line[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, LineUGen[R]] {
+case class Line[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, LineUGen[R]] with HasSideEffect with HasDoneFlag {
    def expand = {
       val _start: IIdxSeq[AnyUGenIn] = start.expand
       val _end: IIdxSeq[AnyUGenIn] = end.expand

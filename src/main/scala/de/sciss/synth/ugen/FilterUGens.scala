@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 20:18:43 GMT 2011
+ * Created: Wed Jan 05 01:09:04 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -690,7 +690,7 @@ object DetectSilence {
    def kr(in: GE[control, UGenIn[control]], amp: AnyGE = 1.0E-4f, dur: AnyGE = 0.1f, doneAction: AnyGE = doNothing) = apply[control](control, in, amp, dur, doneAction)
    def ar(in: GE[audio, UGenIn[audio]], amp: AnyGE = 1.0E-4f, dur: AnyGE = 0.1f, doneAction: AnyGE = doNothing) = apply[audio](audio, in, amp, dur, doneAction)
 }
-case class DetectSilence[R <: Rate](rate: R, in: AnyGE, amp: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, DetectSilenceUGen[R]] {
+case class DetectSilence[R <: Rate](rate: R, in: AnyGE, amp: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, DetectSilenceUGen[R]] with HasSideEffect {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _amp: IIdxSeq[AnyUGenIn] = amp.expand

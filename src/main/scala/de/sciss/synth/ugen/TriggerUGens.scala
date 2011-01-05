@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Jan 04 20:18:42 GMT 2011
+ * Created: Wed Jan 05 01:09:09 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -45,7 +45,7 @@ object SendTrig {
    def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[audio](audio, trig, value, id)
    def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[control](control, trig, value, id)
 }
-case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) extends GE[R, SendTrigUGen[R]] {
+case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) extends GE[R, SendTrigUGen[R]] with HasSideEffect {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _value: IIdxSeq[AnyUGenIn] = value.expand
@@ -115,22 +115,22 @@ case class Gate[R <: Rate](rate: R, in: AnyGE, gate: AnyGE) extends GE[R, GateUG
 }
 case class GateUGen[R <: Rate](rate: R, in: AnyUGenIn, gate: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, gate))
 object Schmidt {
-   def kr(trig: AnyGE, min: AnyGE = 0.0f, max: AnyGE = 0.0f) = apply[control](control, trig, min, max)
-   def ar(trig: AnyGE, min: AnyGE = 0.0f, max: AnyGE = 0.0f) = apply[audio](audio, trig, min, max)
+   def kr(trig: AnyGE, minVal: AnyGE = 0.0f, maxVal: AnyGE = 0.0f) = apply[control](control, trig, minVal, maxVal)
+   def ar(trig: AnyGE, minVal: AnyGE = 0.0f, maxVal: AnyGE = 0.0f) = apply[audio](audio, trig, minVal, maxVal)
 }
-case class Schmidt[R <: Rate](rate: R, trig: AnyGE, min: AnyGE, max: AnyGE) extends GE[R, SchmidtUGen[R]] {
+case class Schmidt[R <: Rate](rate: R, trig: AnyGE, minVal: AnyGE, maxVal: AnyGE) extends GE[R, SchmidtUGen[R]] {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _min: IIdxSeq[AnyUGenIn] = min.expand
-      val _max: IIdxSeq[AnyUGenIn] = max.expand
+      val _minVal: IIdxSeq[AnyUGenIn] = minVal.expand
+      val _maxVal: IIdxSeq[AnyUGenIn] = maxVal.expand
       val _sz_trig = _trig.size
-      val _sz_min = _min.size
-      val _sz_max = _max.size
-      val _exp_ = maxInt(_sz_trig, _sz_min, _sz_max)
-      IIdxSeq.tabulate(_exp_)(i => SchmidtUGen(rate, _trig(i.%(_sz_trig)), _min(i.%(_sz_min)), _max(i.%(_sz_max))))
+      val _sz_minVal = _minVal.size
+      val _sz_maxVal = _maxVal.size
+      val _exp_ = maxInt(_sz_trig, _sz_minVal, _sz_maxVal)
+      IIdxSeq.tabulate(_exp_)(i => SchmidtUGen(rate, _trig(i.%(_sz_trig)), _minVal(i.%(_sz_minVal)), _maxVal(i.%(_sz_maxVal))))
    }
 }
-case class SchmidtUGen[R <: Rate](rate: R, trig: AnyUGenIn, min: AnyUGenIn, max: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, min, max))
+case class SchmidtUGen[R <: Rate](rate: R, trig: AnyUGenIn, minVal: AnyUGenIn, maxVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, minVal, maxVal))
 object PulseDivider {
    def kr(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply[control](control, trig, div, start)
    def ar(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply[audio](audio, trig, div, start)
@@ -164,28 +164,28 @@ case class PulseCount[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE) extends GE[
 }
 case class PulseCountUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset))
 object Stepper {
-   def kr(trig: AnyGE, reset: AnyGE = 0.0f, min: AnyGE = 0.0f, max: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, reset, min, max, step, resetVal)
-   def ar(trig: AnyGE, reset: AnyGE = 0.0f, min: AnyGE = 0.0f, max: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, reset, min, max, step, resetVal)
+   def kr(trig: AnyGE, reset: AnyGE = 0.0f, minVal: AnyGE = 0.0f, maxVal: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, reset, minVal, maxVal, step, resetVal)
+   def ar(trig: AnyGE, reset: AnyGE = 0.0f, minVal: AnyGE = 0.0f, maxVal: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, reset, minVal, maxVal, step, resetVal)
 }
-case class Stepper[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE, min: AnyGE, max: AnyGE, step: AnyGE, resetVal: AnyGE) extends GE[R, StepperUGen[R]] {
+case class Stepper[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE, minVal: AnyGE, maxVal: AnyGE, step: AnyGE, resetVal: AnyGE) extends GE[R, StepperUGen[R]] {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _reset: IIdxSeq[AnyUGenIn] = reset.expand
-      val _min: IIdxSeq[AnyUGenIn] = min.expand
-      val _max: IIdxSeq[AnyUGenIn] = max.expand
+      val _minVal: IIdxSeq[AnyUGenIn] = minVal.expand
+      val _maxVal: IIdxSeq[AnyUGenIn] = maxVal.expand
       val _step: IIdxSeq[AnyUGenIn] = step.expand
       val _resetVal: IIdxSeq[AnyUGenIn] = resetVal.expand
       val _sz_trig = _trig.size
       val _sz_reset = _reset.size
-      val _sz_min = _min.size
-      val _sz_max = _max.size
+      val _sz_minVal = _minVal.size
+      val _sz_maxVal = _maxVal.size
       val _sz_step = _step.size
       val _sz_resetVal = _resetVal.size
-      val _exp_ = maxInt(_sz_trig, _sz_reset, _sz_min, _sz_max, _sz_step, _sz_resetVal)
-      IIdxSeq.tabulate(_exp_)(i => StepperUGen(rate, _trig(i.%(_sz_trig)), _reset(i.%(_sz_reset)), _min(i.%(_sz_min)), _max(i.%(_sz_max)), _step(i.%(_sz_step)), _resetVal(i.%(_sz_resetVal))))
+      val _exp_ = maxInt(_sz_trig, _sz_reset, _sz_minVal, _sz_maxVal, _sz_step, _sz_resetVal)
+      IIdxSeq.tabulate(_exp_)(i => StepperUGen(rate, _trig(i.%(_sz_trig)), _reset(i.%(_sz_reset)), _minVal(i.%(_sz_minVal)), _maxVal(i.%(_sz_maxVal)), _step(i.%(_sz_step)), _resetVal(i.%(_sz_resetVal))))
    }
 }
-case class StepperUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn, min: AnyUGenIn, max: AnyUGenIn, step: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset, min, max, step, resetVal))
+case class StepperUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn, minVal: AnyUGenIn, maxVal: AnyUGenIn, step: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset, minVal, maxVal, step, resetVal))
 object TDelay {
    def kr(trig: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, trig, dur)
    def ar(trig: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, trig, dur)
@@ -239,26 +239,26 @@ case class Sweep[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE) extends GE[R, Sw
 }
 case class SweepUGen[R <: Rate](rate: R, trig: AnyUGenIn, speed: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, speed))
 object Phasor {
-   def kr(trig: AnyGE, speed: AnyGE = 1.0f, min: AnyGE = 0.0f, max: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, speed, min, max, resetVal)
-   def ar(trig: AnyGE, speed: AnyGE = 1.0f, min: AnyGE = 0.0f, max: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, speed, min, max, resetVal)
+   def kr(trig: AnyGE, speed: AnyGE = 1.0f, minVal: AnyGE = 0.0f, maxVal: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, speed, minVal, maxVal, resetVal)
+   def ar(trig: AnyGE, speed: AnyGE = 1.0f, minVal: AnyGE = 0.0f, maxVal: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, speed, minVal, maxVal, resetVal)
 }
-case class Phasor[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE, min: AnyGE, max: AnyGE, resetVal: AnyGE) extends GE[R, PhasorUGen[R]] {
+case class Phasor[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE, minVal: AnyGE, maxVal: AnyGE, resetVal: AnyGE) extends GE[R, PhasorUGen[R]] {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
-      val _min: IIdxSeq[AnyUGenIn] = min.expand
-      val _max: IIdxSeq[AnyUGenIn] = max.expand
+      val _minVal: IIdxSeq[AnyUGenIn] = minVal.expand
+      val _maxVal: IIdxSeq[AnyUGenIn] = maxVal.expand
       val _resetVal: IIdxSeq[AnyUGenIn] = resetVal.expand
       val _sz_trig = _trig.size
       val _sz_speed = _speed.size
-      val _sz_min = _min.size
-      val _sz_max = _max.size
+      val _sz_minVal = _minVal.size
+      val _sz_maxVal = _maxVal.size
       val _sz_resetVal = _resetVal.size
-      val _exp_ = maxInt(_sz_trig, _sz_speed, _sz_min, _sz_max, _sz_resetVal)
-      IIdxSeq.tabulate(_exp_)(i => PhasorUGen(rate, _trig(i.%(_sz_trig)), _speed(i.%(_sz_speed)), _min(i.%(_sz_min)), _max(i.%(_sz_max)), _resetVal(i.%(_sz_resetVal))))
+      val _exp_ = maxInt(_sz_trig, _sz_speed, _sz_minVal, _sz_maxVal, _sz_resetVal)
+      IIdxSeq.tabulate(_exp_)(i => PhasorUGen(rate, _trig(i.%(_sz_trig)), _speed(i.%(_sz_speed)), _minVal(i.%(_sz_minVal)), _maxVal(i.%(_sz_maxVal)), _resetVal(i.%(_sz_resetVal))))
    }
 }
-case class PhasorUGen[R <: Rate](rate: R, trig: AnyUGenIn, speed: AnyUGenIn, min: AnyUGenIn, max: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, speed, min, max, resetVal))
+case class PhasorUGen[R <: Rate](rate: R, trig: AnyUGenIn, speed: AnyUGenIn, minVal: AnyUGenIn, maxVal: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, speed, minVal, maxVal, resetVal))
 object Peak {
    def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
    def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
@@ -367,17 +367,17 @@ case class LastValueUGen[R <: Rate](rate: R, in: AnyUGenIn, thresh: AnyUGenIn) e
 object Done {
    def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }
-case class Done(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends GE[control, DoneUGen] with ControlRated {
+case class Done(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends GE[control, DoneUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
       IIdxSeq.tabulate(_src.size)(i => DoneUGen(_src(i)))
    }
 }
-case class DoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with ControlRated with HasSideEffect
+case class DoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
 object Pause {
    def kr(gate: AnyGE, node: AnyGE) = apply(gate, node)
 }
-case class Pause(gate: AnyGE, node: AnyGE) extends GE[control, PauseUGen] with ControlRated {
+case class Pause(gate: AnyGE, node: AnyGE) extends GE[control, PauseUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _gate: IIdxSeq[AnyUGenIn] = gate.expand
       val _node: IIdxSeq[AnyUGenIn] = node.expand
@@ -387,31 +387,31 @@ case class Pause(gate: AnyGE, node: AnyGE) extends GE[control, PauseUGen] with C
       IIdxSeq.tabulate(_exp_)(i => PauseUGen(_gate(i.%(_sz_gate)), _node(i.%(_sz_node))))
    }
 }
-case class PauseUGen(gate: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(gate, node)) with ControlRated with HasSideEffect
+case class PauseUGen(gate: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(gate, node)) with HasSideEffect with ControlRated
 object FreeSelf {
    def kr(trig: AnyGE) = apply(trig)
 }
-case class FreeSelf(trig: AnyGE) extends GE[control, FreeSelfUGen] with ControlRated {
+case class FreeSelf(trig: AnyGE) extends GE[control, FreeSelfUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       IIdxSeq.tabulate(_trig.size)(i => FreeSelfUGen(_trig(i)))
    }
 }
-case class FreeSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with ControlRated with HasSideEffect
+case class FreeSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with HasSideEffect with ControlRated
 object PauseSelf {
    def kr(trig: AnyGE) = apply(trig)
 }
-case class PauseSelf(trig: AnyGE) extends GE[control, PauseSelfUGen] with ControlRated {
+case class PauseSelf(trig: AnyGE) extends GE[control, PauseSelfUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       IIdxSeq.tabulate(_trig.size)(i => PauseSelfUGen(_trig(i)))
    }
 }
-case class PauseSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with ControlRated with HasSideEffect
+case class PauseSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with HasSideEffect with ControlRated
 object Free {
    def kr(trig: AnyGE, node: AnyGE) = apply(trig, node)
 }
-case class Free(trig: AnyGE, node: AnyGE) extends GE[control, FreeUGen] with ControlRated {
+case class Free(trig: AnyGE, node: AnyGE) extends GE[control, FreeUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _node: IIdxSeq[AnyUGenIn] = node.expand
@@ -421,24 +421,24 @@ case class Free(trig: AnyGE, node: AnyGE) extends GE[control, FreeUGen] with Con
       IIdxSeq.tabulate(_exp_)(i => FreeUGen(_trig(i.%(_sz_trig)), _node(i.%(_sz_node))))
    }
 }
-case class FreeUGen(trig: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig, node)) with ControlRated with HasSideEffect
+case class FreeUGen(trig: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig, node)) with HasSideEffect with ControlRated
 object FreeSelfWhenDone {
    def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }
-case class FreeSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends GE[control, FreeSelfWhenDoneUGen] with ControlRated {
+case class FreeSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends GE[control, FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
       IIdxSeq.tabulate(_src.size)(i => FreeSelfWhenDoneUGen(_src(i)))
    }
 }
-case class FreeSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with ControlRated with HasSideEffect
+case class FreeSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
 object PauseSelfWhenDone {
    def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }
-case class PauseSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends GE[control, PauseSelfWhenDoneUGen] with ControlRated {
+case class PauseSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends GE[control, PauseSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    def expand = {
       val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
       IIdxSeq.tabulate(_src.size)(i => PauseSelfWhenDoneUGen(_src(i)))
    }
 }
-case class PauseSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with ControlRated with HasSideEffect
+case class PauseSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated

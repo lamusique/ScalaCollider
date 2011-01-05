@@ -50,8 +50,39 @@ trait UGenProxy {
  *    automatically removed from the graph.
  */
 trait HasSideEffect
-
+/**
+ *    Marks a ugen which sets a special done
+ *    flag that can be read by ugens such
+ *    as `Done`.
+ */
 trait HasDoneFlag
+/**
+ *    Marks a ugen which is individual, that
+ *    is two instances of that ugen are different
+ *    even if all inputs are the same. This is
+ *    the case for example for all ugens that
+ *    depend on the random seed (as indicated
+ *    by the sub-type `HasRandSeed`) or which
+ *    mix onto buses or buffers (e.g. `RecordBuf`).
+ *
+ *    Note that for example `BufWr` could be
+ *    considered not individual as two identically
+ *    parametrized BufWr instances produce exactly the same
+ *    behaviour as one of them. However,
+ *    they are in certain spots of the UGen
+ *    graph in which they could be behave differently,
+ *    for example if the computation order is
+ *    `BufWr` -> `BufRd` -> `BufRd`. We thus
+ *    defensively mark every ugen as individual
+ *    which writes to a Buffer or Bus.
+ */
+trait IsIndividual {
+   override def equals( x: Any ) : Boolean = super.equals( x )
+   override def hashCode() = super.hashCode()
+}
+trait UsesRandSeed extends IsIndividual
+trait WritesBuffer extends HasSideEffect with IsIndividual  // XXX eventually: WritesBuffer[T] { def buf: T }
+trait WritesBus extends HasSideEffect with IsIndividual     // XXX eventually: WritesBus[T] { def bus: T }
 
 abstract class UGen
 extends /* YYY RatedGE with */ UGenProxy {
