@@ -193,138 +193,138 @@ trait GE[ R <: Rate, +U <: UGenIn[ R ]] extends Expands[ U ] {
 
    // binary ops
    def +[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Plus.make[ R, S, T ]( r.rate, this, b )
+      Plus.make[ R, S, T ]( r.out, this, b )
    
    def -[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Minus.make[ R, S, T ]( r.rate, this, b )
+      Minus.make[ R, S, T ]( r.out, this, b )
    
    def *[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Times.make[ R, S, T ]( r.rate, this, b )
+      Times.make[ R, S, T ]( r.out, this, b )
    
-// def div( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE      = IDiv.make[ R, S, T ]( r.rate, this, b )
+// def div( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE      = IDiv.make[ R, S, T ]( r.out, this, b )
    
    def /[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Div.make[ R, S, T ]( r.rate, this, b )
+      Div.make[ R, S, T ]( r.out, this, b )
    
    def %[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Mod.make[ R, S, T ]( r.rate, this, b )
+      Mod.make[ R, S, T ]( r.out, this, b )
    
    def ===[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Eq.make[ R, S, T ]( r.rate, this, b )
+      Eq.make[ R, S, T ]( r.out, this, b )
    
    def !==[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Neq.make[ R, S, T ]( r.rate, this, b )
+      Neq.make[ R, S, T ]( r.out, this, b )
    
    def <[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Lt.make[ R, S, T ]( r.rate, this, b )
+      Lt.make[ R, S, T ]( r.out, this, b )
    
    def >[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Gt.make[ R, S, T ]( r.rate, this, b )
+      Gt.make[ R, S, T ]( r.out, this, b )
    
    def <=[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Leq.make[ R, S, T ]( r.rate, this, b )
+      Leq.make[ R, S, T ]( r.out, this, b )
    
    def >=[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Geq.make[ R, S, T ]( r.rate, this, b )
+      Geq.make[ R, S, T ]( r.out, this, b )
    
    def min[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Min.make[ R, S, T ]( r.rate, this, b )
+      Min.make[ R, S, T ]( r.out, this, b )
    
    def max[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Max.make[ R, S, T ]( r.rate, this, b )
+      Max.make[ R, S, T ]( r.out, this, b )
    
    def &[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      BitAnd.make[ R, S, T ]( r.rate, this, b )
+      BitAnd.make[ R, S, T ]( r.out, this, b )
    
    def |[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =   
-      BitOr.make[ R, S, T ]( r.rate, this, b )
+      BitOr.make[ R, S, T ]( r.out, this, b )
    
    def ^[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      BitXor.make[ R, S, T ]( r.rate, this, b )
+      BitXor.make[ R, S, T ]( r.out, this, b )
    
-// def Lcm( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE      = Lcm.make[ R, S, T ]( r.rate, this, b )
-// def Gcd( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE      = Gcd.make[ R, S, T ]( r.rate, this, b )
+// def Lcm( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE      = Lcm.make[ R, S, T ]( r.out, this, b )
+// def Gcd( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE      = Gcd.make[ R, S, T ]( r.out, this, b )
    
    def round[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Round.make[ R, S, T ]( r.rate, this, b )
+      Round.make[ R, S, T ]( r.out, this, b )
    
    def roundup[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Roundup.make[ R, S, T ]( r.rate, this, b ) // sclang uses camel case instead
+      Roundup.make[ R, S, T ]( r.out, this, b ) // sclang uses camel case instead
    
    def trunc[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Trunc.make[ R, S, T ]( r.rate, this, b )
+      Trunc.make[ R, S, T ]( r.out, this, b )
    
    def atan2[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Atan2.make[ R, S, T ]( r.rate, this, b )
+      Atan2.make[ R, S, T ]( r.out, this, b )
    
    def hypot[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Hypot.make[ R, S, T ]( r.rate, this, b )
+      Hypot.make[ R, S, T ]( r.out, this, b )
    
    def hypotx[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Hypotx.make[ R, S, T ]( r.rate, this, b )
+      Hypotx.make[ R, S, T ]( r.out, this, b )
    
    def pow[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Pow.make[ R, S, T ]( r.rate, this, b )
+      Pow.make[ R, S, T ]( r.out, this, b )
    
-// def <<( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE       = <<.make[ R, S, T ]( r.rate, this, b )
-// def >>( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE       = >>.make[ R, S, T ]( r.rate, this, b )
-// def unsgnRghtShift( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE = UnsgnRghtShift.make[ R, S, T ]( r.rate, this, b )
-// def fill( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE     = Fill.make[ R, S, T ]( r.rate, this, b )
+// def <<( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE       = <<.make[ R, S, T ]( r.out, this, b )
+// def >>( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE       = >>.make[ R, S, T ]( r.out, this, b )
+// def unsgnRghtShift( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE = UnsgnRghtShift.make[ R, S, T ]( r.out, this, b )
+// def fill( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE     = Fill.make[ R, S, T ]( r.out, this, b )
    
    def ring1[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Ring1.make[ R, S, T ]( r.rate, this, b )
+      Ring1.make[ R, S, T ]( r.out, this, b )
    
    def ring2[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Ring2.make[ R, S, T ]( r.rate, this, b )
+      Ring2.make[ R, S, T ]( r.out, this, b )
    
    def ring3[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Ring3.make[ R, S, T ]( r.rate, this, b )
+      Ring3.make[ R, S, T ]( r.out, this, b )
    
    def ring4[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Ring4.make[ R, S, T ]( r.rate, this, b )
+      Ring4.make[ R, S, T ]( r.out, this, b )
    
    def difsqr[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Difsqr.make[ R, S, T ]( r.rate, this, b )
+      Difsqr.make[ R, S, T ]( r.out, this, b )
    
    def sumsqr[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-      Sumsqr.make[ R, S, T ]( r.rate, this, b )
+      Sumsqr.make[ R, S, T ]( r.out, this, b )
    
    def sqrsum[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Sqrsum.make[ R, S, T ]( r.rate, this, b )
+      Sqrsum.make[ R, S, T ]( r.out, this, b )
    
    def sqrdif[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Sqrdif.make[ R, S, T ]( r.rate, this, b )
+      Sqrdif.make[ R, S, T ]( r.out, this, b )
    
    def absdif[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Absdif.make[ R, S, T ]( r.rate, this, b )
+      Absdif.make[ R, S, T ]( r.out, this, b )
    
    def thresh[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Thresh.make[ R, S, T ]( r.rate, this, b )
+      Thresh.make[ R, S, T ]( r.out, this, b )
    
    def amclip[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Amclip.make[ R, S, T ]( r.rate, this, b )
+      Amclip.make[ R, S, T ]( r.out, this, b )
    
    def scaleneg[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Scaleneg.make[ R, S, T ]( r.rate, this, b )
+      Scaleneg.make[ R, S, T ]( r.out, this, b )
    
    def clip2[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Clip2.make[ R, S, T ]( r.rate, this, b )
+      Clip2.make[ R, S, T ]( r.out, this, b )
    
    def excess[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Excess.make[ R, S, T ]( r.rate, this, b )
+      Excess.make[ R, S, T ]( r.out, this, b )
    
    def fold2[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Fold2.make[ R, S, T ]( r.rate, this, b )
+      Fold2.make[ R, S, T ]( r.out, this, b )
    
    def wrap2[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = 
-      Wrap2.make[ R, S, T ]( r.rate, this, b )
+      Wrap2.make[ R, S, T ]( r.out, this, b )
 
 // YYY
 //   def firstarg[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) =
-//      Firstarg.make[ R, S, T ]( r.rate, this, b ) // sclang uses camel case instead
+//      Firstarg.make[ R, S, T ]( r.out, this, b ) // sclang uses camel case instead
    
-// def rrand( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE    = Rrand.make[ R, S, T ]( r.rate, this, b )
-// def exprrand( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE = Exprrand.make[ R, S, T ]( r.rate, this, b )
+// def rrand( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE    = Rrand.make[ R, S, T ]( r.out, this, b )
+// def exprrand( b: GE[ S, UGenIn[ S ]])( implicit r: RateOrder[ R, S, T ]) = : GE = Exprrand.make[ R, S, T ]( r.out, this, b )
 
    // other ugens
 //   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = {

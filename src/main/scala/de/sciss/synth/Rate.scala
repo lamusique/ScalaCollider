@@ -72,13 +72,16 @@ case object demand  extends demand
 trait ScalarRated  { def rate = scalar }
 trait ControlRated { def rate = control }
 trait AudioRated   { def rate = audio }
+trait DemandRated  { def rate = demand }
 
 sealed trait HigherRate[ R <: Rate, S <: Rate ] {
    def rate1: R
    def rate2: S
 }
 sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] {
-   def rate: T
+   def in1: R
+   def in2: S
+   def out: T
 }
 trait RateRelations {
    implicit val audioImp   = audio
@@ -87,7 +90,7 @@ trait RateRelations {
    implicit val demandImp  = demand
 
    private class HigherRateImpl[ R <: Rate, S <: Rate ]( val rate1: R, val rate2: S ) extends HigherRate[ R, S ]
-   private class RateOrderImpl[ R <: Rate, S <: Rate, T <: Rate ]( val rate: T ) extends RateOrder[ R, S, T ]
+   private class RateOrderImpl[ R <: Rate, S <: Rate, T <: Rate ]( val in1: R, val in2: S, val out: T ) extends RateOrder[ R, S, T ]
 //   implicit val demandGtDemand:   HigherRate[ demand,  demand  ] = new HigherRateImpl( demand,  demand  )
    implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new HigherRateImpl( demand,  audio   )
    implicit val demandGtControl:  HigherRate[ demand,  control ] = new HigherRateImpl( demand,  control )
@@ -99,10 +102,10 @@ trait RateRelations {
    implicit val controlGtScalar:  HigherRate[ control, scalar  ] = new HigherRateImpl( control, scalar  )
 //   implicit val scalarGtScalar:   HigherRate[ scalar,  scalar  ] = new HigherRateImpl( scalar,  scalar  )
 
-   implicit def rateOrder1[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrderImpl[ R, S, R ]( rel.rate1 )
-   implicit def rateOrder2[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrderImpl[ R, S, S ]( rel.rate1 )
-   implicit val rateOrder3 : RateOrder[ scalar, scalar, scalar ] = new RateOrderImpl[ scalar, scalar, scalar ]( scalar )
-   implicit val rateOrder4 : RateOrder[ control, control, control ] = new RateOrderImpl[ control, control, control ]( control )
-   implicit val rateOrder5 : RateOrder[ audio, audio, audio ] = new RateOrderImpl[ audio, audio, audio ]( audio )
-   implicit val rateOrder6 : RateOrder[ demand, demand, demand ] = new RateOrderImpl[ demand, demand, demand ]( demand )
+   implicit def rateOrder1[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrderImpl[ R, S, R ]( rel.rate1, rel.rate2, rel.rate1 )
+   implicit def rateOrder2[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrderImpl[ R, S, S ]( rel.rate2, rel.rate1, rel.rate1 )
+   implicit val rateOrder3 : RateOrder[ scalar, scalar, scalar ] = new RateOrderImpl[ scalar, scalar, scalar ]( scalar, scalar, scalar )
+   implicit val rateOrder4 : RateOrder[ control, control, control ] = new RateOrderImpl[ control, control, control ]( control, control, control )
+   implicit val rateOrder5 : RateOrder[ audio, audio, audio ] = new RateOrderImpl[ audio, audio, audio ]( audio, audio, audio )
+   implicit val rateOrder6 : RateOrder[ demand, demand, demand ] = new RateOrderImpl[ demand, demand, demand ]( demand, demand, demand )
 }
