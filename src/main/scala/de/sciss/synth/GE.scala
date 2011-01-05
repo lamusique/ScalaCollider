@@ -73,7 +73,7 @@ trait GE[ R <: Rate, +U <: UGenIn[ R ]] extends Expands[ U ] {
 
 //   private[synth] def ops = new GEOps( this )
 
-//   def madd( mul: GE[ AnyUGenIn ], add: GE[ AnyUGenIn ]) : GE[ AnyUGenIn ] = {
+   def madd( mul: AnyGE, add: AnyGE ) = MulAdd[ R ]( rate, this, mul, add )
 //      Rate.highest( outputs.map( _.rate ): _* ) match {
 //         case `audio`   => MulAdd.ar( this, mul, add )
 //         case `control` => MulAdd.kr( this, mul, add )
