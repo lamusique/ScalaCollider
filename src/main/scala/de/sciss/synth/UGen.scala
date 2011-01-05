@@ -82,6 +82,7 @@ trait IsIndividual {
 }
 trait UsesRandSeed extends IsIndividual
 trait WritesBuffer extends HasSideEffect with IsIndividual  // XXX eventually: WritesBuffer[T] { def buf: T }
+trait WritesFFT extends HasSideEffect with IsIndividual
 trait WritesBus extends HasSideEffect with IsIndividual     // XXX eventually: WritesBus[T] { def bus: T }
 
 abstract class UGen
