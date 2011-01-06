@@ -193,7 +193,7 @@ object Env extends AbstractEnvFactory[ Env ] {
 }
 
 object AbstractEnv {
-   implicit def toGE( env: AbstractEnv ) : Expands[ AnyGE ] = env.toGE
+   implicit def toGE( env: AbstractEnv ) : Expands[ MultiGE ] = env.toGE
 }
 
 trait AbstractEnv {
@@ -203,19 +203,20 @@ trait AbstractEnv {
 // note: we do not define toSeq because the format is
 // significantly different so there is little sense in doing so
 //	def toSeq : Seq[ GE ] ...
-   def toGE : Expands[ AnyGE ]
+   def toGE : Expands[ MultiGE ]
 }
 
 case class Env( startLevel: AnyGE, segments: Seq[ EnvSeg.Any ],
                 releaseNode: AnyGE = -99, loopNode: AnyGE = -99 )
 extends AbstractEnv {
 
-	def toGE : Expands[ AnyGE ] = {
+	def toGE : Expands[ MultiGE ] = {
       val segmIdx    = segments.toIndexedSeq
       val sizeGE: AnyGE = segmIdx.size
       val res: IIdxSeq[ AnyGE ] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap( seg =>
          IIdxSeq[ AnyGE ]( seg.targetLevel, seg.dur, seg.shape.idGE, seg.shape.curvatureGE ))
-      error( "NOT YET" )
+//      error( "NOT YET" )
+      res
    }
 
    def isSustained = releaseNode != Constant( -99 )

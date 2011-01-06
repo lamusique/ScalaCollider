@@ -486,17 +486,17 @@ case class LinLin[R <: Rate](rate: R, in: AnyGE, srcLo: AnyGE, srcHi: AnyGE, dst
 }
 case class LinLinUGen[R <: Rate](rate: R, in: AnyUGenIn, srcLo: AnyUGenIn, srcHi: AnyUGenIn, dstLo: AnyUGenIn, dstHi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, srcLo, srcHi, dstLo, dstHi))
 object EnvGen {
-   def kr(envelope: Expands[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
-   def ar(envelope: Expands[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def kr(envelope: Expands[MultiGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def ar(envelope: Expands[MultiGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
 }
-case class EnvGen[R <: Rate](rate: R, envelope: Expands[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends GE[R, EnvGenUGen[R]] {
+case class EnvGen[R <: Rate](rate: R, envelope: Expands[MultiGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends GE[R, EnvGenUGen[R]] {
    def expand = {
       val _gate: IIdxSeq[AnyUGenIn] = gate.expand
       val _levelScale: IIdxSeq[AnyUGenIn] = levelScale.expand
       val _levelBias: IIdxSeq[AnyUGenIn] = levelBias.expand
       val _timeScale: IIdxSeq[AnyUGenIn] = timeScale.expand
       val _doneAction: IIdxSeq[AnyUGenIn] = doneAction.expand
-      val _envelope: IIdxSeq[AnyGE] = envelope.expand
+      val _envelope: IIdxSeq[MultiGE] = envelope.expand
       val _sz_gate = _gate.size
       val _sz_levelScale = _levelScale.size
       val _sz_levelBias = _levelBias.size

@@ -63,6 +63,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    // GEs
 
    type AnyUGenIn = UGenIn[ _ <: Rate ]
+   type MultiGE   = Expands[ AnyUGenIn ]
    type AnyGE     = GE[ R, _ <: UGenIn[ R ]] forSome { type R <: Rate }
 
    /**
@@ -96,14 +97,15 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //         case _               => new RatedUGenInSeq( x.head.rate, outputs )
       }
    }
-//   implicit def seqOfGEToGE[ R <: Rate ]( x: Seq[ GE[ R, UGenIn[ R ]]])( implicit rate: R ) : GE[ R, UGenIn[ R ]] = {
-//      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
-//      outputs match {
-//         case IIdxSeq( mono ) => mono
-//         case _               => new RatedUGenInSeq( rate, outputs )
-////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
-//      }
-//   }
+
+   implicit def seqOfGEToGE( x: Seq[ MultiGE ]) : MultiGE = {
+      val outputs: IIdxSeq[ AnyUGenIn ] = x.flatMap( _.expand )( breakOut )
+      outputs match {
+         case IIdxSeq( mono ) => mono
+         case _               => new UGenInSeq( outputs )
+//         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+      }
+   }
    implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )

@@ -99,7 +99,7 @@ object SynthGraph {
       SynthGraph {
          val res1 = thunk
          val rate = res1.rate // .highest( res1.outputs.map( _.rate ): _* )
-         if( (rate == audio) || (rate == control) ) {
+         val res2 = if( (rate == audio) || (rate == control) ) {
             val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
             val out = "out".kr
             if( rate == audio ) {
@@ -108,6 +108,7 @@ object SynthGraph {
                Out.kr( out, res2 )
             }
          } else res1
+         res2.expand // YYY
       }
 
 	def makeFadeEnv( fadeTime: Float ) : GE[ control, UGenIn[ control ]] = {
@@ -175,7 +176,7 @@ object SynthGraph {
       }
    }
 
-   def individuate: Int = builder.individuate
+//   def individuate: Int = builder.individuate
 
   // ---- rich ugen ----
 
