@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Jan 05 19:06:55 GMT 2011
+ * Created: Thu Jan 06 16:54:58 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,76 +12,74 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object WhiteNoise {
-   def kr: WhiteNoise[control,scalar,control] = kr( )
-   def kr[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)( implicit rateOrder: RateOrder[ control, S, T ]) = apply[control, S, T](rateOrder.out, mul)(rateOrder)
-   def ar: WhiteNoise[audio,scalar,audio] = ar( )
-   def ar[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)( implicit rateOrder: RateOrder[ audio, S, T ]) = apply[audio, S, T](rateOrder.out, mul)(rateOrder)
+   def kr: WhiteNoise[control, scalar, control] = kr()
+   def kr[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[control, S, T]) = apply[control, S, T](rateOrder.out, mul)(rateOrder)
+   def ar: WhiteNoise[audio, scalar, audio] = ar()
+   def ar[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[audio, S, T]) = apply[audio, S, T](rateOrder.out, mul)(rateOrder)
 }
-case class WhiteNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenIn[S]])(implicit rateOrder: RateOrder[ R, S, T ])
-extends GE[T, UGenIn[T]] with UsesRandSeed {
+case class WhiteNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenIn[S]])( implicit rateOrder: RateOrder[R, S, T]) extends GE[T, UGenIn[T]] with UsesRandSeed {
    def expand = {
       val _mul: IIdxSeq[UGenIn[S]] = mul.expand
-//      IIdxSeq.tabulate(_mul.size)(i => WhiteNoiseUGen(rateOrder.in1) * _mul(i))
-      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen[T]( rateOrder.out, BinaryOp.Times, WhiteNoiseUGen(rateOrder.in1), _mul(i)))
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen[T](rateOrder.out, BinaryOp.Times, WhiteNoiseUGen(rateOrder.in1), _mul(i)))
    }
 }
 case class WhiteNoiseUGen[R <: Rate](rate: R) extends SingleOutUGen[R](IIdxSeq.empty) with UsesRandSeed
 object GrayNoise {
-   def kr: GrayNoise[control] = kr( )
-   def kr[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[control](control, mul)
-   def ar: GrayNoise[audio] = ar( )
-   def ar[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[audio](audio, mul)
+   def kr: GrayNoise[control, scalar, control] = kr()
+   def kr[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[control, S, T]) = apply[control, S, T](rateOrder.out, mul)(rateOrder)
+   def ar: GrayNoise[audio, scalar, audio] = ar()
+   def ar[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[audio, S, T]) = apply[audio, S, T](rateOrder.out, mul)(rateOrder)
 }
-case class GrayNoise[R <: Rate](rate: R, mul: AnyGE) extends GE[R, GrayNoiseUGen[R]] with UsesRandSeed {
+case class GrayNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenIn[S]])( implicit rateOrder: RateOrder[R, S, T]) extends GE[T, UGenIn[T]] with UsesRandSeed {
    def expand = {
-      val _mul: IIdxSeq[AnyUGenIn] = mul.expand
-      IIdxSeq.tabulate(_mul.size)(i => GrayNoiseUGen(rate, _mul(i)))
+      val _mul: IIdxSeq[UGenIn[S]] = mul.expand
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen[T](rateOrder.out, BinaryOp.Times, GrayNoiseUGen(rateOrder.in1), _mul(i)))
    }
 }
-case class GrayNoiseUGen[R <: Rate](rate: R, mul: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(mul)) with UsesRandSeed
+case class GrayNoiseUGen[R <: Rate](rate: R) extends SingleOutUGen[R](IIdxSeq.empty) with UsesRandSeed
 object ClipNoise {
-   def kr: ClipNoise[control] = kr( )
-   def kr[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[control](control, mul)
-   def ar: ClipNoise[audio] = ar( )
-   def ar[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[audio](audio, mul)
+   def kr: ClipNoise[control, scalar, control] = kr()
+   def kr[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[control, S, T]) = apply[control, S, T](rateOrder.out, mul)(rateOrder)
+   def ar: ClipNoise[audio, scalar, audio] = ar()
+   def ar[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[audio, S, T]) = apply[audio, S, T](rateOrder.out, mul)(rateOrder)
 }
-case class ClipNoise[R <: Rate](rate: R, mul: AnyGE) extends GE[R, ClipNoiseUGen[R]] with UsesRandSeed {
+case class ClipNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenIn[S]])( implicit rateOrder: RateOrder[R, S, T]) extends GE[T, UGenIn[T]] with UsesRandSeed {
    def expand = {
-      val _mul: IIdxSeq[AnyUGenIn] = mul.expand
-      IIdxSeq.tabulate(_mul.size)(i => ClipNoiseUGen(rate, _mul(i)))
+      val _mul: IIdxSeq[UGenIn[S]] = mul.expand
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen[T](rateOrder.out, BinaryOp.Times, ClipNoiseUGen(rateOrder.in1), _mul(i)))
    }
 }
-case class ClipNoiseUGen[R <: Rate](rate: R, mul: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(mul)) with UsesRandSeed
+case class ClipNoiseUGen[R <: Rate](rate: R) extends SingleOutUGen[R](IIdxSeq.empty) with UsesRandSeed
 object PinkNoise {
-   def kr: PinkNoise[control] = kr( )
-   def kr[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[control](control, mul)
-   def ar: PinkNoise[audio] = ar( )
-   def ar[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[audio](audio, mul)
+   def kr: PinkNoise[control, scalar, control] = kr()
+   def kr[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[control, S, T]) = apply[control, S, T](rateOrder.out, mul)(rateOrder)
+   def ar: PinkNoise[audio, scalar, audio] = ar()
+   def ar[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[audio, S, T]) = apply[audio, S, T](rateOrder.out, mul)(rateOrder)
 }
-case class PinkNoise[R <: Rate](rate: R, mul: AnyGE) extends GE[R, PinkNoiseUGen[R]] with UsesRandSeed {
+case class PinkNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenIn[S]])( implicit rateOrder: RateOrder[R, S, T]) extends GE[T, UGenIn[T]] with UsesRandSeed {
    def expand = {
-      val _mul: IIdxSeq[AnyUGenIn] = mul.expand
-      IIdxSeq.tabulate(_mul.size)(i => PinkNoiseUGen(rate, _mul(i)))
+      val _mul: IIdxSeq[UGenIn[S]] = mul.expand
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen[T](rateOrder.out, BinaryOp.Times, PinkNoiseUGen(rateOrder.in1), _mul(i)))
    }
 }
-case class PinkNoiseUGen[R <: Rate](rate: R, mul: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(mul)) with UsesRandSeed
+case class PinkNoiseUGen[R <: Rate](rate: R) extends SingleOutUGen[R](IIdxSeq.empty) with UsesRandSeed
 object BrownNoise {
-   def kr: BrownNoise[control] = kr( )
-   def kr[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[control](control, mul)
-   def ar: BrownNoise[audio] = ar( )
-   def ar[S <: Rate, T <: Rate](mul: AnyGE = 1.0f) = apply[audio](audio, mul)
+   def kr: BrownNoise[control, scalar, control] = kr()
+   def kr[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[control, S, T]) = apply[control, S, T](rateOrder.out, mul)(rateOrder)
+   def ar: BrownNoise[audio, scalar, audio] = ar()
+   def ar[S <: Rate, T <: Rate](mul: GE[S, UGenIn[S]] = 1.0f)(implicit rateOrder: RateOrder[audio, S, T]) = apply[audio, S, T](rateOrder.out, mul)(rateOrder)
 }
-case class BrownNoise[R <: Rate](rate: R, mul: AnyGE) extends GE[R, BrownNoiseUGen[R]] with UsesRandSeed {
+case class BrownNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenIn[S]])( implicit rateOrder: RateOrder[R, S, T]) extends GE[T, UGenIn[T]] with UsesRandSeed {
    def expand = {
-      val _mul: IIdxSeq[AnyUGenIn] = mul.expand
-      IIdxSeq.tabulate(_mul.size)(i => BrownNoiseUGen(rate, _mul(i)))
+      val _mul: IIdxSeq[UGenIn[S]] = mul.expand
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen[T](rateOrder.out, BinaryOp.Times, BrownNoiseUGen(rateOrder.in1), _mul(i)))
    }
 }
-case class BrownNoiseUGen[R <: Rate](rate: R, mul: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(mul)) with UsesRandSeed
+case class BrownNoiseUGen[R <: Rate](rate: R) extends SingleOutUGen[R](IIdxSeq.empty) with UsesRandSeed
 object Dust {
-   def kr: Dust[control] = kr( )
+   def kr: Dust[control] = kr()
    def kr(density: AnyGE = 1.0f) = apply[control](control, density)
-   def ar: Dust[audio] = ar( )
+   def ar: Dust[audio] = ar()
    def ar(density: AnyGE = 1.0f) = apply[audio](audio, density)
 }
 case class Dust[R <: Rate](rate: R, density: AnyGE) extends GE[R, DustUGen[R]] with UsesRandSeed {
@@ -92,9 +90,9 @@ case class Dust[R <: Rate](rate: R, density: AnyGE) extends GE[R, DustUGen[R]] w
 }
 case class DustUGen[R <: Rate](rate: R, density: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(density)) with UsesRandSeed
 object Dust2 {
-   def kr: Dust2[control] = kr( )
+   def kr: Dust2[control] = kr()
    def kr(density: AnyGE = 1.0f) = apply[control](control, density)
-   def ar: Dust2[audio] = ar( )
+   def ar: Dust2[audio] = ar()
    def ar(density: AnyGE = 1.0f) = apply[audio](audio, density)
 }
 case class Dust2[R <: Rate](rate: R, density: AnyGE) extends GE[R, Dust2UGen[R]] with UsesRandSeed {
@@ -105,9 +103,9 @@ case class Dust2[R <: Rate](rate: R, density: AnyGE) extends GE[R, Dust2UGen[R]]
 }
 case class Dust2UGen[R <: Rate](rate: R, density: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(density)) with UsesRandSeed
 object Crackle {
-   def kr: Crackle[control] = kr( )
+   def kr: Crackle[control] = kr()
    def kr(chaos: AnyGE = 1.5f) = apply[control](control, chaos)
-   def ar: Crackle[audio] = ar( )
+   def ar: Crackle[audio] = ar()
    def ar(chaos: AnyGE = 1.5f) = apply[audio](audio, chaos)
 }
 case class Crackle[R <: Rate](rate: R, chaos: AnyGE) extends GE[R, CrackleUGen[R]] {
@@ -118,9 +116,9 @@ case class Crackle[R <: Rate](rate: R, chaos: AnyGE) extends GE[R, CrackleUGen[R
 }
 case class CrackleUGen[R <: Rate](rate: R, chaos: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(chaos))
 object Logistic {
-   def kr: Logistic[control] = kr( )
+   def kr: Logistic[control] = kr()
    def kr(chaos: AnyGE = 3.0f, freq: AnyGE = 1000.0f, init: AnyGE = 0.5f) = apply[control](control, chaos, freq, init)
-   def ar: Logistic[audio] = ar( )
+   def ar: Logistic[audio] = ar()
    def ar(chaos: AnyGE = 3.0f, freq: AnyGE = 1000.0f, init: AnyGE = 0.5f) = apply[audio](audio, chaos, freq, init)
 }
 case class Logistic[R <: Rate](rate: R, chaos: AnyGE, freq: AnyGE, init: AnyGE) extends GE[R, LogisticUGen[R]] {
@@ -163,9 +161,9 @@ case class MantissaMask[R <: Rate](rate: R, in: AnyGE, bits: AnyGE) extends GE[R
 }
 case class MantissaMaskUGen[R <: Rate](rate: R, in: AnyUGenIn, bits: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, bits))
 object LFClipNoise {
-   def kr: LFClipNoise[control] = kr( )
+   def kr: LFClipNoise[control] = kr()
    def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFClipNoise[audio] = ar( )
+   def ar: LFClipNoise[audio] = ar()
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFClipNoise[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFClipNoiseUGen[R]] with UsesRandSeed {
@@ -176,9 +174,9 @@ case class LFClipNoise[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFClipNois
 }
 case class LFClipNoiseUGen[R <: Rate](rate: R, freq: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq)) with UsesRandSeed
 object LFNoise0 {
-   def kr: LFNoise0[control] = kr( )
+   def kr: LFNoise0[control] = kr()
    def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFNoise0[audio] = ar( )
+   def ar: LFNoise0[audio] = ar()
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFNoise0[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFNoise0UGen[R]] with UsesRandSeed {
@@ -189,9 +187,9 @@ case class LFNoise0[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFNoise0UGen[
 }
 case class LFNoise0UGen[R <: Rate](rate: R, freq: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq)) with UsesRandSeed
 object LFNoise1 {
-   def kr: LFNoise1[control] = kr( )
+   def kr: LFNoise1[control] = kr()
    def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFNoise1[audio] = ar( )
+   def ar: LFNoise1[audio] = ar()
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFNoise1[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFNoise1UGen[R]] with UsesRandSeed {
@@ -202,9 +200,9 @@ case class LFNoise1[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFNoise1UGen[
 }
 case class LFNoise1UGen[R <: Rate](rate: R, freq: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq)) with UsesRandSeed
 object LFNoise2 {
-   def kr: LFNoise2[control] = kr( )
+   def kr: LFNoise2[control] = kr()
    def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFNoise2[audio] = ar( )
+   def ar: LFNoise2[audio] = ar()
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFNoise2[R <: Rate](rate: R, freq: AnyGE) extends GE[R, LFNoise2UGen[R]] with UsesRandSeed {
@@ -340,9 +338,9 @@ case class CoinGate[R <: Rate](rate: R, in: AnyGE, prob: AnyGE) extends GE[R, Co
 }
 case class CoinGateUGen[R <: Rate](rate: R, in: AnyUGenIn, prob: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(prob, in)) with UsesRandSeed
 object RandSeed {
-   def ir: RandSeed[scalar] = ir( )
+   def ir: RandSeed[scalar] = ir()
    def ir(trig: AnyGE = 1.0f, seed: AnyGE = 56789.0f) = apply[scalar](scalar, trig, seed)
-   def kr: RandSeed[control] = kr( )
+   def kr: RandSeed[control] = kr()
    def kr(trig: AnyGE = 1.0f, seed: AnyGE = 56789.0f) = apply[control](control, trig, seed)
 }
 case class RandSeed[R <: Rate](rate: R, trig: AnyGE, seed: AnyGE) extends GE[R, RandSeedUGen[R]] with HasSideEffect {
@@ -357,9 +355,9 @@ case class RandSeed[R <: Rate](rate: R, trig: AnyGE, seed: AnyGE) extends GE[R, 
 }
 case class RandSeedUGen[R <: Rate](rate: R, trig: AnyUGenIn, seed: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, seed)) with HasSideEffect
 object RandID {
-   def ir: RandID[scalar] = ir( )
+   def ir: RandID[scalar] = ir()
    def ir(id: AnyGE = 0.0f) = apply[scalar](scalar, id)
-   def kr: RandID[control] = kr( )
+   def kr: RandID[control] = kr()
    def kr(id: AnyGE = 0.0f) = apply[control](control, id)
 }
 case class RandID[R <: Rate](rate: R, id: AnyGE) extends GE[R, RandIDUGen[R]] with HasSideEffect {

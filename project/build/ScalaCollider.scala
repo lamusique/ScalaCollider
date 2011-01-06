@@ -17,4 +17,8 @@ class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) {
        catch { case e: IOException => { e.printStackTrace(); "" }}
        consoleTask( consoleClasspath, Nil, consoleInit ) describedAs "Starts a ScalaCollider REPL, initializing from file \"console-startup.txt\"."
    }
+
+// NOTE: these don't have any effect. you need to edit the sbt launch script to increase JVM heap size!
+//   override def javaCompileOptions = JavaCompileOption( "-Xmx1024m" ) :: JavaCompileOption( "-Xss1m" ) ::
+//      JavaCompileOption( "-XX:MaxPermSize=256m" ) :: JavaCompileOption( "-XX:PermSize=64m" ) :: JavaCompileOption( "-server" ) :: Nil
 }

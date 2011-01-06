@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Jan 05 18:34:00 GMT 2011
+ * Created: Thu Jan 06 16:41:02 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,9 +12,9 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object Vibrato {
-   def kr: Vibrato[control] = kr( )
+   def kr: Vibrato[control] = kr()
    def kr(freq: AnyGE = 440.0f, beat: AnyGE = 6.0f, depth: AnyGE = 0.02f, delay: AnyGE = 0.0f, onset: AnyGE = 0.0f, beatVar: AnyGE = 0.04f, depthVar: AnyGE = 0.1f, iphase: AnyGE = 0.0f) = apply[control](control, freq, beat, depth, delay, onset, beatVar, depthVar, iphase)
-   def ar: Vibrato[audio] = ar( )
+   def ar: Vibrato[audio] = ar()
    def ar(freq: AnyGE = 440.0f, beat: AnyGE = 6.0f, depth: AnyGE = 0.02f, delay: AnyGE = 0.0f, onset: AnyGE = 0.0f, beatVar: AnyGE = 0.04f, depthVar: AnyGE = 0.1f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, beat, depth, delay, onset, beatVar, depthVar, iphase)
 }
 case class Vibrato[R <: Rate](rate: R, freq: AnyGE, beat: AnyGE, depth: AnyGE, delay: AnyGE, onset: AnyGE, beatVar: AnyGE, depthVar: AnyGE, iphase: AnyGE) extends GE[R, VibratoUGen[R]] {
@@ -41,9 +41,9 @@ case class Vibrato[R <: Rate](rate: R, freq: AnyGE, beat: AnyGE, depth: AnyGE, d
 }
 case class VibratoUGen[R <: Rate](rate: R, freq: AnyUGenIn, beat: AnyUGenIn, depth: AnyUGenIn, delay: AnyUGenIn, onset: AnyUGenIn, beatVar: AnyUGenIn, depthVar: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, beat, depth, delay, onset, beatVar, depthVar, iphase))
 object LFPulse {
-   def kr: LFPulse[control] = kr( )
+   def kr: LFPulse[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[control](control, freq, iphase, width)
-   def ar: LFPulse[audio] = ar( )
+   def ar: LFPulse[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[audio](audio, freq, iphase, width)
 }
 case class LFPulse[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE, width: AnyGE) extends GE[R, LFPulseUGen[R]] {
@@ -60,9 +60,9 @@ case class LFPulse[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE, width: AnyGE)
 }
 case class LFPulseUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn, width: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase, width))
 object LFSaw {
-   def kr: LFSaw[control] = kr( )
+   def kr: LFSaw[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
-   def ar: LFSaw[audio] = ar( )
+   def ar: LFSaw[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
 }
 case class LFSaw[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, LFSawUGen[R]] {
@@ -77,9 +77,9 @@ case class LFSaw[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, L
 }
 case class LFSawUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase))
 object LFPar {
-   def kr: LFPar[control] = kr( )
+   def kr: LFPar[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
-   def ar: LFPar[audio] = ar( )
+   def ar: LFPar[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
 }
 case class LFPar[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, LFParUGen[R]] {
@@ -94,9 +94,9 @@ case class LFPar[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, L
 }
 case class LFParUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase))
 object LFCub {
-   def kr: LFCub[control] = kr( )
+   def kr: LFCub[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
-   def ar: LFCub[audio] = ar( )
+   def ar: LFCub[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
 }
 case class LFCub[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, LFCubUGen[R]] {
@@ -111,9 +111,9 @@ case class LFCub[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, L
 }
 case class LFCubUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase))
 object LFTri {
-   def kr: LFTri[control] = kr( )
+   def kr: LFTri[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
-   def ar: LFTri[audio] = ar( )
+   def ar: LFTri[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
 }
 case class LFTri[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, LFTriUGen[R]] {
@@ -128,9 +128,9 @@ case class LFTri[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, L
 }
 case class LFTriUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase))
 object LFGauss {
-   def kr: LFGauss[control] = kr( )
+   def kr: LFGauss[control] = kr()
    def kr(dur: AnyGE = 1.0f, width: AnyGE = 0.1f, iphase: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, dur, width, iphase, loop, doneAction)
-   def ar: LFGauss[audio] = ar( )
+   def ar: LFGauss[audio] = ar()
    def ar(dur: AnyGE = 1.0f, width: AnyGE = 0.1f, iphase: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, dur, width, iphase, loop, doneAction)
 }
 case class LFGauss[R <: Rate](rate: R, dur: AnyGE, width: AnyGE, iphase: AnyGE, loop: AnyGE, doneAction: AnyGE) extends GE[R, LFGaussUGen[R]] {
@@ -151,9 +151,9 @@ case class LFGauss[R <: Rate](rate: R, dur: AnyGE, width: AnyGE, iphase: AnyGE, 
 }
 case class LFGaussUGen[R <: Rate](rate: R, dur: AnyUGenIn, width: AnyUGenIn, iphase: AnyUGenIn, loop: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(dur, width, iphase, loop, doneAction))
 object Impulse {
-   def kr: Impulse[control] = kr( )
+   def kr: Impulse[control] = kr()
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
-   def ar: Impulse[audio] = ar( )
+   def ar: Impulse[audio] = ar()
    def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
 }
 case class Impulse[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, ImpulseUGen[R]] {
@@ -168,9 +168,9 @@ case class Impulse[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, 
 }
 case class ImpulseUGen[R <: Rate](rate: R, freq: AnyUGenIn, phase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, phase))
 object VarSaw {
-   def kr: VarSaw[control] = kr( )
+   def kr: VarSaw[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[control](control, freq, iphase, width)
-   def ar: VarSaw[audio] = ar( )
+   def ar: VarSaw[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[audio](audio, freq, iphase, width)
 }
 case class VarSaw[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE, width: AnyGE) extends GE[R, VarSawUGen[R]] {
@@ -187,9 +187,9 @@ case class VarSaw[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE, width: AnyGE) 
 }
 case class VarSawUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn, width: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase, width))
 object SyncSaw {
-   def kr: SyncSaw[control] = kr( )
+   def kr: SyncSaw[control] = kr()
    def kr(syncFreq: AnyGE = 440.0f, sawFreq: AnyGE = 440.0f) = apply[control](control, syncFreq, sawFreq)
-   def ar: SyncSaw[audio] = ar( )
+   def ar: SyncSaw[audio] = ar()
    def ar(syncFreq: AnyGE = 440.0f, sawFreq: AnyGE = 440.0f) = apply[audio](audio, syncFreq, sawFreq)
 }
 case class SyncSaw[R <: Rate](rate: R, syncFreq: AnyGE, sawFreq: AnyGE) extends GE[R, SyncSawUGen[R]] {
@@ -243,15 +243,26 @@ case class T2A(in: AnyGE) extends GE[audio, T2AUGen] with AudioRated {
    }
 }
 case class T2AUGen(in: AnyUGenIn) extends SingleOutUGen[audio](IIdxSeq(in)) with AudioRated
+object DC {
+   def kr(in: Expands[AnyGE]) = apply[control](control, in)
+   def ar(in: Expands[AnyGE]) = apply[audio](audio, in)
+}
+case class DC[R <: Rate](rate: R, in: Expands[AnyGE]) extends Expands[DCUGen[R]] {
+   def expand = {
+      val _in: IIdxSeq[AnyGE] = in.expand
+      IIdxSeq.tabulate(_in.size)(i => DCUGen(rate, _in(i).expand))
+   }
+}
+case class DCUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn]) extends MultiOutUGen(IIdxSeq.fill(in.size)(rate), in)
 object Silent {
-   def ar: Silent = ar( )
+   def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
 }
 case class Silent(numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
 object Line {
-   def ar: Line[audio] = ar( )
+   def ar: Line[audio] = ar()
    def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, start, end, dur, doneAction)
-   def kr: Line[control] = kr( )
+   def kr: Line[control] = kr()
    def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, start, end, dur, doneAction)
 }
 case class Line[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, LineUGen[R]] with HasSideEffect with HasDoneFlag {
@@ -270,9 +281,9 @@ case class Line[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAc
 }
 case class LineUGen[R <: Rate](rate: R, start: AnyUGenIn, end: AnyUGenIn, dur: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(start, end, dur, doneAction)) with HasSideEffect with HasDoneFlag
 object XLine {
-   def ar: XLine[audio] = ar( )
+   def ar: XLine[audio] = ar()
    def ar(start: AnyGE = 1.0f, end: AnyGE = 2.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, start, end, dur, doneAction)
-   def kr: XLine[control] = kr( )
+   def kr: XLine[control] = kr()
    def kr(start: AnyGE = 1.0f, end: AnyGE = 2.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, start, end, dur, doneAction)
 }
 case class XLine[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends GE[R, XLineUGen[R]] with HasSideEffect with HasDoneFlag {
@@ -345,11 +356,11 @@ case class Clip[R <: Rate](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends GE[
 }
 case class ClipUGen[R <: Rate](rate: R, in: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, lo, hi))
 object AmpComp {
-   def ir: AmpComp[scalar] = ir( )
+   def ir: AmpComp[scalar] = ir()
    def ir(freq: AnyGE = 60.midicps, root: AnyGE = 60.midicps, expon: AnyGE = 0.3333f) = apply[scalar](scalar, freq, root, expon)
-   def kr: AmpComp[control] = kr( )
+   def kr: AmpComp[control] = kr()
    def kr(freq: AnyGE = 60.midicps, root: AnyGE = 60.midicps, expon: AnyGE = 0.3333f) = apply[control](control, freq, root, expon)
-   def ar: AmpComp[audio] = ar( )
+   def ar: AmpComp[audio] = ar()
    def ar(freq: AnyGE = 60.midicps, root: AnyGE = 60.midicps, expon: AnyGE = 0.3333f) = apply[audio](audio, freq, root, expon)
 }
 case class AmpComp[R <: Rate](rate: R, freq: AnyGE, root: AnyGE, expon: AnyGE) extends GE[R, AmpCompUGen[R]] {
@@ -366,11 +377,11 @@ case class AmpComp[R <: Rate](rate: R, freq: AnyGE, root: AnyGE, expon: AnyGE) e
 }
 case class AmpCompUGen[R <: Rate](rate: R, freq: AnyUGenIn, root: AnyUGenIn, expon: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, root, expon))
 object AmpCompA {
-   def ir: AmpCompA[scalar] = ir( )
+   def ir: AmpCompA[scalar] = ir()
    def ir(freq: AnyGE = 1000.0f, root: AnyGE = 0.0f, minAmp: AnyGE = 0.32f, rootAmp: AnyGE = 1.0f) = apply[scalar](scalar, freq, root, minAmp, rootAmp)
-   def kr: AmpCompA[control] = kr( )
+   def kr: AmpCompA[control] = kr()
    def kr(freq: AnyGE = 1000.0f, root: AnyGE = 0.0f, minAmp: AnyGE = 0.32f, rootAmp: AnyGE = 1.0f) = apply[control](control, freq, root, minAmp, rootAmp)
-   def ar: AmpCompA[audio] = ar( )
+   def ar: AmpCompA[audio] = ar()
    def ar(freq: AnyGE = 1000.0f, root: AnyGE = 0.0f, minAmp: AnyGE = 0.32f, rootAmp: AnyGE = 1.0f) = apply[audio](audio, freq, root, minAmp, rootAmp)
 }
 case class AmpCompA[R <: Rate](rate: R, freq: AnyGE, root: AnyGE, minAmp: AnyGE, rootAmp: AnyGE) extends GE[R, AmpCompAUGen[R]] {
@@ -474,10 +485,33 @@ case class LinLin[R <: Rate](rate: R, in: AnyGE, srcLo: AnyGE, srcHi: AnyGE, dst
    }
 }
 case class LinLinUGen[R <: Rate](rate: R, in: AnyUGenIn, srcLo: AnyUGenIn, srcHi: AnyUGenIn, dstLo: AnyUGenIn, dstHi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, srcLo, srcHi, dstLo, dstHi))
+object EnvGen {
+   def kr(envelope: Expands[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def ar(envelope: Expands[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+}
+case class EnvGen[R <: Rate](rate: R, envelope: Expands[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends GE[R, EnvGenUGen[R]] {
+   def expand = {
+      val _gate: IIdxSeq[AnyUGenIn] = gate.expand
+      val _levelScale: IIdxSeq[AnyUGenIn] = levelScale.expand
+      val _levelBias: IIdxSeq[AnyUGenIn] = levelBias.expand
+      val _timeScale: IIdxSeq[AnyUGenIn] = timeScale.expand
+      val _doneAction: IIdxSeq[AnyUGenIn] = doneAction.expand
+      val _envelope: IIdxSeq[AnyGE] = envelope.expand
+      val _sz_gate = _gate.size
+      val _sz_levelScale = _levelScale.size
+      val _sz_levelBias = _levelBias.size
+      val _sz_timeScale = _timeScale.size
+      val _sz_doneAction = _doneAction.size
+      val _sz_envelope = _envelope.size
+      val _exp_ = maxInt(_sz_gate, _sz_levelScale, _sz_levelBias, _sz_timeScale, _sz_doneAction, _sz_envelope)
+      IIdxSeq.tabulate(_exp_)(i => EnvGenUGen(rate, _envelope(i.%(_sz_envelope)).expand, _gate(i.%(_sz_gate)), _levelScale(i.%(_sz_levelScale)), _levelBias(i.%(_sz_levelBias)), _timeScale(i.%(_sz_timeScale)), _doneAction(i.%(_sz_doneAction))))
+   }
+}
+case class EnvGenUGen[R <: Rate](rate: R, envelope: IIdxSeq[AnyUGenIn], gate: AnyUGenIn, levelScale: AnyUGenIn, levelBias: AnyUGenIn, timeScale: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](gate, levelScale, levelBias, timeScale, doneAction).++(envelope))
 object Linen {
-   def kr: Linen[control] = kr( )
+   def kr: Linen[control] = kr()
    def kr(gate: AnyGE = 1.0f, attack: AnyGE = 0.01f, sustain: AnyGE = 1.0f, release: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, gate, attack, sustain, release, doneAction)
-   def ar: Linen[audio] = ar( )
+   def ar: Linen[audio] = ar()
    def ar(gate: AnyGE = 1.0f, attack: AnyGE = 0.01f, sustain: AnyGE = 1.0f, release: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, gate, attack, sustain, release, doneAction)
 }
 case class Linen[R <: Rate](rate: R, gate: AnyGE, attack: AnyGE, sustain: AnyGE, release: AnyGE, doneAction: AnyGE) extends GE[R, LinenUGen[R]] {
@@ -497,3 +531,18 @@ case class Linen[R <: Rate](rate: R, gate: AnyGE, attack: AnyGE, sustain: AnyGE,
    }
 }
 case class LinenUGen[R <: Rate](rate: R, gate: AnyUGenIn, attack: AnyUGenIn, sustain: AnyUGenIn, release: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(gate, attack, sustain, release, doneAction))
+object IEnvGen {
+   def kr(envelope: Expands[AnyGE], index: AnyGE = 1.0f) = apply[control](control, envelope, index)
+   def ar(envelope: Expands[AnyGE], index: AnyGE = 1.0f) = apply[audio](audio, envelope, index)
+}
+case class IEnvGen[R <: Rate](rate: R, envelope: Expands[AnyGE], index: AnyGE) extends GE[R, IEnvGenUGen[R]] {
+   def expand = {
+      val _index: IIdxSeq[AnyUGenIn] = index.expand
+      val _envelope: IIdxSeq[AnyGE] = envelope.expand
+      val _sz_index = _index.size
+      val _sz_envelope = _envelope.size
+      val _exp_ = maxInt(_sz_index, _sz_envelope)
+      IIdxSeq.tabulate(_exp_)(i => IEnvGenUGen(rate, _envelope(i.%(_sz_envelope)).expand, _index(i.%(_sz_index))))
+   }
+}
+case class IEnvGenUGen[R <: Rate](rate: R, envelope: IIdxSeq[AnyUGenIn], index: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](index).++(envelope))

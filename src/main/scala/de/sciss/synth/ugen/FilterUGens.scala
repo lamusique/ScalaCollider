@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Jan 05 18:33:55 GMT 2011
+ * Created: Thu Jan 06 16:40:57 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 

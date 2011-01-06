@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Jan 05 18:34:02 GMT 2011
+ * Created: Thu Jan 06 16:41:04 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -39,10 +39,10 @@ case class Select[R <: Rate](rate: R, index: AnyGE, in: Expands[AnyGE]) extends 
       val _sz_index = _index.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_index, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => SelectUGen(rate, _index(i.%(_sz_index)), _in(i.%(_sz_in))))
+      IIdxSeq.tabulate(_exp_)(i => SelectUGen(rate, _index(i.%(_sz_index)), _in(i.%(_sz_in)).expand))
    }
 }
-case class SelectUGen[R <: Rate](rate: R, index: AnyUGenIn, in: AnyGE) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](index).++(in.expand))
+case class SelectUGen[R <: Rate](rate: R, index: AnyUGenIn, in: IIdxSeq[AnyUGenIn]) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](index).++(in))
 object TWindex {
    def kr(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[control](control, trig, prob, normalize)
    def ar(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[audio](audio, trig, prob, normalize)
@@ -136,9 +136,9 @@ case class Shaper[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends GE[R, Shape
 }
 case class ShaperUGen[R <: Rate](rate: R, buf: AnyUGenIn, in: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(buf, in))
 object FSinOsc {
-   def ar: FSinOsc[audio] = ar( )
+   def ar: FSinOsc[audio] = ar()
    def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
-   def kr: FSinOsc[control] = kr( )
+   def kr: FSinOsc[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
 }
 case class FSinOsc[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, FSinOscUGen[R]] {
@@ -153,9 +153,9 @@ case class FSinOsc[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R,
 }
 case class FSinOscUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase))
 object SinOsc {
-   def ar: SinOsc[audio] = ar( )
+   def ar: SinOsc[audio] = ar()
    def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
-   def kr: SinOsc[control] = kr( )
+   def kr: SinOsc[control] = kr()
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
 case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, SinOscUGen[R]] {
@@ -170,9 +170,9 @@ case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, S
 }
 case class SinOscUGen[R <: Rate](rate: R, freq: AnyUGenIn, phase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, phase))
 object SinOscFB {
-   def ar: SinOscFB[audio] = ar( )
+   def ar: SinOscFB[audio] = ar()
    def ar(freq: AnyGE = 440.0f, feedback: AnyGE = 0.0f) = apply[audio](audio, freq, feedback)
-   def kr: SinOscFB[control] = kr( )
+   def kr: SinOscFB[control] = kr()
    def kr(freq: AnyGE = 440.0f, feedback: AnyGE = 0.0f) = apply[control](control, freq, feedback)
 }
 case class SinOscFB[R <: Rate](rate: R, freq: AnyGE, feedback: AnyGE) extends GE[R, SinOscFBUGen[R]] {
@@ -273,9 +273,9 @@ case class COsc[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, beats: AnyGE) exten
 }
 case class COscUGen[R <: Rate](rate: R, buf: AnyUGenIn, freq: AnyUGenIn, beats: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(buf, freq, beats))
 object Formant {
-   def ar: Formant[audio] = ar( )
+   def ar: Formant[audio] = ar()
    def ar(fundFreq: AnyGE = 440.0f, formFreq: AnyGE = 1760.0f, bw: AnyGE = 880.0f) = apply[audio](audio, fundFreq, formFreq, bw)
-   def kr: Formant[control] = kr( )
+   def kr: Formant[control] = kr()
    def kr(fundFreq: AnyGE = 440.0f, formFreq: AnyGE = 1760.0f, bw: AnyGE = 880.0f) = apply[control](control, fundFreq, formFreq, bw)
 }
 case class Formant[R <: Rate](rate: R, fundFreq: AnyGE, formFreq: AnyGE, bw: AnyGE) extends GE[R, FormantUGen[R]] {
@@ -292,9 +292,9 @@ case class Formant[R <: Rate](rate: R, fundFreq: AnyGE, formFreq: AnyGE, bw: Any
 }
 case class FormantUGen[R <: Rate](rate: R, fundFreq: AnyUGenIn, formFreq: AnyUGenIn, bw: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(fundFreq, formFreq, bw))
 object Blip {
-   def kr: Blip[control] = kr( )
+   def kr: Blip[control] = kr()
    def kr(freq: AnyGE = 440.0f, numHarm: AnyGE = 200.0f) = apply[control](control, freq, numHarm)
-   def ar: Blip[audio] = ar( )
+   def ar: Blip[audio] = ar()
    def ar(freq: AnyGE = 440.0f, numHarm: AnyGE = 200.0f) = apply[audio](audio, freq, numHarm)
 }
 case class Blip[R <: Rate](rate: R, freq: AnyGE, numHarm: AnyGE) extends GE[R, BlipUGen[R]] {
@@ -309,9 +309,9 @@ case class Blip[R <: Rate](rate: R, freq: AnyGE, numHarm: AnyGE) extends GE[R, B
 }
 case class BlipUGen[R <: Rate](rate: R, freq: AnyUGenIn, numHarm: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, numHarm))
 object Saw {
-   def kr: Saw[control] = kr( )
+   def kr: Saw[control] = kr()
    def kr(freq: AnyGE = 440.0f) = apply[control](control, freq)
-   def ar: Saw[audio] = ar( )
+   def ar: Saw[audio] = ar()
    def ar(freq: AnyGE = 440.0f) = apply[audio](audio, freq)
 }
 case class Saw[R <: Rate](rate: R, freq: AnyGE) extends GE[R, SawUGen[R]] {
@@ -322,9 +322,9 @@ case class Saw[R <: Rate](rate: R, freq: AnyGE) extends GE[R, SawUGen[R]] {
 }
 case class SawUGen[R <: Rate](rate: R, freq: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq))
 object Pulse {
-   def kr: Pulse[control] = kr( )
+   def kr: Pulse[control] = kr()
    def kr(freq: AnyGE = 440.0f, width: AnyGE = 0.5f) = apply[control](control, freq, width)
-   def ar: Pulse[audio] = ar( )
+   def ar: Pulse[audio] = ar()
    def ar(freq: AnyGE = 440.0f, width: AnyGE = 0.5f) = apply[audio](audio, freq, width)
 }
 case class Pulse[R <: Rate](rate: R, freq: AnyGE, width: AnyGE) extends GE[R, PulseUGen[R]] {

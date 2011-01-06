@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Jan 05 18:33:50 GMT 2011
+ * Created: Thu Jan 06 16:40:52 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,53 +12,53 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object ControlRate {
-   def ir = apply
+   def ir() = apply()
 }
-case class ControlRate extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class ControlRate() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object SampleRate {
-   def ir = apply
+   def ir() = apply()
 }
-case class SampleRate extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class SampleRate() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object SampleDur {
-   def ir = apply
+   def ir() = apply()
 }
-case class SampleDur extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class SampleDur() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object ControlDur {
-   def ir = apply
+   def ir() = apply()
 }
-case class ControlDur extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class ControlDur() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object SubsampleOffset {
-   def ir = apply
+   def ir() = apply()
 }
-case class SubsampleOffset extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class SubsampleOffset() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object RadiansPerSample {
-   def ir = apply
+   def ir() = apply()
 }
-case class RadiansPerSample extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class RadiansPerSample() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumInputBuses {
-   def ir = apply
+   def ir() = apply()
 }
-case class NumInputBuses extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumInputBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumOutputBuses {
-   def ir = apply
+   def ir() = apply()
 }
-case class NumOutputBuses extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumOutputBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumAudioBuses {
-   def ir = apply
+   def ir() = apply()
 }
-case class NumAudioBuses extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumAudioBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumControlBuses {
-   def ir = apply
+   def ir() = apply()
 }
-case class NumControlBuses extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumControlBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumBuffers {
-   def ir = apply
+   def ir() = apply()
 }
-case class NumBuffers extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumBuffers() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumRunningSynths {
-   def ir = apply
+   def ir() = apply()
 }
-case class NumRunningSynths extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumRunningSynths() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object BufSampleRate {
    def ir(buf: AnyGE) = apply[scalar](scalar, buf)
    def kr(buf: AnyGE) = apply[control](control, buf)
@@ -173,10 +173,10 @@ case class RecordBuf[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, offset:
       val _sz_doneAction = _doneAction.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_buf, _sz_offset, _sz_recLevel, _sz_preLevel, _sz_run, _sz_loop, _sz_trig, _sz_doneAction, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => RecordBufUGen(rate, _in(i.%(_sz_in)), _buf(i.%(_sz_buf)), _offset(i.%(_sz_offset)), _recLevel(i.%(_sz_recLevel)), _preLevel(i.%(_sz_preLevel)), _run(i.%(_sz_run)), _loop(i.%(_sz_loop)), _trig(i.%(_sz_trig)), _doneAction(i.%(_sz_doneAction))))
+      IIdxSeq.tabulate(_exp_)(i => RecordBufUGen(rate, _in(i.%(_sz_in)).expand, _buf(i.%(_sz_buf)), _offset(i.%(_sz_offset)), _recLevel(i.%(_sz_recLevel)), _preLevel(i.%(_sz_preLevel)), _run(i.%(_sz_run)), _loop(i.%(_sz_loop)), _trig(i.%(_sz_trig)), _doneAction(i.%(_sz_doneAction))))
    }
 }
-case class RecordBufUGen[R <: Rate](rate: R, in: AnyGE, buf: AnyUGenIn, offset: AnyUGenIn, recLevel: AnyUGenIn, preLevel: AnyUGenIn, run: AnyUGenIn, loop: AnyUGenIn, trig: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, offset, recLevel, preLevel, run, loop, trig, doneAction).++(in.expand)) with WritesBuffer
+case class RecordBufUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn], buf: AnyUGenIn, offset: AnyUGenIn, recLevel: AnyUGenIn, preLevel: AnyUGenIn, run: AnyUGenIn, loop: AnyUGenIn, trig: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, offset, recLevel, preLevel, run, loop, trig, doneAction).++(in)) with WritesBuffer
 object BufRd {
    def kr(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[control](control, numChannels, buf, phase, loop, interp)
    def ar(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[audio](audio, numChannels, buf, phase, loop, interp)
@@ -211,10 +211,10 @@ case class BufWr[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, phase: AnyG
       val _sz_loop = _loop.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_buf, _sz_phase, _sz_loop, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => BufWrUGen(rate, _in(i.%(_sz_in)), _buf(i.%(_sz_buf)), _phase(i.%(_sz_phase)), _loop(i.%(_sz_loop))))
+      IIdxSeq.tabulate(_exp_)(i => BufWrUGen(rate, _in(i.%(_sz_in)).expand, _buf(i.%(_sz_buf)), _phase(i.%(_sz_phase)), _loop(i.%(_sz_loop))))
    }
 }
-case class BufWrUGen[R <: Rate](rate: R, in: AnyGE, buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, phase, loop).++(in.expand)) with WritesBuffer
+case class BufWrUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn], buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, phase, loop).++(in)) with WritesBuffer
 object Pitch {
    def kr(in: AnyGE, initFreq: AnyGE = 440.0f, minFreq: AnyGE = 60.0f, maxFreq: AnyGE = 4000.0f, execFreq: AnyGE = 100.0f, binsPerOct: AnyGE = 16.0f, median: AnyGE = 1.0f, ampThresh: AnyGE = 0.01f, peakThresh: AnyGE = 0.5f, downSample: AnyGE = 1.0f) = apply[control](control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)
 }
@@ -623,10 +623,10 @@ case class ScopeOut[R <: Rate](rate: R, buf: AnyGE, in: Expands[AnyGE]) extends 
       val _sz_buf = _buf.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_buf, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => ScopeOutUGen(rate, _buf(i.%(_sz_buf)), _in(i.%(_sz_in))))
+      IIdxSeq.tabulate(_exp_)(i => ScopeOutUGen(rate, _buf(i.%(_sz_buf)), _in(i.%(_sz_in)).expand))
    }
 }
-case class ScopeOutUGen[R <: Rate](rate: R, buf: AnyUGenIn, in: AnyGE) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf).++(in.expand)) with WritesBuffer
+case class ScopeOutUGen[R <: Rate](rate: R, buf: AnyUGenIn, in: IIdxSeq[AnyUGenIn]) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf).++(in)) with WritesBuffer
 object Pluck {
    def ar(in: AnyGE, trig: AnyGE = 1.0f, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f, coef: AnyGE = 0.5f) = apply(in, trig, maxDelayTime, delayTime, decayTime, coef)
 }
