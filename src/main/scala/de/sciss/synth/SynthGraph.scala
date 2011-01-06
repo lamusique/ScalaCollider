@@ -32,7 +32,7 @@ import java.io.DataOutputStream
 import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.Out
+import ugen.{EnvGen, Out}
 
 /**
  *    @version 0.12, 02-Aug-10
@@ -94,14 +94,13 @@ object SynthGraph {
 //      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
 //   }
 
-   def wrapOut( thunk: => AnyGE, fadeTime: Option[Float] = Some(0.02f) ) =
+   def wrapOut[ R <: Rate, S <: Rate ]( thunk: => GE[ R, UGenIn[ R ]], fadeTime: Option[Float] = Some(0.02f) )
+                                      ( implicit r: RateOrder[ control, R, S ]) =
       SynthGraph {
          val res1 = thunk
          val rate = res1.rate // .highest( res1.outputs.map( _.rate ): _* )
          if( (rate == audio) || (rate == control) ) {
-// YYY
-//            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
-            val res2 = res1
+            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
             val out = "out".kr
             if( rate == audio ) {
                Out.ar( out, res2 )
@@ -111,17 +110,16 @@ object SynthGraph {
          } else res1
       }
 
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//	def makeFadeEnv( fadeTime: Float ) : EnvGen = {
-//		val dt			= "fadeTime".kr( fadeTime )
-//		val gate       = "gate".kr( 1 )
-//		val startVal	= (dt <= 0)
-//      // this is slightly more costly than what sclang does
-//      // (using non-linear shape plus an extra unary op),
-//      // but it fadeout is much smoother this way...
-//		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
-//         gate, timeScale = dt, doneAction = freeSelf ).squared
-//	}
+	def makeFadeEnv( fadeTime: Float ) : GE[ control, UGenIn[ control ]] = {
+		val dt			= "fadeTime".kr( fadeTime )
+		val gate       = "gate".kr( 1 )
+		val startVal	= (dt <= 0)
+      // this is slightly more costly than what sclang does
+      // (using non-linear shape plus an extra unary op),
+      // but it fadeout is much smoother this way...
+		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+         gate, timeScale = dt, doneAction = freeSelf ).squared
+	}
 
 //   def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
 //      val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
