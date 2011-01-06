@@ -28,10 +28,9 @@
 
 package de.sciss.synth.ugen
 
-import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
+import collection.immutable.{ IndexedSeq => IIdxSeq }
 import collection.breakOut
-import de.sciss.synth.{ scalar, control, audio, AbstractControlProxy, AudioRated, ControlFactoryLike,
-                        ControlProxyLike, ControlRated, MultiOutUGen, Rate, HasSideEffect, SynthGraph, UGen }
+import de.sciss.synth._
 
 /**
  *    @version 0.12, 17-May-10
@@ -44,17 +43,25 @@ object Control {
     *    Note: we are not providing further convenience methods,
     *    as that is the task of ControlProxyFactory...
     */
-   def ir( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : ControlUGen = make( scalar, values, name )
-   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : ControlUGen = make( control, values, name )
+   def ir( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = apply[ scalar ](  scalar,  values, name )
+   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = apply[ control ]( control, values, name )
 
-   def ir( values: Float* ) : ControlUGen = ir( Vector( values: _* ))
-   def kr( values: Float* ) : ControlUGen = kr( Vector( values: _* ))
+   def ir( values: Float* ) : Control[ scalar ] = ir( IIdxSeq( values: _* ))
+   def kr( values: Float* ) : Control[ control ]= kr( IIdxSeq( values: _* ))
 
-   private def make( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ]) : ControlUGen = {
-      val specialIndex = SynthGraph.builder.addControl( values, name )
-      ControlUGen( rate, values.size, specialIndex )
+// YYY
+//   private def make( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ]) : ControlUGen = {
+//      val specialIndex = SynthGraph.builder.addControl( values, name )
+//      ControlUGen( rate, values.size, specialIndex )
+//   }
+}
+case class Control[R <: Rate]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ]) extends Expands[ ControlUGen ] {
+   def expand = {
+      val specialIndex = UGenGraph.builder.addControl( values, name )
+      IIdxSeq( ControlUGen( rate, values.size, specialIndex ))
    }
 }
+
 case class ControlUGen private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty ) with HasSideEffect
 
@@ -71,8 +78,8 @@ extends AbstractControlProxy[ R, ControlProxy[ R ]]( IIdxSeq.fill( values.size )
 
    private object ControlFactory extends ControlFactoryLike[ ControlProxy[ R ]] {
       // XXX eventually we should try to factor this out for all controlfactories...
-      def build( proxies: ControlProxy[ R ]* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
-         val b = SynthGraph.builder
+      def build( b: UGenGraphBuilder, proxies: ControlProxy[ R ]* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+//         val b = UGenGraph.builder
          // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
          // which exhibited a problem of not forcing varargs into being strict.
          // this has probably been fixed, hence we should eventually check if
@@ -127,12 +134,21 @@ extends AbstractControlProxy[ R, ControlProxy[ R ]]( IIdxSeq.fill( values.size )
 // ---------- TrigControl ----------
 
 object TrigControl {
-   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : TrigControlUGen = {
-      val specialIndex = SynthGraph.builder.addControl( values, name )
-      TrigControlUGen( values.size, specialIndex )
-   }
-   def kr( values: Float* ) : TrigControlUGen = kr( Vector( values: _* ))
+//   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : TrigControlUGen = {
+//      val specialIndex = SynthGraph.builder.addControl( values, name )
+//      TrigControlUGen( values.size, specialIndex )
+//   }
+   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = TrigControl( values, name )
+//   def kr( values: Float* ) : TrigControlUGen = kr( Vector( values: _* ))
+   def kr( values: Float* ) : TrigControl = kr( IIdxSeq( values: _* ))
 }
+case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends Expands[ TrigControlUGen ] {
+   def expand = {
+      val specialIndex = UGenGraph.builder.addControl( values, name )
+      IIdxSeq( TrigControlUGen( values.size, specialIndex ))
+   }
+}
+
 case class TrigControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) with ControlRated with HasSideEffect
 
@@ -148,8 +164,8 @@ extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill( values.
 }
 
 object TrigControlFactory extends ControlFactoryLike[ TrigControlProxy ] {
-   def build( proxies: TrigControlProxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
-      val b = SynthGraph.builder
+   def build( b: UGenGraphBuilder, proxies: TrigControlProxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+//      val b = SynthGraph.builder
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {
          numChannels += p.values.size
@@ -168,12 +184,20 @@ object TrigControlFactory extends ControlFactoryLike[ TrigControlProxy ] {
 // ---------- AudioControl ----------
 
 object AudioControl {
-   def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : AudioControlUGen = {
-      val specialIndex = SynthGraph.builder.addControl( values, name )
-      AudioControlUGen( values.size, specialIndex )
-   }
-   def ar( values: Float* ) : AudioControlUGen = ar( Vector( values: _* ))
+//   def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : AudioControlUGen = {
+//      val specialIndex = SynthGraph.builder.addControl( values, name )
+//      AudioControlUGen( values.size, specialIndex )
+//   }
+   def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = AudioControl( values, name )
+   def ar( values: Float* ) : AudioControl = ar( IIdxSeq( values: _* ))
 }
+case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends Expands[ AudioControlUGen ] {
+   def expand = {
+      val specialIndex = UGenGraph.builder.addControl( values, name )
+      IIdxSeq( AudioControlUGen( values.size, specialIndex ))
+   }
+}
+
 case class AudioControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
 
@@ -189,8 +213,8 @@ extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill( values.s
 }
 
 object AudioControlFactory extends ControlFactoryLike[ AudioControlProxy ] {
-   def build( proxies: AudioControlProxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
-      val b = SynthGraph.builder
+   def build( b: UGenGraphBuilder, proxies: AudioControlProxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+//      val b = SynthGraph.builder
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {
          numChannels += p.values.size

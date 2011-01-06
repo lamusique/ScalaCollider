@@ -87,10 +87,10 @@ trait WritesBus extends HasSideEffect with IsIndividual     // XXX eventually: W
 
 abstract class UGen
 extends /* YYY RatedGE with */ UGenProxy {
-   // ---- constructor ----
-   {
-      SynthGraph.builder.addUGen( this )
-   }
+//   // ---- constructor ----
+//   {
+//      SynthGraph.builder.addUGen( this )
+//   }
 
    def rate: Rate // YYY
    def numOutputs: Int // YYY
@@ -145,3 +145,10 @@ abstract class ZeroOutUGen( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with 
    final override def numOutputs = 0
    final def outputs = IIdxSeq.empty
 }
+
+trait UGenSource[ +U <: UGen ] extends Expands[ U ] {
+   // ---- constructor ----
+   SynthGraph.builder.addUGenSource( this )
+}
+
+trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen[ R ]] extends UGenSource[ U ] with GE[ R, U ]

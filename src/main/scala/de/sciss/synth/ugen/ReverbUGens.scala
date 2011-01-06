@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:41:05 GMT 2011
+ * Created: Thu Jan 06 20:58:09 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -14,7 +14,7 @@ import UGenHelper._
 object FreeVerb {
    def ar(in: GE[audio, UGenIn[audio]], mix: AnyGE = 0.33f, room: AnyGE = 0.5f, damp: AnyGE = 0.5f) = apply(in, mix, room, damp)
 }
-case class FreeVerb(in: AnyGE, mix: AnyGE, room: AnyGE, damp: AnyGE) extends GE[audio, FreeVerbUGen] with AudioRated {
+case class FreeVerb(in: AnyGE, mix: AnyGE, room: AnyGE, damp: AnyGE) extends SingleOutUGenSource[audio, FreeVerbUGen] with AudioRated {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _mix: IIdxSeq[AnyUGenIn] = mix.expand
@@ -32,7 +32,7 @@ case class FreeVerbUGen(in: AnyUGenIn, mix: AnyUGenIn, room: AnyUGenIn, damp: An
 object FreeVerb2 {
    def ar(left: GE[audio, UGenIn[audio]], right: GE[audio, UGenIn[audio]], mix: AnyGE = 0.33f, room: AnyGE = 0.5f, damp: AnyGE = 0.5f) = apply(left, right, mix, room, damp)
 }
-case class FreeVerb2(left: AnyGE, right: AnyGE, mix: AnyGE, room: AnyGE, damp: AnyGE) extends Expands[FreeVerb2UGen] with AudioRated {
+case class FreeVerb2(left: AnyGE, right: AnyGE, mix: AnyGE, room: AnyGE, damp: AnyGE) extends UGenSource[FreeVerb2UGen] with AudioRated {
    def expand = {
       val _left: IIdxSeq[AnyUGenIn] = left.expand
       val _right: IIdxSeq[AnyUGenIn] = right.expand
@@ -52,7 +52,7 @@ case class FreeVerb2UGen(left: AnyUGenIn, right: AnyUGenIn, mix: AnyUGenIn, room
 object GVerb {
    def ar(in: GE[audio, UGenIn[audio]], roomSize: AnyGE = 10.0f, revTime: AnyGE = 3.0f, damping: AnyGE = 0.5f, inputBW: AnyGE = 0.5f, spread: AnyGE = 15.0f, dryLevel: AnyGE = 1.0f, earlyRefLevel: AnyGE = 0.7f, tailLevel: AnyGE = 0.5f, maxRoomSize: AnyGE = 300.0f) = apply(in, roomSize, revTime, damping, inputBW, spread, dryLevel, earlyRefLevel, tailLevel, maxRoomSize)
 }
-case class GVerb(in: AnyGE, roomSize: AnyGE, revTime: AnyGE, damping: AnyGE, inputBW: AnyGE, spread: AnyGE, dryLevel: AnyGE, earlyRefLevel: AnyGE, tailLevel: AnyGE, maxRoomSize: AnyGE) extends Expands[GVerbUGen] with AudioRated {
+case class GVerb(in: AnyGE, roomSize: AnyGE, revTime: AnyGE, damping: AnyGE, inputBW: AnyGE, spread: AnyGE, dryLevel: AnyGE, earlyRefLevel: AnyGE, tailLevel: AnyGE, maxRoomSize: AnyGE) extends UGenSource[GVerbUGen] with AudioRated {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _roomSize: IIdxSeq[AnyUGenIn] = roomSize.expand

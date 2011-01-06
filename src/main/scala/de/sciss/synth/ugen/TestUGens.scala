@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:41:05 GMT 2011
+ * Created: Thu Jan 06 20:58:09 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -16,7 +16,7 @@ object CheckBadValues {
    def kr(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[control](control, in, id, post)
    def ar(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[audio](audio, in, id, post)
 }
-case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE) extends GE[R, CheckBadValuesUGen[R]] with HasSideEffect {
+case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE) extends SingleOutUGenSource[R, CheckBadValuesUGen[R]] with HasSideEffect {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _id: IIdxSeq[AnyUGenIn] = id.expand

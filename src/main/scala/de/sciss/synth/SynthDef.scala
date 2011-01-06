@@ -43,7 +43,7 @@ import de.sciss.osc.{OSCBundle, OSCMessage, OSCPacket}
  *    @version 0.19, 24-Aug-10
  *    @todo    should add load and loadDir to companion object
  */
-case class SynthDef( name: String, graph: SynthGraph ) {
+case class SynthDef( name: String, graph: UGenGraph ) {
    syndef =>
 
    import SynthDef._
@@ -195,7 +195,7 @@ object SynthDef {
 
    var defaultDir    = System.getProperty( "java.io.tmpdir" )
 
-   def apply( name: String )( thunk: => Unit ) : SynthDef = SynthDef( name, SynthGraph( thunk ))
+   def apply( name: String )( thunk: => Unit ) : SynthDef = SynthDef( name, SynthGraph( thunk ).expand )
 
    def recv( server: Server = Server.default, name: String, completion: Completion = NoCompletion )
            ( thunk: => Unit ) : SynthDef = {

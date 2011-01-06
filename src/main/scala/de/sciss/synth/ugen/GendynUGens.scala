@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:41:02 GMT 2011
+ * Created: Thu Jan 06 20:58:06 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -17,7 +17,7 @@ object Gendy1 {
    def kr: Gendy1[control] = kr()
    def kr(ampDist: AnyGE = 1.0f, durDist: AnyGE = 1.0f, adParam: AnyGE = 1.0f, ddParam: AnyGE = 1.0f, minFreq: AnyGE = 440.0f, maxFreq: AnyGE = 660.0f, ampScale: AnyGE = 0.5f, durScale: AnyGE = 0.5f, initCPs: AnyGE = 12.0f, kNum: AnyGE = 12.0f) = apply[control](control, ampDist, durDist, adParam, ddParam, minFreq, maxFreq, ampScale, durScale, initCPs, kNum)
 }
-case class Gendy1[R <: Rate](rate: R, ampDist: AnyGE, durDist: AnyGE, adParam: AnyGE, ddParam: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, ampScale: AnyGE, durScale: AnyGE, initCPs: AnyGE, kNum: AnyGE) extends GE[R, Gendy1UGen[R]] with UsesRandSeed {
+case class Gendy1[R <: Rate](rate: R, ampDist: AnyGE, durDist: AnyGE, adParam: AnyGE, ddParam: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, ampScale: AnyGE, durScale: AnyGE, initCPs: AnyGE, kNum: AnyGE) extends SingleOutUGenSource[R, Gendy1UGen[R]] with UsesRandSeed {
    def expand = {
       val _ampDist: IIdxSeq[AnyUGenIn] = ampDist.expand
       val _durDist: IIdxSeq[AnyUGenIn] = durDist.expand
@@ -50,7 +50,7 @@ object Gendy2 {
    def kr: Gendy2[control] = kr()
    def kr(ampDist: AnyGE = 1.0f, durDist: AnyGE = 1.0f, adParam: AnyGE = 1.0f, ddParam: AnyGE = 1.0f, minFreq: AnyGE = 440.0f, maxFreq: AnyGE = 660.0f, ampScale: AnyGE = 0.5f, durScale: AnyGE = 0.5f, initCPs: AnyGE = 12.0f, kNum: AnyGE = 12.0f, a: AnyGE = 1.17f, c: AnyGE = 0.31f) = apply[control](control, ampDist, durDist, adParam, ddParam, minFreq, maxFreq, ampScale, durScale, initCPs, kNum, a, c)
 }
-case class Gendy2[R <: Rate](rate: R, ampDist: AnyGE, durDist: AnyGE, adParam: AnyGE, ddParam: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, ampScale: AnyGE, durScale: AnyGE, initCPs: AnyGE, kNum: AnyGE, a: AnyGE, c: AnyGE) extends GE[R, Gendy2UGen[R]] with UsesRandSeed {
+case class Gendy2[R <: Rate](rate: R, ampDist: AnyGE, durDist: AnyGE, adParam: AnyGE, ddParam: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, ampScale: AnyGE, durScale: AnyGE, initCPs: AnyGE, kNum: AnyGE, a: AnyGE, c: AnyGE) extends SingleOutUGenSource[R, Gendy2UGen[R]] with UsesRandSeed {
    def expand = {
       val _ampDist: IIdxSeq[AnyUGenIn] = ampDist.expand
       val _durDist: IIdxSeq[AnyUGenIn] = durDist.expand
@@ -87,7 +87,7 @@ object Gendy3 {
    def kr: Gendy3[control] = kr()
    def kr(ampDist: AnyGE = 1.0f, durDist: AnyGE = 1.0f, adParam: AnyGE = 1.0f, ddParam: AnyGE = 1.0f, freq: AnyGE = 440.0f, ampScale: AnyGE = 0.5f, durScale: AnyGE = 0.5f, initCPs: AnyGE = 12.0f, kNum: AnyGE = 12.0f) = apply[control](control, ampDist, durDist, adParam, ddParam, freq, ampScale, durScale, initCPs, kNum)
 }
-case class Gendy3[R <: Rate](rate: R, ampDist: AnyGE, durDist: AnyGE, adParam: AnyGE, ddParam: AnyGE, freq: AnyGE, ampScale: AnyGE, durScale: AnyGE, initCPs: AnyGE, kNum: AnyGE) extends GE[R, Gendy3UGen[R]] with UsesRandSeed {
+case class Gendy3[R <: Rate](rate: R, ampDist: AnyGE, durDist: AnyGE, adParam: AnyGE, ddParam: AnyGE, freq: AnyGE, ampScale: AnyGE, durScale: AnyGE, initCPs: AnyGE, kNum: AnyGE) extends SingleOutUGenSource[R, Gendy3UGen[R]] with UsesRandSeed {
    def expand = {
       val _ampDist: IIdxSeq[AnyUGenIn] = ampDist.expand
       val _durDist: IIdxSeq[AnyUGenIn] = durDist.expand

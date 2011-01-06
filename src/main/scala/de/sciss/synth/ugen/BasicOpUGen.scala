@@ -28,9 +28,8 @@
 
 package de.sciss.synth.ugen
 
-import de.sciss.synth.{ AnyUGenIn, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper,
-                        UGenIn }
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import de.sciss.synth.{SingleOutUGenSource, AnyUGenIn, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
 import UGenHelper._
 
 /**
@@ -42,7 +41,7 @@ object MulAdd {
    def ir( in: GE[ scalar, UGenIn[ scalar ]],   mul: AnyGE, add: AnyGE ) : MulAdd[ scalar ]  = apply[ scalar ](  scalar,  in, mul, add )
 }
 
-case class MulAdd[ R <: Rate ]( rate: R, in: GE[ R, UGenIn[ R ]], mul: AnyGE, add: AnyGE ) extends GE[ R, MulAddUGen[ R ]] {
+case class MulAdd[ R <: Rate ]( rate: R, in: GE[ R, UGenIn[ R ]], mul: AnyGE, add: AnyGE ) extends SingleOutUGenSource[ R, MulAddUGen[ R ]] {
    def expand = {
       val _in: IIdxSeq[ UGenIn[ R ]]    = in.expand
       val _mul: IIdxSeq[ AnyUGenIn ]    = mul.expand
@@ -257,7 +256,7 @@ object UnaryOp {
 }
 
 case class UnaryOp[ R <: Rate ]( rate: R, selector: UnaryOp.Op, a: GE[ R, UGenIn[ R ]])
-extends GE[ R, UnaryOpUGen[ R ]] {
+extends SingleOutUGenSource[ R, UnaryOpUGen[ R ]] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 
@@ -501,7 +500,7 @@ object BinaryOp {
 }
 
 case class BinaryOp[ R <: Rate ]( rate: R, selector: BinaryOp.Op, a: AnyGE, b: AnyGE )
-extends GE[ R, BinaryOpUGen[ R ]] {
+extends SingleOutUGenSource[ R, BinaryOpUGen[ R ]] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 

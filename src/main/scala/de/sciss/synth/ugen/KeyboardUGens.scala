@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:41:02 GMT 2011
+ * Created: Thu Jan 06 20:58:06 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -14,7 +14,7 @@ import UGenHelper._
 object KeyState {
    def kr(keyCode: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, lag: AnyGE = 0.2f) = apply(keyCode, lo, hi, lag)
 }
-case class KeyState(keyCode: AnyGE, lo: AnyGE, hi: AnyGE, lag: AnyGE) extends GE[control, KeyStateUGen] with ControlRated {
+case class KeyState(keyCode: AnyGE, lo: AnyGE, hi: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, KeyStateUGen] with ControlRated {
    def expand = {
       val _keyCode: IIdxSeq[AnyUGenIn] = keyCode.expand
       val _lo: IIdxSeq[AnyUGenIn] = lo.expand

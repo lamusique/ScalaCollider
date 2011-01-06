@@ -82,7 +82,7 @@ class ControlProxyFactory( name: String ) {
 
 trait ControlFactoryLike[ T ] {
    type Proxy = T // don't ask me what this is doing. some vital variance correction...
-   def build( proxies: Proxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ]
+   def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ]
 }
 
 trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R, UGenIn[ R ]] /* extends RatedGE[ U ] */ {
@@ -93,10 +93,11 @@ trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R, UGenIn[ R ]] /* extends
 
 abstract class AbstractControlProxy[ R <: Rate, Impl ]( outputRates: IIdxSeq[ R ])
 extends ControlProxyLike[ R, Impl ] {
-   // ---- constructor ----
-   {
-      SynthGraph.builder.addControlProxy( this )
-   }
+// YYY
+//   // ---- constructor ----
+//   {
+//      UGenGraph.builder.addControlProxy( this )
+//   }
 
 //   def this( rate: Rate, numOutputs: Int ) =  this( IIdxSeq.fill( numOutputs )( rate ))
 

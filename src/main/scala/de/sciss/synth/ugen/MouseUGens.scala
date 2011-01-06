@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:41:04 GMT 2011
+ * Created: Thu Jan 06 20:58:08 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -15,7 +15,7 @@ object MouseX {
    def kr: MouseX = kr()
    def kr(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, warp: AnyGE = 0.0f, lag: AnyGE = 0.2f) = apply(lo, hi, warp, lag)
 }
-case class MouseX(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends GE[control, MouseXUGen] with ControlRated {
+case class MouseX(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, MouseXUGen] with ControlRated {
    def expand = {
       val _lo: IIdxSeq[AnyUGenIn] = lo.expand
       val _hi: IIdxSeq[AnyUGenIn] = hi.expand
@@ -34,7 +34,7 @@ object MouseY {
    def kr: MouseY = kr()
    def kr(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, warp: AnyGE = 0.0f, lag: AnyGE = 0.2f) = apply(lo, hi, warp, lag)
 }
-case class MouseY(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends GE[control, MouseYUGen] with ControlRated {
+case class MouseY(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, MouseYUGen] with ControlRated {
    def expand = {
       val _lo: IIdxSeq[AnyUGenIn] = lo.expand
       val _hi: IIdxSeq[AnyUGenIn] = hi.expand
@@ -53,7 +53,7 @@ object MouseButton {
    def kr: MouseButton = kr()
    def kr(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, lag: AnyGE = 0.2f) = apply(lo, hi, lag)
 }
-case class MouseButton(lo: AnyGE, hi: AnyGE, lag: AnyGE) extends GE[control, MouseButtonUGen] with ControlRated {
+case class MouseButton(lo: AnyGE, hi: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, MouseButtonUGen] with ControlRated {
    def expand = {
       val _lo: IIdxSeq[AnyUGenIn] = lo.expand
       val _hi: IIdxSeq[AnyUGenIn] = hi.expand

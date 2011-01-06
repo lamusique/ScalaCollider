@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:40:56 GMT 2011
+ * Created: Thu Jan 06 20:58:00 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -14,7 +14,7 @@ import UGenHelper._
 object Convolution {
    def ar(in: AnyGE, kernel: AnyGE, frameSize: AnyGE) = apply[audio](audio, in, kernel, frameSize)
 }
-case class Convolution[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, frameSize: AnyGE) extends GE[R, ConvolutionUGen[R]] {
+case class Convolution[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, frameSize: AnyGE) extends SingleOutUGenSource[R, ConvolutionUGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _kernel: IIdxSeq[AnyUGenIn] = kernel.expand
@@ -30,7 +30,7 @@ case class ConvolutionUGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenIn,
 object Convolution2 {
    def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
 }
-case class Convolution2[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends GE[R, Convolution2UGen[R]] {
+case class Convolution2[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends SingleOutUGenSource[R, Convolution2UGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _kernel: IIdxSeq[AnyUGenIn] = kernel.expand
@@ -48,7 +48,7 @@ case class Convolution2UGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenIn
 object Convolution2L {
    def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernel, trig, frameSize, fadePeriods)
 }
-case class Convolution2L[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends GE[R, Convolution2LUGen[R]] {
+case class Convolution2L[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends SingleOutUGenSource[R, Convolution2LUGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _kernel: IIdxSeq[AnyUGenIn] = kernel.expand
@@ -68,7 +68,7 @@ case class Convolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenI
 object StereoConvolution2L {
    def ar(in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernelL, kernelR, trig, frameSize, fadePeriods)
 }
-case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends Expands[StereoConvolution2LUGen[R]] {
+case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends UGenSource[StereoConvolution2LUGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _kernelL: IIdxSeq[AnyUGenIn] = kernelL.expand
@@ -90,7 +90,7 @@ case class StereoConvolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernelL: A
 object Convolution3 {
    def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
 }
-case class Convolution3[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends GE[R, Convolution3UGen[R]] {
+case class Convolution3[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends SingleOutUGenSource[R, Convolution3UGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _kernel: IIdxSeq[AnyUGenIn] = kernel.expand
@@ -105,7 +105,7 @@ case class Convolution3[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyG
    }
 }
 case class Convolution3UGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenIn, trig: AnyUGenIn, frameSize: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, kernel, trig, frameSize))
-case class PV_ConformalMap(chain: AnyGE, real: AnyGE = 0.0f, imag: AnyGE = 0.0f) extends GE[control, PV_ConformalMapUGen] with ControlRated with WritesFFT {
+case class PV_ConformalMap(chain: AnyGE, real: AnyGE = 0.0f, imag: AnyGE = 0.0f) extends SingleOutUGenSource[control, PV_ConformalMapUGen] with ControlRated with WritesFFT {
    def expand = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _real: IIdxSeq[AnyUGenIn] = real.expand
@@ -121,7 +121,7 @@ case class PV_ConformalMapUGen(chain: AnyUGenIn, real: AnyUGenIn, imag: AnyUGenI
 object PV_JensenAndersen {
    def ar(chain: AnyGE, propSC: AnyGE = 0.25f, propHFE: AnyGE = 0.25f, propHFC: AnyGE = 0.25f, propSF: AnyGE = 0.25f, thresh: AnyGE = 1.0f, waitTime: AnyGE = 0.04f) = apply[audio](audio, chain, propSC, propHFE, propHFC, propSF, thresh, waitTime)
 }
-case class PV_JensenAndersen[R <: Rate](rate: R, chain: AnyGE, propSC: AnyGE, propHFE: AnyGE, propHFC: AnyGE, propSF: AnyGE, thresh: AnyGE, waitTime: AnyGE) extends GE[R, PV_JensenAndersenUGen[R]] {
+case class PV_JensenAndersen[R <: Rate](rate: R, chain: AnyGE, propSC: AnyGE, propHFE: AnyGE, propHFC: AnyGE, propSF: AnyGE, thresh: AnyGE, waitTime: AnyGE) extends SingleOutUGenSource[R, PV_JensenAndersenUGen[R]] {
    def expand = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _propSC: IIdxSeq[AnyUGenIn] = propSC.expand
@@ -145,7 +145,7 @@ case class PV_JensenAndersenUGen[R <: Rate](rate: R, chain: AnyUGenIn, propSC: A
 object PV_HainsworthFoote {
    def ar(chain: AnyGE, propH: AnyGE = 0.0f, propF: AnyGE = 0.0f, thresh: AnyGE = 1.0f, waitTime: AnyGE = 0.04f) = apply[audio](audio, chain, propH, propF, thresh, waitTime)
 }
-case class PV_HainsworthFoote[R <: Rate](rate: R, chain: AnyGE, propH: AnyGE, propF: AnyGE, thresh: AnyGE, waitTime: AnyGE) extends GE[R, PV_HainsworthFooteUGen[R]] {
+case class PV_HainsworthFoote[R <: Rate](rate: R, chain: AnyGE, propH: AnyGE, propF: AnyGE, thresh: AnyGE, waitTime: AnyGE) extends SingleOutUGenSource[R, PV_HainsworthFooteUGen[R]] {
    def expand = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _propH: IIdxSeq[AnyUGenIn] = propH.expand
@@ -166,7 +166,7 @@ object RunningSum {
    def kr(in: GE[control, UGenIn[control]], winSize: AnyGE = 440.0f) = apply[control](control, in, winSize)
    def ar(in: GE[audio, UGenIn[audio]], winSize: AnyGE = 440.0f) = apply[audio](audio, in, winSize)
 }
-case class RunningSum[R <: Rate](rate: R, in: AnyGE, winSize: AnyGE) extends GE[R, RunningSumUGen[R]] {
+case class RunningSum[R <: Rate](rate: R, in: AnyGE, winSize: AnyGE) extends SingleOutUGenSource[R, RunningSumUGen[R]] {
    def expand = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _winSize: IIdxSeq[AnyUGenIn] = winSize.expand

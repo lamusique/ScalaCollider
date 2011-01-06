@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 16:41:04 GMT 2011
+ * Created: Thu Jan 06 20:58:08 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -15,7 +15,7 @@ object DegreeToKey {
    def kr(buf: AnyGE, in: AnyGE, octave: AnyGE = 12.0f) = apply[control](control, buf, in, octave)
    def ar(buf: AnyGE, in: AnyGE, octave: AnyGE = 12.0f) = apply[audio](audio, buf, in, octave)
 }
-case class DegreeToKey[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, octave: AnyGE) extends GE[R, DegreeToKeyUGen[R]] {
+case class DegreeToKey[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, octave: AnyGE) extends SingleOutUGenSource[R, DegreeToKeyUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -32,7 +32,7 @@ object Select {
    def kr(index: AnyGE, in: Expands[AnyGE]) = apply[control](control, index, in)
    def ar(index: AnyGE, in: Expands[AnyGE]) = apply[audio](audio, index, in)
 }
-case class Select[R <: Rate](rate: R, index: AnyGE, in: Expands[AnyGE]) extends GE[R, SelectUGen[R]] {
+case class Select[R <: Rate](rate: R, index: AnyGE, in: Expands[AnyGE]) extends SingleOutUGenSource[R, SelectUGen[R]] {
    def expand = {
       val _index: IIdxSeq[AnyUGenIn] = index.expand
       val _in: IIdxSeq[AnyGE] = in.expand
@@ -47,7 +47,7 @@ object TWindex {
    def kr(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[control](control, trig, prob, normalize)
    def ar(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[audio](audio, trig, prob, normalize)
 }
-case class TWindex[R <: Rate](rate: R, trig: AnyGE, prob: AnyGE, normalize: AnyGE) extends GE[R, TWindexUGen[R]] {
+case class TWindex[R <: Rate](rate: R, trig: AnyGE, prob: AnyGE, normalize: AnyGE) extends SingleOutUGenSource[R, TWindexUGen[R]] {
    def expand = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _prob: IIdxSeq[AnyUGenIn] = prob.expand
@@ -64,7 +64,7 @@ object Index {
    def kr(buf: AnyGE, in: AnyGE = 0.0f) = apply[control](control, buf, in)
    def ar(buf: AnyGE, in: AnyGE = 0.0f) = apply[audio](audio, buf, in)
 }
-case class Index[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends GE[R, IndexUGen[R]] {
+case class Index[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends SingleOutUGenSource[R, IndexUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -79,7 +79,7 @@ object WrapIndex {
    def kr(buf: AnyGE, in: AnyGE = 0.0f) = apply[control](control, buf, in)
    def ar(buf: AnyGE, in: AnyGE = 0.0f) = apply[audio](audio, buf, in)
 }
-case class WrapIndex[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends GE[R, WrapIndexUGen[R]] {
+case class WrapIndex[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends SingleOutUGenSource[R, WrapIndexUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -94,7 +94,7 @@ object IndexInBetween {
    def kr(buf: AnyGE, in: AnyGE = 0.0f) = apply[control](control, buf, in)
    def ar(buf: AnyGE, in: AnyGE = 0.0f) = apply[audio](audio, buf, in)
 }
-case class IndexInBetween[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends GE[R, IndexInBetweenUGen[R]] {
+case class IndexInBetween[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends SingleOutUGenSource[R, IndexInBetweenUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -109,7 +109,7 @@ object DetectIndex {
    def kr(buf: AnyGE, in: AnyGE = 0.0f) = apply[control](control, buf, in)
    def ar(buf: AnyGE, in: AnyGE = 0.0f) = apply[audio](audio, buf, in)
 }
-case class DetectIndex[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends GE[R, DetectIndexUGen[R]] {
+case class DetectIndex[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends SingleOutUGenSource[R, DetectIndexUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -124,7 +124,7 @@ object Shaper {
    def kr(buf: AnyGE, in: AnyGE = 0.0f) = apply[control](control, buf, in)
    def ar(buf: AnyGE, in: AnyGE = 0.0f) = apply[audio](audio, buf, in)
 }
-case class Shaper[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends GE[R, ShaperUGen[R]] {
+case class Shaper[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends SingleOutUGenSource[R, ShaperUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -141,7 +141,7 @@ object FSinOsc {
    def kr: FSinOsc[control] = kr()
    def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
 }
-case class FSinOsc[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends GE[R, FSinOscUGen[R]] {
+case class FSinOsc[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends SingleOutUGenSource[R, FSinOscUGen[R]] {
    def expand = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _iphase: IIdxSeq[AnyUGenIn] = iphase.expand
@@ -158,7 +158,7 @@ object SinOsc {
    def kr: SinOsc[control] = kr()
    def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
-case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends GE[R, SinOscUGen[R]] {
+case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, SinOscUGen[R]] {
    def expand = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _phase: IIdxSeq[AnyUGenIn] = phase.expand
@@ -175,7 +175,7 @@ object SinOscFB {
    def kr: SinOscFB[control] = kr()
    def kr(freq: AnyGE = 440.0f, feedback: AnyGE = 0.0f) = apply[control](control, freq, feedback)
 }
-case class SinOscFB[R <: Rate](rate: R, freq: AnyGE, feedback: AnyGE) extends GE[R, SinOscFBUGen[R]] {
+case class SinOscFB[R <: Rate](rate: R, freq: AnyGE, feedback: AnyGE) extends SingleOutUGenSource[R, SinOscFBUGen[R]] {
    def expand = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _feedback: IIdxSeq[AnyUGenIn] = feedback.expand
@@ -190,7 +190,7 @@ object VOsc {
    def ar(bufPos: AnyGE, freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, bufPos, freq, phase)
    def kr(bufPos: AnyGE, freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, bufPos, freq, phase)
 }
-case class VOsc[R <: Rate](rate: R, bufPos: AnyGE, freq: AnyGE, phase: AnyGE) extends GE[R, VOscUGen[R]] {
+case class VOsc[R <: Rate](rate: R, bufPos: AnyGE, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, VOscUGen[R]] {
    def expand = {
       val _bufPos: IIdxSeq[AnyUGenIn] = bufPos.expand
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -207,7 +207,7 @@ object VOsc3 {
    def ar(bufPos: AnyGE, freq1: AnyGE = 110.0f, freq2: AnyGE = 220.0f, freq3: AnyGE = 440.0f) = apply[audio](audio, bufPos, freq1, freq2, freq3)
    def kr(bufPos: AnyGE, freq1: AnyGE = 110.0f, freq2: AnyGE = 220.0f, freq3: AnyGE = 440.0f) = apply[control](control, bufPos, freq1, freq2, freq3)
 }
-case class VOsc3[R <: Rate](rate: R, bufPos: AnyGE, freq1: AnyGE, freq2: AnyGE, freq3: AnyGE) extends GE[R, VOsc3UGen[R]] {
+case class VOsc3[R <: Rate](rate: R, bufPos: AnyGE, freq1: AnyGE, freq2: AnyGE, freq3: AnyGE) extends SingleOutUGenSource[R, VOsc3UGen[R]] {
    def expand = {
       val _bufPos: IIdxSeq[AnyUGenIn] = bufPos.expand
       val _freq1: IIdxSeq[AnyUGenIn] = freq1.expand
@@ -226,7 +226,7 @@ object Osc {
    def ar(buf: AnyGE, freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, buf, freq, phase)
    def kr(buf: AnyGE, freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, buf, freq, phase)
 }
-case class Osc[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, phase: AnyGE) extends GE[R, OscUGen[R]] {
+case class Osc[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, OscUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -243,7 +243,7 @@ object OscN {
    def ar(buf: AnyGE, freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, buf, freq, phase)
    def kr(buf: AnyGE, freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, buf, freq, phase)
 }
-case class OscN[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, phase: AnyGE) extends GE[R, OscNUGen[R]] {
+case class OscN[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, OscNUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -259,7 +259,7 @@ case class OscNUGen[R <: Rate](rate: R, buf: AnyUGenIn, freq: AnyUGenIn, phase: 
 object COsc {
    def ar(buf: AnyGE, freq: AnyGE = 440.0f, beats: AnyGE = 0.5f) = apply[audio](audio, buf, freq, beats)
 }
-case class COsc[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, beats: AnyGE) extends GE[R, COscUGen[R]] {
+case class COsc[R <: Rate](rate: R, buf: AnyGE, freq: AnyGE, beats: AnyGE) extends SingleOutUGenSource[R, COscUGen[R]] {
    def expand = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -278,7 +278,7 @@ object Formant {
    def kr: Formant[control] = kr()
    def kr(fundFreq: AnyGE = 440.0f, formFreq: AnyGE = 1760.0f, bw: AnyGE = 880.0f) = apply[control](control, fundFreq, formFreq, bw)
 }
-case class Formant[R <: Rate](rate: R, fundFreq: AnyGE, formFreq: AnyGE, bw: AnyGE) extends GE[R, FormantUGen[R]] {
+case class Formant[R <: Rate](rate: R, fundFreq: AnyGE, formFreq: AnyGE, bw: AnyGE) extends SingleOutUGenSource[R, FormantUGen[R]] {
    def expand = {
       val _fundFreq: IIdxSeq[AnyUGenIn] = fundFreq.expand
       val _formFreq: IIdxSeq[AnyUGenIn] = formFreq.expand
@@ -297,7 +297,7 @@ object Blip {
    def ar: Blip[audio] = ar()
    def ar(freq: AnyGE = 440.0f, numHarm: AnyGE = 200.0f) = apply[audio](audio, freq, numHarm)
 }
-case class Blip[R <: Rate](rate: R, freq: AnyGE, numHarm: AnyGE) extends GE[R, BlipUGen[R]] {
+case class Blip[R <: Rate](rate: R, freq: AnyGE, numHarm: AnyGE) extends SingleOutUGenSource[R, BlipUGen[R]] {
    def expand = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _numHarm: IIdxSeq[AnyUGenIn] = numHarm.expand
@@ -314,7 +314,7 @@ object Saw {
    def ar: Saw[audio] = ar()
    def ar(freq: AnyGE = 440.0f) = apply[audio](audio, freq)
 }
-case class Saw[R <: Rate](rate: R, freq: AnyGE) extends GE[R, SawUGen[R]] {
+case class Saw[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, SawUGen[R]] {
    def expand = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       IIdxSeq.tabulate(_freq.size)(i => SawUGen(rate, _freq(i)))
@@ -327,7 +327,7 @@ object Pulse {
    def ar: Pulse[audio] = ar()
    def ar(freq: AnyGE = 440.0f, width: AnyGE = 0.5f) = apply[audio](audio, freq, width)
 }
-case class Pulse[R <: Rate](rate: R, freq: AnyGE, width: AnyGE) extends GE[R, PulseUGen[R]] {
+case class Pulse[R <: Rate](rate: R, freq: AnyGE, width: AnyGE) extends SingleOutUGenSource[R, PulseUGen[R]] {
    def expand = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _width: IIdxSeq[AnyUGenIn] = width.expand

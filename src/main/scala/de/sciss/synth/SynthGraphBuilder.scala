@@ -31,11 +31,16 @@ package de.sciss.synth
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 trait SynthGraphBuilder {
+   def addUGenSource( u: UGenSource[ _ <: UGen ]) : Unit
+   def build : SynthGraph
+}
+
+trait UGenGraphBuilder {
    def addUGen( ugen: UGen ) : Unit
 //   def addUGenElem( u: Expands[ UGen ]) : Unit
    def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
    def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
-   def build : SynthGraph
+   def build : UGenGraph
 
 //   private var indivCnt = 0
 //   def individuate : Int = {
