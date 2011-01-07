@@ -31,19 +31,19 @@ package de.sciss.synth
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 trait SynthGraphBuilder {
-   def addUGenSource( u: UGenSource[ _ <: UGen ]) : Unit
+   def addLazyGE( g: LazyGE ) : Unit
    def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
    def build : SynthGraph
 }
 
 trait UGenGraphBuilder {
-//   def addUGen( ugen: UGen ) : Unit
+   def addUGen( ugen: UGen ) : Unit
 //   def addUGenElem( u: Expands[ UGen ]) : Unit
 //   def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
    def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
    def build : UGenGraph
 
-   def expand[ U <: UGen ]( src: ImmutableCache[ UGenSource[ U ]], gen: => IIdxSeq[ U ]) : IIdxSeq[ U ]
+   def visit[ U <: AnyRef ]( src: LazyGE, init: => U ) : U
 
 //   private var indivCnt = 0
 //   def individuate : Int = {

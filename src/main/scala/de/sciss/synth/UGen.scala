@@ -87,10 +87,8 @@ trait WritesBus extends HasSideEffect with IsIndividual     // XXX eventually: W
 
 abstract class UGen
 extends /* YYY RatedGE with */ UGenProxy {
-//   // ---- constructor ----
-//   {
-//      SynthGraph.builder.addUGen( this )
-//   }
+   // ---- constructor ----
+   UGenGraph.builder.addUGen( this )
 
    //final val cache = new ImmutableCache( this )
 
@@ -148,18 +146,27 @@ abstract class ZeroOutUGen( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with 
    final def outputs = IIdxSeq.empty
 }
 
-trait UGenSource[ +U <: UGen ] extends Expands[ U ] {
-   final lazy val cache = new ImmutableCache( this )
-
+trait LazyGE /* extends Expands[ UGen ] */ {
    // ---- constructor ----
-   SynthGraph.builder.addUGenSource( this )
+   SynthGraph.builder.addLazyGE( this )
+
+   def force( b: UGenGraphBuilder ) : Unit
+}
+
+trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
+   private lazy val cache = new LazyGECache( this )
+
+//
+//   // ---- constructor ----
+//   SynthGraph.builder.addUGenSource( this )
 
 //   // prevent aliasing at this stage of the synth-graph creation process
 //   /* final */ override def hashCode() : Int = super.hashCode()
 //   /* final */ override def equals( x: Any ) : Boolean = super.equals( x )
 
-   final def expand: IIdxSeq[ U ] = UGenGraph.builder.expand( cache, expandUGens )
-
+   final def force( b: UGenGraphBuilder ) { expand( b )}
+   final def expand: IIdxSeq[ U ] = expand( UGenGraph.builder )
+   private def expand( b: UGenGraphBuilder ): IIdxSeq[ U ] = b.visit( cache, expandUGens )
    protected def expandUGens : IIdxSeq[ U ]
 }
 
@@ -172,6 +179,7 @@ trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen[ R ]] extends UGenSour
 //   }
 //}
 
-class ImmutableCache[ +T ]( val self: T ) extends Proxy {
+class LazyGECache[ +T <: LazyGE ]( val self: T ) extends Proxy with LazyGE {
    override val hashCode: Int = self.hashCode
+   def force( b: UGenGraphBuilder ) = self.force( b )
 }

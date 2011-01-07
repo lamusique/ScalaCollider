@@ -159,17 +159,17 @@ object SynthGraph {
 
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
-      def addUGenSource( u: UGenSource[ _ <: UGen ]) {}
+      def addLazyGE( g: LazyGE ) {}
       def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
-      private val ugenSources    = MBuffer.empty[ UGenSource[ _ <: UGen ]]
+      private val lazyGEs        = MBuffer.empty[ LazyGE ]
       private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
-      def build = SynthGraph( ugenSources.toIndexedSeq, controlProxies.toSet )
-      def addUGenSource( u: UGenSource[ _ <: UGen ]) {
-         ugenSources += u
+      def build = SynthGraph( lazyGEs.toIndexedSeq, controlProxies.toSet )
+      def addLazyGE( g: LazyGE ) {
+         lazyGEs += g
       }
 
       def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
@@ -178,7 +178,7 @@ object SynthGraph {
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ UGenSource[ _ <: UGen ]], controlProxies: ISet[ ControlProxyLike[ _, _ ]]) {
+case class SynthGraph( sources: IIdxSeq[ LazyGE ], controlProxies: ISet[ ControlProxyLike[ _, _ ]]) {
    def expand = UGenGraph.expand( this )
 }
 
@@ -211,8 +211,8 @@ object UGenGraph {
       def build : UGenGraph = outOfContext
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
 //      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
-//      def addUGen( ugen: UGen ) {}
-      def expand[ U <: UGen ]( src: ImmutableCache[ UGenSource[ U ]], gen: => IIdxSeq[ U ]) : IIdxSeq[ U ] = outOfContext
+      def addUGen( ugen: UGen ) {}
+      def visit[ U <: AnyRef ]( src: LazyGE, init: => U ) : U = outOfContext
 
       private def outOfContext : Nothing = error( "Out of context" )
    }
@@ -227,12 +227,11 @@ object UGenGraph {
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
 //      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
-      private val sourceMap      = MMap.empty[ ImmutableCache[ UGenSource[ UGen ]], IIdxSeq[ UGen ]]
+      private val sourceMap      = MMap.empty[ LazyGE, AnyRef ]
 
       def build = {
-         graph.sources.foreach( _.expand )
+         graph.sources.foreach( _.force( builder ))
          val ctrlProxyMap        = buildControls( graph.controlProxies )
-         // check inputs
          val (igens, constants)  = indexUGens( ctrlProxyMap )
          val indexedUGens        = sortUGens( igens )
          val richUGens : IIdxSeq[ RichUGen ] =
@@ -318,16 +317,16 @@ object UGenGraph {
          sorted
       }
 
-      def expand[ U <: UGen ]( src: ImmutableCache[ UGenSource[ U ]], gen: => IIdxSeq[ U ]) : IIdxSeq[ U ] = {
+      def visit[ U <: AnyRef ]( src: LazyGE, init: => U ) : U = {
          sourceMap.getOrElse( src, {
-            val exp = gen
+            val exp = init
             sourceMap += src -> exp
-            exp.foreach( addUGen( _ ))
+//            exp.foreach( addUGen( _ ))
             exp
-         }).asInstanceOf[ IIdxSeq[ U ]] // XXX hmmm, not so pretty...
+         }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
       }
 
-      private def addUGen( ugen: UGen ) {
+      def addUGen( ugen: UGen ) {
          if( ugenSet.add( ugen )) ugens += ugen
       }
 
@@ -349,9 +348,9 @@ object UGenGraph {
       private def buildControls( p: Traversable[ ControlProxyLike[ _, _ ]]): Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
          p.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
-            val res = factory.build( builder, proxies.toSeq: _* )
-            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
-            res
+            factory.build( builder, proxies.toSeq: _* )
+//            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
+//            res
          })( breakOut )
       }
 
