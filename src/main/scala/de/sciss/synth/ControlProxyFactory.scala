@@ -29,12 +29,18 @@
 package de.sciss.synth
 
 import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
-import ugen.{ AudioControlProxy, ControlProxy, TrigControlProxy }
+import ugen.{ControlFactory, AudioControlProxy, ControlProxy, TrigControlProxy}
 
 /**
- *    @version	0.14, 28-Dec-10
+ *    @version	0.14, 07-Jan-10
  */
+object ControlProxyFactory {
+   private val controlIrFactory = new ControlFactory[ scalar ]( scalar )
+   private val controlKrFactory = new ControlFactory[ control ]( control )
+}
 class ControlProxyFactory( name: String ) {
+   import ControlProxyFactory._
+
    def ir : ControlProxy[ scalar ] = ir( IIdxSeq( 0f ))
    def ir( value: Double, values: Double* ) : ControlProxy[ scalar ] = ir( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
    def ir( value: Float, values: Float* ) : ControlProxy[ scalar ] = ir( IIdxSeq( (value +: values): _* ))
@@ -50,8 +56,8 @@ class ControlProxyFactory( name: String ) {
 //   def kr[ T <% GE ]( spec: (T, Double), specs: (T, Double)* ) : GE = kr( Vector( (spec._1, spec._2.toFloat) ))
 //   def kr[ T <% GE ]( spec: (T, Float), specs: (T, Float)* ) : GE = kr( Vector( spec ))
 
-   @inline private def ir( values: IIdxSeq[ Float ]) = ControlProxy[ scalar ]( scalar, values, Some( name ))
-   @inline private def kr( values: IIdxSeq[ Float ]) = ControlProxy[ control ]( control, values, Some( name ))
+   @inline private def ir( values: IIdxSeq[ Float ]) = ControlProxy[ scalar ]( scalar, values, Some( name ))( controlIrFactory )
+   @inline private def kr( values: IIdxSeq[ Float ]) = ControlProxy[ control ]( control, values, Some( name ))( controlKrFactory )
    @inline private def tr( values: IIdxSeq[ Float ]) = TrigControlProxy( values, Some( name ))
    @inline private def ar( values: IIdxSeq[ Float ]) = AudioControlProxy( values, Some( name ))
 //   @inline private def kr( specs: IIdxSeq[ (GE, Float) ]) : GE = {

@@ -65,42 +65,33 @@ case class Control[R <: Rate]( rate: R, values: IIdxSeq[ Float ], name: Option[ 
 case class ControlUGen private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty ) with HasSideEffect
 
-case class ControlProxy[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ])
+case class ControlProxy[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ])( val factory: ControlFactory[ R ])
 extends AbstractControlProxy[ R, ControlProxy[ R ]]( IIdxSeq.fill( values.size )( rate )) {
 //   def factory = ControlFactory
-   def factory : ControlFactoryLike[ ControlProxy[ R ]] = ControlFactory
+//   def factory : ControlFactoryLike[ ControlProxy[ R ]] = ControlFactory
 
    override def toString: String = {
       name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
    }
 
    def displayName = "Control"
+}
 
-   private object ControlFactory extends ControlFactoryLike[ ControlProxy[ R ]] {
-      // XXX eventually we should try to factor this out for all controlfactories...
-      def build( b: UGenGraphBuilder, proxies: ControlProxy[ R ]* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
-//         val b = UGenGraph.builder
-         // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
-         // which exhibited a problem of not forcing varargs into being strict.
-         // this has probably been fixed, hence we should eventually check if
-         // the force is still necessary or could be removed!
-         // -- DONE
-         proxies.groupBy( _.rate ).flatMap( group => {
-            val (rate, ps)    = group
-            var numChannels   = 0
-            val specialIndex  = ps.map( p => {
-               numChannels += p.values.size
-               b.addControl( p.values, p.name )
-            }).head
-            val ugen: UGen = ControlUGen( rate, numChannels, specialIndex )
-            var offset = 0
-            ps.map( p => {
-               val res = p -> (ugen, offset)
-               offset += p.values.size
-               res
-            })
-         })( breakOut )
-      }
+class ControlFactory[ R <: Rate ]( rate: R ) extends ControlFactoryLike[ ControlProxy[ R ]] {
+   // XXX eventually we should try to factor this out for all controlfactories...
+   def build( b: UGenGraphBuilder, proxies: ControlProxy[ R ]* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+      var numChannels   = 0
+      val specialIndex  = proxies.map( p => {
+         numChannels += p.values.size
+         b.addControl( p.values, p.name )
+      }).head
+      val ugen: UGen = ControlUGen( rate, numChannels, specialIndex )
+      var offset = 0
+      proxies.map( p => {
+         val res = p -> (ugen, offset)
+         offset += p.values.size
+         res
+      })( breakOut )
    }
 }
 
