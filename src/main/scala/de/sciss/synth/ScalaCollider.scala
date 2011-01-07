@@ -62,7 +62,7 @@ object ScalaCollider {
       import ugen._
 
 //      val g = SynthGraph { Out.ar( 0, SinOsc.ar( mce( 333 :: 444 :: Nil )))}
-      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr )}
+      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr ) + "test".ir }
       val u = g.expand
    }
 

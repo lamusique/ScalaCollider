@@ -145,7 +145,7 @@ object SynthGraph {
    }
    def builder: SynthGraphBuilder = builders.get
 
-   def apply( thunk: => Unit ) : SynthGraph = {
+   def apply( thunk: => Any ) : SynthGraph = {
       val b    = new BuilderImpl
       val old  = builders.get()
       builders.set( b )

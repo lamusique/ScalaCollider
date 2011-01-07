@@ -34,6 +34,7 @@ import ugen.{BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 
 trait Expands[ +R ] {
    def expand: IIdxSeq[ R ]
+//   def expandSize: Int
 }
 
 trait Multi[ +G ] {

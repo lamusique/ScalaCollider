@@ -28,6 +28,7 @@
 
 package de.sciss.synth
 
+import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 import ugen.{ControlFactory, AudioControlProxy, ControlProxy, TrigControlProxy}
 
@@ -91,6 +92,25 @@ trait ControlFactoryLike[ T ] {
    def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ]
 }
 
+abstract class AbstractControlFactory[ T <: AbstractControlProxy[ _ <: Rate, _ ]] extends ControlFactoryLike[ T ] {
+   def build( b: UGenGraphBuilder, proxies: T* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+      var numChannels   = 0
+      val specialIndex  = proxies.map( p => {
+         numChannels += p.values.size
+         b.addControl( p.values, p.name )
+      }).head
+      val ugen = makeUGen( numChannels, specialIndex )
+      var offset = 0
+      proxies.map( p => {
+         val res = p -> (ugen, offset)
+         offset += p.values.size
+         res
+      })( breakOut )
+   }
+
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen
+}
+
 trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R, UGenIn[ R ]] /* extends RatedGE[ U ] */ {
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
@@ -102,12 +122,25 @@ extends ControlProxyLike[ R, Impl ] {
    // ---- constructor ----
    SynthGraph.builder.addControlProxy( this )
 
+   def name: Option[ String ]
+   def values: IIdxSeq[ Float ]
+
 //   def this( rate: Rate, numOutputs: Int ) =  this( IIdxSeq.fill( numOutputs )( rate ))
 
 // YYY
 //   final override def numOutputs = outputRates.size
-	final def outputs: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map(
+//	final def outputs: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map(
+//      tup => ControlOutProxy[ R ]( this, tup._2, tup._1 ))
+
+   final def expand: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map(
       tup => ControlOutProxy[ R ]( this, tup._2, tup._1 ))
 
-   final def expand: IIdxSeq[ UGenIn[ R ]] = outputs   // YYY
+   final override def toString: String = {
+      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
+   }
+
+   def displayName = {
+      val cn = getClass.getName
+      cn.substring( cn.lastIndexOf( '.' ) + 1, cn.length - 5 ) // i.e. class name without "Proxy" extension
+   }
 }
