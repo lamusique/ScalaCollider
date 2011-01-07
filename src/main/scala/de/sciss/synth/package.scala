@@ -65,6 +65,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    type AnyUGenIn = UGenIn[ _ <: Rate ]
    type MultiGE   = Expands[ AnyUGenIn ]
    type AnyGE     = GE[ R, _ <: UGenIn[ R ]] forSome { type R <: Rate }
+//   type AnyGE   = Expands[ AnyUGenIn ]
 
    /**
     * This conversion is particularly important to balance priorities,
@@ -89,6 +90,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 
 //   implicit def geOps( ge: GE ) = ge.ops
 
+   // problem with automatic application: http://lampsvn.epfl.ch/trac/scala/ticket/3152
    implicit def mce[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R, UGenIn[ R ]], rate: R ) : GE[ R, UGenIn[ R ]] = {
       new RatedUGenInSeq( rate, x )
 //      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )

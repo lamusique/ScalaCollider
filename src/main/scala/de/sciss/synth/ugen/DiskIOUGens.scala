@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 00:11:17 GMT 2011
+ * Created: Fri Jan 07 14:02:31 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -26,12 +26,12 @@ case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends UGenSource[
 }
 case class DiskInUGen(numChannels: Int, buf: AnyUGenIn, loop: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, loop)) with HasSideEffect with AudioRated
 object DiskOut {
-   def ar(buf: AnyGE, in: Expands[GE[audio, UGenIn[audio]]]) = apply(buf, in)
+   def ar(buf: AnyGE, in: Multi[GE[audio, UGenIn[audio]]]) = apply(buf, in)
 }
-case class DiskOut(buf: AnyGE, in: Expands[AnyGE]) extends SingleOutUGenSource[audio, DiskOutUGen] with AudioRated with WritesBuffer {
+case class DiskOut(buf: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[audio, DiskOutUGen] with AudioRated with WritesBuffer {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
-      val _in: IIdxSeq[AnyGE] = in.expand
+      val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_buf = _buf.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_buf, _sz_in)

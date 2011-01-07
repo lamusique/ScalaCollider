@@ -99,11 +99,11 @@ object SynthGraph {
 //            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
             val res2 = res1
             val out = "out".kr
-            if( rate == audio ) {
-               Out.ar( out, res2 )
-            } else {
-               Out.kr( out, res2 )
-            }
+//            if( rate == audio ) {
+               Out( rate, out, res2 )
+//            } else {
+//               Out.kr( out, res2 )
+//            }
          } else res1
       }
 

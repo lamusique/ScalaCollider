@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 00:11:13 GMT 2011
+ * Created: Fri Jan 07 14:02:27 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -149,10 +149,10 @@ case class PlayBuf[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, speed: AnyG
 }
 case class PlayBufUGen[R <: Rate](rate: R, numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, trig: AnyUGenIn, startPos: AnyUGenIn, loop: AnyUGenIn, doneAction: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
 object RecordBuf {
-   def kr(in: Expands[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
-   def ar(in: Expands[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
+   def kr(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
+   def ar(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
 }
-case class RecordBuf[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, offset: AnyGE, recLevel: AnyGE, preLevel: AnyGE, run: AnyGE, loop: AnyGE, trig: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, RecordBufUGen[R]] with WritesBuffer {
+case class RecordBuf[R <: Rate](rate: R, in: Multi[AnyGE], buf: AnyGE, offset: AnyGE, recLevel: AnyGE, preLevel: AnyGE, run: AnyGE, loop: AnyGE, trig: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, RecordBufUGen[R]] with WritesBuffer {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _offset: IIdxSeq[AnyUGenIn] = offset.expand
@@ -162,7 +162,7 @@ case class RecordBuf[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, offset:
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _doneAction: IIdxSeq[AnyUGenIn] = doneAction.expand
-      val _in: IIdxSeq[AnyGE] = in.expand
+      val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_buf = _buf.size
       val _sz_offset = _offset.size
       val _sz_recLevel = _recLevel.size
@@ -197,15 +197,15 @@ case class BufRd[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, phase: AnyGE,
 }
 case class BufRdUGen[R <: Rate](rate: R, numChannels: Int, buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, phase, loop, interp))
 object BufWr {
-   def kr(in: Expands[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[control](control, in, buf, phase, loop)
-   def ar(in: Expands[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[audio](audio, in, buf, phase, loop)
+   def kr(in: Multi[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[control](control, in, buf, phase, loop)
+   def ar(in: Multi[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[audio](audio, in, buf, phase, loop)
 }
-case class BufWr[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, phase: AnyGE, loop: AnyGE) extends SingleOutUGenSource[R, BufWrUGen[R]] with WritesBuffer {
+case class BufWr[R <: Rate](rate: R, in: Multi[AnyGE], buf: AnyGE, phase: AnyGE, loop: AnyGE) extends SingleOutUGenSource[R, BufWrUGen[R]] with WritesBuffer {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _phase: IIdxSeq[AnyUGenIn] = phase.expand
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand
-      val _in: IIdxSeq[AnyGE] = in.expand
+      val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_buf = _buf.size
       val _sz_phase = _phase.size
       val _sz_loop = _loop.size
@@ -613,13 +613,13 @@ case class TGrains(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE, cent
 }
 case class TGrainsUGen(numChannels: Int, trig: AnyUGenIn, buf: AnyUGenIn, speed: AnyUGenIn, centerPos: AnyUGenIn, dur: AnyUGenIn, pan: AnyUGenIn, amp: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, buf, speed, centerPos, dur, pan, amp, interp)) with AudioRated
 object ScopeOut {
-   def ar(buf: AnyGE, in: Expands[AnyGE]) = apply[audio](audio, buf, in)
-   def kr(buf: AnyGE, in: Expands[AnyGE]) = apply[control](control, buf, in)
+   def ar(buf: AnyGE, in: Multi[AnyGE]) = apply[audio](audio, buf, in)
+   def kr(buf: AnyGE, in: Multi[AnyGE]) = apply[control](control, buf, in)
 }
-case class ScopeOut[R <: Rate](rate: R, buf: AnyGE, in: Expands[AnyGE]) extends SingleOutUGenSource[R, ScopeOutUGen[R]] with WritesBuffer {
+case class ScopeOut[R <: Rate](rate: R, buf: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[R, ScopeOutUGen[R]] with WritesBuffer {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
-      val _in: IIdxSeq[AnyGE] = in.expand
+      val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_buf = _buf.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_buf, _sz_in)

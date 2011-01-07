@@ -38,7 +38,7 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo
-      test2
+      test3
 //      System.exit( 1 )
    }
 
@@ -56,6 +56,14 @@ object ScalaCollider {
          println( "Booted." )
          test( s )
       }
+   }
+
+   def test3 {
+      import ugen._
+
+//      val g = SynthGraph { Out.ar( 0, SinOsc.ar( mce( 333 :: 444 :: Nil )))}
+      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr )}
+      val u = g.expand
    }
 
    def test( s: Server ) {

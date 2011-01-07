@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 00:11:24 GMT 2011
+ * Created: Fri Jan 07 14:02:37 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -244,12 +244,12 @@ case class T2A(in: AnyGE) extends SingleOutUGenSource[audio, T2AUGen] with Audio
 }
 case class T2AUGen(in: AnyUGenIn) extends SingleOutUGen[audio](IIdxSeq(in)) with AudioRated
 object DC {
-   def kr(in: Expands[AnyGE]) = apply[control](control, in)
-   def ar(in: Expands[AnyGE]) = apply[audio](audio, in)
+   def kr(in: Multi[AnyGE]) = apply[control](control, in)
+   def ar(in: Multi[AnyGE]) = apply[audio](audio, in)
 }
-case class DC[R <: Rate](rate: R, in: Expands[AnyGE]) extends UGenSource[DCUGen[R]] {
+case class DC[R <: Rate](rate: R, in: Multi[AnyGE]) extends UGenSource[DCUGen[R]] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyGE] = in.expand
+      val _in: IIdxSeq[AnyGE] = in.mexpand
       IIdxSeq.tabulate(_in.size)(i => DCUGen(rate, _in(i).expand))
    }
 }
@@ -486,17 +486,17 @@ case class LinLin[R <: Rate](rate: R, in: AnyGE, srcLo: AnyGE, srcHi: AnyGE, dst
 }
 case class LinLinUGen[R <: Rate](rate: R, in: AnyUGenIn, srcLo: AnyUGenIn, srcHi: AnyUGenIn, dstLo: AnyUGenIn, dstHi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, srcLo, srcHi, dstLo, dstHi))
 object EnvGen {
-   def kr(envelope: Expands[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
-   def ar(envelope: Expands[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def kr(envelope: Multi[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def ar(envelope: Multi[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
 }
-case class EnvGen[R <: Rate](rate: R, envelope: Expands[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, EnvGenUGen[R]] {
+case class EnvGen[R <: Rate](rate: R, envelope: Multi[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, EnvGenUGen[R]] {
    protected def expandUGens = {
       val _gate: IIdxSeq[AnyUGenIn] = gate.expand
       val _levelScale: IIdxSeq[AnyUGenIn] = levelScale.expand
       val _levelBias: IIdxSeq[AnyUGenIn] = levelBias.expand
       val _timeScale: IIdxSeq[AnyUGenIn] = timeScale.expand
       val _doneAction: IIdxSeq[AnyUGenIn] = doneAction.expand
-      val _envelope: IIdxSeq[AnyGE] = envelope.expand
+      val _envelope: IIdxSeq[AnyGE] = envelope.mexpand
       val _sz_gate = _gate.size
       val _sz_levelScale = _levelScale.size
       val _sz_levelBias = _levelBias.size
@@ -532,13 +532,13 @@ case class Linen[R <: Rate](rate: R, gate: AnyGE, attack: AnyGE, sustain: AnyGE,
 }
 case class LinenUGen[R <: Rate](rate: R, gate: AnyUGenIn, attack: AnyUGenIn, sustain: AnyUGenIn, release: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(gate, attack, sustain, release, doneAction))
 object IEnvGen {
-   def kr(envelope: Expands[AnyGE], index: AnyGE = 1.0f) = apply[control](control, envelope, index)
-   def ar(envelope: Expands[AnyGE], index: AnyGE = 1.0f) = apply[audio](audio, envelope, index)
+   def kr(envelope: Multi[AnyGE], index: AnyGE = 1.0f) = apply[control](control, envelope, index)
+   def ar(envelope: Multi[AnyGE], index: AnyGE = 1.0f) = apply[audio](audio, envelope, index)
 }
-case class IEnvGen[R <: Rate](rate: R, envelope: Expands[AnyGE], index: AnyGE) extends SingleOutUGenSource[R, IEnvGenUGen[R]] {
+case class IEnvGen[R <: Rate](rate: R, envelope: Multi[AnyGE], index: AnyGE) extends SingleOutUGenSource[R, IEnvGenUGen[R]] {
    protected def expandUGens = {
       val _index: IIdxSeq[AnyUGenIn] = index.expand
-      val _envelope: IIdxSeq[AnyGE] = envelope.expand
+      val _envelope: IIdxSeq[AnyGE] = envelope.mexpand
       val _sz_index = _index.size
       val _sz_envelope = _envelope.size
       val _exp_ = maxInt(_sz_index, _sz_envelope)

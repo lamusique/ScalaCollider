@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 00:11:26 GMT 2011
+ * Created: Fri Jan 07 14:02:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -29,13 +29,13 @@ case class DegreeToKey[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, octave: AnyGE)
 }
 case class DegreeToKeyUGen[R <: Rate](rate: R, buf: AnyUGenIn, in: AnyUGenIn, octave: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(buf, in, octave))
 object Select {
-   def kr(index: AnyGE, in: Expands[AnyGE]) = apply[control](control, index, in)
-   def ar(index: AnyGE, in: Expands[AnyGE]) = apply[audio](audio, index, in)
+   def kr(index: AnyGE, in: Multi[AnyGE]) = apply[control](control, index, in)
+   def ar(index: AnyGE, in: Multi[AnyGE]) = apply[audio](audio, index, in)
 }
-case class Select[R <: Rate](rate: R, index: AnyGE, in: Expands[AnyGE]) extends SingleOutUGenSource[R, SelectUGen[R]] {
+case class Select[R <: Rate](rate: R, index: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[R, SelectUGen[R]] {
    protected def expandUGens = {
       val _index: IIdxSeq[AnyUGenIn] = index.expand
-      val _in: IIdxSeq[AnyGE] = in.expand
+      val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_index = _index.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_index, _sz_in)

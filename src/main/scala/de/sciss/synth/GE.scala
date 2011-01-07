@@ -36,6 +36,10 @@ trait Expands[ +R ] {
    def expand: IIdxSeq[ R ]
 }
 
+trait Multi[ +G ] {
+   def mexpand: IIdxSeq[ G ]
+}
+
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
  *    Graph elements can be decomposed into a sequence of UGenIn objects.
@@ -45,13 +49,14 @@ trait Expands[ +R ] {
  *
  *    @version 0.11, 26-Aug-10
  */
-trait GE[ R <: Rate, +U <: UGenIn[ R ]] extends Expands[ U ] {
+trait GE[ R <: Rate, +U <: UGenIn[ R ]] extends Expands[ U ] with Multi[ GE[ R, U ]] {
    ge =>
 
 //   type Rate = R
    def rate: R // R
 
 //   def expand: IIdxSeq[ U ]
+   final def mexpand = IIdxSeq( ge )
 
    /**
     * Decomposes the graph element into its distinct outputs. For a single-output UGen
