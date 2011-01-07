@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:58:08 GMT 2011
+ * Created: Fri Jan 07 00:11:25 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -15,7 +15,7 @@ object BeatTrack {
    def kr(chain: AnyGE, lock: AnyGE = 0.0f) = apply(chain, lock)
 }
 case class BeatTrack(chain: AnyGE, lock: AnyGE) extends SingleOutUGenSource[control, BeatTrackUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _lock: IIdxSeq[AnyUGenIn] = lock.expand
       val _sz_chain = _chain.size
@@ -29,7 +29,7 @@ object Loudness {
    def kr(chain: AnyGE, smask: AnyGE = 0.25f, tmask: AnyGE = 1.0f) = apply(chain, smask, tmask)
 }
 case class Loudness(chain: AnyGE, smask: AnyGE, tmask: AnyGE) extends SingleOutUGenSource[control, LoudnessUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _smask: IIdxSeq[AnyUGenIn] = smask.expand
       val _tmask: IIdxSeq[AnyUGenIn] = tmask.expand
@@ -45,7 +45,7 @@ object KeyTrack {
    def kr(chain: AnyGE, keyDecay: AnyGE = 2.0f, chromaLeak: AnyGE = 0.5f) = apply(chain, keyDecay, chromaLeak)
 }
 case class KeyTrack(chain: AnyGE, keyDecay: AnyGE, chromaLeak: AnyGE) extends SingleOutUGenSource[control, KeyTrackUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _keyDecay: IIdxSeq[AnyUGenIn] = keyDecay.expand
       val _chromaLeak: IIdxSeq[AnyUGenIn] = chromaLeak.expand
@@ -61,7 +61,7 @@ object MFCC {
    def kr(chain: AnyGE, numCoeffs: Int = 13) = apply(chain, numCoeffs)
 }
 case class MFCC(chain: AnyGE, numCoeffs: Int) extends UGenSource[MFCCUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       IIdxSeq.tabulate(_chain.size)(i => MFCCUGen(_chain(i), numCoeffs))
    }
@@ -71,7 +71,7 @@ object Onsets {
    def kr(chain: AnyGE, thresh: AnyGE = 0.5f, fun: AnyGE = 3.0f, decay: AnyGE = 1.0f, noiseFloor: AnyGE = 0.1f, minGap: AnyGE = 10.0f, medianSpan: AnyGE = 11.0f, whType: AnyGE = 1.0f, raw: AnyGE = 0.0f) = apply(chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw)
 }
 case class Onsets(chain: AnyGE, thresh: AnyGE, fun: AnyGE, decay: AnyGE, noiseFloor: AnyGE, minGap: AnyGE, medianSpan: AnyGE, whType: AnyGE, raw: AnyGE) extends SingleOutUGenSource[control, OnsetsUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _thresh: IIdxSeq[AnyUGenIn] = thresh.expand
       val _fun: IIdxSeq[AnyUGenIn] = fun.expand
@@ -99,7 +99,7 @@ object BeatTrack2 {
    def kr(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE = 2.0f, phaseSpacing: AnyGE = 0.02f, lock: AnyGE = 0.0f, weighting: AnyGE = -2.1f) = apply(bus, numChannels, winSize, phaseSpacing, lock, weighting)
 }
 case class BeatTrack2(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE, phaseSpacing: AnyGE, lock: AnyGE, weighting: AnyGE) extends UGenSource[BeatTrack2UGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _numChannels: IIdxSeq[AnyUGenIn] = numChannels.expand
       val _winSize: IIdxSeq[AnyUGenIn] = winSize.expand
@@ -121,7 +121,7 @@ object SpecFlatness {
    def kr(chain: AnyGE) = apply(chain)
 }
 case class SpecFlatness(chain: AnyGE) extends SingleOutUGenSource[control, SpecFlatnessUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       IIdxSeq.tabulate(_chain.size)(i => SpecFlatnessUGen(_chain(i)))
    }
@@ -131,7 +131,7 @@ object SpecPcile {
    def kr(chain: AnyGE, percent: AnyGE = 0.5f, interp: AnyGE = 0.0f) = apply(chain, percent, interp)
 }
 case class SpecPcile(chain: AnyGE, percent: AnyGE, interp: AnyGE) extends SingleOutUGenSource[control, SpecPcileUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _percent: IIdxSeq[AnyUGenIn] = percent.expand
       val _interp: IIdxSeq[AnyUGenIn] = interp.expand
@@ -147,7 +147,7 @@ object SpecCentroid {
    def kr(chain: AnyGE) = apply(chain)
 }
 case class SpecCentroid(chain: AnyGE) extends SingleOutUGenSource[control, SpecCentroidUGen] with ControlRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       IIdxSeq.tabulate(_chain.size)(i => SpecCentroidUGen(_chain(i)))
    }

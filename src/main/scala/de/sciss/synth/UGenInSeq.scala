@@ -47,18 +47,25 @@ case class UGenInSeq( elems: IIdxSeq[ AnyUGenIn ]) extends /* IIdxSeq[ U ] with 
 //   def length : Int = elems.length
 }
 
-case class RatedUGenInSeq[ R <: Rate, +U <: UGenIn[ R ]]( rate: R, elems: IIdxSeq[ U ]) extends /* IIdxSeq[ U ] with */ GE[ R, U ] { //
-//   def expand = this
-   def expand = elems // this
+//case class RatedUGenInSeq[ R <: Rate, +U <: UGenIn[ R ]]( rate: R, elems: IIdxSeq[ U ]) extends /* IIdxSeq[ U ] with */ GE[ R, U ] { //
+////   def expand = this
+//   def expand = elems // this
+////   def apply( idx: Int ) = elems( idx )
+////   def length : Int = elems.length
+//}
+
+case class RatedUGenInSeq[ R <: Rate, G ]( rate: R, elems: Seq[ G ])( implicit view: G => GE[ R, UGenIn[ R ]]) extends GE[ R, UGenIn[ R ]] { //
+   def expand = elems.flatMap( _.expand )( collection.breakOut )
+//   def expand = elems // this
 //   def apply( idx: Int ) = elems( idx )
 //   def length : Int = elems.length
 }
 
-object GESeq {
-   def apply[ R <: Rate, U <: UGenIn[ R ]]( elems: U* )( implicit rate: R ) = new GESeq[ R, U ]( elems: _* )( rate )
-}
-class GESeq[ R <: Rate, +U <: UGenIn[ R ]] private ( elems: U* )( implicit val rate: R ) extends IIdxSeq[ U ] with GE[ R, U ] {
-   def expand = this
-   def apply( idx: Int ) = elems( idx )
-   def length : Int = elems.length
-}
+//object GESeq {
+//   def apply[ R <: Rate, U <: UGenIn[ R ]]( elems: U* )( implicit rate: R ) = new GESeq[ R, U ]( elems: _* )( rate )
+//}
+//class GESeq[ R <: Rate, +U <: UGenIn[ R ]] private ( elems: U* )( implicit val rate: R ) extends IIdxSeq[ U ] with GE[ R, U ] {
+//   def expand = this
+//   def apply( idx: Int ) = elems( idx )
+//   def length : Int = elems.length
+//}

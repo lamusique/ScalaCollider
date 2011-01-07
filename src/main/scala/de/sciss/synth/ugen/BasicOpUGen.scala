@@ -42,7 +42,7 @@ object MulAdd {
 }
 
 case class MulAdd[ R <: Rate ]( rate: R, in: GE[ R, UGenIn[ R ]], mul: AnyGE, add: AnyGE ) extends SingleOutUGenSource[ R, MulAddUGen[ R ]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[ UGenIn[ R ]]    = in.expand
       val _mul: IIdxSeq[ AnyUGenIn ]    = mul.expand
       val _add: IIdxSeq[ AnyUGenIn ]    = add.expand
@@ -260,7 +260,7 @@ extends SingleOutUGenSource[ R, UnaryOpUGen[ R ]] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 
-   def expand = {
+   protected def expandUGens = {
       val _a = a.expand
       IIdxSeq.tabulate( _a.size )( i => UnaryOpUGen( rate, selector, _a( i )))
    }
@@ -504,7 +504,7 @@ extends SingleOutUGenSource[ R, BinaryOpUGen[ R ]] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 
-   def expand = {
+   protected def expandUGens = {
       val _a: IIdxSeq[ AnyUGenIn ]  = a.expand
       val _b: IIdxSeq[ AnyUGenIn ]  = b.expand
       val _sz_a   = _a.size

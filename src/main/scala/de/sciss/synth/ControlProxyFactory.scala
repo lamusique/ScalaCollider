@@ -93,11 +93,8 @@ trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R, UGenIn[ R ]] /* extends
 
 abstract class AbstractControlProxy[ R <: Rate, Impl ]( outputRates: IIdxSeq[ R ])
 extends ControlProxyLike[ R, Impl ] {
-// YYY
-//   // ---- constructor ----
-//   {
-//      UGenGraph.builder.addControlProxy( this )
-//   }
+   // ---- constructor ----
+   SynthGraph.builder.addControlProxy( this )
 
 //   def this( rate: Rate, numOutputs: Int ) =  this( IIdxSeq.fill( numOutputs )( rate ))
 

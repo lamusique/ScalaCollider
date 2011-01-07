@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:57:59 GMT 2011
+ * Created: Fri Jan 07 00:11:17 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -18,7 +18,7 @@ object LFDNoise0 {
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFDNoise0[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, LFDNoise0UGen[R]] with UsesRandSeed {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       IIdxSeq.tabulate(_freq.size)(i => LFDNoise0UGen(rate, _freq(i)))
    }
@@ -31,7 +31,7 @@ object LFDNoise1 {
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFDNoise1[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, LFDNoise1UGen[R]] with UsesRandSeed {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       IIdxSeq.tabulate(_freq.size)(i => LFDNoise1UGen(rate, _freq(i)))
    }
@@ -44,7 +44,7 @@ object LFDNoise3 {
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFDNoise3[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, LFDNoise3UGen[R]] with UsesRandSeed {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       IIdxSeq.tabulate(_freq.size)(i => LFDNoise3UGen(rate, _freq(i)))
    }
@@ -57,7 +57,7 @@ object LFDClipNoise {
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
 case class LFDClipNoise[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, LFDClipNoiseUGen[R]] with UsesRandSeed {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       IIdxSeq.tabulate(_freq.size)(i => LFDClipNoiseUGen(rate, _freq(i)))
    }

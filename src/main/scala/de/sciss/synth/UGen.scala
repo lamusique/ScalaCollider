@@ -92,6 +92,8 @@ extends /* YYY RatedGE with */ UGenProxy {
 //      SynthGraph.builder.addUGen( this )
 //   }
 
+   //final val cache = new ImmutableCache( this )
+
    def rate: Rate // YYY
    def numOutputs: Int // YYY
    def outputs: IIdxSeq[ AnyUGenIn ] // YYY
@@ -147,8 +149,29 @@ abstract class ZeroOutUGen( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with 
 }
 
 trait UGenSource[ +U <: UGen ] extends Expands[ U ] {
+   final lazy val cache = new ImmutableCache( this )
+
    // ---- constructor ----
    SynthGraph.builder.addUGenSource( this )
+
+//   // prevent aliasing at this stage of the synth-graph creation process
+//   /* final */ override def hashCode() : Int = super.hashCode()
+//   /* final */ override def equals( x: Any ) : Boolean = super.equals( x )
+
+   final def expand: IIdxSeq[ U ] = UGenGraph.builder.expand( cache, expandUGens )
+
+   protected def expandUGens : IIdxSeq[ U ]
 }
 
 trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen[ R ]] extends UGenSource[ U ] with GE[ R, U ]
+
+//class HashCache[ T ]( t: T ) {
+//   override lazy val hashCode() : Int = t.hashCode()
+//   override def equals( x: Any ) : Boolean = {
+//      if( x != null && (hashCode() != x.hashCode()) ) t.equals( x)
+//   }
+//}
+
+class ImmutableCache[ +T ]( val self: T ) extends Proxy {
+   override val hashCode: Int = self.hashCode
+}

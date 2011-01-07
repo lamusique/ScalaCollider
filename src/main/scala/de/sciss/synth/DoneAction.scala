@@ -28,6 +28,9 @@
 
 package de.sciss.synth
 
+object DoneAction {
+   implicit def toGE( x: DoneAction ) = Constant( x.id )
+}
 sealed abstract class DoneAction( val id: Int )
 
 /**

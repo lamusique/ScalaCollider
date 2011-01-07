@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:58:09 GMT 2011
+ * Created: Fri Jan 07 00:11:26 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -16,7 +16,7 @@ object Pan2 {
    def ar(in: AnyGE, pos: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, in, pos, level)
 }
 case class Pan2[R <: Rate](rate: R, in: AnyGE, pos: AnyGE, level: AnyGE) extends UGenSource[Pan2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
       val _level: IIdxSeq[AnyUGenIn] = level.expand
@@ -33,7 +33,7 @@ object Pan4 {
    def ar(in: AnyGE, xpos: AnyGE = 0.0f, ypos: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, in, xpos, ypos, level)
 }
 case class Pan4[R <: Rate](rate: R, in: AnyGE, xpos: AnyGE, ypos: AnyGE, level: AnyGE) extends UGenSource[Pan4UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _xpos: IIdxSeq[AnyUGenIn] = xpos.expand
       val _ypos: IIdxSeq[AnyUGenIn] = ypos.expand
@@ -52,7 +52,7 @@ object LinPan2 {
    def ar(in: AnyGE, pos: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, in, pos, level)
 }
 case class LinPan2[R <: Rate](rate: R, in: AnyGE, pos: AnyGE, level: AnyGE) extends UGenSource[LinPan2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
       val _level: IIdxSeq[AnyUGenIn] = level.expand
@@ -69,7 +69,7 @@ object Balance2 {
    def ar(left: AnyGE, right: AnyGE, pos: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, left, right, pos, level)
 }
 case class Balance2[R <: Rate](rate: R, left: AnyGE, right: AnyGE, pos: AnyGE, level: AnyGE) extends UGenSource[Balance2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _left: IIdxSeq[AnyUGenIn] = left.expand
       val _right: IIdxSeq[AnyUGenIn] = right.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
@@ -88,7 +88,7 @@ object Rotate2 {
    def ar(x: AnyGE, y: AnyGE, pos: AnyGE = 0.0f) = apply[audio](audio, x, y, pos)
 }
 case class Rotate2[R <: Rate](rate: R, x: AnyGE, y: AnyGE, pos: AnyGE) extends UGenSource[Rotate2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _x: IIdxSeq[AnyUGenIn] = x.expand
       val _y: IIdxSeq[AnyUGenIn] = y.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
@@ -105,7 +105,7 @@ object XFade2 {
    def ar(inA: AnyGE, inB: AnyGE = 0.0f, pan: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, inA, inB, pan, level)
 }
 case class XFade2[R <: Rate](rate: R, inA: AnyGE, inB: AnyGE, pan: AnyGE, level: AnyGE) extends SingleOutUGenSource[R, XFade2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _inA: IIdxSeq[AnyUGenIn] = inA.expand
       val _inB: IIdxSeq[AnyUGenIn] = inB.expand
       val _pan: IIdxSeq[AnyUGenIn] = pan.expand
@@ -124,7 +124,7 @@ object LinXFade2 {
    def ar(inA: AnyGE, inB: AnyGE = 0.0f, pan: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, inA, inB, pan, level)
 }
 case class LinXFade2[R <: Rate](rate: R, inA: AnyGE, inB: AnyGE, pan: AnyGE, level: AnyGE) extends SingleOutUGenSource[R, LinXFade2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _inA: IIdxSeq[AnyUGenIn] = inA.expand
       val _inB: IIdxSeq[AnyUGenIn] = inB.expand
       val _pan: IIdxSeq[AnyUGenIn] = pan.expand
@@ -143,7 +143,7 @@ object PanB {
    def ar(in: AnyGE, azimuth: AnyGE = 0.0f, elevation: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, in, azimuth, elevation, level)
 }
 case class PanB[R <: Rate](rate: R, in: AnyGE, azimuth: AnyGE, elevation: AnyGE, level: AnyGE) extends UGenSource[PanBUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _azimuth: IIdxSeq[AnyUGenIn] = azimuth.expand
       val _elevation: IIdxSeq[AnyUGenIn] = elevation.expand
@@ -162,7 +162,7 @@ object PanB2 {
    def ar(in: AnyGE, azimuth: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, in, azimuth, level)
 }
 case class PanB2[R <: Rate](rate: R, in: AnyGE, azimuth: AnyGE, level: AnyGE) extends UGenSource[PanB2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _azimuth: IIdxSeq[AnyUGenIn] = azimuth.expand
       val _level: IIdxSeq[AnyUGenIn] = level.expand
@@ -179,7 +179,7 @@ object BiPanB2 {
    def ar(inA: AnyGE, inB: AnyGE, azimuth: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, inA, inB, azimuth, level)
 }
 case class BiPanB2[R <: Rate](rate: R, inA: AnyGE, inB: AnyGE, azimuth: AnyGE, level: AnyGE) extends UGenSource[BiPanB2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _inA: IIdxSeq[AnyUGenIn] = inA.expand
       val _inB: IIdxSeq[AnyUGenIn] = inB.expand
       val _azimuth: IIdxSeq[AnyUGenIn] = azimuth.expand
@@ -198,7 +198,7 @@ object PanAz {
    def ar(numChannels: Int, in: AnyGE, pos: AnyGE = 0.0f, level: AnyGE = 1.0f, width: AnyGE = 2.0f, orient: AnyGE = 0.0f) = apply[audio](audio, numChannels, in, pos, level, width, orient)
 }
 case class PanAz[R <: Rate](rate: R, numChannels: Int, in: AnyGE, pos: AnyGE, level: AnyGE, width: AnyGE, orient: AnyGE) extends UGenSource[PanAzUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
       val _level: IIdxSeq[AnyUGenIn] = level.expand
@@ -219,7 +219,7 @@ object DecodeB2 {
    def ar(numChannels: Int, w: AnyGE, x: AnyGE, y: AnyGE, orient: AnyGE = 0.5f) = apply[audio](audio, numChannels, w, x, y, orient)
 }
 case class DecodeB2[R <: Rate](rate: R, numChannels: Int, w: AnyGE, x: AnyGE, y: AnyGE, orient: AnyGE) extends UGenSource[DecodeB2UGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _w: IIdxSeq[AnyUGenIn] = w.expand
       val _x: IIdxSeq[AnyUGenIn] = x.expand
       val _y: IIdxSeq[AnyUGenIn] = y.expand

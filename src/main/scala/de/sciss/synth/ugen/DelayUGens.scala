@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:57:55 GMT 2011
+ * Created: Fri Jan 07 00:11:13 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -64,7 +64,7 @@ object BufSampleRate {
    def kr(buf: AnyGE) = apply[control](control, buf)
 }
 case class BufSampleRate[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, BufSampleRateUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       IIdxSeq.tabulate(_buf.size)(i => BufSampleRateUGen(rate, _buf(i)))
    }
@@ -75,7 +75,7 @@ object BufRateScale {
    def kr(buf: AnyGE) = apply[control](control, buf)
 }
 case class BufRateScale[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, BufRateScaleUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       IIdxSeq.tabulate(_buf.size)(i => BufRateScaleUGen(rate, _buf(i)))
    }
@@ -86,7 +86,7 @@ object BufSamples {
    def kr(buf: AnyGE) = apply[control](control, buf)
 }
 case class BufSamples[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, BufSamplesUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       IIdxSeq.tabulate(_buf.size)(i => BufSamplesUGen(rate, _buf(i)))
    }
@@ -97,7 +97,7 @@ object BufFrames {
    def kr(buf: AnyGE) = apply[control](control, buf)
 }
 case class BufFrames[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, BufFramesUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       IIdxSeq.tabulate(_buf.size)(i => BufFramesUGen(rate, _buf(i)))
    }
@@ -108,7 +108,7 @@ object BufChannels {
    def kr(buf: AnyGE) = apply[control](control, buf)
 }
 case class BufChannels[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, BufChannelsUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       IIdxSeq.tabulate(_buf.size)(i => BufChannelsUGen(rate, _buf(i)))
    }
@@ -119,7 +119,7 @@ object BufDur {
    def kr(buf: AnyGE) = apply[control](control, buf)
 }
 case class BufDur[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, BufDurUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       IIdxSeq.tabulate(_buf.size)(i => BufDurUGen(rate, _buf(i)))
    }
@@ -130,7 +130,7 @@ object PlayBuf {
    def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, numChannels, buf, speed, trig, startPos, loop, doneAction)
 }
 case class PlayBuf[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends UGenSource[PlayBufUGen[R]] with HasSideEffect with HasDoneFlag {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -153,7 +153,7 @@ object RecordBuf {
    def ar(in: Expands[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
 }
 case class RecordBuf[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, offset: AnyGE, recLevel: AnyGE, preLevel: AnyGE, run: AnyGE, loop: AnyGE, trig: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, RecordBufUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _offset: IIdxSeq[AnyUGenIn] = offset.expand
       val _recLevel: IIdxSeq[AnyUGenIn] = recLevel.expand
@@ -182,7 +182,7 @@ object BufRd {
    def ar(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[audio](audio, numChannels, buf, phase, loop, interp)
 }
 case class BufRd[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, phase: AnyGE, loop: AnyGE, interp: AnyGE) extends UGenSource[BufRdUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _phase: IIdxSeq[AnyUGenIn] = phase.expand
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand
@@ -201,7 +201,7 @@ object BufWr {
    def ar(in: Expands[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[audio](audio, in, buf, phase, loop)
 }
 case class BufWr[R <: Rate](rate: R, in: Expands[AnyGE], buf: AnyGE, phase: AnyGE, loop: AnyGE) extends SingleOutUGenSource[R, BufWrUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _phase: IIdxSeq[AnyUGenIn] = phase.expand
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand
@@ -219,7 +219,7 @@ object Pitch {
    def kr(in: AnyGE, initFreq: AnyGE = 440.0f, minFreq: AnyGE = 60.0f, maxFreq: AnyGE = 4000.0f, execFreq: AnyGE = 100.0f, binsPerOct: AnyGE = 16.0f, median: AnyGE = 1.0f, ampThresh: AnyGE = 0.01f, peakThresh: AnyGE = 0.5f, downSample: AnyGE = 1.0f) = apply[control](control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)
 }
 case class Pitch[R <: Rate](rate: R, in: AnyGE, initFreq: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, execFreq: AnyGE, binsPerOct: AnyGE, median: AnyGE, ampThresh: AnyGE, peakThresh: AnyGE, downSample: AnyGE) extends UGenSource[PitchUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _initFreq: IIdxSeq[AnyUGenIn] = initFreq.expand
       val _minFreq: IIdxSeq[AnyUGenIn] = minFreq.expand
@@ -249,7 +249,7 @@ object BufDelayN {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f) = apply[audio](audio, buf, in, delayTime)
 }
 case class BufDelayN[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE) extends SingleOutUGenSource[R, BufDelayNUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -265,7 +265,7 @@ object BufDelayL {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f) = apply[audio](audio, buf, in, delayTime)
 }
 case class BufDelayL[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE) extends SingleOutUGenSource[R, BufDelayLUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -281,7 +281,7 @@ object BufDelayC {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f) = apply[audio](audio, buf, in, delayTime)
 }
 case class BufDelayC[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE) extends SingleOutUGenSource[R, BufDelayCUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -297,7 +297,7 @@ object BufCombN {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, buf, in, delayTime, decayTime)
 }
 case class BufCombN[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, BufCombNUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -315,7 +315,7 @@ object BufCombL {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, buf, in, delayTime, decayTime)
 }
 case class BufCombL[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, BufCombLUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -333,7 +333,7 @@ object BufCombC {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, buf, in, delayTime, decayTime)
 }
 case class BufCombC[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, BufCombCUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -351,7 +351,7 @@ object BufAllpassN {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, buf, in, delayTime, decayTime)
 }
 case class BufAllpassN[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, BufAllpassNUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -369,7 +369,7 @@ object BufAllpassL {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, buf, in, delayTime, decayTime)
 }
 case class BufAllpassL[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, BufAllpassLUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -387,7 +387,7 @@ object BufAllpassC {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, buf, in, delayTime, decayTime)
 }
 case class BufAllpassC[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, BufAllpassCUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -406,7 +406,7 @@ object DelayN {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f) = apply[audio](audio, in, maxDelayTime, delayTime)
 }
 case class DelayN[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE) extends SingleOutUGenSource[R, DelayNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -423,7 +423,7 @@ object DelayL {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f) = apply[audio](audio, in, maxDelayTime, delayTime)
 }
 case class DelayL[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE) extends SingleOutUGenSource[R, DelayLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -440,7 +440,7 @@ object DelayC {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f) = apply[audio](audio, in, maxDelayTime, delayTime)
 }
 case class DelayC[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE) extends SingleOutUGenSource[R, DelayCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -457,7 +457,7 @@ object CombN {
    def kr(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[control](control, in, maxDelayTime, delayTime, decayTime)
 }
 case class CombN[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, CombNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -476,7 +476,7 @@ object CombL {
    def kr(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[control](control, in, maxDelayTime, delayTime, decayTime)
 }
 case class CombL[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, CombLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -495,7 +495,7 @@ object CombC {
    def kr(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[control](control, in, maxDelayTime, delayTime, decayTime)
 }
 case class CombC[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, CombCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -514,7 +514,7 @@ object AllpassN {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, in, maxDelayTime, delayTime, decayTime)
 }
 case class AllpassN[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, AllpassNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -533,7 +533,7 @@ object AllpassL {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, in, maxDelayTime, delayTime, decayTime)
 }
 case class AllpassL[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, AllpassLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -552,7 +552,7 @@ object AllpassC {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, in, maxDelayTime, delayTime, decayTime)
 }
 case class AllpassC[R <: Rate](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, AllpassCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand
@@ -570,7 +570,7 @@ object PitchShift {
    def ar(in: AnyGE, winSize: AnyGE = 0.2f, pitchRatio: AnyGE = 1.0f, pitchDispersion: AnyGE = 0.0f, timeDispersion: AnyGE = 0.0f) = apply(in, winSize, pitchRatio, pitchDispersion, timeDispersion)
 }
 case class PitchShift(in: AnyGE, winSize: AnyGE, pitchRatio: AnyGE, pitchDispersion: AnyGE, timeDispersion: AnyGE) extends SingleOutUGenSource[audio, PitchShiftUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _winSize: IIdxSeq[AnyUGenIn] = winSize.expand
       val _pitchRatio: IIdxSeq[AnyUGenIn] = pitchRatio.expand
@@ -590,7 +590,7 @@ object TGrains {
    def ar(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE = 1.0f, centerPos: AnyGE = 0.0f, dur: AnyGE = 0.1f, pan: AnyGE = 0.0f, amp: AnyGE = 0.1f, interp: AnyGE = 4.0f) = apply(numChannels, trig, buf, speed, centerPos, dur, pan, amp, interp)
 }
 case class TGrains(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE, centerPos: AnyGE, dur: AnyGE, pan: AnyGE, amp: AnyGE, interp: AnyGE) extends UGenSource[TGrainsUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
@@ -617,7 +617,7 @@ object ScopeOut {
    def kr(buf: AnyGE, in: Expands[AnyGE]) = apply[control](control, buf, in)
 }
 case class ScopeOut[R <: Rate](rate: R, buf: AnyGE, in: Expands[AnyGE]) extends SingleOutUGenSource[R, ScopeOutUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyGE] = in.expand
       val _sz_buf = _buf.size
@@ -631,7 +631,7 @@ object Pluck {
    def ar(in: AnyGE, trig: AnyGE = 1.0f, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f, coef: AnyGE = 0.5f) = apply(in, trig, maxDelayTime, delayTime, decayTime, coef)
 }
 case class Pluck(in: AnyGE, trig: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE, coef: AnyGE) extends SingleOutUGenSource[audio, PluckUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _maxDelayTime: IIdxSeq[AnyUGenIn] = maxDelayTime.expand
@@ -654,7 +654,7 @@ object DelTapWr {
    def kr(buf: AnyGE, in: AnyGE) = apply[control](control, buf, in)
 }
 case class DelTapWr[R <: Rate](rate: R, buf: AnyGE, in: AnyGE) extends SingleOutUGenSource[R, DelTapWrUGen[R]] with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _sz_buf = _buf.size
@@ -669,7 +669,7 @@ object DelTapRd {
    def kr(buf: AnyGE, phase: AnyGE, delayTime: AnyGE, interp: AnyGE = 1.0f) = apply[control](control, buf, phase, delayTime, interp)
 }
 case class DelTapRd[R <: Rate](rate: R, buf: AnyGE, phase: AnyGE, delayTime: AnyGE, interp: AnyGE) extends SingleOutUGenSource[R, DelTapRdUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _phase: IIdxSeq[AnyUGenIn] = phase.expand
       val _delayTime: IIdxSeq[AnyUGenIn] = delayTime.expand

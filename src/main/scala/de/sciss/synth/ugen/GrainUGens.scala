@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:58:06 GMT 2011
+ * Created: Fri Jan 07 00:11:24 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -15,7 +15,7 @@ object GrainIn {
    def ar(in: AnyGE, numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(in, numChannels, trig, dur, pan, envBuf, maxGrains)
 }
 case class GrainIn(in: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainInUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -38,7 +38,7 @@ object GrainSin {
    def ar(numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, freq: AnyGE = 440.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(numChannels, trig, dur, freq, pan, envBuf, maxGrains)
 }
 case class GrainSin(numChannels: Int, trig: AnyGE, dur: AnyGE, freq: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainSinUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -61,7 +61,7 @@ object GrainFM {
    def ar(numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, carFreq: AnyGE = 440.0f, modFreq: AnyGE = 200.0f, index: AnyGE = 1.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(numChannels, trig, dur, carFreq, modFreq, index, pan, envBuf, maxGrains)
 }
 case class GrainFM(numChannels: Int, trig: AnyGE, dur: AnyGE, carFreq: AnyGE, modFreq: AnyGE, index: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainFMUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
       val _carFreq: IIdxSeq[AnyUGenIn] = carFreq.expand
@@ -87,7 +87,7 @@ object GrainBuf {
    def ar(buf: AnyGE, numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, speed: AnyGE = 1.0f, pos: AnyGE = 0.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(buf, numChannels, trig, dur, speed, pos, pan, envBuf, maxGrains)
 }
 case class GrainBuf(buf: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, speed: AnyGE, pos: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainBufUGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
@@ -113,7 +113,7 @@ object Warp1 {
    def ar(numChannels: Int, buf: AnyGE, pos: AnyGE = 0.0f, speed: AnyGE = 1.0f, winSize: AnyGE = 0.2f, envBuf: AnyGE = -1.0f, overlaps: AnyGE = 8.0f, winRand: AnyGE = 0.0f, interp: AnyGE = 1.0f) = apply(numChannels, buf, pos, speed, winSize, envBuf, overlaps, winRand, interp)
 }
 case class Warp1(numChannels: Int, buf: AnyGE, pos: AnyGE, speed: AnyGE, winSize: AnyGE, envBuf: AnyGE, overlaps: AnyGE, winRand: AnyGE, interp: AnyGE) extends UGenSource[Warp1UGen] with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand

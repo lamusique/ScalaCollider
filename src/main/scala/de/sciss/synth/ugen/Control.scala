@@ -55,8 +55,8 @@ object Control {
 //      ControlUGen( rate, values.size, specialIndex )
 //   }
 }
-case class Control[R <: Rate]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ]) extends Expands[ ControlUGen ] {
-   def expand = {
+case class Control[R <: Rate]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ]) extends UGenSource[ ControlUGen ] {
+   protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( ControlUGen( rate, values.size, specialIndex ))
    }

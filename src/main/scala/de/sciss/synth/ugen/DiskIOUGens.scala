@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:57:59 GMT 2011
+ * Created: Fri Jan 07 00:11:17 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -15,7 +15,7 @@ object DiskIn {
    def ar(numChannels: Int, buf: AnyGE, loop: AnyGE = 0.0f) = apply(numChannels, buf, loop)
 }
 case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends UGenSource[DiskInUGen] with HasSideEffect with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand
       val _sz_buf = _buf.size
@@ -29,7 +29,7 @@ object DiskOut {
    def ar(buf: AnyGE, in: Expands[GE[audio, UGenIn[audio]]]) = apply(buf, in)
 }
 case class DiskOut(buf: AnyGE, in: Expands[AnyGE]) extends SingleOutUGenSource[audio, DiskOutUGen] with AudioRated with WritesBuffer {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyGE] = in.expand
       val _sz_buf = _buf.size
@@ -43,7 +43,7 @@ object VDiskIn {
    def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, loop: AnyGE = 0.0f, sendID: AnyGE = 0.0f) = apply(numChannels, buf, speed, loop, sendID)
 }
 case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends UGenSource[VDiskInUGen] with HasSideEffect with AudioRated {
-   def expand = {
+   protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand

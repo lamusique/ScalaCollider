@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:58:09 GMT 2011
+ * Created: Fri Jan 07 00:11:27 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -16,7 +16,7 @@ object Spring {
    def ar(in: AnyGE, spring: AnyGE = 1.0f, damp: AnyGE = 0.0f) = apply[audio](audio, in, spring, damp)
 }
 case class Spring[R <: Rate](rate: R, in: AnyGE, spring: AnyGE, damp: AnyGE) extends SingleOutUGenSource[R, SpringUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _spring: IIdxSeq[AnyUGenIn] = spring.expand
       val _damp: IIdxSeq[AnyUGenIn] = damp.expand
@@ -33,7 +33,7 @@ object Ball {
    def ar(in: AnyGE, g: AnyGE = 1.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply[audio](audio, in, g, damp, friction)
 }
 case class Ball[R <: Rate](rate: R, in: AnyGE, g: AnyGE, damp: AnyGE, friction: AnyGE) extends SingleOutUGenSource[R, BallUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _g: IIdxSeq[AnyUGenIn] = g.expand
       val _damp: IIdxSeq[AnyUGenIn] = damp.expand
@@ -52,7 +52,7 @@ object TBall {
    def ar(in: AnyGE, g: AnyGE = 10.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply[audio](audio, in, g, damp, friction)
 }
 case class TBall[R <: Rate](rate: R, in: AnyGE, g: AnyGE, damp: AnyGE, friction: AnyGE) extends SingleOutUGenSource[R, TBallUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _g: IIdxSeq[AnyUGenIn] = g.expand
       val _damp: IIdxSeq[AnyUGenIn] = damp.expand

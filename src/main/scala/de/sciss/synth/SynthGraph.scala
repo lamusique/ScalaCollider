@@ -31,7 +31,7 @@ package de.sciss.synth
 import java.io.DataOutputStream
 import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
-import collection.immutable.{ IndexedSeq => IIdxSeq }
+import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
 import ugen.{EnvGen, Out}
 
 /**
@@ -160,33 +160,36 @@ object SynthGraph {
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
       def addUGenSource( u: UGenSource[ _ <: UGen ]) {}
+      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
-      private val ugenSources = MBuffer.empty[ UGenSource[ _ <: UGen ]]
+      private val ugenSources    = MBuffer.empty[ UGenSource[ _ <: UGen ]]
+      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
-      def build = SynthGraph( ugenSources.toIndexedSeq )
+      def build = SynthGraph( ugenSources.toIndexedSeq, controlProxies.toSet )
       def addUGenSource( u: UGenSource[ _ <: UGen ]) {
          ugenSources += u
+      }
+
+      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
+         controlProxies += proxy
       }
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ UGenSource[ _ <: UGen ]]) {
-   def expand = UGenGraph( sources )
+case class SynthGraph( sources: IIdxSeq[ UGenSource[ _ <: UGen ]], controlProxies: ISet[ ControlProxyLike[ _, _ ]]) {
+   def expand = UGenGraph.expand( this )
 }
 
 object UGenGraph {
 //   def individuate: Int = builder.individuate
 
-   def apply( sources: IIdxSeq[ UGenSource[ _ <: UGen ]]) : UGenGraph = {
-      val b    = new BuilderImpl
+   def expand( graph: SynthGraph ) : UGenGraph = {
+      val b    = new BuilderImpl( graph )
       val old  = builders.get()
       builders.set( b )
       try {
-         // YYY XXX NO WAY
-         sources.foreach( _.expand.foreach( b.addUGen( _ )))
-
          b.build
       } finally {
          builders.set( old ) // BuilderDummy
@@ -205,13 +208,16 @@ object UGenGraph {
    def builder: UGenGraphBuilder = builders.get
 
    private object BuilderDummy extends UGenGraphBuilder {
-      def build : UGenGraph = error( "Out of context" )
+      def build : UGenGraph = outOfContext
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
-      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
-      def addUGen( ugen: UGen ) {}
+//      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
+//      def addUGen( ugen: UGen ) {}
+      def expand[ U <: UGen ]( src: ImmutableCache[ UGenSource[ U ]], gen: => IIdxSeq[ U ]) : IIdxSeq[ U ] = outOfContext
+
+      private def outOfContext : Nothing = error( "Out of context" )
    }
 
-   private class BuilderImpl extends UGenGraphBuilder {
+   private class BuilderImpl( graph: SynthGraph ) extends UGenGraphBuilder {
       builder =>
 
       // updated during build
@@ -219,10 +225,13 @@ object UGenGraph {
       private var ugenSet        = MSet.empty[ UGen ]
       private var controlValues  = IIdxSeq.empty[ Float ]
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
-      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
+//      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
+
+      private val sourceMap      = MMap.empty[ ImmutableCache[ UGenSource[ UGen ]], IIdxSeq[ UGen ]]
 
       def build = {
-         val ctrlProxyMap        = buildControls
+         graph.sources.foreach( _.expand )
+         val ctrlProxyMap        = buildControls( graph.controlProxies )
          // check inputs
          val (igens, constants)  = indexUGens( ctrlProxyMap )
          val indexedUGens        = sortUGens( igens )
@@ -309,7 +318,16 @@ object UGenGraph {
          sorted
       }
 
-      def addUGen( ugen: UGen ) {
+      def expand[ U <: UGen ]( src: ImmutableCache[ UGenSource[ U ]], gen: => IIdxSeq[ U ]) : IIdxSeq[ U ] = {
+         sourceMap.getOrElse( src, {
+            val exp = gen
+            sourceMap += src -> exp
+            exp.foreach( addUGen( _ ))
+            exp
+         }).asInstanceOf[ IIdxSeq[ U ]] // XXX hmmm, not so pretty...
+      }
+
+      private def addUGen( ugen: UGen ) {
          if( ugenSet.add( ugen )) ugens += ugen
       }
 
@@ -320,18 +338,20 @@ object UGenGraph {
          specialIndex
       }
 
-      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
-         controlProxies += proxy
-      }
+//      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
+//         controlProxies += proxy
+//      }
 
       /*
        *    Manita, how simple things can get as soon as you
        *    clean up the sclang mess...
        */
-      private def buildControls: Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
-         controlProxies.groupBy( _.factory ).flatMap( tuple => {
+      private def buildControls( p: Traversable[ ControlProxyLike[ _, _ ]]): Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+         p.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
-            factory.build( builder, proxies.toSeq: _* )
+            val res = factory.build( builder, proxies.toSeq: _* )
+            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
+            res
          })( breakOut )
       }
 

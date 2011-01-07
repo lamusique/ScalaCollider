@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:57:54 GMT 2011
+ * Created: Fri Jan 07 00:11:12 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -16,7 +16,7 @@ object CuspN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = 1.9f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, xi)
 }
 case class CuspN[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, CuspNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -35,7 +35,7 @@ object CuspL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = 1.9f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, xi)
 }
 case class CuspL[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, CuspLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -54,7 +54,7 @@ object FBSineN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, im: AnyGE = 1.0f, fb: AnyGE = 0.1f, a: AnyGE = 1.1f, c: AnyGE = 0.5f, xi: AnyGE = 0.1f, yi: AnyGE = 0.1f) = apply[audio](audio, freq, im, fb, a, c, xi, yi)
 }
 case class FBSineN[R <: Rate](rate: R, freq: AnyGE, im: AnyGE, fb: AnyGE, a: AnyGE, c: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, FBSineNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _im: IIdxSeq[AnyUGenIn] = im.expand
       val _fb: IIdxSeq[AnyUGenIn] = fb.expand
@@ -79,7 +79,7 @@ object FBSineL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, im: AnyGE = 1.0f, fb: AnyGE = 0.1f, a: AnyGE = 1.1f, c: AnyGE = 0.5f, xi: AnyGE = 0.1f, yi: AnyGE = 0.1f) = apply[audio](audio, freq, im, fb, a, c, xi, yi)
 }
 case class FBSineL[R <: Rate](rate: R, freq: AnyGE, im: AnyGE, fb: AnyGE, a: AnyGE, c: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, FBSineLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _im: IIdxSeq[AnyUGenIn] = im.expand
       val _fb: IIdxSeq[AnyUGenIn] = fb.expand
@@ -104,7 +104,7 @@ object FBSineC {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, im: AnyGE = 1.0f, fb: AnyGE = 0.1f, a: AnyGE = 1.1f, c: AnyGE = 0.5f, xi: AnyGE = 0.1f, yi: AnyGE = 0.1f) = apply[audio](audio, freq, im, fb, a, c, xi, yi)
 }
 case class FBSineC[R <: Rate](rate: R, freq: AnyGE, im: AnyGE, fb: AnyGE, a: AnyGE, c: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, FBSineCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _im: IIdxSeq[AnyUGenIn] = im.expand
       val _fb: IIdxSeq[AnyUGenIn] = fb.expand
@@ -129,7 +129,7 @@ object GbmanN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, xi: AnyGE = 1.2f, yi: AnyGE = 2.1f) = apply[audio](audio, freq, xi, yi)
 }
 case class GbmanN[R <: Rate](rate: R, freq: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, GbmanNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _xi: IIdxSeq[AnyUGenIn] = xi.expand
       val _yi: IIdxSeq[AnyUGenIn] = yi.expand
@@ -146,7 +146,7 @@ object GbmanL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, xi: AnyGE = 1.2f, yi: AnyGE = 2.1f) = apply[audio](audio, freq, xi, yi)
 }
 case class GbmanL[R <: Rate](rate: R, freq: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, GbmanLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _xi: IIdxSeq[AnyUGenIn] = xi.expand
       val _yi: IIdxSeq[AnyUGenIn] = yi.expand
@@ -163,7 +163,7 @@ object HenonN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.4f, b: AnyGE = 0.3f, x0: AnyGE = 0.0f, x1: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, x0, x1)
 }
 case class HenonN[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, x0: AnyGE, x1: AnyGE) extends SingleOutUGenSource[R, HenonNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -184,7 +184,7 @@ object HenonL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.4f, b: AnyGE = 0.3f, x0: AnyGE = 0.0f, x1: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, x0, x1)
 }
 case class HenonL[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, x0: AnyGE, x1: AnyGE) extends SingleOutUGenSource[R, HenonLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -205,7 +205,7 @@ object HenonC {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.4f, b: AnyGE = 0.3f, x0: AnyGE = 0.0f, x1: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, x0, x1)
 }
 case class HenonC[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, x0: AnyGE, x1: AnyGE) extends SingleOutUGenSource[R, HenonCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -226,7 +226,7 @@ object LatoocarfianN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = 3.0f, c: AnyGE = 0.5f, d: AnyGE = 0.5f, xi: AnyGE = 0.5f, yi: AnyGE = 0.5f) = apply[audio](audio, freq, a, b, c, d, xi, yi)
 }
 case class LatoocarfianN[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, c: AnyGE, d: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, LatoocarfianNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -251,7 +251,7 @@ object LatoocarfianL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = 3.0f, c: AnyGE = 0.5f, d: AnyGE = 0.5f, xi: AnyGE = 0.5f, yi: AnyGE = 0.5f) = apply[audio](audio, freq, a, b, c, d, xi, yi)
 }
 case class LatoocarfianL[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, c: AnyGE, d: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, LatoocarfianLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -276,7 +276,7 @@ object LatoocarfianC {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = 3.0f, c: AnyGE = 0.5f, d: AnyGE = 0.5f, xi: AnyGE = 0.5f, yi: AnyGE = 0.5f) = apply[audio](audio, freq, a, b, c, d, xi, yi)
 }
 case class LatoocarfianC[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, c: AnyGE, d: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, LatoocarfianCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -301,7 +301,7 @@ object LinCongN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.1f, c: AnyGE = 0.13f, m: AnyGE = 1.0f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, c, m, xi)
 }
 case class LinCongN[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, c: AnyGE, m: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, LinCongNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _c: IIdxSeq[AnyUGenIn] = c.expand
@@ -322,7 +322,7 @@ object LinCongL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.1f, c: AnyGE = 0.13f, m: AnyGE = 1.0f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, c, m, xi)
 }
 case class LinCongL[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, c: AnyGE, m: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, LinCongLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _c: IIdxSeq[AnyUGenIn] = c.expand
@@ -343,7 +343,7 @@ object LinCongC {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.1f, c: AnyGE = 0.13f, m: AnyGE = 1.0f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, c, m, xi)
 }
 case class LinCongC[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, c: AnyGE, m: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, LinCongCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _c: IIdxSeq[AnyUGenIn] = c.expand
@@ -364,7 +364,7 @@ object LorenzL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, s: AnyGE = 10.0f, r: AnyGE = 28.0f, b: AnyGE = 2.667f, h: AnyGE = 0.05f, xi: AnyGE = 0.1f, yi: AnyGE = 0.0f, zi: AnyGE = 0.0f) = apply[audio](audio, freq, s, r, b, h, xi, yi, zi)
 }
 case class LorenzL[R <: Rate](rate: R, freq: AnyGE, s: AnyGE, r: AnyGE, b: AnyGE, h: AnyGE, xi: AnyGE, yi: AnyGE, zi: AnyGE) extends SingleOutUGenSource[R, LorenzLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _s: IIdxSeq[AnyUGenIn] = s.expand
       val _r: IIdxSeq[AnyUGenIn] = r.expand
@@ -391,7 +391,7 @@ object QuadN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = -1.0f, c: AnyGE = -0.75f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, c, xi)
 }
 case class QuadN[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, c: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, QuadNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -412,7 +412,7 @@ object QuadL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = -1.0f, c: AnyGE = -0.75f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, c, xi)
 }
 case class QuadL[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, c: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, QuadLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -433,7 +433,7 @@ object QuadC {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, a: AnyGE = 1.0f, b: AnyGE = -1.0f, c: AnyGE = -0.75f, xi: AnyGE = 0.0f) = apply[audio](audio, freq, a, b, c, xi)
 }
 case class QuadC[R <: Rate](rate: R, freq: AnyGE, a: AnyGE, b: AnyGE, c: AnyGE, xi: AnyGE) extends SingleOutUGenSource[R, QuadCUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _a: IIdxSeq[AnyUGenIn] = a.expand
       val _b: IIdxSeq[AnyUGenIn] = b.expand
@@ -454,7 +454,7 @@ object StandardN {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, k: AnyGE = 1.0f, xi: AnyGE = 0.5f, yi: AnyGE = 0.0f) = apply[audio](audio, freq, k, xi, yi)
 }
 case class StandardN[R <: Rate](rate: R, freq: AnyGE, k: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, StandardNUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _k: IIdxSeq[AnyUGenIn] = k.expand
       val _xi: IIdxSeq[AnyUGenIn] = xi.expand
@@ -473,7 +473,7 @@ object StandardL {
    def ar(freq: AnyGE = SampleRate.ir * 0.5, k: AnyGE = 1.0f, xi: AnyGE = 0.5f, yi: AnyGE = 0.0f) = apply[audio](audio, freq, k, xi, yi)
 }
 case class StandardL[R <: Rate](rate: R, freq: AnyGE, k: AnyGE, xi: AnyGE, yi: AnyGE) extends SingleOutUGenSource[R, StandardLUGen[R]] {
-   def expand = {
+   protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
       val _k: IIdxSeq[AnyUGenIn] = k.expand
       val _xi: IIdxSeq[AnyUGenIn] = xi.expand

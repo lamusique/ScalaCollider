@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 06 20:58:10 GMT 2011
+ * Created: Fri Jan 07 00:11:28 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,7 +12,7 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 case class Unpack1FFT(chain: AnyGE, fftSize: AnyGE, bin: AnyGE, which: AnyGE = 0.0f) extends SingleOutUGenSource[demand, Unpack1FFTUGen] with DemandRated {
-   def expand = {
+   protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       val _fftSize: IIdxSeq[AnyUGenIn] = fftSize.expand
       val _bin: IIdxSeq[AnyUGenIn] = bin.expand

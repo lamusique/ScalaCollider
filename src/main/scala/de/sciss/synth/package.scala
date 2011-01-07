@@ -90,12 +90,13 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //   implicit def geOps( ge: GE ) = ge.ops
 
    implicit def mce[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R, UGenIn[ R ]], rate: R ) : GE[ R, UGenIn[ R ]] = {
-      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
-      outputs match {
-         case IIdxSeq( mono ) => mono
-         case _               => new RatedUGenInSeq( rate, outputs )
-//         case _               => new RatedUGenInSeq( x.head.rate, outputs )
-      }
+      new RatedUGenInSeq( rate, x )
+//      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
+//      outputs match {
+//         case IIdxSeq( mono ) => mono
+//         case _               => new RatedUGenInSeq( rate, outputs )
+////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+//      }
    }
 
    implicit def seqOfGEToGE( x: Seq[ MultiGE ]) : MultiGE = {
@@ -106,7 +107,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //         case _               => new RatedUGenInSeq( x.head.rate, outputs )
       }
    }
-   implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
+//   implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   // or should we add a view bound to seqOfGEToGE?
