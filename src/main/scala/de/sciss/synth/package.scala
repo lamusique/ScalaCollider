@@ -141,7 +141,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
    implicit def thunkToGraphFunction[ R <: Rate, S <: Rate, T ]( thunk: => T )
-      ( implicit view: T => GE[ R, UGenIn[ R ]], r: RateOrder[ control, R, S ]) = new GraphFunction( thunk )
+      ( implicit view: T => Multi[ GE[ R, UGenIn[ R ]]], r: RateOrder[ control, R, S ]) = new GraphFunction( thunk )
 
 //   // Misc
 //   implicit def stringToOption( x: String ) = Some( x )
@@ -168,10 +168,10 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
   
    // explicit methods
-   def play[ R <: Rate, S <: Rate ]( thunk: => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ control, R, S ]) : Synth = play()( thunk )
+   def play[ R <: Rate, S <: Rate ]( thunk: => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ control, R, S ]) : Synth = play()( thunk )
    def play[ R <: Rate, S <: Rate ]( target: Node = Server.default.defaultGroup, outBus: Int = 0,
              fadeTime: Option[Float] = Some( 0.02f ),
-             addAction: AddAction = addToHead )( thunk: => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ control, R, S ]) : Synth = {
+             addAction: AddAction = addToHead )( thunk: => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ control, R, S ]) : Synth = {
       val fun = new GraphFunction( thunk )
       fun.play( target, outBus, fadeTime, addAction )
    }

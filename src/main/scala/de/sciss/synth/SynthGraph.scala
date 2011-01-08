@@ -90,11 +90,11 @@ private[synth] object UGenHelper {
 }
 
 object SynthGraph {
-   def wrapOut[ R <: Rate, S <: Rate ]( thunk: => GE[ R, UGenIn[ R ]], fadeTime: Option[Float] = Some(0.02f) )
+   def wrapOut[ R <: Rate, S <: Rate ]( thunk: => Multi[ GE[ R, UGenIn[ R ]]], fadeTime: Option[Float] = Some(0.02f) )
                                       ( implicit r: RateOrder[ control, R, S ]) =
       SynthGraph {
          val res1 = thunk
-         val rate = res1.rate // .highest( res1.outputs.map( _.rate ): _* )
+         val rate = r.in2 // .highest( res1.outputs.map( _.rate ): _* )
          val res2 = if( (rate == audio) || (rate == control) ) {
 //            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
             val res2 = res1

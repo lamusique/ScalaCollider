@@ -44,16 +44,15 @@ object Mix {
 
 	// support this common idiom
     // (corresponds to fill in sclang)
-	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) = {
-      implicit val rate = r.out
-      Mix[ R ]( mce( IIdxSeq.tabulate( n )( fun )))
-   }
+//	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) = {
+//      implicit val rate = r.out
+//      Mix[ R ]( mce( IIdxSeq.tabulate( n )( i => fun( i ).mexpand )))
+//   }
 
-
-   def fill[ R <: Rate ]( n: Int )( thunk: => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) = {
-      implicit val rate = r.out
-      Mix[ R ]( mce( IIdxSeq.fill( n )( thunk )))
-   }
+//   def fill[ R <: Rate ]( n: Int )( thunk: => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) = {
+//      implicit val rate = r.out
+//      Mix[ R ]( mce( IIdxSeq.fill( n )( thunk )))
+//   }
 }
 
 case class Mix[ R <: Rate ]( elems: Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ])

@@ -171,6 +171,9 @@ trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
 }
 
 trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen[ R ]] extends UGenSource[ U ] with GE[ R, U ]
+trait MultiOutUGenSource[  R <: Rate, +U <: MultiOutUGen[ R ]]  extends UGenSource[ U ] with Multi[ U ] {
+   def mexpand = expand
+}
 
 //class HashCache[ T ]( t: T ) {
 //   override lazy val hashCode() : Int = t.hashCode()

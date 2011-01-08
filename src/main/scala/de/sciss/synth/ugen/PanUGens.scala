@@ -15,7 +15,7 @@ object Pan2 {
    def kr(in: AnyGE, pos: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[control](control, in, pos, level)
    def ar(in: GE[audio, UGenIn[audio]], pos: AnyGE = 0.0f, level: AnyGE = 1.0f) = apply[audio](audio, in, pos, level)
 }
-case class Pan2[R <: Rate](rate: R, in: AnyGE, pos: AnyGE, level: AnyGE) extends UGenSource[Pan2UGen[R]] {
+case class Pan2[R <: Rate](rate: R, in: AnyGE, pos: AnyGE, level: AnyGE) extends MultiOutUGenSource[R, Pan2UGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand

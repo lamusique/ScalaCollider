@@ -42,7 +42,7 @@ object GraphFunction {
    }
 }
 
-class GraphFunction[ R <: Rate, S <: Rate ]( thunk: => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ control, R, S ]) {
+class GraphFunction[ R <: Rate, S <: Rate ]( thunk: => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ control, R, S ]) {
    import GraphFunction._
    
    def play : Synth = {

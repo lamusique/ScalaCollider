@@ -37,7 +37,23 @@ trait Expands[ +R ] {
 //   def expandSize: Int
 }
 
-trait Multi[ +G ] {
+object Multi {
+   implicit def flatten[ R <: Rate, U <: UGenIn[ R ]]( m: Multi[ GE[ R, U ]])( implicit r: R ) : GE[ R, U ] = Flatten( r, m )
+   def joint[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.Joint( g )
+
+   case class Flatten[ R <: Rate, U <: UGenIn[ R ]]( rate: R, m: Multi[ GE[ R, U ]]) extends GE[ R, U ] {
+      override def toString = "Multi.flatten(" + m + ")"
+      def expand : IIdxSeq[ U ] = {
+         m.mexpand.flatMap( _.expand )
+      }
+   }
+
+   case class Joint[ G <: AnyGE ]( g: G ) extends Multi[ G ] {
+      def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
+   }
+}
+
+trait Multi[ +G <: AnyGE ] {
    def mexpand: IIdxSeq[ G ]
 }
 
@@ -50,7 +66,10 @@ trait Multi[ +G ] {
  *
  *    @version 0.11, 26-Aug-10
  */
-trait GE[ R <: Rate, +U <: UGenIn[ R ]] extends Expands[ U ] with Multi[ GE[ R, U ]] {
+object GE {
+   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.joint( g )
+}
+trait GE[ R <: Rate, +U <: UGenIn[ R ]] extends Expands[ U ] /* with Multi[ GE[ R, U ]] */ {
    ge =>
 
 //   type Rate = R
