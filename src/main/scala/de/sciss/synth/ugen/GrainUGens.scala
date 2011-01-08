@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:37 GMT 2011
+ * Created: Sat Jan 08 20:00:49 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -14,7 +14,7 @@ import UGenHelper._
 object GrainIn {
    def ar(in: AnyGE, numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(in, numChannels, trig, dur, pan, envBuf, maxGrains)
 }
-case class GrainIn(in: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainInUGen] with AudioRated {
+case class GrainIn(in: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends MultiOutUGenSource[audio, GrainInUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
@@ -32,12 +32,12 @@ case class GrainIn(in: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, pan: An
       IIdxSeq.tabulate(_exp_)(i => GrainInUGen(_in(i.%(_sz_in)), numChannels, _trig(i.%(_sz_trig)), _dur(i.%(_sz_dur)), _pan(i.%(_sz_pan)), _envBuf(i.%(_sz_envBuf)), _maxGrains(i.%(_sz_maxGrains))))
    }
 }
-case class GrainInUGen(in: AnyUGenIn, numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, in, pan, envBuf, maxGrains)) with AudioRated
+case class GrainInUGen(in: AnyUGenIn, numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, in, pan, envBuf, maxGrains)) with AudioRated
 object GrainSin {
    def ar: GrainSin = ar()
    def ar(numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, freq: AnyGE = 440.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(numChannels, trig, dur, freq, pan, envBuf, maxGrains)
 }
-case class GrainSin(numChannels: Int, trig: AnyGE, dur: AnyGE, freq: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainSinUGen] with AudioRated {
+case class GrainSin(numChannels: Int, trig: AnyGE, dur: AnyGE, freq: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends MultiOutUGenSource[audio, GrainSinUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
@@ -55,12 +55,12 @@ case class GrainSin(numChannels: Int, trig: AnyGE, dur: AnyGE, freq: AnyGE, pan:
       IIdxSeq.tabulate(_exp_)(i => GrainSinUGen(numChannels, _trig(i.%(_sz_trig)), _dur(i.%(_sz_dur)), _freq(i.%(_sz_freq)), _pan(i.%(_sz_pan)), _envBuf(i.%(_sz_envBuf)), _maxGrains(i.%(_sz_maxGrains))))
    }
 }
-case class GrainSinUGen(numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, freq: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, freq, pan, envBuf, maxGrains)) with AudioRated
+case class GrainSinUGen(numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, freq: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, freq, pan, envBuf, maxGrains)) with AudioRated
 object GrainFM {
    def ar: GrainFM = ar()
    def ar(numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, carFreq: AnyGE = 440.0f, modFreq: AnyGE = 200.0f, index: AnyGE = 1.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(numChannels, trig, dur, carFreq, modFreq, index, pan, envBuf, maxGrains)
 }
-case class GrainFM(numChannels: Int, trig: AnyGE, dur: AnyGE, carFreq: AnyGE, modFreq: AnyGE, index: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainFMUGen] with AudioRated {
+case class GrainFM(numChannels: Int, trig: AnyGE, dur: AnyGE, carFreq: AnyGE, modFreq: AnyGE, index: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends MultiOutUGenSource[audio, GrainFMUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
@@ -82,11 +82,11 @@ case class GrainFM(numChannels: Int, trig: AnyGE, dur: AnyGE, carFreq: AnyGE, mo
       IIdxSeq.tabulate(_exp_)(i => GrainFMUGen(numChannels, _trig(i.%(_sz_trig)), _dur(i.%(_sz_dur)), _carFreq(i.%(_sz_carFreq)), _modFreq(i.%(_sz_modFreq)), _index(i.%(_sz_index)), _pan(i.%(_sz_pan)), _envBuf(i.%(_sz_envBuf)), _maxGrains(i.%(_sz_maxGrains))))
    }
 }
-case class GrainFMUGen(numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, carFreq: AnyUGenIn, modFreq: AnyUGenIn, index: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, carFreq, modFreq, index, pan, envBuf, maxGrains)) with AudioRated
+case class GrainFMUGen(numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, carFreq: AnyUGenIn, modFreq: AnyUGenIn, index: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, carFreq, modFreq, index, pan, envBuf, maxGrains)) with AudioRated
 object GrainBuf {
    def ar(buf: AnyGE, numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, speed: AnyGE = 1.0f, pos: AnyGE = 0.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(buf, numChannels, trig, dur, speed, pos, pan, envBuf, maxGrains)
 }
-case class GrainBuf(buf: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, speed: AnyGE, pos: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends UGenSource[GrainBufUGen] with AudioRated {
+case class GrainBuf(buf: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, speed: AnyGE, pos: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends MultiOutUGenSource[audio, GrainBufUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
@@ -108,11 +108,11 @@ case class GrainBuf(buf: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, speed
       IIdxSeq.tabulate(_exp_)(i => GrainBufUGen(_buf(i.%(_sz_buf)), numChannels, _trig(i.%(_sz_trig)), _dur(i.%(_sz_dur)), _speed(i.%(_sz_speed)), _pos(i.%(_sz_pos)), _pan(i.%(_sz_pan)), _envBuf(i.%(_sz_envBuf)), _maxGrains(i.%(_sz_maxGrains))))
    }
 }
-case class GrainBufUGen(buf: AnyUGenIn, numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, speed: AnyUGenIn, pos: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, buf, speed, pos, pan, envBuf, maxGrains)) with AudioRated
+case class GrainBufUGen(buf: AnyUGenIn, numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, speed: AnyUGenIn, pos: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, buf, speed, pos, pan, envBuf, maxGrains)) with AudioRated
 object Warp1 {
    def ar(numChannels: Int, buf: AnyGE, pos: AnyGE = 0.0f, speed: AnyGE = 1.0f, winSize: AnyGE = 0.2f, envBuf: AnyGE = -1.0f, overlaps: AnyGE = 8.0f, winRand: AnyGE = 0.0f, interp: AnyGE = 1.0f) = apply(numChannels, buf, pos, speed, winSize, envBuf, overlaps, winRand, interp)
 }
-case class Warp1(numChannels: Int, buf: AnyGE, pos: AnyGE, speed: AnyGE, winSize: AnyGE, envBuf: AnyGE, overlaps: AnyGE, winRand: AnyGE, interp: AnyGE) extends UGenSource[Warp1UGen] with AudioRated {
+case class Warp1(numChannels: Int, buf: AnyGE, pos: AnyGE, speed: AnyGE, winSize: AnyGE, envBuf: AnyGE, overlaps: AnyGE, winRand: AnyGE, interp: AnyGE) extends MultiOutUGenSource[audio, Warp1UGen] with AudioRated {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _pos: IIdxSeq[AnyUGenIn] = pos.expand
@@ -134,4 +134,4 @@ case class Warp1(numChannels: Int, buf: AnyGE, pos: AnyGE, speed: AnyGE, winSize
       IIdxSeq.tabulate(_exp_)(i => Warp1UGen(numChannels, _buf(i.%(_sz_buf)), _pos(i.%(_sz_pos)), _speed(i.%(_sz_speed)), _winSize(i.%(_sz_winSize)), _envBuf(i.%(_sz_envBuf)), _overlaps(i.%(_sz_overlaps)), _winRand(i.%(_sz_winRand)), _interp(i.%(_sz_interp))))
    }
 }
-case class Warp1UGen(numChannels: Int, buf: AnyUGenIn, pos: AnyUGenIn, speed: AnyUGenIn, winSize: AnyUGenIn, envBuf: AnyUGenIn, overlaps: AnyUGenIn, winRand: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, pos, speed, winSize, envBuf, overlaps, winRand, interp)) with AudioRated
+case class Warp1UGen(numChannels: Int, buf: AnyUGenIn, pos: AnyUGenIn, speed: AnyUGenIn, winSize: AnyUGenIn, envBuf: AnyUGenIn, overlaps: AnyUGenIn, winRand: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, pos, speed, winSize, envBuf, overlaps, winRand, interp)) with AudioRated

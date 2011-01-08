@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:27 GMT 2011
+ * Created: Sat Jan 08 20:00:39 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -129,7 +129,7 @@ object PlayBuf {
    def kr(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, numChannels, buf, speed, trig, startPos, loop, doneAction)
    def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, numChannels, buf, speed, trig, startPos, loop, doneAction)
 }
-case class PlayBuf[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends UGenSource[PlayBufUGen[R]] with HasSideEffect with HasDoneFlag {
+case class PlayBuf[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[R, PlayBufUGen[R]] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
@@ -147,7 +147,7 @@ case class PlayBuf[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, speed: AnyG
       IIdxSeq.tabulate(_exp_)(i => PlayBufUGen(rate, numChannels, _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _trig(i.%(_sz_trig)), _startPos(i.%(_sz_startPos)), _loop(i.%(_sz_loop)), _doneAction(i.%(_sz_doneAction))))
    }
 }
-case class PlayBufUGen[R <: Rate](rate: R, numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, trig: AnyUGenIn, startPos: AnyUGenIn, loop: AnyUGenIn, doneAction: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
+case class PlayBufUGen[R <: Rate](rate: R, numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, trig: AnyUGenIn, startPos: AnyUGenIn, loop: AnyUGenIn, doneAction: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
 object RecordBuf {
    def kr(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
    def ar(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
@@ -181,7 +181,7 @@ object BufRd {
    def kr(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[control](control, numChannels, buf, phase, loop, interp)
    def ar(numChannels: Int, buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[audio](audio, numChannels, buf, phase, loop, interp)
 }
-case class BufRd[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, phase: AnyGE, loop: AnyGE, interp: AnyGE) extends UGenSource[BufRdUGen[R]] {
+case class BufRd[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, phase: AnyGE, loop: AnyGE, interp: AnyGE) extends MultiOutUGenSource[R, BufRdUGen[R]] {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _phase: IIdxSeq[AnyUGenIn] = phase.expand
@@ -195,7 +195,7 @@ case class BufRd[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, phase: AnyGE,
       IIdxSeq.tabulate(_exp_)(i => BufRdUGen(rate, numChannels, _buf(i.%(_sz_buf)), _phase(i.%(_sz_phase)), _loop(i.%(_sz_loop)), _interp(i.%(_sz_interp))))
    }
 }
-case class BufRdUGen[R <: Rate](rate: R, numChannels: Int, buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, phase, loop, interp))
+case class BufRdUGen[R <: Rate](rate: R, numChannels: Int, buf: AnyUGenIn, phase: AnyUGenIn, loop: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, phase, loop, interp))
 object BufWr {
    def kr(in: Multi[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[control](control, in, buf, phase, loop)
    def ar(in: Multi[AnyGE], buf: AnyGE, phase: AnyGE = 0.0f, loop: AnyGE = 1.0f) = apply[audio](audio, in, buf, phase, loop)
@@ -218,7 +218,7 @@ case class BufWrUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn], buf: AnyUGenIn,
 object Pitch {
    def kr(in: AnyGE, initFreq: AnyGE = 440.0f, minFreq: AnyGE = 60.0f, maxFreq: AnyGE = 4000.0f, execFreq: AnyGE = 100.0f, binsPerOct: AnyGE = 16.0f, median: AnyGE = 1.0f, ampThresh: AnyGE = 0.01f, peakThresh: AnyGE = 0.5f, downSample: AnyGE = 1.0f) = apply[control](control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)
 }
-case class Pitch[R <: Rate](rate: R, in: AnyGE, initFreq: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, execFreq: AnyGE, binsPerOct: AnyGE, median: AnyGE, ampThresh: AnyGE, peakThresh: AnyGE, downSample: AnyGE) extends UGenSource[PitchUGen[R]] {
+case class Pitch[R <: Rate](rate: R, in: AnyGE, initFreq: AnyGE, minFreq: AnyGE, maxFreq: AnyGE, execFreq: AnyGE, binsPerOct: AnyGE, median: AnyGE, ampThresh: AnyGE, peakThresh: AnyGE, downSample: AnyGE) extends MultiOutUGenSource[R, PitchUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _initFreq: IIdxSeq[AnyUGenIn] = initFreq.expand
@@ -244,7 +244,7 @@ case class Pitch[R <: Rate](rate: R, in: AnyGE, initFreq: AnyGE, minFreq: AnyGE,
       IIdxSeq.tabulate(_exp_)(i => PitchUGen(rate, _in(i.%(_sz_in)), _initFreq(i.%(_sz_initFreq)), _minFreq(i.%(_sz_minFreq)), _maxFreq(i.%(_sz_maxFreq)), _execFreq(i.%(_sz_execFreq)), _binsPerOct(i.%(_sz_binsPerOct)), _median(i.%(_sz_median)), _ampThresh(i.%(_sz_ampThresh)), _peakThresh(i.%(_sz_peakThresh)), _downSample(i.%(_sz_downSample))))
    }
 }
-case class PitchUGen[R <: Rate](rate: R, in: AnyUGenIn, initFreq: AnyUGenIn, minFreq: AnyUGenIn, maxFreq: AnyUGenIn, execFreq: AnyUGenIn, binsPerOct: AnyUGenIn, median: AnyUGenIn, ampThresh: AnyUGenIn, peakThresh: AnyUGenIn, downSample: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(2)(rate), IIdxSeq(in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample))
+case class PitchUGen[R <: Rate](rate: R, in: AnyUGenIn, initFreq: AnyUGenIn, minFreq: AnyUGenIn, maxFreq: AnyUGenIn, execFreq: AnyUGenIn, binsPerOct: AnyUGenIn, median: AnyUGenIn, ampThresh: AnyUGenIn, peakThresh: AnyUGenIn, downSample: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(2)(rate), IIdxSeq(in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample))
 object BufDelayN {
    def ar(buf: AnyGE, in: AnyGE, delayTime: AnyGE = 0.2f) = apply[audio](audio, buf, in, delayTime)
 }
@@ -589,7 +589,7 @@ case class PitchShiftUGen(in: AnyUGenIn, winSize: AnyUGenIn, pitchRatio: AnyUGen
 object TGrains {
    def ar(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE = 1.0f, centerPos: AnyGE = 0.0f, dur: AnyGE = 0.1f, pan: AnyGE = 0.0f, amp: AnyGE = 0.1f, interp: AnyGE = 4.0f) = apply(numChannels, trig, buf, speed, centerPos, dur, pan, amp, interp)
 }
-case class TGrains(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE, centerPos: AnyGE, dur: AnyGE, pan: AnyGE, amp: AnyGE, interp: AnyGE) extends UGenSource[TGrainsUGen] with AudioRated {
+case class TGrains(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE, centerPos: AnyGE, dur: AnyGE, pan: AnyGE, amp: AnyGE, interp: AnyGE) extends MultiOutUGenSource[audio, TGrainsUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
@@ -611,7 +611,7 @@ case class TGrains(numChannels: Int, trig: AnyGE, buf: AnyGE, speed: AnyGE, cent
       IIdxSeq.tabulate(_exp_)(i => TGrainsUGen(numChannels, _trig(i.%(_sz_trig)), _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _centerPos(i.%(_sz_centerPos)), _dur(i.%(_sz_dur)), _pan(i.%(_sz_pan)), _amp(i.%(_sz_amp)), _interp(i.%(_sz_interp))))
    }
 }
-case class TGrainsUGen(numChannels: Int, trig: AnyUGenIn, buf: AnyUGenIn, speed: AnyUGenIn, centerPos: AnyUGenIn, dur: AnyUGenIn, pan: AnyUGenIn, amp: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, buf, speed, centerPos, dur, pan, amp, interp)) with AudioRated
+case class TGrainsUGen(numChannels: Int, trig: AnyUGenIn, buf: AnyUGenIn, speed: AnyUGenIn, centerPos: AnyUGenIn, dur: AnyUGenIn, pan: AnyUGenIn, amp: AnyUGenIn, interp: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, buf, speed, centerPos, dur, pan, amp, interp)) with AudioRated
 object ScopeOut {
    def ar(buf: AnyGE, in: Multi[AnyGE]) = apply[audio](audio, buf, in)
    def kr(buf: AnyGE, in: Multi[AnyGE]) = apply[control](control, buf, in)

@@ -86,7 +86,8 @@ case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float
 }
 
 private[synth] object UGenHelper {
-   def maxInt( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
+//   def maxInt( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
+   def maxInt( is: Int* ) : Int = is.reduceLeft( math.max( _, _ ))
 }
 
 object SynthGraph {

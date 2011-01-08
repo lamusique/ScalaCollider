@@ -1,5 +1,5 @@
 /*
-*  Mix.scala
+ *  Mix.scala
 *  (ScalaCollider)
 *
 *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
@@ -42,34 +42,89 @@ object Mix {
 //      in.ex
 //   }
 
-	// support this common idiom
-    // (corresponds to fill in sclang)
-//	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) = {
-//      implicit val rate = r.out
-//      Mix[ R ]( mce( IIdxSeq.tabulate( n )( i => fun( i ).mexpand )))
-//   }
+   /**
+    * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
+    */
+	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) = {
+      Mix.Seq( IIdxSeq.tabulate( n )( i => fun( i )))
+   }
 
-//   def fill[ R <: Rate ]( n: Int )( thunk: => GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) = {
-//      implicit val rate = r.out
-//      Mix[ R ]( mce( IIdxSeq.fill( n )( thunk )))
-//   }
+   /**
+    * A mixing idiom that corresponds to @Seq.fill@.
+    */
+   def fill[ R <: Rate ]( n: Int )( thunk: => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) = {
+      Mix.Seq( IIdxSeq.fill( n )( thunk ))
+   }
+
+   /**
+    * This is to implement explicit disjoint multi behavior so that ge's default
+    * (joint) conversion to a multi is not effective.
+    * Thus, any GE mixes down to a mono signal. Multi-output signals use the
+    * other @apply@ method and expand to their original number of channels.
+    */
+   def apply[ R <: Rate ]( elem: GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) : Mix[ R ] = Mix( Multi.disjoint( elem ))
+
+   /**
+    * This is an alias for the @apply@ method using a @GE@ input. This can be used to feed in multi-output
+    * signals which would, using the @apply@ method be not split and summed.
+    */
+   def mono[ R <: Rate ]( elem: GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) : Mix[ R ] = apply( elem )
+
+   def seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ GE[ R, UGenIn[ R ]]]])( implicit r: RateOrder[ R, R, R ]) = Seq( elems )
+
+   case class Seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ GE[ R, UGenIn[ R ]]]])( implicit r: RateOrder[ R, R, R ])
+   extends LazyGE with GE[ R, UGenIn[ R ]] {
+      def rate = r.out
+
+      def force( b: UGenGraphBuilder ) { expand( b )}
+      def expand: IIdxSeq[ UGenIn[ R ]] = {
+         expand( UGenGraph.builder )
+      }
+      private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn[ R ]] = b.visit( this /* cache */, expandUGens )
+      protected def expandUGens : IIdxSeq[ UGenIn[ R ]] = {
+         val seq  = elems.map( sum( _ ))
+         if( seq.isEmpty ) return IIdxSeq.empty
+         val szs  = seq.map( _.size )
+         val zip  = seq.zip( szs )
+         val sz   = UGenHelper.maxInt( szs: _* )
+         IIdxSeq.tabulate( sz )( i => zip.map( tup => tup._1.apply( i % tup._2 ))
+            .reduceLeft( (a, b) => BinaryOpUGen( rate, BinaryOp.Plus, a, b ))) // XXX should use optimization in BinaryOp.Op !
+      }
+   }
+
+   private def sum[ R <: Rate ]( elems: Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) : IIdxSeq[ UGenIn[ R ]] = {
+      val _elems     = elems.mexpand
+      val _sz_elems  = _elems.size
+      if( _sz_elems > 0 ) _elems.reduceLeft( _ + _ ).expand else IIdxSeq.empty
+   }
 }
 
+/**
+ * Mixes the channels of a signal together. Note that, different from sclang, a multi-output UGen whose
+ * inputs are not expanded, will come out with its original number-of-channels, and is not mixed down
+ * to a mono signal (indicated below with an ! exclamation mark). If you want to enforce a mono mix of
+ * a multi-output UGen, you can use the @Mix.mono@ call instead.
+ *
+ * Here are some examples:
+ *
+ * {{{
+ * Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> Line.ar( 440 ) + Line.ar( 660 )
+ * Mix( SinOsc.ar( 440 )) --> Line.ar( 440 )
+ * Mix( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) // !!
+ * Mix.mono( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) --> left + right // !!
+ * Mix( Pan2.ar( SinOsc.ar :: Saw.ar :: Nil )) --> Pan2.ar( SinOsc.ar ) + Pan2.ar( Saw.ar )
+ * }}}
+ */
 case class Mix[ R <: Rate ]( elems: Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ])
 extends LazyGE with GE[ R, UGenIn[ R ]] {
+   import Mix._
+
    def rate = r.out
 
-   final def force( b: UGenGraphBuilder ) { expand( b )}
+   def force( b: UGenGraphBuilder ) { expand( b )}
    def expand: IIdxSeq[ UGenIn[ R ]] = {
       expand( UGenGraph.builder )
    }
    private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn[ R ]] = b.visit( this /* cache */, expandUGens )
-   protected def expandUGens : IIdxSeq[ UGenIn[ R ]] = {
-      val _elems     = elems.mexpand
-      val _sz_elems  = _elems.size
-      if( _sz_elems > 0 ) {
-         val summed = _elems.reduceLeft( _ + _ )
-         summed.expand
-      } else IIdxSeq.empty
-   }
+   protected def expandUGens : IIdxSeq[ UGenIn[ R ]] = sum( elems )
 }

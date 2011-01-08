@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:31 GMT 2011
+ * Created: Sat Jan 08 20:00:43 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -14,7 +14,7 @@ import UGenHelper._
 object DiskIn {
    def ar(numChannels: Int, buf: AnyGE, loop: AnyGE = 0.0f) = apply(numChannels, buf, loop)
 }
-case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends UGenSource[DiskInUGen] with HasSideEffect with AudioRated {
+case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends MultiOutUGenSource[audio, DiskInUGen] with HasSideEffect with AudioRated {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _loop: IIdxSeq[AnyUGenIn] = loop.expand
@@ -24,7 +24,7 @@ case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends UGenSource[
       IIdxSeq.tabulate(_exp_)(i => DiskInUGen(numChannels, _buf(i.%(_sz_buf)), _loop(i.%(_sz_loop))))
    }
 }
-case class DiskInUGen(numChannels: Int, buf: AnyUGenIn, loop: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, loop)) with HasSideEffect with AudioRated
+case class DiskInUGen(numChannels: Int, buf: AnyUGenIn, loop: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, loop)) with HasSideEffect with AudioRated
 object DiskOut {
    def ar(buf: AnyGE, in: Multi[GE[audio, UGenIn[audio]]]) = apply(buf, in)
 }
@@ -42,7 +42,7 @@ case class DiskOutUGen(buf: AnyUGenIn, in: IIdxSeq[AnyUGenIn]) extends SingleOut
 object VDiskIn {
    def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, loop: AnyGE = 0.0f, sendID: AnyGE = 0.0f) = apply(numChannels, buf, speed, loop, sendID)
 }
-case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends UGenSource[VDiskInUGen] with HasSideEffect with AudioRated {
+case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends MultiOutUGenSource[audio, VDiskInUGen] with HasSideEffect with AudioRated {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
@@ -56,4 +56,4 @@ case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, send
       IIdxSeq.tabulate(_exp_)(i => VDiskInUGen(numChannels, _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _loop(i.%(_sz_loop)), _sendID(i.%(_sz_sendID))))
    }
 }
-case class VDiskInUGen(numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, loop: AnyUGenIn, sendID: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, speed, loop, sendID)) with HasSideEffect with AudioRated
+case class VDiskInUGen(numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, loop: AnyUGenIn, sendID: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, speed, loop, sendID)) with HasSideEffect with AudioRated

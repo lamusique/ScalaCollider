@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:32 GMT 2011
+ * Created: Sat Jan 08 20:00:44 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -708,13 +708,13 @@ case class DetectSilenceUGen[R <: Rate](rate: R, in: AnyUGenIn, amp: AnyUGenIn, 
 object Hilbert {
    def ar(in: AnyGE) = apply[audio](audio, in)
 }
-case class Hilbert[R <: Rate](rate: R, in: AnyGE) extends UGenSource[HilbertUGen[R]] {
+case class Hilbert[R <: Rate](rate: R, in: AnyGE) extends MultiOutUGenSource[R, HilbertUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => HilbertUGen(rate, _in(i)))
    }
 }
-case class HilbertUGen[R <: Rate](rate: R, in: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(2)(rate), IIdxSeq(in))
+case class HilbertUGen[R <: Rate](rate: R, in: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(2)(rate), IIdxSeq(in))
 object FreqShift {
    def ar(in: AnyGE, freq: AnyGE = 0.0f, phase: AnyGE = 0.0f) = apply[audio](audio, in, freq, phase)
 }

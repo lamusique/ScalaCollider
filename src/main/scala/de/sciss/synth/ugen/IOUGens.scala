@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:37 GMT 2011
+ * Created: Sat Jan 08 20:00:50 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -14,7 +14,7 @@ import UGenHelper._
 object OffsetOut {
    def ar(bus: AnyGE, in: Multi[GE[audio, UGenIn[audio]]]) = apply(bus, in)
 }
-case class OffsetOut(bus: AnyGE, in: Multi[AnyGE]) extends UGenSource[OffsetOutUGen] with AudioRated with WritesBus {
+case class OffsetOut(bus: AnyGE, in: Multi[AnyGE]) extends ZeroOutUGenSource[OffsetOutUGen] with AudioRated with WritesBus {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _in: IIdxSeq[AnyGE] = in.mexpand
@@ -31,12 +31,12 @@ object LocalIn {
    def ar: LocalIn[audio] = ar()
    def ar(numChannels: Int = 1) = apply[audio](audio, numChannels)
 }
-case class LocalIn[R <: Rate](rate: R, numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq.empty)
+case class LocalIn[R <: Rate](rate: R, numChannels: Int) extends MultiOutUGen[R](IIdxSeq.fill(numChannels)(rate), IIdxSeq.empty)
 object XOut {
    def ar(bus: AnyGE, in: Multi[GE[audio, UGenIn[audio]]], xfade: AnyGE) = apply[audio](audio, bus, in, xfade)
    def kr(bus: AnyGE, in: Multi[AnyGE], xfade: AnyGE) = apply[control](control, bus, in, xfade)
 }
-case class XOut[R <: Rate](rate: R, bus: AnyGE, in: Multi[AnyGE], xfade: AnyGE) extends UGenSource[XOutUGen[R]] with WritesBus {
+case class XOut[R <: Rate](rate: R, bus: AnyGE, in: Multi[AnyGE], xfade: AnyGE) extends ZeroOutUGenSource[XOutUGen[R]] with WritesBus {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _xfade: IIdxSeq[AnyUGenIn] = xfade.expand
@@ -52,7 +52,7 @@ case class XOutUGen[R <: Rate](rate: R, bus: AnyUGenIn, in: IIdxSeq[AnyUGenIn], 
 object ReplaceOut {
    def ar(bus: AnyGE, in: Multi[GE[audio, UGenIn[audio]]]) = apply(bus, in)
 }
-case class ReplaceOut(bus: AnyGE, in: Multi[AnyGE]) extends UGenSource[ReplaceOutUGen] with AudioRated with WritesBus {
+case class ReplaceOut(bus: AnyGE, in: Multi[AnyGE]) extends ZeroOutUGenSource[ReplaceOutUGen] with AudioRated with WritesBus {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _in: IIdxSeq[AnyGE] = in.mexpand
@@ -68,7 +68,7 @@ object Out {
    def kr(bus: AnyGE, in: Multi[AnyGE]) = apply[control](control, bus, in)
    def ir(bus: AnyGE, in: Multi[AnyGE]) = apply[scalar](scalar, bus, in)
 }
-case class Out[R <: Rate](rate: R, bus: AnyGE, in: Multi[AnyGE]) extends UGenSource[OutUGen[R]] with WritesBus {
+case class Out[R <: Rate](rate: R, bus: AnyGE, in: Multi[AnyGE]) extends ZeroOutUGenSource[OutUGen[R]] with WritesBus {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _in: IIdxSeq[AnyGE] = in.mexpand
@@ -83,7 +83,7 @@ object LocalOut {
    def kr(in: Multi[AnyGE]) = apply[control](control, in)
    def ar(in: Multi[GE[audio, UGenIn[audio]]]) = apply[audio](audio, in)
 }
-case class LocalOut[R <: Rate](rate: R, in: Multi[AnyGE]) extends UGenSource[LocalOutUGen[R]] {
+case class LocalOut[R <: Rate](rate: R, in: Multi[AnyGE]) extends ZeroOutUGenSource[LocalOutUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyGE] = in.mexpand
       IIdxSeq.tabulate(_in.size)(i => LocalOutUGen(rate, _in(i).expand))
@@ -95,17 +95,17 @@ object In {
    def kr(bus: AnyGE, numChannels: Int = 1) = apply[control](control, bus, numChannels)
    def ar(bus: AnyGE, numChannels: Int = 1) = apply[audio](audio, bus, numChannels)
 }
-case class In[R <: Rate](rate: R, bus: AnyGE, numChannels: Int) extends UGenSource[InUGen[R]] {
+case class In[R <: Rate](rate: R, bus: AnyGE, numChannels: Int) extends MultiOutUGenSource[R, InUGen[R]] {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       IIdxSeq.tabulate(_bus.size)(i => InUGen(rate, _bus(i), numChannels))
    }
 }
-case class InUGen[R <: Rate](rate: R, bus: AnyUGenIn, numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(bus))
+case class InUGen[R <: Rate](rate: R, bus: AnyUGenIn, numChannels: Int) extends MultiOutUGen[R](IIdxSeq.fill(numChannels)(rate), IIdxSeq(bus))
 object LagIn {
    def kr(bus: AnyGE, numChannels: Int = 1, lag: AnyGE = 0.1f) = apply[control](control, bus, numChannels, lag)
 }
-case class LagIn[R <: Rate](rate: R, bus: AnyGE, numChannels: Int, lag: AnyGE) extends UGenSource[LagInUGen[R]] {
+case class LagIn[R <: Rate](rate: R, bus: AnyGE, numChannels: Int, lag: AnyGE) extends MultiOutUGenSource[R, LagInUGen[R]] {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _lag: IIdxSeq[AnyUGenIn] = lag.expand
@@ -115,24 +115,24 @@ case class LagIn[R <: Rate](rate: R, bus: AnyGE, numChannels: Int, lag: AnyGE) e
       IIdxSeq.tabulate(_exp_)(i => LagInUGen(rate, _bus(i.%(_sz_bus)), numChannels, _lag(i.%(_sz_lag))))
    }
 }
-case class LagInUGen[R <: Rate](rate: R, bus: AnyUGenIn, numChannels: Int, lag: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(bus, lag))
+case class LagInUGen[R <: Rate](rate: R, bus: AnyUGenIn, numChannels: Int, lag: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(numChannels)(rate), IIdxSeq(bus, lag))
 object InFeedback {
    def ar(bus: AnyGE, numChannels: Int = 1) = apply(bus, numChannels)
 }
-case class InFeedback(bus: AnyGE, numChannels: Int) extends UGenSource[InFeedbackUGen] with AudioRated {
+case class InFeedback(bus: AnyGE, numChannels: Int) extends MultiOutUGenSource[audio, InFeedbackUGen] with AudioRated {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       IIdxSeq.tabulate(_bus.size)(i => InFeedbackUGen(_bus(i), numChannels))
    }
 }
-case class InFeedbackUGen(bus: AnyUGenIn, numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(bus)) with AudioRated
+case class InFeedbackUGen(bus: AnyUGenIn, numChannels: Int) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(bus)) with AudioRated
 object InTrig {
    def kr(bus: AnyGE, numChannels: Int = 1) = apply(bus, numChannels)
 }
-case class InTrig(bus: AnyGE, numChannels: Int) extends UGenSource[InTrigUGen] with ControlRated {
+case class InTrig(bus: AnyGE, numChannels: Int) extends MultiOutUGenSource[control, InTrigUGen] with ControlRated {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       IIdxSeq.tabulate(_bus.size)(i => InTrigUGen(_bus(i), numChannels))
    }
 }
-case class InTrigUGen(bus: AnyUGenIn, numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(control), IIdxSeq(bus)) with ControlRated
+case class InTrigUGen(bus: AnyUGenIn, numChannels: Int) extends MultiOutUGen[control](IIdxSeq.fill(numChannels)(control), IIdxSeq(bus)) with ControlRated

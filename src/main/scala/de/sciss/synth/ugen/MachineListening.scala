@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:39 GMT 2011
+ * Created: Sat Jan 08 20:00:51 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -60,13 +60,13 @@ case class KeyTrackUGen(chain: AnyUGenIn, keyDecay: AnyUGenIn, chromaLeak: AnyUG
 object MFCC {
    def kr(chain: AnyGE, numCoeffs: Int = 13) = apply(chain, numCoeffs)
 }
-case class MFCC(chain: AnyGE, numCoeffs: Int) extends UGenSource[MFCCUGen] with ControlRated {
+case class MFCC(chain: AnyGE, numCoeffs: Int) extends MultiOutUGenSource[control, MFCCUGen] with ControlRated {
    protected def expandUGens = {
       val _chain: IIdxSeq[AnyUGenIn] = chain.expand
       IIdxSeq.tabulate(_chain.size)(i => MFCCUGen(_chain(i), numCoeffs))
    }
 }
-case class MFCCUGen(chain: AnyUGenIn, numCoeffs: Int) extends MultiOutUGen(IIdxSeq.fill(numCoeffs)(control), IIdxSeq(chain)) with ControlRated
+case class MFCCUGen(chain: AnyUGenIn, numCoeffs: Int) extends MultiOutUGen[control](IIdxSeq.fill(numCoeffs)(control), IIdxSeq(chain)) with ControlRated
 object Onsets {
    def kr(chain: AnyGE, thresh: AnyGE = 0.5f, fun: AnyGE = 3.0f, decay: AnyGE = 1.0f, noiseFloor: AnyGE = 0.1f, minGap: AnyGE = 10.0f, medianSpan: AnyGE = 11.0f, whType: AnyGE = 1.0f, raw: AnyGE = 0.0f) = apply(chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw)
 }
@@ -98,7 +98,7 @@ case class OnsetsUGen(chain: AnyUGenIn, thresh: AnyUGenIn, fun: AnyUGenIn, decay
 object BeatTrack2 {
    def kr(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE = 2.0f, phaseSpacing: AnyGE = 0.02f, lock: AnyGE = 0.0f, weighting: AnyGE = -2.1f) = apply(bus, numChannels, winSize, phaseSpacing, lock, weighting)
 }
-case class BeatTrack2(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE, phaseSpacing: AnyGE, lock: AnyGE, weighting: AnyGE) extends UGenSource[BeatTrack2UGen] with ControlRated {
+case class BeatTrack2(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE, phaseSpacing: AnyGE, lock: AnyGE, weighting: AnyGE) extends MultiOutUGenSource[control, BeatTrack2UGen] with ControlRated {
    protected def expandUGens = {
       val _bus: IIdxSeq[AnyUGenIn] = bus.expand
       val _numChannels: IIdxSeq[AnyUGenIn] = numChannels.expand
@@ -116,7 +116,7 @@ case class BeatTrack2(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE, phaseSpaci
       IIdxSeq.tabulate(_exp_)(i => BeatTrack2UGen(_bus(i.%(_sz_bus)), _numChannels(i.%(_sz_numChannels)), _winSize(i.%(_sz_winSize)), _phaseSpacing(i.%(_sz_phaseSpacing)), _lock(i.%(_sz_lock)), _weighting(i.%(_sz_weighting))))
    }
 }
-case class BeatTrack2UGen(bus: AnyUGenIn, numChannels: AnyUGenIn, winSize: AnyUGenIn, phaseSpacing: AnyUGenIn, lock: AnyUGenIn, weighting: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(6)(control), IIdxSeq(bus, numChannels, winSize, phaseSpacing, lock, weighting)) with ControlRated
+case class BeatTrack2UGen(bus: AnyUGenIn, numChannels: AnyUGenIn, winSize: AnyUGenIn, phaseSpacing: AnyUGenIn, lock: AnyUGenIn, weighting: AnyUGenIn) extends MultiOutUGen[control](IIdxSeq.fill(6)(control), IIdxSeq(bus, numChannels, winSize, phaseSpacing, lock, weighting)) with ControlRated
 object SpecFlatness {
    def kr(chain: AnyGE) = apply(chain)
 }

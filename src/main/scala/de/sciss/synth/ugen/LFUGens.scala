@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:37 GMT 2011
+ * Created: Sat Jan 08 20:00:50 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -247,18 +247,18 @@ object DC {
    def kr(in: Multi[AnyGE]) = apply[control](control, in)
    def ar(in: Multi[AnyGE]) = apply[audio](audio, in)
 }
-case class DC[R <: Rate](rate: R, in: Multi[AnyGE]) extends UGenSource[DCUGen[R]] {
+case class DC[R <: Rate](rate: R, in: Multi[AnyGE]) extends MultiOutUGenSource[R, DCUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyGE] = in.mexpand
       IIdxSeq.tabulate(_in.size)(i => DCUGen(rate, _in(i).expand))
    }
 }
-case class DCUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn]) extends MultiOutUGen(IIdxSeq.fill(in.size)(rate), in)
+case class DCUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn]) extends MultiOutUGen[R](IIdxSeq.fill(in.size)(rate), in)
 object Silent {
    def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
 }
-case class Silent(numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
+case class Silent(numChannels: Int) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
 object Line {
    def ar: Line[audio] = ar()
    def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, start, end, dur, doneAction)

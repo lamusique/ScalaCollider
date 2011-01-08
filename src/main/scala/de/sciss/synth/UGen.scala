@@ -153,7 +153,7 @@ trait LazyGE /* extends Expands[ UGen ] */ {
    def force( b: UGenGraphBuilder ) : Unit
 }
 
-trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
+sealed trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
    private lazy val cache = new LazyGECache( this )
 
 //
@@ -170,6 +170,7 @@ trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
    protected def expandUGens : IIdxSeq[ U ]
 }
 
+trait ZeroOutUGenSource[ +U <: ZeroOutUGen ] extends UGenSource[ U ]
 trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen[ R ]] extends UGenSource[ U ] with GE[ R, U ]
 trait MultiOutUGenSource[  R <: Rate, +U <: MultiOutUGen[ R ]]  extends UGenSource[ U ] with Multi[ U ] {
    def mexpand = expand

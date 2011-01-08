@@ -49,14 +49,14 @@ object Control {
    def ir( values: Float* ) : Control[ scalar ] = ir( IIdxSeq( values: _* ))
    def kr( values: Float* ) : Control[ control ]= kr( IIdxSeq( values: _* ))
 }
-case class Control[R <: Rate]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ]) extends UGenSource[ ControlUGen ] {
+case class Control[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ R, ControlUGen[ R ]] {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( ControlUGen( rate, values.size, specialIndex ))
    }
 }
 
-case class ControlUGen private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
+case class ControlUGen[ R <: Rate ]( rate: R, numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty ) with HasSideEffect
 
 case class ControlProxy[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ])( val factory: ControlFactory[ R ])
@@ -72,15 +72,15 @@ object TrigControl {
    def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = TrigControl( values, name )
    def kr( values: Float* ) : TrigControl = kr( IIdxSeq( values: _* ))
 }
-case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends Expands[ TrigControlUGen ] {
-   def expand = {
+case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ control, TrigControlUGen ] {
+   protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( TrigControlUGen( values.size, specialIndex ))
    }
 }
 
 case class TrigControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) with ControlRated with HasSideEffect
+extends MultiOutUGen[ control ]( IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) with ControlRated with HasSideEffect
 
 case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill( values.size )( control )) with ControlRated {
@@ -97,15 +97,15 @@ object AudioControl {
    def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = AudioControl( values, name )
    def ar( values: Float* ) : AudioControl = ar( IIdxSeq( values: _* ))
 }
-case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends Expands[ AudioControlUGen ] {
-   def expand = {
+case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ audio, AudioControlUGen ] {
+   protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( AudioControlUGen( values.size, specialIndex ))
    }
 }
 
 case class AudioControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
+extends MultiOutUGen[ audio ]( IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
 
 case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill( values.size )( audio )) with AudioRated {

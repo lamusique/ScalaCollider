@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:32 GMT 2011
+ * Created: Sat Jan 08 20:00:44 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -68,7 +68,7 @@ case class Convolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenI
 object StereoConvolution2L {
    def ar(in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernelL, kernelR, trig, frameSize, fadePeriods)
 }
-case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends UGenSource[StereoConvolution2LUGen[R]] {
+case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends MultiOutUGenSource[R, StereoConvolution2LUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _kernelL: IIdxSeq[AnyUGenIn] = kernelL.expand
@@ -86,7 +86,7 @@ case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, ke
       IIdxSeq.tabulate(_exp_)(i => StereoConvolution2LUGen(rate, _in(i.%(_sz_in)), _kernelL(i.%(_sz_kernelL)), _kernelR(i.%(_sz_kernelR)), _trig(i.%(_sz_trig)), _frameSize(i.%(_sz_frameSize)), _fadePeriods(i.%(_sz_fadePeriods))))
    }
 }
-case class StereoConvolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernelL: AnyUGenIn, kernelR: AnyUGenIn, trig: AnyUGenIn, frameSize: AnyUGenIn, fadePeriods: AnyUGenIn) extends MultiOutUGen(IIdxSeq.fill(2)(rate), IIdxSeq(in, kernelL, kernelR, trig, frameSize, fadePeriods))
+case class StereoConvolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernelL: AnyUGenIn, kernelR: AnyUGenIn, trig: AnyUGenIn, frameSize: AnyUGenIn, fadePeriods: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(2)(rate), IIdxSeq(in, kernelL, kernelR, trig, frameSize, fadePeriods))
 object Convolution3 {
    def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
 }

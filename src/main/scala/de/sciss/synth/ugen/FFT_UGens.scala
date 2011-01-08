@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jan 07 14:02:31 GMT 2011
+ * Created: Sat Jan 08 20:00:43 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,15 +12,6 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 case class FFT(buf: AnyGE, in: AnyGE, hop: AnyGE = 0.5f, winType: AnyGE = 0.0f, active: AnyGE = 1.0f, winSize: AnyGE = 0.0f) extends SingleOutUGenSource[control, FFTUGen] with ControlRated with WritesFFT {
-//   def expandSize = {
-//      val _sz_buf       = buf.expandSize
-//      val _sz_in        = in.expandSize
-//      val _sz_hop       = hop.expandSize
-//      val _sz_winType   = winType.expandSize
-//      val _sz_active    = active.expandSize
-//      val _sz_winSize   = winSize.expandSize
-//      maxInt(_sz_buf, _sz_in, _sz_hop, _sz_winType, _sz_active, _sz_winSize)
-//   }
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _in: IIdxSeq[AnyUGenIn] = in.expand

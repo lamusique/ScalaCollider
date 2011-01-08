@@ -40,6 +40,7 @@ trait Expands[ +R ] {
 object Multi {
    implicit def flatten[ R <: Rate, U <: UGenIn[ R ]]( m: Multi[ GE[ R, U ]])( implicit r: R ) : GE[ R, U ] = Flatten( r, m )
    def joint[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.Joint( g )
+   def disjoint[ R <: Rate ]( g: GE[ R, UGenIn[ R ]]) : Multi[ GE[ R, UGenIn[ R ]]] = Multi.Disjoint( g )
 
    case class Flatten[ R <: Rate, U <: UGenIn[ R ]]( rate: R, m: Multi[ GE[ R, U ]]) extends GE[ R, U ] {
       override def toString = "Multi.flatten(" + m + ")"
@@ -50,6 +51,10 @@ object Multi {
 
    case class Joint[ G <: AnyGE ]( g: G ) extends Multi[ G ] {
       def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
+   }
+
+   case class Disjoint[ R <: Rate ]( g: GE[ R, UGenIn[ R ]]) extends Multi[ GE[ R, UGenIn[ R ]]] {
+      def mexpand = IIdxSeq( g.expand: _* )
    }
 }
 
