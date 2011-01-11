@@ -405,7 +405,7 @@ x.set("trig" -> 1, "freq" -> 880)
 
 //////////////////////////////////////////////////////////////////////////
 
-// waiting for SendTrig replies . XXX currently doesn't work
+// waiting for SendTrig replies
 
 val x = play {
     SendTrig.kr( MouseButton.kr( lag = 0 ), MouseX.kr( lag = 0 )) // warning: different arg order!
@@ -484,10 +484,8 @@ import Float.{ PositiveInfinity => inf }
 
 val x = play {
    val freq = DemandEnvGen.ar(
-      Dseq( List( 204, 400, 201, 502, 300, 200 ), inf ),
-      Drand( List( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
+      Dseq( mc( 204, 400, 201, 502, 300, 200 ), inf ),
+      Drand( mc( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
       cubShape.id )
    SinOsc.ar( freq * mc( 1, 1.01 )) * 0.1
 }
-
-val x = IFFT( 0 ) * mc( 0.5, 0.5 )

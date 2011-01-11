@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Jan 08 20:00:53 GMT 2011
+ * Created: Sun Jan 09 18:05:58 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -115,22 +115,22 @@ case class Gate[R <: Rate](rate: R, in: AnyGE, gate: AnyGE) extends SingleOutUGe
 }
 case class GateUGen[R <: Rate](rate: R, in: AnyUGenIn, gate: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, gate))
 object Schmidt {
-   def kr(trig: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[control](control, trig, lo, hi)
-   def ar(trig: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[audio](audio, trig, lo, hi)
+   def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[control](control, in, lo, hi)
+   def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[audio](audio, in, lo, hi)
 }
-case class Schmidt[R <: Rate](rate: R, trig: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, SchmidtUGen[R]] {
+case class Schmidt[R <: Rate](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, SchmidtUGen[R]] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _in: IIdxSeq[AnyUGenIn] = in.expand
       val _lo: IIdxSeq[AnyUGenIn] = lo.expand
       val _hi: IIdxSeq[AnyUGenIn] = hi.expand
-      val _sz_trig = _trig.size
+      val _sz_in = _in.size
       val _sz_lo = _lo.size
       val _sz_hi = _hi.size
-      val _exp_ = maxInt(_sz_trig, _sz_lo, _sz_hi)
-      IIdxSeq.tabulate(_exp_)(i => SchmidtUGen(rate, _trig(i.%(_sz_trig)), _lo(i.%(_sz_lo)), _hi(i.%(_sz_hi))))
+      val _exp_ = maxInt(_sz_in, _sz_lo, _sz_hi)
+      IIdxSeq.tabulate(_exp_)(i => SchmidtUGen(rate, _in(i.%(_sz_in)), _lo(i.%(_sz_lo)), _hi(i.%(_sz_hi))))
    }
 }
-case class SchmidtUGen[R <: Rate](rate: R, trig: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, lo, hi))
+case class SchmidtUGen[R <: Rate](rate: R, in: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, lo, hi))
 object PulseDivider {
    def kr(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply[control](control, trig, div, start)
    def ar(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply[audio](audio, trig, div, start)
