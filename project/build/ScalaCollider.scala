@@ -1,9 +1,9 @@
 import sbt._
 import java.io.{ IOException, RandomAccessFile }
 
-class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) { 
-   val dep1 = "de.sciss" %% "scalaosc" % "0.20"
-   val dep2 = "de.sciss" %% "scalaaudiofile" % "0.14"
+class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) {
+   val dep1 = "de.sciss" %% "scalaosc" % "0.21"
+   val dep2 = "de.sciss" %% "scalaaudiofile" % "0.15"
    lazy val demo = demoAction
 
    protected def demoAction = {
@@ -15,6 +15,10 @@ class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) {
            new String( buf, "UTF-8" )
        }
        catch { case e: IOException => { e.printStackTrace(); "" }}
-       consoleTask( consoleClasspath, consoleInit ) describedAs "Starts a ScalaCollider REPL, initializing from file \"console-startup.txt\"."
+       consoleTask( consoleClasspath, Nil, consoleInit ) describedAs "Starts a ScalaCollider REPL, initializing from file \"console-startup.txt\"."
    }
+
+// NOTE: these don't have any effect. you need to edit the sbt launch script to increase JVM heap size!
+//   override def javaCompileOptions = JavaCompileOption( "-Xmx1024m" ) :: JavaCompileOption( "-Xss1m" ) ::
+//      JavaCompileOption( "-XX:MaxPermSize=256m" ) :: JavaCompileOption( "-XX:PermSize=64m" ) :: JavaCompileOption( "-server" ) :: Nil
 }
