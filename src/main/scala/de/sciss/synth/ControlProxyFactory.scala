@@ -52,8 +52,8 @@ class ControlProxyFactory( name: String ) {
 
    @inline private def ir( values: IIdxSeq[ Float ]) : GE  = ControlProxy( scalar, values, Some( name ))
    @inline private def kr( values: IIdxSeq[ Float ]) : GE  = ControlProxy( control, values, Some( name ))
-   @inline private def tr( values: IIdxSeq[ Float ]) : GE  = TrigControlProxy( control, values, Some( name ))
-   @inline private def ar( values: IIdxSeq[ Float ]) : GE  = AudioControlProxy( control, values, Some( name ))
+   @inline private def tr( values: IIdxSeq[ Float ]) : GE  = TrigControlProxy( values, Some( name ))
+   @inline private def ar( values: IIdxSeq[ Float ]) : GE  = AudioControlProxy( values, Some( name ))
 //   @inline private def kr( specs: IIdxSeq[ (GE, Float) ]) : GE = {
 //
 //      LagControlProxy( control, values, Some( name ))

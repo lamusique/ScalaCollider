@@ -108,8 +108,8 @@ object TrigControl {
 case class TrigControl private[ugen]( numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( control, numChannels ) with ControlRated with SideEffectUGen
 
-case class TrigControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ TrigControlProxy ]( rate, values.size ) {
+case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ TrigControlProxy ]( control, values.size ) with ControlRated {
    def factory = TrigControlFactory
 
    override def toString: String = {
@@ -149,8 +149,8 @@ object AudioControl {
 case class AudioControl private[ugen]( numChannels: Int, override val specialIndex: Int )
 extends MultiOutUGen( audio, numChannels ) with AudioRated with SideEffectUGen
 
-case class AudioControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ AudioControlProxy ]( rate, values.size ) {
+case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ AudioControlProxy ]( audio, values.size ) with AudioRated {
    def factory = AudioControlFactory
 
    override def toString: String = {
