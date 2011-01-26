@@ -28,9 +28,9 @@
 
 package de.sciss
 
-import de.sciss.osc.{ OSCMessage }
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
+import osc.{OSCPacket, OSCMessage}
 import synth.{ addToHead, AddAction, AudioBus, ControlBus, Completion, Constant, ControlProxyFactory, DoneAction, GE,
                GraphFunction, Group, MultiControlSetMap, MultiControlABusMap, MultiControlKBusMap, Node,
                RichDouble, RichFloat, RichInt, Server, SingleControlABusMap, SingleControlKBusMap, SingleControlSetMap,
@@ -134,16 +134,16 @@ package object synth extends de.sciss.synth.LowPriorityImplicits {
    // Buffer convenience
 //   implicit def actionToCompletion( fun: Buffer => Unit ) : Buffer.Completion = Buffer.action( fun )
 //   import Buffer.{ Completion => Comp }
-   def message[T]( msg: => OSCMessage ) = Completion[T]( Some( _ => msg ), None )
-   def message[T]( msg: T => OSCMessage ) = Completion[T]( Some( msg ), None )
+   def message[T]( p: => OSCPacket ) = Completion[T]( Some( _ => p ), None )
+   def message[T]( p: T => OSCPacket ) = Completion[T]( Some( p ), None )
    def action[T]( action: => Unit ) = Completion[T]( None, Some( _ => action ))
    def action[T]( action: T => Unit ) = Completion[T]( None, Some( action ))
-   def complete[T]( msg: => OSCMessage, action: => Unit ) = Completion[T]( Some( _ => msg ), Some( _ => action ))
-   def complete[T]( msg: T => OSCMessage, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
-   def complete[T]( msg: => OSCMessage, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
-   def complete[T]( msg: T => OSCMessage, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
-   implicit def messageToCompletion[T]( msg: OSCMessage ) = message[T]( msg )
-   implicit def messageToOption( msg: OSCMessage ) = Some( msg )
+   def complete[T]( p: => OSCPacket, action: => Unit ) = Completion[T]( Some( _ => p ), Some( _ => action ))
+   def complete[T]( p: T => OSCPacket, action: => Unit ) = Completion[T]( Some( p ), Some( _ => action ))
+   def complete[T]( p: => OSCPacket, action: T => Unit ) = Completion[T]( Some( _ => p ), Some( action ))
+   def complete[T]( p: T => OSCPacket, action: T => Unit ) = Completion[T]( Some( p ), Some( action ))
+   implicit def messageToCompletion[T]( p: OSCPacket ) = message[T]( p )
+   implicit def messageToOption( p: OSCPacket ) = Some( p )
 
    // Nodes
 //   implicit def intToNode( id: Int ) : Node = new Group( Server.default, id )
