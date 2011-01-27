@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -11,9 +11,21 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
+/**
+ * @see [[de.sciss.synth.ugen.Convolution2L]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution2]]
+ * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
+ */
 object Convolution {
    def ar(in: AnyGE, kernel: AnyGE, frameSize: AnyGE) = apply[audio](audio, in, kernel, frameSize)
 }
+/**
+ * @see [[de.sciss.synth.ugen.Convolution2L]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution2]]
+ * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
+ */
 case class Convolution[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, frameSize: AnyGE) extends SingleOutUGenSource[R, ConvolutionUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -27,9 +39,47 @@ case class Convolution[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, frameSize: 
    }
 }
 case class ConvolutionUGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenIn, frameSize: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, kernel, frameSize))
+/**
+ * A frequency-domain convolution UGen using a fixed kernel which can be updated
+ * by a trigger signal. The delay caused by the convolution when the kernel is a dirac impulse
+ * is equal to `frameSize - (controlBlockSize + 1)` (measured august 2010), so for a frameSize
+ * of 2048 and a controlBlockSize of 64, this is 1983 sample frames.
+ * 
+ * @see [[de.sciss.synth.ugen.Convolution2L]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution]]
+ * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
+ */
 object Convolution2 {
-   def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
+   
+/**
+ * @param in              the realtime input to be convolved
+ * @param kernel          buffer identifier for the fixed kernel, which may be modulated in combination with the trigger
+ * @param trig            updates the kernel on a change from non-positive to positive (<= 0 to >0)
+ * @param frameSize       size of the kernel. this must be a power of two. the FFT calculated internally
+ *                        by the UGen has a size of twice this value. The maximum allowed frameSize
+ *                        is 65536(?).
+ */
+def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
 }
+/**
+ * A frequency-domain convolution UGen using a fixed kernel which can be updated
+ * by a trigger signal. The delay caused by the convolution when the kernel is a dirac impulse
+ * is equal to `frameSize - (controlBlockSize + 1)` (measured august 2010), so for a frameSize
+ * of 2048 and a controlBlockSize of 64, this is 1983 sample frames.
+ * 
+ * @param in              the realtime input to be convolved
+ * @param kernel          buffer identifier for the fixed kernel, which may be modulated in combination with the trigger
+ * @param trig            updates the kernel on a change from non-positive to positive (<= 0 to >0)
+ * @param frameSize       size of the kernel. this must be a power of two. the FFT calculated internally
+ *                        by the UGen has a size of twice this value. The maximum allowed frameSize
+ *                        is 65536(?).
+ * 
+ * @see [[de.sciss.synth.ugen.Convolution2L]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution]]
+ * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
+ */
 case class Convolution2[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends SingleOutUGenSource[R, Convolution2UGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -45,9 +95,21 @@ case class Convolution2[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyG
    }
 }
 case class Convolution2UGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenIn, trig: AnyUGenIn, frameSize: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, kernel, trig, frameSize))
+/**
+ * @see [[de.sciss.synth.ugen.Convolution2]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution]]
+ * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
+ */
 object Convolution2L {
    def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernel, trig, frameSize, fadePeriods)
 }
+/**
+ * @see [[de.sciss.synth.ugen.Convolution2]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution]]
+ * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
+ */
 case class Convolution2L[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends SingleOutUGenSource[R, Convolution2LUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -65,9 +127,59 @@ case class Convolution2L[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: Any
    }
 }
 case class Convolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernel: AnyUGenIn, trig: AnyUGenIn, frameSize: AnyUGenIn, fadePeriods: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, kernel, trig, frameSize, fadePeriods))
+/**
+ * A frequency domain stereo convolution UGen, capable of performing linear crossfades between kernel updates.
+ * When receiving a trigger, there is a linear crossfade between the old kernel the new buffer contents.
+ * It operates similar to Convolution2L, however uses two buffers and outputs a stereo signal, resulting
+ * in better CPU usage than two discrete instances of Convolution2L as this way one FFT transformation per period
+ * is saved.
+ * 
+ * @see [[de.sciss.synth.ugen.Convolution2]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution]]
+ * @see [[de.sciss.synth.ugen.Convolution2L]]
+ */
 object StereoConvolution2L {
-   def ar(in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernelL, kernelR, trig, frameSize, fadePeriods)
+   
+/**
+ * @param in              the realtime input to be convolved
+ * @param kernelL         buffer identifier for the left channel's fixed kernel, which may be modulated in combination
+ *                        with the trigger
+ * @param kernelR         buffer identifier for the right channel's fixed kernel, which may be modulated in combination
+ *                        with the trigger
+ * @param trig            updates the kernel on a change from non-positive to positive (<= 0 to >0), and starts a new
+ *                        crossfade from the previous kernel to the new one over the given amount of periods.
+ * @param frameSize       size of each kernel. this must be a power of two. the FFT calculated internally
+ *                        by the UGen has a size of twice this value. The maximum allowed frameSize
+ *                        is 65536(?).
+ * @param fadePeriods     The number of periods over which a crossfade is performed. This must be an integer
+ */
+def ar(in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernelL, kernelR, trig, frameSize, fadePeriods)
 }
+/**
+ * A frequency domain stereo convolution UGen, capable of performing linear crossfades between kernel updates.
+ * When receiving a trigger, there is a linear crossfade between the old kernel the new buffer contents.
+ * It operates similar to Convolution2L, however uses two buffers and outputs a stereo signal, resulting
+ * in better CPU usage than two discrete instances of Convolution2L as this way one FFT transformation per period
+ * is saved.
+ * 
+ * @param in              the realtime input to be convolved
+ * @param kernelL         buffer identifier for the left channel's fixed kernel, which may be modulated in combination
+ *                        with the trigger
+ * @param kernelR         buffer identifier for the right channel's fixed kernel, which may be modulated in combination
+ *                        with the trigger
+ * @param trig            updates the kernel on a change from non-positive to positive (<= 0 to >0), and starts a new
+ *                        crossfade from the previous kernel to the new one over the given amount of periods.
+ * @param frameSize       size of each kernel. this must be a power of two. the FFT calculated internally
+ *                        by the UGen has a size of twice this value. The maximum allowed frameSize
+ *                        is 65536(?).
+ * @param fadePeriods     The number of periods over which a crossfade is performed. This must be an integer
+ * 
+ * @see [[de.sciss.synth.ugen.Convolution2]]
+ * @see [[de.sciss.synth.ugen.Convolution3]]
+ * @see [[de.sciss.synth.ugen.Convolution]]
+ * @see [[de.sciss.synth.ugen.Convolution2L]]
+ */
 case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends MultiOutUGenSource[R, StereoConvolution2LUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -87,9 +199,15 @@ case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, ke
    }
 }
 case class StereoConvolution2LUGen[R <: Rate](rate: R, in: AnyUGenIn, kernelL: AnyUGenIn, kernelR: AnyUGenIn, trig: AnyUGenIn, frameSize: AnyUGenIn, fadePeriods: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(2)(rate), IIdxSeq(in, kernelL, kernelR, trig, frameSize, fadePeriods))
+/**
+ * A UGen for triggered convolution in the time domain.
+ */
 object Convolution3 {
    def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
 }
+/**
+ * A UGen for triggered convolution in the time domain.
+ */
 case class Convolution3[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends SingleOutUGenSource[R, Convolution3UGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -162,10 +280,34 @@ case class PV_HainsworthFoote[R <: Rate](rate: R, chain: AnyGE, propH: AnyGE, pr
    }
 }
 case class PV_HainsworthFooteUGen[R <: Rate](rate: R, chain: AnyUGenIn, propH: AnyUGenIn, propF: AnyUGenIn, thresh: AnyUGenIn, waitTime: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(chain, propH, propF, thresh, waitTime))
+/**
+ * A UGen calculating the running sum of an input signal over a given number of samples.
+ */
 object RunningSum {
-   def kr(in: GE[control, UGenIn[control]], winSize: AnyGE = 440.0f) = apply[control](control, in, winSize)
-   def ar(in: GE[audio, UGenIn[audio]], winSize: AnyGE = 440.0f) = apply[audio](audio, in, winSize)
+   
+/**
+ * @param in              the input signal to sum up
+ * @param winSize         the length of the sliding window over the input signal.
+ *                        these are the number of audio sample-frames for audio-rate calculation,
+ *                        or the number of blocks for control-rate calculation summed up.
+ */
+def kr(in: GE[control, UGenIn[control]], winSize: AnyGE = 440.0f) = apply[control](control, in, winSize)
+/**
+ * @param in              the input signal to sum up
+ * @param winSize         the length of the sliding window over the input signal.
+ *                        these are the number of audio sample-frames for audio-rate calculation,
+ *                        or the number of blocks for control-rate calculation summed up.
+ */
+def ar(in: GE[audio, UGenIn[audio]], winSize: AnyGE = 440.0f) = apply[audio](audio, in, winSize)
 }
+/**
+ * A UGen calculating the running sum of an input signal over a given number of samples.
+ * 
+ * @param in              the input signal to sum up
+ * @param winSize         the length of the sliding window over the input signal.
+ *                        these are the number of audio sample-frames for audio-rate calculation,
+ *                        or the number of blocks for control-rate calculation summed up.
+ */
 case class RunningSum[R <: Rate](rate: R, in: AnyGE, winSize: AnyGE) extends SingleOutUGenSource[R, RunningSumUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand

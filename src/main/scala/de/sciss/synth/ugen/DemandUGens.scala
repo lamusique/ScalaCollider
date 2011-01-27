@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:10:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,10 +12,63 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 import Float.{PositiveInfinity => inf}
+/**
+ * A UGen which polls results from demand-rate ugens when receiving a trigger.
+ * When there is a trigger at the `trig` input, a value is demanded from each ugen in the `in` input
+ * and output. The unit generators in the list should be demand-rate.
+ * When there is a trigger at the reset input, the demand rate ugens in the list are reset.
+ * 
+ * Note: By design, a reset trigger only resets the demand ugens; it does not reset the value at Demand's output.
+ * Demand continues to hold its value until the next value is demanded, at which point its output value will
+ * be the first expected item in the `in` argument.
+ * 
+ * Note: One demand-rate ugen represents a single stream of values, so that embedding the same ugen twice
+ * calls this stream twice per demand, possibly yielding different values. To embed the same sequence
+ * twice, either make sure the ugen is demanded only once, or create two instances of the ugen.
+ * 
+ * '''Warning''': Demand currently seems to have problems with infinite sequences. As a workaround
+ * use a very large length instead. E.g. instead of `Dbrown( 0, 1, inf )` use `Dbrown( 0, 1, 0xFFFFFFFF )`!
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 object Demand {
-   def kr(trig: AnyGE, in: Multi[AnyGE], reset: AnyGE = 0.0f) = apply[control](control, trig, in, reset)
-   def ar(trig: AnyGE, in: Multi[AnyGE], reset: AnyGE = 0.0f) = apply[audio](audio, trig, in, reset)
+   
+/**
+ * @param trig            trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
+ * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
+ * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
+ */
+def kr(trig: AnyGE, in: Multi[AnyGE], reset: AnyGE = 0.0f) = apply[control](control, trig, in, reset)
+/**
+ * @param trig            trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
+ * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
+ * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
+ */
+def ar(trig: AnyGE, in: Multi[AnyGE], reset: AnyGE = 0.0f) = apply[audio](audio, trig, in, reset)
 }
+/**
+ * A UGen which polls results from demand-rate ugens when receiving a trigger.
+ * When there is a trigger at the `trig` input, a value is demanded from each ugen in the `in` input
+ * and output. The unit generators in the list should be demand-rate.
+ * When there is a trigger at the reset input, the demand rate ugens in the list are reset.
+ * 
+ * Note: By design, a reset trigger only resets the demand ugens; it does not reset the value at Demand's output.
+ * Demand continues to hold its value until the next value is demanded, at which point its output value will
+ * be the first expected item in the `in` argument.
+ * 
+ * Note: One demand-rate ugen represents a single stream of values, so that embedding the same ugen twice
+ * calls this stream twice per demand, possibly yielding different values. To embed the same sequence
+ * twice, either make sure the ugen is demanded only once, or create two instances of the ugen.
+ * 
+ * '''Warning''': Demand currently seems to have problems with infinite sequences. As a workaround
+ * use a very large length instead. E.g. instead of `Dbrown( 0, 1, inf )` use `Dbrown( 0, 1, 0xFFFFFFFF )`!
+ * 
+ * @param trig            trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
+ * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
+ * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 case class Demand[R <: Rate](rate: R, trig: AnyGE, in: Multi[AnyGE], reset: AnyGE) extends MultiOutUGenSource[R, DemandUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -29,10 +82,57 @@ case class Demand[R <: Rate](rate: R, trig: AnyGE, in: Multi[AnyGE], reset: AnyG
    }
 }
 case class DemandUGen[R <: Rate](rate: R, trig: AnyUGenIn, in: IIdxSeq[AnyUGenIn], reset: AnyUGenIn) extends MultiOutUGen[R](IIdxSeq.fill(in.size)(rate), IIdxSeq[AnyUGenIn](trig, reset).++(in))
+/**
+ * A UGen which polls results from demand-rate ugens in intervals specified by a durational input.
+ * A value from the `level` ugen is demanded and output according to a stream
+ * of duration values. When there is a trigger at the reset input, the `level`
+ * and the `dur` input are reset.
+ * 
+ * @see [[de.sciss.synth.ugen.TDuty]]
+ * @see [[de.sciss.synth.ugen.Demand]]
+ * @see [[de.sciss.synth.DoneAction]]
+ */
 object Duty {
-   def kr(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE, doneAction: AnyGE = doNothing) = apply[control](control, dur, reset, level, doneAction)
-   def ar(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE, doneAction: AnyGE = doNothing) = apply[audio](audio, dur, reset, level, doneAction)
+   
+/**
+ * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
+ *                        The next poll is acquired after the previous duration.
+ * @param reset           a trigger which resets the dur input (if demand-rated) and the
+ *                        the level input ugen. The reset input may also be a demand-rate ugen, in this case
+ *                        providing a stream of reset times.
+ * @param level           a demand-rate ugen providing the output values.
+ * @param doneAction      a doneAction that is evaluated when the duration stream ends.
+ */
+def kr(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE, doneAction: AnyGE = doNothing) = apply[control](control, dur, reset, level, doneAction)
+/**
+ * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
+ *                        The next poll is acquired after the previous duration.
+ * @param reset           a trigger which resets the dur input (if demand-rated) and the
+ *                        the level input ugen. The reset input may also be a demand-rate ugen, in this case
+ *                        providing a stream of reset times.
+ * @param level           a demand-rate ugen providing the output values.
+ * @param doneAction      a doneAction that is evaluated when the duration stream ends.
+ */
+def ar(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE, doneAction: AnyGE = doNothing) = apply[audio](audio, dur, reset, level, doneAction)
 }
+/**
+ * A UGen which polls results from demand-rate ugens in intervals specified by a durational input.
+ * A value from the `level` ugen is demanded and output according to a stream
+ * of duration values. When there is a trigger at the reset input, the `level`
+ * and the `dur` input are reset.
+ * 
+ * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
+ *                        The next poll is acquired after the previous duration.
+ * @param reset           a trigger which resets the dur input (if demand-rated) and the
+ *                        the level input ugen. The reset input may also be a demand-rate ugen, in this case
+ *                        providing a stream of reset times.
+ * @param level           a demand-rate ugen providing the output values.
+ * @param doneAction      a doneAction that is evaluated when the duration stream ends.
+ * 
+ * @see [[de.sciss.synth.ugen.TDuty]]
+ * @see [[de.sciss.synth.ugen.Demand]]
+ * @see [[de.sciss.synth.DoneAction]]
+ */
 case class Duty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, DutyUGen[R]] {
    protected def expandUGens = {
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
@@ -48,12 +148,74 @@ case class Duty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, done
    }
 }
 case class DutyUGen[R <: Rate](rate: R, dur: AnyUGenIn, reset: AnyUGenIn, level: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(dur, reset, level, doneAction))
+/**
+ * A UGen which polls results from demand-rate ugens in intervals specified by a durational input,
+ * and outputs them as trigger values.
+ * A value from the `level` ugen is demanded and output for one sample (when
+ * running at audio-rate) or one block (when running at control-rate) according to a stream
+ * of duration values. When there is a trigger at the reset input, the `level` and
+ * the `dur` input are reset.
+ * 
+ * @see [[de.sciss.synth.ugen.Duty]]
+ * @see [[de.sciss.synth.ugen.Demand]]
+ * @see [[de.sciss.synth.DoneAction]]
+ */
 object TDuty {
    def kr: TDuty[control] = kr()
-   def kr(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE = 1.0f, doneAction: AnyGE = doNothing, gapFirst: AnyGE = 0.0f) = apply[control](control, dur, reset, level, doneAction, gapFirst)
+/**
+ * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
+ *                        The next poll is acquired after the previous duration.
+ * @param reset           a trigger which resets the dur input (if demand-rated) and the
+ *                        the level input ugen. The reset input may also be a demand-rate ugen, in this case
+ *                        providing a stream of reset times.
+ * @param level           a demand-rate ugen providing the output values.
+ * @param doneAction      a doneAction that is evaluated when the duration stream ends.
+ * @param gapFirst        when 0 (default), the UGen does the first level poll immediately and then
+ *                        waits for the first durational value. When this is 1, the UGen initially polls the first
+ *                        durational value, waits for that duration, and then polls the first level
+ *                        (along with polling the next durational value).
+ */
+def kr(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE = 1.0f, doneAction: AnyGE = doNothing, gapFirst: AnyGE = 0.0f) = apply[control](control, dur, reset, level, doneAction, gapFirst)
    def ar: TDuty[audio] = ar()
-   def ar(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE = 1.0f, doneAction: AnyGE = doNothing, gapFirst: AnyGE = 0.0f) = apply[audio](audio, dur, reset, level, doneAction, gapFirst)
+/**
+ * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
+ *                        The next poll is acquired after the previous duration.
+ * @param reset           a trigger which resets the dur input (if demand-rated) and the
+ *                        the level input ugen. The reset input may also be a demand-rate ugen, in this case
+ *                        providing a stream of reset times.
+ * @param level           a demand-rate ugen providing the output values.
+ * @param doneAction      a doneAction that is evaluated when the duration stream ends.
+ * @param gapFirst        when 0 (default), the UGen does the first level poll immediately and then
+ *                        waits for the first durational value. When this is 1, the UGen initially polls the first
+ *                        durational value, waits for that duration, and then polls the first level
+ *                        (along with polling the next durational value).
+ */
+def ar(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE = 1.0f, doneAction: AnyGE = doNothing, gapFirst: AnyGE = 0.0f) = apply[audio](audio, dur, reset, level, doneAction, gapFirst)
 }
+/**
+ * A UGen which polls results from demand-rate ugens in intervals specified by a durational input,
+ * and outputs them as trigger values.
+ * A value from the `level` ugen is demanded and output for one sample (when
+ * running at audio-rate) or one block (when running at control-rate) according to a stream
+ * of duration values. When there is a trigger at the reset input, the `level` and
+ * the `dur` input are reset.
+ * 
+ * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
+ *                        The next poll is acquired after the previous duration.
+ * @param reset           a trigger which resets the dur input (if demand-rated) and the
+ *                        the level input ugen. The reset input may also be a demand-rate ugen, in this case
+ *                        providing a stream of reset times.
+ * @param level           a demand-rate ugen providing the output values.
+ * @param doneAction      a doneAction that is evaluated when the duration stream ends.
+ * @param gapFirst        when 0 (default), the UGen does the first level poll immediately and then
+ *                        waits for the first durational value. When this is 1, the UGen initially polls the first
+ *                        durational value, waits for that duration, and then polls the first level
+ *                        (along with polling the next durational value).
+ * 
+ * @see [[de.sciss.synth.ugen.Duty]]
+ * @see [[de.sciss.synth.ugen.Demand]]
+ * @see [[de.sciss.synth.DoneAction]]
+ */
 case class TDuty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE, gapFirst: AnyGE) extends SingleOutUGenSource[R, TDutyUGen[R]] {
    protected def expandUGens = {
       val _dur: IIdxSeq[AnyUGenIn] = dur.expand
@@ -71,9 +233,63 @@ case class TDuty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, don
    }
 }
 case class TDutyUGen[R <: Rate](rate: R, dur: AnyUGenIn, reset: AnyUGenIn, level: AnyUGenIn, doneAction: AnyUGenIn, gapFirst: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(dur, reset, level, doneAction, gapFirst))
+/**
+ * An envelope generator UGen using demand-rate inputs for the envelope segments.
+ * For each parameter of the envelope (levels, durations and shapes), values are polled
+ * every time a new segment starts.
+ * 
+ * @see [[de.sciss.synth.ugen.EnvGen]]
+ * @see [[de.sciss.synth.EnvShape]]
+ * @see [[de.sciss.synth.DoneAction]]
+ */
 object DemandEnvGen {
-   def ar(levels: AnyGE, durs: AnyGE, shapes: AnyGE = 1.0f, curvatures: AnyGE = 0.0f, gate: AnyGE = 1.0f, reset: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, levels, durs, shapes, curvatures, gate, reset, levelScale, levelBias, timeScale, doneAction)
+   
+/**
+ * @param levels          demand-rate ugen (or other ugen) returning level values
+ * @param durs            demand-rate ugen (or other ugen) returning durational values
+ * @param shapes          demand-rate ugen (or other ugen) returning shape number for the envelope segment.
+ * @param curvatures      demand-rate ugen (or other ugen) returning curvature values. these are
+ *                        used for curveShape segments (shape number 5) and should be zero for other shapes.
+ * @param gate            a control rate gate: if gate is x >= 1, the ugen runs.
+ *                        if gate is 0 > x > 1, the ugen is released at the next level (according to doneAction).
+ *                        if gate is x <= 0, the ugen is sampled end held.
+ * @param reset           a trigger signal. a trigger occurs when passing from non-positive to positive.
+ *                        when the trigger amplitude is < 1, the input ugens (those that are demand-rated)
+ *                        are reset when the current segment ends. if the trigger amplitude is > 1,
+ *                        the reset is performed immediately.
+ * @param levelScale      demand-rate ugen returning level scaling values
+ * @param levelBias       demand-rate ugen returning level offset values
+ * @param timeScale       demand-rate ugen returning time scaling values
+ * @param doneAction      a done action performed when one of the demand-rated series ends
+ */
+def ar(levels: AnyGE, durs: AnyGE, shapes: AnyGE = 1.0f, curvatures: AnyGE = 0.0f, gate: AnyGE = 1.0f, reset: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, levels, durs, shapes, curvatures, gate, reset, levelScale, levelBias, timeScale, doneAction)
 }
+/**
+ * An envelope generator UGen using demand-rate inputs for the envelope segments.
+ * For each parameter of the envelope (levels, durations and shapes), values are polled
+ * every time a new segment starts.
+ * 
+ * @param levels          demand-rate ugen (or other ugen) returning level values
+ * @param durs            demand-rate ugen (or other ugen) returning durational values
+ * @param shapes          demand-rate ugen (or other ugen) returning shape number for the envelope segment.
+ * @param curvatures      demand-rate ugen (or other ugen) returning curvature values. these are
+ *                        used for curveShape segments (shape number 5) and should be zero for other shapes.
+ * @param gate            a control rate gate: if gate is x >= 1, the ugen runs.
+ *                        if gate is 0 > x > 1, the ugen is released at the next level (according to doneAction).
+ *                        if gate is x <= 0, the ugen is sampled end held.
+ * @param reset           a trigger signal. a trigger occurs when passing from non-positive to positive.
+ *                        when the trigger amplitude is < 1, the input ugens (those that are demand-rated)
+ *                        are reset when the current segment ends. if the trigger amplitude is > 1,
+ *                        the reset is performed immediately.
+ * @param levelScale      demand-rate ugen returning level scaling values
+ * @param levelBias       demand-rate ugen returning level offset values
+ * @param timeScale       demand-rate ugen returning time scaling values
+ * @param doneAction      a done action performed when one of the demand-rated series ends
+ * 
+ * @see [[de.sciss.synth.ugen.EnvGen]]
+ * @see [[de.sciss.synth.EnvShape]]
+ * @see [[de.sciss.synth.DoneAction]]
+ */
 case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, shapes: AnyGE, curvatures: AnyGE, gate: AnyGE, reset: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, DemandEnvGenUGen[R]] {
    protected def expandUGens = {
       val _levels: IIdxSeq[AnyUGenIn] = levels.expand
@@ -101,6 +317,19 @@ case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, shapes: 
    }
 }
 case class DemandEnvGenUGen[R <: Rate](rate: R, levels: AnyUGenIn, durs: AnyUGenIn, shapes: AnyUGenIn, curvatures: AnyUGenIn, gate: AnyUGenIn, reset: AnyUGenIn, levelScale: AnyUGenIn, levelBias: AnyUGenIn, timeScale: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(levels, durs, shapes, curvatures, gate, reset, levelScale, levelBias, timeScale, doneAction))
+/**
+ * A demand-rate UGen which produces an arithmetic (linear) series.
+ * 
+ * The arguments can be constant or any other ugens.
+ * 
+ * @param start           the start value of the series
+ * @param step            the incremental step by which the series changes. the step is
+ *                        added to the previous value on each demand.
+ * @param length          the number of elements to produces (maybe be infinite)
+ * 
+ * @see [[de.sciss.synth.ugen.Dgeom]]
+ * @see [[de.sciss.synth.ugen.Dseq]]
+ */
 case class Dseries(start: AnyGE = 0.0f, step: AnyGE = 1.0f, length: AnyGE = inf) extends SingleOutUGenSource[demand, DseriesUGen] with DemandRated with IsIndividual {
    protected def expandUGens = {
       val _start: IIdxSeq[AnyUGenIn] = start.expand
@@ -190,6 +419,16 @@ case class Dser(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOutUGenS
    }
 }
 case class DserUGen(seq: IIdxSeq[AnyUGenIn], repeats: AnyUGenIn) extends SingleOutUGen[demand](IIdxSeq[AnyUGenIn](repeats).++(seq)) with DemandRated with IsIndividual
+/**
+ * A demand-rate UGen that reads out a buffer. All inputs can be either demand ugen or any other ugen.
+ * 
+ * @param buf             the identifier of the buffer to read out
+ * @param index           the frame index into the buffer
+ * @param loop            whether to wrap an exceeding phase around the buffer length (1) or not (0)
+ * 
+ * @see [[de.sciss.synth.ugen.BufRd]]
+ * @see [[de.sciss.synth.ugen.Dbufwr]]
+ */
 case class Dbufrd(buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends SingleOutUGenSource[demand, DbufrdUGen] with DemandRated with IsIndividual {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand

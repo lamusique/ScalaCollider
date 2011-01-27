@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -11,10 +11,43 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
+/**
+ * A UGen which outputs a value of 1 for a given duration when triggered.
+ * 
+ * When a trigger occurs at the input, a value of 1 is output for the specified duration,
+ * otherwise zero is output. When a new trigger occurs while this ugens outputs 1, the
+ * hold-time is reset to the duration.
+ * 
+ * @see [[de.sciss.synth.ugen.Trig]]
+ */
 object Trig1 {
-   def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, in, dur)
-   def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
+   
+/**
+ * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
+ *                        from non-positive to positive.
+ * @param dur             the duration for which the ugens holds the value of 1 when triggered
+ */
+def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, in, dur)
+/**
+ * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
+ *                        from non-positive to positive.
+ * @param dur             the duration for which the ugens holds the value of 1 when triggered
+ */
+def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
 }
+/**
+ * A UGen which outputs a value of 1 for a given duration when triggered.
+ * 
+ * When a trigger occurs at the input, a value of 1 is output for the specified duration,
+ * otherwise zero is output. When a new trigger occurs while this ugens outputs 1, the
+ * hold-time is reset to the duration.
+ * 
+ * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
+ *                        from non-positive to positive.
+ * @param dur             the duration for which the ugens holds the value of 1 when triggered
+ * 
+ * @see [[de.sciss.synth.ugen.Trig]]
+ */
 case class Trig1[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleOutUGenSource[R, Trig1UGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -27,9 +60,25 @@ case class Trig1[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleOutUGe
 }
 case class Trig1UGen[R <: Rate](rate: R, in: AnyUGenIn, dur: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, dur))
 object Trig {
-   def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, in, dur)
-   def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
+   
+/**
+ * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
+ *                        from non-positive to positive.
+ * @param dur             the duration for which the ugens holds the value of the input signal when triggered
+ */
+def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, in, dur)
+/**
+ * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
+ *                        from non-positive to positive.
+ * @param dur             the duration for which the ugens holds the value of the input signal when triggered
+ */
+def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
 }
+/**
+ * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
+ *                        from non-positive to positive.
+ * @param dur             the duration for which the ugens holds the value of the input signal when triggered
+ */
 case class Trig[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleOutUGenSource[R, TrigUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -41,10 +90,56 @@ case class Trig[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleOutUGen
    }
 }
 case class TrigUGen[R <: Rate](rate: R, in: AnyUGenIn, dur: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, dur))
+/**
+ * A UGen that sends a value from the server to all notified clients upon receiving triggers.
+ * The message sent is `OSCMessage( "/tr", <(Int) nodeID>, <(Int) trigID>, <(Float) value> )`.
+ * 
+ * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
+ * 
+ * '''Warning''': We have changed the argument order. While in sclang, `id` precedes `value`,
+ * we are using them in reverse order here!
+ * 
+ * @see [[de.sciss.synth.ugen.SendReply]]
+ */
 object SendTrig {
-   def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[audio](audio, trig, value, id)
-   def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[control](control, trig, value, id)
+   
+/**
+ * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
+ *                        when passing from non-positive to positive.
+ * @param value           a changing signal or constant that will be polled at the time of trigger,
+ *                        and its value passed with the trigger message
+ * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
+ *                        This is useful to distinguish between several SendTrig instances per SynthDef.
+ */
+def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[audio](audio, trig, value, id)
+/**
+ * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
+ *                        when passing from non-positive to positive.
+ * @param value           a changing signal or constant that will be polled at the time of trigger,
+ *                        and its value passed with the trigger message
+ * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
+ *                        This is useful to distinguish between several SendTrig instances per SynthDef.
+ */
+def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[control](control, trig, value, id)
 }
+/**
+ * A UGen that sends a value from the server to all notified clients upon receiving triggers.
+ * The message sent is `OSCMessage( "/tr", <(Int) nodeID>, <(Int) trigID>, <(Float) value> )`.
+ * 
+ * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
+ * 
+ * '''Warning''': We have changed the argument order. While in sclang, `id` precedes `value`,
+ * we are using them in reverse order here!
+ * 
+ * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
+ *                        when passing from non-positive to positive.
+ * @param value           a changing signal or constant that will be polled at the time of trigger,
+ *                        and its value passed with the trigger message
+ * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
+ *                        This is useful to distinguish between several SendTrig instances per SynthDef.
+ * 
+ * @see [[de.sciss.synth.ugen.SendReply]]
+ */
 case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) extends SingleOutUGenSource[R, SendTrigUGen[R]] with HasSideEffect {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -58,10 +153,32 @@ case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) ex
    }
 }
 case class SendTrigUGen[R <: Rate](rate: R, trig: AnyUGenIn, value: AnyUGenIn, id: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, value, id)) with HasSideEffect
+/**
+ * A UGen that toggles like a flip-flop between zero and one upon receiving a trigger.
+ * The flip-flop is initially outputing zero, so changes to one when the first trigger
+ * arrives.
+ */
 object ToggleFF {
-   def kr(trig: AnyGE) = apply[control](control, trig)
-   def ar(trig: AnyGE) = apply[audio](audio, trig)
+   
+/**
+ * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
+ *                        changes from non-positive to positive.
+ */
+def kr(trig: AnyGE) = apply[control](control, trig)
+/**
+ * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
+ *                        changes from non-positive to positive.
+ */
+def ar(trig: AnyGE) = apply[audio](audio, trig)
 }
+/**
+ * A UGen that toggles like a flip-flop between zero and one upon receiving a trigger.
+ * The flip-flop is initially outputing zero, so changes to one when the first trigger
+ * arrives.
+ * 
+ * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
+ *                        changes from non-positive to positive.
+ */
 case class ToggleFF[R <: Rate](rate: R, trig: AnyGE) extends SingleOutUGenSource[R, ToggleFFUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -84,10 +201,39 @@ case class SetResetFF[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE) extends Sin
    }
 }
 case class SetResetFFUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset))
+/**
+ * A sample-and-hold UGen. When triggered, a new value is taken from the input and
+ * hold until the next trigger occurs.
+ * 
+ * @see [[de.sciss.synth.ugen.Gate]]
+ * @see [[de.sciss.synth.ugen.Demand]]
+ */
 object Latch {
-   def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
-   def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
+   
+/**
+ * @param in              the input signal
+ * @param trig            the trigger. The can be any signal. A trigger happens when the signal changes from
+ *                        non-positive to positive.
+ */
+def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
+/**
+ * @param in              the input signal
+ * @param trig            the trigger. The can be any signal. A trigger happens when the signal changes from
+ *                        non-positive to positive.
+ */
+def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
 }
+/**
+ * A sample-and-hold UGen. When triggered, a new value is taken from the input and
+ * hold until the next trigger occurs.
+ * 
+ * @param in              the input signal
+ * @param trig            the trigger. The can be any signal. A trigger happens when the signal changes from
+ *                        non-positive to positive.
+ * 
+ * @see [[de.sciss.synth.ugen.Gate]]
+ * @see [[de.sciss.synth.ugen.Demand]]
+ */
 case class Latch[R <: Rate](rate: R, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[R, LatchUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -99,10 +245,39 @@ case class Latch[R <: Rate](rate: R, in: AnyGE, trig: AnyGE) extends SingleOutUG
    }
 }
 case class LatchUGen[R <: Rate](rate: R, in: AnyUGenIn, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, trig))
+/**
+ * A gate or hold UGen.
+ * It allows the input signal value to pass when the `gate` argument is positive,
+ * otherwise it holds last value.
+ * 
+ * @see [[de.sciss.synth.ugen.Latch]]
+ */
 object Gate {
-   def kr(in: AnyGE, gate: AnyGE) = apply[control](control, in, gate)
-   def ar(in: AnyGE, gate: AnyGE) = apply[audio](audio, in, gate)
+   
+/**
+ * @param in              the input signal to gate
+ * @param gate            the signal specifying whether to pass the input signal (when greater than zero) or
+ *                        whether to close the gate and hold the last value (when less than or equal to zero)
+ */
+def kr(in: AnyGE, gate: AnyGE) = apply[control](control, in, gate)
+/**
+ * @param in              the input signal to gate
+ * @param gate            the signal specifying whether to pass the input signal (when greater than zero) or
+ *                        whether to close the gate and hold the last value (when less than or equal to zero)
+ */
+def ar(in: AnyGE, gate: AnyGE) = apply[audio](audio, in, gate)
 }
+/**
+ * A gate or hold UGen.
+ * It allows the input signal value to pass when the `gate` argument is positive,
+ * otherwise it holds last value.
+ * 
+ * @param in              the input signal to gate
+ * @param gate            the signal specifying whether to pass the input signal (when greater than zero) or
+ *                        whether to close the gate and hold the last value (when less than or equal to zero)
+ * 
+ * @see [[de.sciss.synth.ugen.Latch]]
+ */
 case class Gate[R <: Rate](rate: R, in: AnyGE, gate: AnyGE) extends SingleOutUGenSource[R, GateUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -114,10 +289,34 @@ case class Gate[R <: Rate](rate: R, in: AnyGE, gate: AnyGE) extends SingleOutUGe
    }
 }
 case class GateUGen[R <: Rate](rate: R, in: AnyUGenIn, gate: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, gate))
+/**
+ * A Schmidt trigger UGen. Initially it outputs zero. When the input signal rises above `hi`,
+ * its output switches to 1.0, which is hold until the signal falls below `lo`, switching the
+ * output again to 0.0. The produces a kind of hysteresis behavior, preventing heavy
+ * oscillations in a noisy system which might occur with a single-threshold trigger.
+ */
 object Schmidt {
-   def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[control](control, in, lo, hi)
-   def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[audio](audio, in, lo, hi)
+   
+/**
+ * @param lo              The low threshold.
+ * @param hi              The high threshold.
+ */
+def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[control](control, in, lo, hi)
+/**
+ * @param lo              The low threshold.
+ * @param hi              The high threshold.
+ */
+def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[audio](audio, in, lo, hi)
 }
+/**
+ * A Schmidt trigger UGen. Initially it outputs zero. When the input signal rises above `hi`,
+ * its output switches to 1.0, which is hold until the signal falls below `lo`, switching the
+ * output again to 0.0. The produces a kind of hysteresis behavior, preventing heavy
+ * oscillations in a noisy system which might occur with a single-threshold trigger.
+ * 
+ * @param lo              The low threshold.
+ * @param hi              The high threshold.
+ */
 case class Schmidt[R <: Rate](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, SchmidtUGen[R]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand
@@ -186,10 +385,41 @@ case class Stepper[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE, lo: AnyGE, hi:
    }
 }
 case class StepperUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn, step: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset, lo, hi, step, resetVal))
+/**
+ * A delay UGen for trigger signals. Other than a normal buffer delay,
+ * any new trigger arriving in the time between the previous trigger
+ * and the passing of the delay time is ignored.
+ */
 object TDelay {
-   def kr(trig: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, trig, dur)
-   def ar(trig: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, trig, dur)
+   
+/**
+ * @param trig            The input trigger. A trigger is recognized when the signal passes from
+ *                        non-positive to positive. Note that, no matter what the amplitude of
+ *                        the input trigger is, the UGen will output a delayed trigger of
+ *                        amplitude 1.0.
+ * @param dur             The delay time in seconds.
+ */
+def kr(trig: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, trig, dur)
+/**
+ * @param trig            The input trigger. A trigger is recognized when the signal passes from
+ *                        non-positive to positive. Note that, no matter what the amplitude of
+ *                        the input trigger is, the UGen will output a delayed trigger of
+ *                        amplitude 1.0.
+ * @param dur             The delay time in seconds.
+ */
+def ar(trig: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, trig, dur)
 }
+/**
+ * A delay UGen for trigger signals. Other than a normal buffer delay,
+ * any new trigger arriving in the time between the previous trigger
+ * and the passing of the delay time is ignored.
+ * 
+ * @param trig            The input trigger. A trigger is recognized when the signal passes from
+ *                        non-positive to positive. Note that, no matter what the amplitude of
+ *                        the input trigger is, the UGen will output a delayed trigger of
+ *                        amplitude 1.0.
+ * @param dur             The delay time in seconds.
+ */
 case class TDelay[R <: Rate](rate: R, trig: AnyGE, dur: AnyGE) extends SingleOutUGenSource[R, TDelayUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -212,10 +442,36 @@ case class ZeroCrossing[R <: Rate](rate: R, in: AnyGE) extends SingleOutUGenSour
    }
 }
 case class ZeroCrossingUGen[R <: Rate](rate: R, in: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in))
+/**
+ * A UGen that returns time since last triggered.
+ * The time returned is in seconds and is measured from the last received trigger.
+ * Note that currently it seems the initial memory is at -1 sample, so for
+ * `Impulse.ar(1)` the result (at 44.1 kHz) is 2.26757e-05, followed strangely
+ * by 1.00002, and then (as expected) 1.0.
+ */
 object Timer {
-   def kr(trig: AnyGE) = apply[control](control, trig)
-   def ar(trig: AnyGE) = apply[audio](audio, trig)
+   
+/**
+ * @param trig            the trigger to update the output signal.
+ *                        A trigger occurs when trig signal crosses from non-positive to positive.
+ */
+def kr(trig: AnyGE) = apply[control](control, trig)
+/**
+ * @param trig            the trigger to update the output signal.
+ *                        A trigger occurs when trig signal crosses from non-positive to positive.
+ */
+def ar(trig: AnyGE) = apply[audio](audio, trig)
 }
+/**
+ * A UGen that returns time since last triggered.
+ * The time returned is in seconds and is measured from the last received trigger.
+ * Note that currently it seems the initial memory is at -1 sample, so for
+ * `Impulse.ar(1)` the result (at 44.1 kHz) is 2.26757e-05, followed strangely
+ * by 1.00002, and then (as expected) 1.0.
+ * 
+ * @param trig            the trigger to update the output signal.
+ *                        A trigger occurs when trig signal crosses from non-positive to positive.
+ */
 case class Timer[R <: Rate](rate: R, trig: AnyGE) extends SingleOutUGenSource[R, TimerUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -223,10 +479,47 @@ case class Timer[R <: Rate](rate: R, trig: AnyGE) extends SingleOutUGenSource[R,
    }
 }
 case class TimerUGen[R <: Rate](rate: R, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig))
+/**
+ * A UGen which starts a linear raise from zero each time it is
+ * triggered.
+ * 
+ * @see [[de.sciss.synth.ugen.Ramp]]
+ * @see [[de.sciss.synth.ugen.Phasor]]
+ * @see [[de.sciss.synth.ugen.Line]]
+ */
 object Sweep {
-   def kr(trig: AnyGE, speed: AnyGE) = apply[control](control, trig, speed)
-   def ar(trig: AnyGE, speed: AnyGE) = apply[audio](audio, trig, speed)
+   
+/**
+ * @param trig            the trigger that restarts the ramp, when passing from
+ *                        non-positive to positive
+ * @param speed           the amount of increment of the output signal per second.
+ *                        In SCLang this argument is named `rate`, while ScalaCollider uses
+ *                        `speed` to avoid conflict with the UGen's calculation rate.
+ */
+def kr(trig: AnyGE, speed: AnyGE) = apply[control](control, trig, speed)
+/**
+ * @param trig            the trigger that restarts the ramp, when passing from
+ *                        non-positive to positive
+ * @param speed           the amount of increment of the output signal per second.
+ *                        In SCLang this argument is named `rate`, while ScalaCollider uses
+ *                        `speed` to avoid conflict with the UGen's calculation rate.
+ */
+def ar(trig: AnyGE, speed: AnyGE) = apply[audio](audio, trig, speed)
 }
+/**
+ * A UGen which starts a linear raise from zero each time it is
+ * triggered.
+ * 
+ * @param trig            the trigger that restarts the ramp, when passing from
+ *                        non-positive to positive
+ * @param speed           the amount of increment of the output signal per second.
+ *                        In SCLang this argument is named `rate`, while ScalaCollider uses
+ *                        `speed` to avoid conflict with the UGen's calculation rate.
+ * 
+ * @see [[de.sciss.synth.ugen.Ramp]]
+ * @see [[de.sciss.synth.ugen.Phasor]]
+ * @see [[de.sciss.synth.ugen.Line]]
+ */
 case class Sweep[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE) extends SingleOutUGenSource[R, SweepUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -239,9 +532,22 @@ case class Sweep[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE) extends SingleOu
 }
 case class SweepUGen[R <: Rate](rate: R, trig: AnyUGenIn, speed: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, speed))
 object Phasor {
-   def kr(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, speed, lo, hi, resetVal)
-   def ar(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, speed, lo, hi, resetVal)
+   
+/**
+ * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
+ *                        be ignored (you need to feed it zero first)
+ */
+def kr(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, speed, lo, hi, resetVal)
+/**
+ * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
+ *                        be ignored (you need to feed it zero first)
+ */
+def ar(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, speed, lo, hi, resetVal)
 }
+/**
+ * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
+ *                        be ignored (you need to feed it zero first)
+ */
 case class Phasor[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE, lo: AnyGE, hi: AnyGE, resetVal: AnyGE) extends SingleOutUGenSource[R, PhasorUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -364,9 +670,37 @@ case class LastValue[R <: Rate](rate: R, in: AnyGE, thresh: AnyGE) extends Singl
    }
 }
 case class LastValueUGen[R <: Rate](rate: R, in: AnyUGenIn, thresh: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, thresh))
+/**
+ * A UGen which monitors another UGen to see when it is finished.
+ * Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
+ * and the Buffer delay UGens set a 'done' flag when they are finished playing. This UGen echoes that flag
+ * as an explicit output signal when it is set to track a particular UGen. When the tracked UGen changes
+ * to done, the output signal changes from zero to one.
+ * 
+ * @see [[de.sciss.synth.ugen.PlayBuf]]
+ * @see [[de.sciss.synth.ugen.Line]]
+ * @see [[de.sciss.synth.ugen.EnvGen]]
+ */
 object Done {
-   def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
+   
+/**
+ * @param src             the UGen to track
+ */
+def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }
+/**
+ * A UGen which monitors another UGen to see when it is finished.
+ * Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
+ * and the Buffer delay UGens set a 'done' flag when they are finished playing. This UGen echoes that flag
+ * as an explicit output signal when it is set to track a particular UGen. When the tracked UGen changes
+ * to done, the output signal changes from zero to one.
+ * 
+ * @param src             the UGen to track
+ * 
+ * @see [[de.sciss.synth.ugen.PlayBuf]]
+ * @see [[de.sciss.synth.ugen.Line]]
+ * @see [[de.sciss.synth.ugen.EnvGen]]
+ */
 case class Done(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends SingleOutUGenSource[control, DoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
@@ -374,9 +708,43 @@ case class Done(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate 
    }
 }
 case class DoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
+/**
+ * A UGen which pauses and resumes another node.
+ * Note that the UGen initially assumes the node is running, that is,
+ * if `gate` is initially 1, this will '''not''' resume a paused node.
+ * Instead, the gate must go to zero and back to one to resume the node.
+ * Additionally, this UGen will only cause action if the gate value
+ * changes, that is, if the node is paused or resumed otherwise, this
+ * UGen will not interfere with that action, unless the gate value is
+ * adjusted.
+ * 
+ * @see [[de.sciss.synth.ugen.Free]]
+ * @see [[de.sciss.synth.ugen.PauseSelf]]
+ */
 object Pause {
-   def kr(gate: AnyGE, node: AnyGE) = apply(gate, node)
+   
+/**
+ * @param gate            when 0, node is paused, when 1, node is resumed
+ * @param node            the id of the node to be paused or resumed
+ */
+def kr(gate: AnyGE, node: AnyGE) = apply(gate, node)
 }
+/**
+ * A UGen which pauses and resumes another node.
+ * Note that the UGen initially assumes the node is running, that is,
+ * if `gate` is initially 1, this will '''not''' resume a paused node.
+ * Instead, the gate must go to zero and back to one to resume the node.
+ * Additionally, this UGen will only cause action if the gate value
+ * changes, that is, if the node is paused or resumed otherwise, this
+ * UGen will not interfere with that action, unless the gate value is
+ * adjusted.
+ * 
+ * @param gate            when 0, node is paused, when 1, node is resumed
+ * @param node            the id of the node to be paused or resumed
+ * 
+ * @see [[de.sciss.synth.ugen.Free]]
+ * @see [[de.sciss.synth.ugen.PauseSelf]]
+ */
 case class Pause(gate: AnyGE, node: AnyGE) extends SingleOutUGenSource[control, PauseUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _gate: IIdxSeq[AnyUGenIn] = gate.expand
@@ -388,9 +756,33 @@ case class Pause(gate: AnyGE, node: AnyGE) extends SingleOutUGenSource[control, 
    }
 }
 case class PauseUGen(gate: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(gate, node)) with HasSideEffect with ControlRated
+/**
+ * A UGen that, when triggered, frees enclosing synth.
+ * It frees the enclosing synth when the input signal crosses from non-positive to positive.
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @see [[de.sciss.synth.ugen.Free]]
+ * @see [[de.sciss.synth.ugen.PauseSelf]]
+ */
 object FreeSelf {
-   def kr(trig: AnyGE) = apply(trig)
+   
+/**
+ * @param trig            the input signal which will trigger the action.
+ */
+def kr(trig: AnyGE) = apply(trig)
 }
+/**
+ * A UGen that, when triggered, frees enclosing synth.
+ * It frees the enclosing synth when the input signal crosses from non-positive to positive.
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @param trig            the input signal which will trigger the action.
+ * 
+ * @see [[de.sciss.synth.ugen.Free]]
+ * @see [[de.sciss.synth.ugen.PauseSelf]]
+ */
 case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control, FreeSelfUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -398,9 +790,33 @@ case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control, FreeSelfUG
    }
 }
 case class FreeSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with HasSideEffect with ControlRated
+/**
+ * A UGen that, when triggered, pauses enclosing synth.
+ * It pauses the enclosing synth when the input signal crosses from non-positive to positive.
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @see [[de.sciss.synth.ugen.Pause]]
+ * @see [[de.sciss.synth.ugen.FreeSelf]]
+ */
 object PauseSelf {
-   def kr(trig: AnyGE) = apply(trig)
+   
+/**
+ * @param trig            the input signal which will trigger the action.
+ */
+def kr(trig: AnyGE) = apply(trig)
 }
+/**
+ * A UGen that, when triggered, pauses enclosing synth.
+ * It pauses the enclosing synth when the input signal crosses from non-positive to positive.
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @param trig            the input signal which will trigger the action.
+ * 
+ * @see [[de.sciss.synth.ugen.Pause]]
+ * @see [[de.sciss.synth.ugen.FreeSelf]]
+ */
 case class PauseSelf(trig: AnyGE) extends SingleOutUGenSource[control, PauseSelfUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -408,9 +824,33 @@ case class PauseSelf(trig: AnyGE) extends SingleOutUGenSource[control, PauseSelf
    }
 }
 case class PauseSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with HasSideEffect with ControlRated
+/**
+ * A UGen that, when triggered, frees a given node.
+ * 
+ * This UGen outputs its trig input signal for convenience.
+ * 
+ * @see [[de.sciss.synth.ugen.Pause]]
+ * @see [[de.sciss.synth.ugen.FreeSelf]]
+ */
 object Free {
-   def kr(trig: AnyGE, node: AnyGE) = apply(trig, node)
+   
+/**
+ * @param trig            the trigger to cause the action
+ * @param node            the id of the target node to free upon receiving the trigger
+ */
+def kr(trig: AnyGE, node: AnyGE) = apply(trig, node)
 }
+/**
+ * A UGen that, when triggered, frees a given node.
+ * 
+ * This UGen outputs its trig input signal for convenience.
+ * 
+ * @param trig            the trigger to cause the action
+ * @param node            the id of the target node to free upon receiving the trigger
+ * 
+ * @see [[de.sciss.synth.ugen.Pause]]
+ * @see [[de.sciss.synth.ugen.FreeSelf]]
+ */
 case class Free(trig: AnyGE, node: AnyGE) extends SingleOutUGenSource[control, FreeUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -422,9 +862,41 @@ case class Free(trig: AnyGE, node: AnyGE) extends SingleOutUGenSource[control, F
    }
 }
 case class FreeUGen(trig: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig, node)) with HasSideEffect with ControlRated
+/**
+ * A UGen that, when its input UGen is finished, frees enclosing synth.
+ * This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
+ * of providing a trigger signal it reads directly the done flag of an
+ * appropriate ugen (such as `Line` or `PlayBuf`).
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @see [[de.sciss.synth.ugen.Free]]
+ * @see [[de.sciss.synth.ugen.FreeSelf]]
+ * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
+ * @see [[de.sciss.synth.ugen.Done]]
+ */
 object FreeSelfWhenDone {
-   def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
+   
+/**
+ * @param src             the input UGen which when finished will trigger the action.
+ */
+def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }
+/**
+ * A UGen that, when its input UGen is finished, frees enclosing synth.
+ * This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
+ * of providing a trigger signal it reads directly the done flag of an
+ * appropriate ugen (such as `Line` or `PlayBuf`).
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @param src             the input UGen which when finished will trigger the action.
+ * 
+ * @see [[de.sciss.synth.ugen.Free]]
+ * @see [[de.sciss.synth.ugen.FreeSelf]]
+ * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
+ * @see [[de.sciss.synth.ugen.Done]]
+ */
 case class FreeSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends SingleOutUGenSource[control, FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
@@ -432,9 +904,41 @@ case class FreeSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { typ
    }
 }
 case class FreeSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
+/**
+ * A UGen that, when its input UGen is finished, pauses enclosing synth.
+ * This is essentially a shortcut for `PauseSelf.kr( Done.kr( src ))`, so instead
+ * of providing a trigger signal it reads directly the done flag of an
+ * appropriate ugen (such as `Line` or `PlayBuf`).
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @see [[de.sciss.synth.ugen.Pause]]
+ * @see [[de.sciss.synth.ugen.PauseSelf]]
+ * @see [[de.sciss.synth.ugen.FreeSelfWhenDone]]
+ * @see [[de.sciss.synth.ugen.Done]]
+ */
 object PauseSelfWhenDone {
-   def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
+   
+/**
+ * @param src             the input UGen which when finished will trigger the action.
+ */
+def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
 }
+/**
+ * A UGen that, when its input UGen is finished, pauses enclosing synth.
+ * This is essentially a shortcut for `PauseSelf.kr( Done.kr( src ))`, so instead
+ * of providing a trigger signal it reads directly the done flag of an
+ * appropriate ugen (such as `Line` or `PlayBuf`).
+ * 
+ * This UGen outputs its input signal for convenience.
+ * 
+ * @param src             the input UGen which when finished will trigger the action.
+ * 
+ * @see [[de.sciss.synth.ugen.Pause]]
+ * @see [[de.sciss.synth.ugen.PauseSelf]]
+ * @see [[de.sciss.synth.ugen.FreeSelfWhenDone]]
+ * @see [[de.sciss.synth.ugen.Done]]
+ */
 case class PauseSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends SingleOutUGenSource[control, PauseSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand

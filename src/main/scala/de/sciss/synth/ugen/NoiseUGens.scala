@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -76,12 +76,36 @@ case class BrownNoise[R <: Rate, S <: Rate, T <: Rate](rate: T, mul: GE[S, UGenI
    }
 }
 case class BrownNoiseUGen[R <: Rate](rate: R) extends SingleOutUGen[R](IIdxSeq.empty) with UsesRandSeed
+/**
+ * A UGen generating random impulses with values ranging from
+ * `0` to `+1`. The pulse duration is one sample for audio-rate
+ * and one block for control-rate operation.
+ * 
+ * @see [[de.sciss.synth.ugen.Dust2]]
+ * @see [[de.sciss.synth.ugen.TRand]]
+ */
 object Dust {
    def kr: Dust[control] = kr()
-   def kr(density: AnyGE = 1.0f) = apply[control](control, density)
+/**
+ * @param density         the average number of impulses per second
+ */
+def kr(density: AnyGE = 1.0f) = apply[control](control, density)
    def ar: Dust[audio] = ar()
-   def ar(density: AnyGE = 1.0f) = apply[audio](audio, density)
+/**
+ * @param density         the average number of impulses per second
+ */
+def ar(density: AnyGE = 1.0f) = apply[audio](audio, density)
 }
+/**
+ * A UGen generating random impulses with values ranging from
+ * `0` to `+1`. The pulse duration is one sample for audio-rate
+ * and one block for control-rate operation.
+ * 
+ * @param density         the average number of impulses per second
+ * 
+ * @see [[de.sciss.synth.ugen.Dust2]]
+ * @see [[de.sciss.synth.ugen.TRand]]
+ */
 case class Dust[R <: Rate](rate: R, density: AnyGE) extends SingleOutUGenSource[R, DustUGen[R]] with UsesRandSeed {
    protected def expandUGens = {
       val _density: IIdxSeq[AnyUGenIn] = density.expand
@@ -89,12 +113,36 @@ case class Dust[R <: Rate](rate: R, density: AnyGE) extends SingleOutUGenSource[
    }
 }
 case class DustUGen[R <: Rate](rate: R, density: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(density)) with UsesRandSeed
+/**
+ * A UGen generating random impulses with values ranging from
+ * `-1` to `+1`. The pulse duration is one sample for audio-rate
+ * and one block for control-rate operation.
+ * 
+ * @see [[de.sciss.synth.ugen.Dust]]
+ * @see [[de.sciss.synth.ugen.TRand]]
+ */
 object Dust2 {
    def kr: Dust2[control] = kr()
-   def kr(density: AnyGE = 1.0f) = apply[control](control, density)
+/**
+ * @param density         the average number of impulses per second
+ */
+def kr(density: AnyGE = 1.0f) = apply[control](control, density)
    def ar: Dust2[audio] = ar()
-   def ar(density: AnyGE = 1.0f) = apply[audio](audio, density)
+/**
+ * @param density         the average number of impulses per second
+ */
+def ar(density: AnyGE = 1.0f) = apply[audio](audio, density)
 }
+/**
+ * A UGen generating random impulses with values ranging from
+ * `-1` to `+1`. The pulse duration is one sample for audio-rate
+ * and one block for control-rate operation.
+ * 
+ * @param density         the average number of impulses per second
+ * 
+ * @see [[de.sciss.synth.ugen.Dust]]
+ * @see [[de.sciss.synth.ugen.TRand]]
+ */
 case class Dust2[R <: Rate](rate: R, density: AnyGE) extends SingleOutUGenSource[R, Dust2UGen[R]] with UsesRandSeed {
    protected def expandUGens = {
       val _density: IIdxSeq[AnyUGenIn] = density.expand
@@ -322,10 +370,16 @@ case class ExpRand(lo: AnyGE = 0.01f, hi: AnyGE = 1.0f) extends SingleOutUGenSou
    }
 }
 case class ExpRandUGen(lo: AnyUGenIn, hi: AnyUGenIn) extends SingleOutUGen[scalar](IIdxSeq(lo, hi)) with ScalarRated with UsesRandSeed
+/**
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 object CoinGate {
    def kr(in: AnyGE, prob: AnyGE = 0.5f) = apply[control](control, in, prob)
    def ar(in: AnyGE, prob: AnyGE = 0.5f) = apply[audio](audio, in, prob)
 }
+/**
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 case class CoinGate[R <: Rate](rate: R, in: AnyGE, prob: AnyGE) extends SingleOutUGenSource[R, CoinGateUGen[R]] with UsesRandSeed {
    protected def expandUGens = {
       val _prob: IIdxSeq[AnyUGenIn] = prob.expand

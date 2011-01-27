@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -11,9 +11,15 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
+/**
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 object GrainIn {
    def ar(in: AnyGE, numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(in, numChannels, trig, dur, pan, envBuf, maxGrains)
 }
+/**
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 case class GrainIn(in: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends MultiOutUGenSource[audio, GrainInUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -83,9 +89,15 @@ case class GrainFM(numChannels: Int, trig: AnyGE, dur: AnyGE, carFreq: AnyGE, mo
    }
 }
 case class GrainFMUGen(numChannels: Int, trig: AnyUGenIn, dur: AnyUGenIn, carFreq: AnyUGenIn, modFreq: AnyUGenIn, index: AnyUGenIn, pan: AnyUGenIn, envBuf: AnyUGenIn, maxGrains: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(trig, dur, carFreq, modFreq, index, pan, envBuf, maxGrains)) with AudioRated
+/**
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 object GrainBuf {
    def ar(buf: AnyGE, numChannels: Int = 1, trig: AnyGE = 0.0f, dur: AnyGE = 1.0f, speed: AnyGE = 1.0f, pos: AnyGE = 0.0f, pan: AnyGE = 0.0f, envBuf: AnyGE = -1.0f, maxGrains: AnyGE = 512.0f) = apply(buf, numChannels, trig, dur, speed, pos, pan, envBuf, maxGrains)
 }
+/**
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ */
 case class GrainBuf(buf: AnyGE, numChannels: Int, trig: AnyGE, dur: AnyGE, speed: AnyGE, pos: AnyGE, pan: AnyGE, envBuf: AnyGE, maxGrains: AnyGE) extends MultiOutUGenSource[audio, GrainBufUGen] with AudioRated {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand

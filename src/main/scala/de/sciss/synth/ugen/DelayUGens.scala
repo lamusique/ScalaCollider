@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 27 18:02:28 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -11,44 +11,148 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
+/**
+ * A UGen that reports the server's current control rate. This is equivalent to the reciprocal
+ * of `ControlDur`
+ * 
+ * @see [[de.sciss.synth.ugen.ControlDur]]
+ * @see [[de.sciss.synth.ugen.SampleRate]]
+ */
 object ControlRate {
    def ir = apply()
 }
+/**
+ * A UGen that reports the server's current control rate. This is equivalent to the reciprocal
+ * of `ControlDur`
+ * 
+ * @see [[de.sciss.synth.ugen.ControlDur]]
+ * @see [[de.sciss.synth.ugen.SampleRate]]
+ */
 case class ControlRate() extends SingleOutUGenSource[scalar, ControlRateUGen] with ScalarRated {
    protected def expandUGens = IIdxSeq(ControlRateUGen())
 }
 case class ControlRateUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+/**
+ * A UGen that reports the server's current (audio) sample rate. This is equivalent to the reciprocal
+ * of `SampleDur`
+ * 
+ * @see [[de.sciss.synth.ugen.SampleDur]]
+ * @see [[de.sciss.synth.ugen.ControlRate]]
+ * @see [[de.sciss.synth.ugen.RadiansPerSample]]
+ */
 object SampleRate {
    def ir = apply()
 }
+/**
+ * A UGen that reports the server's current (audio) sample rate. This is equivalent to the reciprocal
+ * of `SampleDur`
+ * 
+ * @see [[de.sciss.synth.ugen.SampleDur]]
+ * @see [[de.sciss.synth.ugen.ControlRate]]
+ * @see [[de.sciss.synth.ugen.RadiansPerSample]]
+ */
 case class SampleRate() extends SingleOutUGenSource[scalar, SampleRateUGen] with ScalarRated {
    protected def expandUGens = IIdxSeq(SampleRateUGen())
 }
 case class SampleRateUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+/**
+ * A UGen that reports the server's current (audio) sample period in seconds. This is equivalent to the reciprocal
+ * of `SampleRate`
+ * 
+ * @see [[de.sciss.synth.ugen.SampleRate]]
+ * @see [[de.sciss.synth.ugen.ControlDur]]
+ */
 object SampleDur {
    def ir = apply()
 }
+/**
+ * A UGen that reports the server's current (audio) sample period in seconds. This is equivalent to the reciprocal
+ * of `SampleRate`
+ * 
+ * @see [[de.sciss.synth.ugen.SampleRate]]
+ * @see [[de.sciss.synth.ugen.ControlDur]]
+ */
 case class SampleDur() extends SingleOutUGenSource[scalar, SampleDurUGen] with ScalarRated {
    protected def expandUGens = IIdxSeq(SampleDurUGen())
 }
 case class SampleDurUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+/**
+ * A UGen that reports the server's current control period in seconds. This is equivalent to the reciprocal
+ * of `ControlRate`
+ * 
+ * @see [[de.sciss.synth.ugen.ControlRate]]
+ * @see [[de.sciss.synth.ugen.SampleDur]]
+ */
 object ControlDur {
    def ir = apply()
 }
+/**
+ * A UGen that reports the server's current control period in seconds. This is equivalent to the reciprocal
+ * of `ControlRate`
+ * 
+ * @see [[de.sciss.synth.ugen.ControlRate]]
+ * @see [[de.sciss.synth.ugen.SampleDur]]
+ */
 case class ControlDur() extends SingleOutUGenSource[scalar, ControlDurUGen] with ScalarRated {
    protected def expandUGens = IIdxSeq(ControlDurUGen())
 }
 case class ControlDurUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+/**
+ * A UGen that reports the fractional sample offset of the current Synth from its requested scheduled start.
+ * 
+ * When a synth is created from a time stamped osc-bundle, it starts
+ * calculation at the next possible block (normally 64 samples). Using an
+ * `OffsetOut` UGen, one can delay the audio so that it matches sample
+ * accurately.
+ * 
+ * For some synthesis methods, one even needs subsample accuracy. `SubsampleOffset`
+ * provides the information where, within the current sample, the synth was
+ * scheduled. It can be used to offset envelopes or resample the audio
+ * output.
+ * 
+ * @see [[de.sciss.synth.ugen.ControlRate]]
+ * @see [[de.sciss.synth.ugen.SampleDur]]
+ */
 object SubsampleOffset {
    def ir = apply()
 }
+/**
+ * A UGen that reports the fractional sample offset of the current Synth from its requested scheduled start.
+ * 
+ * When a synth is created from a time stamped osc-bundle, it starts
+ * calculation at the next possible block (normally 64 samples). Using an
+ * `OffsetOut` UGen, one can delay the audio so that it matches sample
+ * accurately.
+ * 
+ * For some synthesis methods, one even needs subsample accuracy. `SubsampleOffset`
+ * provides the information where, within the current sample, the synth was
+ * scheduled. It can be used to offset envelopes or resample the audio
+ * output.
+ * 
+ * @see [[de.sciss.synth.ugen.ControlRate]]
+ * @see [[de.sciss.synth.ugen.SampleDur]]
+ */
 case class SubsampleOffset() extends SingleOutUGenSource[scalar, SubsampleOffsetUGen] with ScalarRated {
    protected def expandUGens = IIdxSeq(SubsampleOffsetUGen())
 }
 case class SubsampleOffsetUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+/**
+ * A UGen that delivers the conversion factor from frequency in Hertz to radians (normalized frequency).
+ * The relation is `RadiansPerSample * sr = 2pi`, thus multiplying the UGen with a frequency between
+ * zero and nyquist (sr/2) yields the normalized frequency between zero and pi.
+ * 
+ * @see [[de.sciss.synth.ugen.SampleRate]]
+ */
 object RadiansPerSample {
    def ir = apply()
 }
+/**
+ * A UGen that delivers the conversion factor from frequency in Hertz to radians (normalized frequency).
+ * The relation is `RadiansPerSample * sr = 2pi`, thus multiplying the UGen with a frequency between
+ * zero and nyquist (sr/2) yields the normalized frequency between zero and pi.
+ * 
+ * @see [[de.sciss.synth.ugen.SampleRate]]
+ */
 case class RadiansPerSample() extends SingleOutUGenSource[scalar, RadiansPerSampleUGen] with ScalarRated {
    protected def expandUGens = IIdxSeq(RadiansPerSampleUGen())
 }
@@ -161,10 +265,93 @@ case class BufDur[R <: Rate](rate: R, buf: AnyGE) extends SingleOutUGenSource[R,
    }
 }
 case class BufDurUGen[R <: Rate](rate: R, buf: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(buf))
+/**
+ * A UGen to play back samples from a buffer in memory.
+ * 
+ * `PlayBuf` provides a kind of high-level interface to sample-playback, whereas `BufRd`
+ * represents a kind of lower-level access. While `BufRd` has a random-access-pointer
+ * in the form of a phase input, `PlayBuf` advances the phase automatically based on
+ * a given playback speed. `PlayBuf` uses cubic interpolation.
+ * 
+ * @see [[de.sciss.synth.ugen.BufRd]]
+ * @see [[de.sciss.synth.ugen.DiskIn]]
+ * @see [[de.sciss.synth.ugen.RecordBuf]]
+ * @see [[de.sciss.synth.DoneAction]]
+ * @see [[de.sciss.synth.ugen.Done]]
+ * @see [[de.sciss.synth.ugen.BufRateScale]]
+ * @see [[de.sciss.synth.ugen.BufFrames]]
+ */
 object PlayBuf {
-   def kr(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, numChannels, buf, speed, trig, startPos, loop, doneAction)
-   def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, numChannels, buf, speed, trig, startPos, loop, doneAction)
+   
+/**
+ * @param numChannels     the number of channels that the buffer will be. Since
+ *                        this is a constant, a change in number of channels of the underlying bus must
+ *                        be reflected by creating different SynthDefs. If a buffer identifier is used of a buffer
+ *                        that has a different numChannels then specified in the PlayBuf, it will fail silently.
+ * @param buf             the identifier of the buffer to use
+ * @param speed           1.0 advances the play head by the server's sample rate each second,
+ *                        so 2.0 means doubling speed (and pitch), and 0.5 means half speed (and half pitch).
+ *                        Negative numbers can be used for backwards playback. If the underlying buffer
+ *                        represents a sound at a different sample rate, the rate should be
+ *                        multiplied by `BufRateScale.kr( bufID )` to obtain the correct speed.
+ * @param trig            a trigger which causes a jump to the given startPos. A trigger occurs when a
+ *                        signal changes from non-positive to positive (e.g. <= 0 to > 0).
+ * @param startPos        sample frame to start playback. This is read when a trigger occurs.
+ * @param loop            1 to loop after the play head reaches the buffer end, 0 to not loop. this can be modulated.
+ * @param doneAction      what to do when the play head reaches the buffer end.
+ */
+def kr(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, numChannels, buf, speed, trig, startPos, loop, doneAction)
+/**
+ * @param numChannels     the number of channels that the buffer will be. Since
+ *                        this is a constant, a change in number of channels of the underlying bus must
+ *                        be reflected by creating different SynthDefs. If a buffer identifier is used of a buffer
+ *                        that has a different numChannels then specified in the PlayBuf, it will fail silently.
+ * @param buf             the identifier of the buffer to use
+ * @param speed           1.0 advances the play head by the server's sample rate each second,
+ *                        so 2.0 means doubling speed (and pitch), and 0.5 means half speed (and half pitch).
+ *                        Negative numbers can be used for backwards playback. If the underlying buffer
+ *                        represents a sound at a different sample rate, the rate should be
+ *                        multiplied by `BufRateScale.kr( bufID )` to obtain the correct speed.
+ * @param trig            a trigger which causes a jump to the given startPos. A trigger occurs when a
+ *                        signal changes from non-positive to positive (e.g. <= 0 to > 0).
+ * @param startPos        sample frame to start playback. This is read when a trigger occurs.
+ * @param loop            1 to loop after the play head reaches the buffer end, 0 to not loop. this can be modulated.
+ * @param doneAction      what to do when the play head reaches the buffer end.
+ */
+def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, startPos: AnyGE = 0.0f, loop: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, numChannels, buf, speed, trig, startPos, loop, doneAction)
 }
+/**
+ * A UGen to play back samples from a buffer in memory.
+ * 
+ * `PlayBuf` provides a kind of high-level interface to sample-playback, whereas `BufRd`
+ * represents a kind of lower-level access. While `BufRd` has a random-access-pointer
+ * in the form of a phase input, `PlayBuf` advances the phase automatically based on
+ * a given playback speed. `PlayBuf` uses cubic interpolation.
+ * 
+ * @param numChannels     the number of channels that the buffer will be. Since
+ *                        this is a constant, a change in number of channels of the underlying bus must
+ *                        be reflected by creating different SynthDefs. If a buffer identifier is used of a buffer
+ *                        that has a different numChannels then specified in the PlayBuf, it will fail silently.
+ * @param buf             the identifier of the buffer to use
+ * @param speed           1.0 advances the play head by the server's sample rate each second,
+ *                        so 2.0 means doubling speed (and pitch), and 0.5 means half speed (and half pitch).
+ *                        Negative numbers can be used for backwards playback. If the underlying buffer
+ *                        represents a sound at a different sample rate, the rate should be
+ *                        multiplied by `BufRateScale.kr( bufID )` to obtain the correct speed.
+ * @param trig            a trigger which causes a jump to the given startPos. A trigger occurs when a
+ *                        signal changes from non-positive to positive (e.g. <= 0 to > 0).
+ * @param startPos        sample frame to start playback. This is read when a trigger occurs.
+ * @param loop            1 to loop after the play head reaches the buffer end, 0 to not loop. this can be modulated.
+ * @param doneAction      what to do when the play head reaches the buffer end.
+ * 
+ * @see [[de.sciss.synth.ugen.BufRd]]
+ * @see [[de.sciss.synth.ugen.DiskIn]]
+ * @see [[de.sciss.synth.ugen.RecordBuf]]
+ * @see [[de.sciss.synth.DoneAction]]
+ * @see [[de.sciss.synth.ugen.Done]]
+ * @see [[de.sciss.synth.ugen.BufRateScale]]
+ * @see [[de.sciss.synth.ugen.BufFrames]]
+ */
 case class PlayBuf[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[R, PlayBufUGen[R]] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
@@ -213,10 +400,73 @@ case class RecordBuf[R <: Rate](rate: R, in: Multi[AnyGE], buf: AnyGE, offset: A
    }
 }
 case class RecordBufUGen[R <: Rate](rate: R, in: IIdxSeq[AnyUGenIn], buf: AnyUGenIn, offset: AnyUGenIn, recLevel: AnyUGenIn, preLevel: AnyUGenIn, run: AnyUGenIn, loop: AnyUGenIn, trig: AnyUGenIn, doneAction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](buf, offset, recLevel, preLevel, run, loop, trig, doneAction).++(in)) with WritesBuffer
+/**
+ * A UGen which reads the content of a buffer, using an index pointer.
+ * 
+ * Warning: if the supplied `bufID` refers to a buffer whose number of channels
+ * differs from `numChannels`, the UGen will fail silently.
+ * 
+ * An alternative to `BufRd` is `PlayBuf`. While `PlayBuf` plays
+ * through the buffer by itself, `BufRd` only moves its read point by the phase input
+ * and therefore has no pitch input. `PlayBuf` uses cubic interplation, while
+ * `BufRd` has variable interpolation. `PlayBuf` can determine the end of the buffer
+ * and issue a done-action.
+ * 
+ * @see [[de.sciss.synth.ugen.PlayBuf]]
+ * @see [[de.sciss.synth.ugen.BufWr]]
+ * @see [[de.sciss.synth.ugen.Phasor]]
+ * @see [[de.sciss.synth.ugen.BufFrames]]
+ * @see [[de.sciss.synth.ugen.BufRateScale]]
+ */
 object BufRd {
-   def kr(numChannels: Int, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[control](control, numChannels, buf, index, loop, interp)
-   def ar(numChannels: Int, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[audio](audio, numChannels, buf, index, loop, interp)
+   
+/**
+ * @param numChannels     number of channels that the buffer will be.
+ *                        Since this is an integer constant, a change in the number of channels must
+ *                        be reflected by creating different SynthDefs.
+ * @param buf             the identifier of the buffer to use
+ * @param index           audio rate frame-index into the buffer.
+ * @param loop            1 to enable looping, 0 to disable looping. this can be modulated.
+ * @param interp          1 for no interpolation, 2 for linear, and 4 for cubic interpolation
+ */
+def kr(numChannels: Int, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[control](control, numChannels, buf, index, loop, interp)
+/**
+ * @param numChannels     number of channels that the buffer will be.
+ *                        Since this is an integer constant, a change in the number of channels must
+ *                        be reflected by creating different SynthDefs.
+ * @param buf             the identifier of the buffer to use
+ * @param index           audio rate frame-index into the buffer.
+ * @param loop            1 to enable looping, 0 to disable looping. this can be modulated.
+ * @param interp          1 for no interpolation, 2 for linear, and 4 for cubic interpolation
+ */
+def ar(numChannels: Int, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f, interp: AnyGE = 2.0f) = apply[audio](audio, numChannels, buf, index, loop, interp)
 }
+/**
+ * A UGen which reads the content of a buffer, using an index pointer.
+ * 
+ * Warning: if the supplied `bufID` refers to a buffer whose number of channels
+ * differs from `numChannels`, the UGen will fail silently.
+ * 
+ * An alternative to `BufRd` is `PlayBuf`. While `PlayBuf` plays
+ * through the buffer by itself, `BufRd` only moves its read point by the phase input
+ * and therefore has no pitch input. `PlayBuf` uses cubic interplation, while
+ * `BufRd` has variable interpolation. `PlayBuf` can determine the end of the buffer
+ * and issue a done-action.
+ * 
+ * @param numChannels     number of channels that the buffer will be.
+ *                        Since this is an integer constant, a change in the number of channels must
+ *                        be reflected by creating different SynthDefs.
+ * @param buf             the identifier of the buffer to use
+ * @param index           audio rate frame-index into the buffer.
+ * @param loop            1 to enable looping, 0 to disable looping. this can be modulated.
+ * @param interp          1 for no interpolation, 2 for linear, and 4 for cubic interpolation
+ * 
+ * @see [[de.sciss.synth.ugen.PlayBuf]]
+ * @see [[de.sciss.synth.ugen.BufWr]]
+ * @see [[de.sciss.synth.ugen.Phasor]]
+ * @see [[de.sciss.synth.ugen.BufFrames]]
+ * @see [[de.sciss.synth.ugen.BufRateScale]]
+ */
 case class BufRd[R <: Rate](rate: R, numChannels: Int, buf: AnyGE, index: AnyGE, loop: AnyGE, interp: AnyGE) extends MultiOutUGenSource[R, BufRdUGen[R]] {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand

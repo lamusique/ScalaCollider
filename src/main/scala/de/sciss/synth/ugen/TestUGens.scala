@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -11,11 +11,47 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
+/**
+ * A UGen to test for infinity, not-a-number (NaN), and denormals.
+ * Its output is as follows: 0 = a normal float, 1 = NaN, 2 = infinity, and 3 = a denormal.
+ * According to the post settings it will print the information to the console along
+ * with a given identifier.
+ */
 object CheckBadValues {
-   def ir(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[scalar](scalar, in, id, post)
-   def kr(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[control](control, in, id, post)
-   def ar(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[audio](audio, in, id, post)
+   
+/**
+ * @param in              the signal to be tested
+ * @param id              an identifier showing up with the values in the console
+ * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
+ *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
+ */
+def ir(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[scalar](scalar, in, id, post)
+/**
+ * @param in              the signal to be tested
+ * @param id              an identifier showing up with the values in the console
+ * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
+ *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
+ */
+def kr(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[control](control, in, id, post)
+/**
+ * @param in              the signal to be tested
+ * @param id              an identifier showing up with the values in the console
+ * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
+ *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
+ */
+def ar(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[audio](audio, in, id, post)
 }
+/**
+ * A UGen to test for infinity, not-a-number (NaN), and denormals.
+ * Its output is as follows: 0 = a normal float, 1 = NaN, 2 = infinity, and 3 = a denormal.
+ * According to the post settings it will print the information to the console along
+ * with a given identifier.
+ * 
+ * @param in              the signal to be tested
+ * @param id              an identifier showing up with the values in the console
+ * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
+ *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
+ */
 case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE) extends SingleOutUGenSource[R, CheckBadValuesUGen[R]] with HasSideEffect {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyUGenIn] = in.expand

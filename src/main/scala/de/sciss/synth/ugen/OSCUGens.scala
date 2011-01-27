@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -28,10 +28,45 @@ case class DegreeToKey[R <: Rate](rate: R, buf: AnyGE, in: AnyGE, octave: AnyGE)
    }
 }
 case class DegreeToKeyUGen[R <: Rate](rate: R, buf: AnyUGenIn, in: AnyUGenIn, octave: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(buf, in, octave))
+/**
+ * A UGen which selects among a sequence of inputs, according to an index signal.
+ * Note that, although only one signal of the `multi` input is let through at
+ * a time, sill all ugens are continuously running.
+ * 
+ * @see [[de.sciss.synth.ugen.TWindex]]
+ */
 object Select {
-   def kr(index: AnyGE, in: Multi[AnyGE]) = apply[control](control, index, in)
-   def ar(index: AnyGE, in: Multi[AnyGE]) = apply[audio](audio, index, in)
+   
+/**
+ * @param index           an index signal into the channels of the `multi` argument. The index
+ *                        is automatically clipped to lie between `0` and `multi.numOutputs - 1`. The index
+ *                        is truncated to its integer part (not rounded), hence using for instance an
+ *                        index of `0.9` will still be interpreted as index `0`.
+ * @param in              a graph element which is composed of the channels to be indexed.
+ */
+def kr(index: AnyGE, in: Multi[AnyGE]) = apply[control](control, index, in)
+/**
+ * @param index           an index signal into the channels of the `multi` argument. The index
+ *                        is automatically clipped to lie between `0` and `multi.numOutputs - 1`. The index
+ *                        is truncated to its integer part (not rounded), hence using for instance an
+ *                        index of `0.9` will still be interpreted as index `0`.
+ * @param in              a graph element which is composed of the channels to be indexed.
+ */
+def ar(index: AnyGE, in: Multi[AnyGE]) = apply[audio](audio, index, in)
 }
+/**
+ * A UGen which selects among a sequence of inputs, according to an index signal.
+ * Note that, although only one signal of the `multi` input is let through at
+ * a time, sill all ugens are continuously running.
+ * 
+ * @param index           an index signal into the channels of the `multi` argument. The index
+ *                        is automatically clipped to lie between `0` and `multi.numOutputs - 1`. The index
+ *                        is truncated to its integer part (not rounded), hence using for instance an
+ *                        index of `0.9` will still be interpreted as index `0`.
+ * @param in              a graph element which is composed of the channels to be indexed.
+ * 
+ * @see [[de.sciss.synth.ugen.TWindex]]
+ */
 case class Select[R <: Rate](rate: R, index: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[R, SelectUGen[R]] {
    protected def expandUGens = {
       val _index: IIdxSeq[AnyUGenIn] = index.expand
@@ -43,10 +78,61 @@ case class Select[R <: Rate](rate: R, index: AnyGE, in: Multi[AnyGE]) extends Si
    }
 }
 case class SelectUGen[R <: Rate](rate: R, index: AnyUGenIn, in: IIdxSeq[AnyUGenIn]) extends SingleOutUGen[R](IIdxSeq[AnyUGenIn](index).++(in))
+/**
+ * A UGen providing a probability-weighted index into a sequence upon receiving a trigger.
+ * 
+ * When triggered, returns a random index value based the values of the channels of the
+ * `prob` argument functioning as probabilities. The index is zero based, hence goes from
+ * `0` to `prob.numOutputs - 1`.
+ * 
+ * By default the sequence of probabilities should sum to 1.0, however for convenience, this
+ * can be achieved by the ugen when the `normalize` flag is set to 1 (less efficient).
+ * 
+ * @see [[de.sciss.synth.ugen.Select]]
+ */
 object TWindex {
-   def kr(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[control](control, trig, prob, normalize)
-   def ar(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[audio](audio, trig, prob, normalize)
+   
+/**
+ * @param trig            the trigger used to calculate a new index. a trigger occurs when passing
+ *                        from non-positive to positive
+ * @param prob            a multi-channel graph element, where the output channels correspond to
+ *                        to the probabilites of their respective indices being chosen.
+ * @param normalize       `0` if the seq argument already sums up to 1.0 and thus doesn't need
+ *                        normalization, `1` if the sum is not guaranteed to be 1.0 and thus the ugen is asked
+ *                        to provide the normalization.
+ */
+def kr(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[control](control, trig, prob, normalize)
+/**
+ * @param trig            the trigger used to calculate a new index. a trigger occurs when passing
+ *                        from non-positive to positive
+ * @param prob            a multi-channel graph element, where the output channels correspond to
+ *                        to the probabilites of their respective indices being chosen.
+ * @param normalize       `0` if the seq argument already sums up to 1.0 and thus doesn't need
+ *                        normalization, `1` if the sum is not guaranteed to be 1.0 and thus the ugen is asked
+ *                        to provide the normalization.
+ */
+def ar(trig: AnyGE, prob: AnyGE, normalize: AnyGE = 0.0f) = apply[audio](audio, trig, prob, normalize)
 }
+/**
+ * A UGen providing a probability-weighted index into a sequence upon receiving a trigger.
+ * 
+ * When triggered, returns a random index value based the values of the channels of the
+ * `prob` argument functioning as probabilities. The index is zero based, hence goes from
+ * `0` to `prob.numOutputs - 1`.
+ * 
+ * By default the sequence of probabilities should sum to 1.0, however for convenience, this
+ * can be achieved by the ugen when the `normalize` flag is set to 1 (less efficient).
+ * 
+ * @param trig            the trigger used to calculate a new index. a trigger occurs when passing
+ *                        from non-positive to positive
+ * @param prob            a multi-channel graph element, where the output channels correspond to
+ *                        to the probabilites of their respective indices being chosen.
+ * @param normalize       `0` if the seq argument already sums up to 1.0 and thus doesn't need
+ *                        normalization, `1` if the sum is not guaranteed to be 1.0 and thus the ugen is asked
+ *                        to provide the normalization.
+ * 
+ * @see [[de.sciss.synth.ugen.Select]]
+ */
 case class TWindex[R <: Rate](rate: R, trig: AnyGE, prob: AnyGE, normalize: AnyGE) extends SingleOutUGenSource[R, TWindexUGen[R]] {
    protected def expandUGens = {
       val _trig: IIdxSeq[AnyUGenIn] = trig.expand
@@ -152,12 +238,37 @@ case class FSinOsc[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends Singl
    }
 }
 case class FSinOscUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase))
+/**
+ * A Sinusoidal (sine tone) oscillator UGen.
+ * This is the same as `Osc` except that it uses a built-in interpolating sine table of 8192 entries.
+ * 
+ * @see [[de.sciss.synth.ugen.Osc]]
+ * @see [[de.sciss.synth.ugen.FSinOsc]]
+ */
 object SinOsc {
    def ar: SinOsc[audio] = ar()
-   def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
+/**
+ * @param freq            frequency in Hertz
+ * @param phase           phase offset or modulator in radians
+ */
+def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
    def kr: SinOsc[control] = kr()
-   def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
+/**
+ * @param freq            frequency in Hertz
+ * @param phase           phase offset or modulator in radians
+ */
+def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
+/**
+ * A Sinusoidal (sine tone) oscillator UGen.
+ * This is the same as `Osc` except that it uses a built-in interpolating sine table of 8192 entries.
+ * 
+ * @param freq            frequency in Hertz
+ * @param phase           phase offset or modulator in radians
+ * 
+ * @see [[de.sciss.synth.ugen.Osc]]
+ * @see [[de.sciss.synth.ugen.FSinOsc]]
+ */
 case class SinOsc[R <: Rate](rate: R, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, SinOscUGen[R]] {
    protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand

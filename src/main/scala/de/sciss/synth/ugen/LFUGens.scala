@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 20:56:40 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -40,12 +40,71 @@ case class Vibrato[R <: Rate](rate: R, freq: AnyGE, beat: AnyGE, depth: AnyGE, d
    }
 }
 case class VibratoUGen[R <: Rate](rate: R, freq: AnyUGenIn, beat: AnyUGenIn, depth: AnyUGenIn, delay: AnyUGenIn, onset: AnyUGenIn, beatVar: AnyUGenIn, depthVar: AnyUGenIn, iphase: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, beat, depth, delay, onset, beatVar, depthVar, iphase))
+/**
+ * A non-band-limited pulse oscillator UGen.
+ * Outputs a high value of one and a low value of zero.
+ * 
+ * @see [[de.sciss.synth.ugen.Pulse]]
+ */
 object LFPulse {
    def kr: LFPulse[control] = kr()
-   def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[control](control, freq, iphase, width)
+/**
+ * @param freq            oscillator frequency in Hertz
+ * @param iphase          initial phase offset in cycles ( `0..1` ). If you think
+ *                        of a buffer of one cycle of the waveform, this is the starting offset
+ *                        into this buffer. Hence, an `iphase` of `0.25` means that you will hear
+ *                        the first impulse after `0.75` periods! If you prefer to specify the
+ *                        perceived delay instead, you could use an `iphase` of `-0.25 + 1` which
+ *                        is more intuitive. Note that the phase is not automatically wrapped
+ *                        into the range of `0..1`, so putting an `iphase` of `-0.25` currently
+ *                        results in a strange initial signal which only stabilizes to the
+ *                        correct behaviour after one period!
+ * @param width           pulse width duty cycle from zero to one. If you want to
+ *                        specify the width rather in seconds, you can use the formula
+ *                        `width = freq * dur`, e.g. for a single sample impulse use
+ *                        `width = freq * SampleDur.ir`.
+ */
+def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[control](control, freq, iphase, width)
    def ar: LFPulse[audio] = ar()
-   def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[audio](audio, freq, iphase, width)
+/**
+ * @param freq            oscillator frequency in Hertz
+ * @param iphase          initial phase offset in cycles ( `0..1` ). If you think
+ *                        of a buffer of one cycle of the waveform, this is the starting offset
+ *                        into this buffer. Hence, an `iphase` of `0.25` means that you will hear
+ *                        the first impulse after `0.75` periods! If you prefer to specify the
+ *                        perceived delay instead, you could use an `iphase` of `-0.25 + 1` which
+ *                        is more intuitive. Note that the phase is not automatically wrapped
+ *                        into the range of `0..1`, so putting an `iphase` of `-0.25` currently
+ *                        results in a strange initial signal which only stabilizes to the
+ *                        correct behaviour after one period!
+ * @param width           pulse width duty cycle from zero to one. If you want to
+ *                        specify the width rather in seconds, you can use the formula
+ *                        `width = freq * dur`, e.g. for a single sample impulse use
+ *                        `width = freq * SampleDur.ir`.
+ */
+def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f, width: AnyGE = 0.5f) = apply[audio](audio, freq, iphase, width)
 }
+/**
+ * A non-band-limited pulse oscillator UGen.
+ * Outputs a high value of one and a low value of zero.
+ * 
+ * @param freq            oscillator frequency in Hertz
+ * @param iphase          initial phase offset in cycles ( `0..1` ). If you think
+ *                        of a buffer of one cycle of the waveform, this is the starting offset
+ *                        into this buffer. Hence, an `iphase` of `0.25` means that you will hear
+ *                        the first impulse after `0.75` periods! If you prefer to specify the
+ *                        perceived delay instead, you could use an `iphase` of `-0.25 + 1` which
+ *                        is more intuitive. Note that the phase is not automatically wrapped
+ *                        into the range of `0..1`, so putting an `iphase` of `-0.25` currently
+ *                        results in a strange initial signal which only stabilizes to the
+ *                        correct behaviour after one period!
+ * @param width           pulse width duty cycle from zero to one. If you want to
+ *                        specify the width rather in seconds, you can use the formula
+ *                        `width = freq * dur`, e.g. for a single sample impulse use
+ *                        `width = freq * SampleDur.ir`.
+ * 
+ * @see [[de.sciss.synth.ugen.Pulse]]
+ */
 case class LFPulse[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE, width: AnyGE) extends SingleOutUGenSource[R, LFPulseUGen[R]] {
    protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -59,12 +118,46 @@ case class LFPulse[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE, width: AnyGE)
    }
 }
 case class LFPulseUGen[R <: Rate](rate: R, freq: AnyUGenIn, iphase: AnyUGenIn, width: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(freq, iphase, width))
+/**
+ * A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
+ * that is it does not use band-limiting. For a band-limited version use
+ * `Saw` instead. The signal range is -1 to +1.
+ * 
+ * @see [[de.sciss.synth.ugen.Saw]]
+ */
 object LFSaw {
    def kr: LFSaw[control] = kr()
-   def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
+/**
+ * @param freq            oscillator frequency in Hertz
+ * @param iphase          initial phase offset. For efficiency reasons this is a
+ *                        value ranging from -1 to 1 (thus equal to the initial output value).
+ *                        Note that a phase of zero (default) means the wave starts at 0 and
+ *                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
+ */
+def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
    def ar: LFSaw[audio] = ar()
-   def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
+/**
+ * @param freq            oscillator frequency in Hertz
+ * @param iphase          initial phase offset. For efficiency reasons this is a
+ *                        value ranging from -1 to 1 (thus equal to the initial output value).
+ *                        Note that a phase of zero (default) means the wave starts at 0 and
+ *                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
+ */
+def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
 }
+/**
+ * A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
+ * that is it does not use band-limiting. For a band-limited version use
+ * `Saw` instead. The signal range is -1 to +1.
+ * 
+ * @param freq            oscillator frequency in Hertz
+ * @param iphase          initial phase offset. For efficiency reasons this is a
+ *                        value ranging from -1 to 1 (thus equal to the initial output value).
+ *                        Note that a phase of zero (default) means the wave starts at 0 and
+ *                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
+ * 
+ * @see [[de.sciss.synth.ugen.Saw]]
+ */
 case class LFSaw[R <: Rate](rate: R, freq: AnyGE, iphase: AnyGE) extends SingleOutUGenSource[R, LFSawUGen[R]] {
    protected def expandUGens = {
       val _freq: IIdxSeq[AnyUGenIn] = freq.expand
@@ -258,13 +351,50 @@ object Silent {
    def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
 }
-case class Silent(numChannels: Int) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
+case class Silent(numChannels: Int) extends MultiOutUGenSource[audio, SilentUGen] with AudioRated {
+   protected def expandUGens = IIdxSeq(SilentUGen(numChannels))
+}
+case class SilentUGen(numChannels: Int) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
+/**
+ * A line generator UGen that moves from a start value to the end value in a given duration.
+ * 
+ * @see [[de.sciss.synth.ugen.XLine]]
+ * @see [[de.sciss.synth.ugen.EnvGen]]
+ * @see [[de.sciss.synth.ugen.Ramp]]
+ */
 object Line {
    def ar: Line[audio] = ar()
-   def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, start, end, dur, doneAction)
+/**
+ * @param start           Starting value. Note that this is read only once at initialization
+ * @param end             Ending value. Note that this is read only once at initialization
+ * @param dur             Duration in seconds. Note that this is read only once at initialization
+ * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
+ *                        given duration
+ */
+def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, start, end, dur, doneAction)
    def kr: Line[control] = kr()
-   def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, start, end, dur, doneAction)
+/**
+ * @param start           Starting value. Note that this is read only once at initialization
+ * @param end             Ending value. Note that this is read only once at initialization
+ * @param dur             Duration in seconds. Note that this is read only once at initialization
+ * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
+ *                        given duration
+ */
+def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, start, end, dur, doneAction)
 }
+/**
+ * A line generator UGen that moves from a start value to the end value in a given duration.
+ * 
+ * @param start           Starting value. Note that this is read only once at initialization
+ * @param end             Ending value. Note that this is read only once at initialization
+ * @param dur             Duration in seconds. Note that this is read only once at initialization
+ * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
+ *                        given duration
+ * 
+ * @see [[de.sciss.synth.ugen.XLine]]
+ * @see [[de.sciss.synth.ugen.EnvGen]]
+ * @see [[de.sciss.synth.ugen.Ramp]]
+ */
 case class Line[R <: Rate](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, LineUGen[R]] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
       val _start: IIdxSeq[AnyUGenIn] = start.expand
