@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 27 20:56:40 GMT 2011
+ * Created: Thu Jan 27 23:03:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,14 +12,14 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object Spring {
-   def kr(in: AnyGE, spring: AnyGE = 1.0f, damp: AnyGE = 0.0f) = apply[control](control, in, spring, damp)
-   def ar(in: AnyGE, spring: AnyGE = 1.0f, damp: AnyGE = 0.0f) = apply[audio](audio, in, spring, damp)
+   def kr(in: AnyGE, spring: AnyGE = 1.0f, damp: AnyGE = 0.0f) = apply(control, in, spring, damp)
+   def ar(in: AnyGE, spring: AnyGE = 1.0f, damp: AnyGE = 0.0f) = apply(audio, in, spring, damp)
 }
-case class Spring[R <: Rate](rate: R, in: AnyGE, spring: AnyGE, damp: AnyGE) extends SingleOutUGenSource[R, SpringUGen[R]] {
+case class Spring(rate: Rate, in: AnyGE, spring: AnyGE, damp: AnyGE) extends SingleOutUGenSource[SpringUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _spring: IIdxSeq[AnyUGenIn] = spring.expand
-      val _damp: IIdxSeq[AnyUGenIn] = damp.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _spring: IIdxSeq[UGenIn] = spring.expand
+      val _damp: IIdxSeq[UGenIn] = damp.expand
       val _sz_in = _in.size
       val _sz_spring = _spring.size
       val _sz_damp = _damp.size
@@ -27,17 +27,17 @@ case class Spring[R <: Rate](rate: R, in: AnyGE, spring: AnyGE, damp: AnyGE) ext
       IIdxSeq.tabulate(_exp_)(i => SpringUGen(rate, _in(i.%(_sz_in)), _spring(i.%(_sz_spring)), _damp(i.%(_sz_damp))))
    }
 }
-case class SpringUGen[R <: Rate](rate: R, in: AnyUGenIn, spring: AnyUGenIn, damp: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, spring, damp))
+case class SpringUGen(rate: Rate, in: UGenIn, spring: UGenIn, damp: UGenIn) extends SingleOutUGen(IIdxSeq(in, spring, damp))
 object Ball {
-   def kr(in: AnyGE, g: AnyGE = 1.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply[control](control, in, g, damp, friction)
-   def ar(in: AnyGE, g: AnyGE = 1.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply[audio](audio, in, g, damp, friction)
+   def kr(in: AnyGE, g: AnyGE = 1.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply(control, in, g, damp, friction)
+   def ar(in: AnyGE, g: AnyGE = 1.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply(audio, in, g, damp, friction)
 }
-case class Ball[R <: Rate](rate: R, in: AnyGE, g: AnyGE, damp: AnyGE, friction: AnyGE) extends SingleOutUGenSource[R, BallUGen[R]] {
+case class Ball(rate: Rate, in: AnyGE, g: AnyGE, damp: AnyGE, friction: AnyGE) extends SingleOutUGenSource[BallUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _g: IIdxSeq[AnyUGenIn] = g.expand
-      val _damp: IIdxSeq[AnyUGenIn] = damp.expand
-      val _friction: IIdxSeq[AnyUGenIn] = friction.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _g: IIdxSeq[UGenIn] = g.expand
+      val _damp: IIdxSeq[UGenIn] = damp.expand
+      val _friction: IIdxSeq[UGenIn] = friction.expand
       val _sz_in = _in.size
       val _sz_g = _g.size
       val _sz_damp = _damp.size
@@ -46,17 +46,17 @@ case class Ball[R <: Rate](rate: R, in: AnyGE, g: AnyGE, damp: AnyGE, friction: 
       IIdxSeq.tabulate(_exp_)(i => BallUGen(rate, _in(i.%(_sz_in)), _g(i.%(_sz_g)), _damp(i.%(_sz_damp)), _friction(i.%(_sz_friction))))
    }
 }
-case class BallUGen[R <: Rate](rate: R, in: AnyUGenIn, g: AnyUGenIn, damp: AnyUGenIn, friction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, g, damp, friction))
+case class BallUGen(rate: Rate, in: UGenIn, g: UGenIn, damp: UGenIn, friction: UGenIn) extends SingleOutUGen(IIdxSeq(in, g, damp, friction))
 object TBall {
-   def kr(in: AnyGE, g: AnyGE = 10.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply[control](control, in, g, damp, friction)
-   def ar(in: AnyGE, g: AnyGE = 10.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply[audio](audio, in, g, damp, friction)
+   def kr(in: AnyGE, g: AnyGE = 10.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply(control, in, g, damp, friction)
+   def ar(in: AnyGE, g: AnyGE = 10.0f, damp: AnyGE = 0.0f, friction: AnyGE = 0.01f) = apply(audio, in, g, damp, friction)
 }
-case class TBall[R <: Rate](rate: R, in: AnyGE, g: AnyGE, damp: AnyGE, friction: AnyGE) extends SingleOutUGenSource[R, TBallUGen[R]] {
+case class TBall(rate: Rate, in: AnyGE, g: AnyGE, damp: AnyGE, friction: AnyGE) extends SingleOutUGenSource[TBallUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _g: IIdxSeq[AnyUGenIn] = g.expand
-      val _damp: IIdxSeq[AnyUGenIn] = damp.expand
-      val _friction: IIdxSeq[AnyUGenIn] = friction.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _g: IIdxSeq[UGenIn] = g.expand
+      val _damp: IIdxSeq[UGenIn] = damp.expand
+      val _friction: IIdxSeq[UGenIn] = friction.expand
       val _sz_in = _in.size
       val _sz_g = _g.size
       val _sz_damp = _damp.size
@@ -65,4 +65,4 @@ case class TBall[R <: Rate](rate: R, in: AnyGE, g: AnyGE, damp: AnyGE, friction:
       IIdxSeq.tabulate(_exp_)(i => TBallUGen(rate, _in(i.%(_sz_in)), _g(i.%(_sz_g)), _damp(i.%(_sz_damp)), _friction(i.%(_sz_friction))))
    }
 }
-case class TBallUGen[R <: Rate](rate: R, in: AnyUGenIn, g: AnyUGenIn, damp: AnyUGenIn, friction: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, g, damp, friction))
+case class TBallUGen(rate: Rate, in: UGenIn, g: UGenIn, damp: UGenIn, friction: UGenIn) extends SingleOutUGen(IIdxSeq(in, g, damp, friction))

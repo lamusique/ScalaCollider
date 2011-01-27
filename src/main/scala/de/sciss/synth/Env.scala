@@ -35,20 +35,20 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 /**
 *    @version 0.10, 23-Apr-10
 */
-object EnvShape {
-   type Any = EnvShape[ _ <: Rate, _ <: Rate ]
+//object EnvShape {
+//   type Any = EnvShape[ _ <: Rate, _ <: Rate ]
+//}
+
+sealed abstract class EnvShape /*[ T <: Rate, U <: Rate ]*/ {
+   def idGE: GE[ /*T,*/ UGenIn /*[ T ]*/]          // AnyGE
+   def curvatureGE: GE[ /*U,*/ UGenIn /*[ U ]*/ ]   // AnyGE
 }
 
-sealed abstract class EnvShape[ T <: Rate, U <: Rate ] {
-   def idGE: GE[ T, UGenIn[ T ]]          // AnyGE
-   def curvatureGE: GE[ U, UGenIn[ U ]]   // AnyGE
-}
-
-sealed abstract class ConstEnvShape extends EnvShape[ scalar, scalar ] {
+sealed abstract class ConstEnvShape extends EnvShape /*[ scalar, scalar ]*/ {
    val id: Int
    val curvature: Float = 0f
-   def idGE: GE[ scalar, UGenIn[ scalar ]] = id
-   val curvatureGE: GE[ scalar, UGenIn[ scalar ]] = curvature
+   def idGE: GE[ /*scalar,*/ UGenIn /*[ scalar ]*/] = id
+   val curvatureGE: GE[ /*scalar,*/ UGenIn /*[ scalar ]*/] = curvature
 
    def levelAt( pos: Float, y1: Float, y2: Float ) : Float
 }
@@ -110,33 +110,33 @@ case object cubShape extends ConstEnvShape {
       (yPow3 * yPow3 * yPow3).toFloat
    }
 }
-case class varShape[ T <: Rate, U <: Rate ]( override val idGE: GE[ T, UGenIn[ T ]],
-                                             override val curvatureGE: GE[ U, UGenIn[ U ]] = 0 ) extends EnvShape[ T, U ]
+case class varShape /*[ T <: Rate, U <: Rate ]*/( override val idGE: GE[ /*T,*/ UGenIn /*[ T ]*/],
+                                             override val curvatureGE: GE[ /*U,*/ UGenIn /*[ U ]*/] = 0 ) extends EnvShape /*[ T, U ] */
 
-object EnvSeg {
-   type Any = EnvSeg[ _ <: Rate, _ <: Rate, _ <: Rate, _ <: Rate ]
-}
-case class EnvSeg[ R <: Rate, S <: Rate, T <: Rate, U <: Rate ](
-   dur: GE[ R, UGenIn[ R ]], targetLevel: GE[ S, UGenIn[ S ]], shape: EnvShape[ T, U ] = linShape )
+//object EnvSeg {
+//   type Any = EnvSeg[ _ <: Rate, _ <: Rate, _ <: Rate, _ <: Rate ]
+//}
+case class EnvSeg /*[ R <: Rate, S <: Rate, T <: Rate, U <: Rate ]*/(
+   dur: GE[ /*R,*/ UGenIn /*[ R ]*/], targetLevel: GE[ /*S,*/ UGenIn /*[ S ]*/], shape: EnvShape /*[ T, U ]*/ = linShape )
 
 import de.sciss.synth.{ EnvSeg => Sg }
 
 trait AbstractEnvFactory[ V <: AbstractEnv ] {
-   protected def create( startLevel: AnyGE, segments: Sg.Any* ) : V
+   protected def create( startLevel: AnyGE, segments: Sg* /*.Any*/ ) : V
 
 	// fixed duration envelopes
    def triangle : V = triangle()
 
-	def triangle[ R <: Rate, S <: Rate ]( dur: GE[ R, UGenIn[ R ]] = 1, level: GE[ S, UGenIn[ S ]] = 1 )
-      ( implicit r: RateOrder[ R, scalar, R ]) : V =  {
+	def triangle /*[ R <: Rate, S <: Rate ]*/( dur: GE[ /* R,*/ UGenIn /*[ R ] */] = 1, level: GE[ /* S,*/ UGenIn /*[ S ]*/] = 1 )
+      /* ( implicit r: RateOrder[ R, scalar, R ])*/ : V =  {
 	  val durH = dur * 0.5f
 	  create( 0, Sg( durH, level ), Sg( durH, 0 ))
 	}
 
    def sine : V = sine()
 
-	def sine[ R <: Rate, S <: Rate ]( dur: GE[ R, UGenIn[ R ]] = 1, level: GE[ S, UGenIn[ S ]] = 1 )
-      ( implicit r: RateOrder[ R, scalar, R ]) : V = {
+	def sine /*[ R <: Rate, S <: Rate ]*/( dur: GE[ /* R,*/ UGenIn /*[ R ]*/] = 1, level: GE[ /* S,*/ UGenIn /*[ S ]*/] = 1 )
+      /* ( implicit r: RateOrder[ R, scalar, R ])*/ : V = {
 	  val durH = dur * 0.5f
 	  create( 0, Sg( durH, level, sinShape ), Sg( durH, 0, sinShape ))
 	}
@@ -144,23 +144,23 @@ trait AbstractEnvFactory[ V <: AbstractEnv ] {
    def perc : V = perc()
 
 	def perc( attack: AnyGE = 0.01, release: AnyGE = 1, level: AnyGE = 1,
-             shape: EnvShape.Any = curveShape( -4 )) : V =
+             shape: EnvShape /*.Any*/ = curveShape( -4 )) : V =
       create( 0, Sg( attack, level, shape ), Sg( release, 0, shape ))
 
    def linen : V = linen()
 
 	def linen( attack: AnyGE = 0.01f, sustain: AnyGE = 1, release: AnyGE = 1,
-              level: AnyGE = 1, shape: EnvShape.Any = linShape ) : V =
+              level: AnyGE = 1, shape: EnvShape /*.Any*/ = linShape ) : V =
 		create( 0, Sg( attack, level, shape ), Sg( sustain, level, shape ),
                  Sg( release, 0, shape ))
 }
 
 object Env extends AbstractEnvFactory[ Env ] {
-   protected def create( startLevel: AnyGE, segments: Sg.Any* ) =
+   protected def create( startLevel: AnyGE, segments: Sg* /*.Any*/ ) =
       new Env( startLevel, segments )
 
 	// envelopes with sustain
-	def cutoff( release: AnyGE = 0.1f, level: AnyGE = 1, shape: EnvShape.Any = linShape ) : Env = {
+	def cutoff( release: AnyGE = 0.1f, level: AnyGE = 1, shape: EnvShape /*.Any*/ = linShape ) : Env = {
       val releaseLevel: AnyGE = shape match {
          case `expShape` => 1e-05f // dbamp( -100 )
          case _ => 0
@@ -168,27 +168,27 @@ object Env extends AbstractEnvFactory[ Env ] {
 		new Env( level, List( Sg( release, releaseLevel, shape )), 0 )
 	}
 
-	def dadsr[ S <: Rate, P <: Rate, B <: Rate, PB <: Rate, PS <: Rate, PSB <: Rate ]
+	def dadsr /*[ S <: Rate, P <: Rate, B <: Rate, PB <: Rate, PS <: Rate, PSB <: Rate ]*/
       ( delay: AnyGE = 0.1f, attack: AnyGE = 0.01f, decay: AnyGE = 0.3f,
-        sustainLevel: GE[ S, UGenIn[ S ]] = 0.5f, release: AnyGE = 1,
-  		  peakLevel: GE[ P, UGenIn[ P ]] = 1, shape: EnvShape.Any = curveShape( -4 ),
-        bias: GE[ B, UGenIn[ B ]] = 0 )
-      ( implicit rpb: RateOrder[ P, B, PB ], rps: RateOrder[ P, S, PS ], rpsb: RateOrder[ PS, B, PSB ]) =
+        sustainLevel: GE[ /* S,*/ UGenIn /*[ S ]*/] = 0.5f, release: AnyGE = 1,
+  		  peakLevel: GE[ /* P,*/ UGenIn /*[ P ]*/] = 1, shape: EnvShape /*.Any*/ = curveShape( -4 ),
+        bias: GE[ /* B,*/ UGenIn /*[ B ]*/ ] = 0 )
+      /* ( implicit rpb: RateOrder[ P, B, PB ], rps: RateOrder[ P, S, PS ], rpsb: RateOrder[ PS, B, PSB ]) */ =
       new Env( bias, List( Sg( delay,   bias, shape ),
                            Sg( attack,  peakLevel + bias, shape ),
                            Sg( decay,   peakLevel * sustainLevel + bias, shape ),
                            Sg( release, bias, shape )), 3 )
 
-	def adsr[ S <: Rate, P <: Rate, B <: Rate, PS <: Rate, PSB <: Rate ]
-      ( attack: AnyGE = 0.01f, decay: AnyGE = 0.3f, sustainLevel: GE[ S, UGenIn[ S ]] = 0.5f,
-        release: AnyGE = 1, peakLevel: GE[ P, UGenIn[ P ]] = 1, shape: EnvShape.Any = curveShape( -4 ),
-        bias: GE[ B, UGenIn[ B ]] = 0 )( implicit rpb: RateOrder[ P, S, PS ], rpsb: RateOrder[ PS, B, PSB ]) =
+	def adsr /*[ S <: Rate, P <: Rate, B <: Rate, PS <: Rate, PSB <: Rate ]*/
+      ( attack: AnyGE = 0.01f, decay: AnyGE = 0.3f, sustainLevel: GE[ /* S,*/ UGenIn /*[ S ]*/] = 0.5f,
+        release: AnyGE = 1, peakLevel: GE[ /*P,*/ UGenIn /*[ P ]*/ ] = 1, shape: EnvShape /*.Any*/ = curveShape( -4 ),
+        bias: GE[ /* B,*/ UGenIn /*[ B ]*/] = 0 ) /* ( implicit rpb: RateOrder[ P, S, PS ], rpsb: RateOrder[ PS, B, PSB ]) */ =
 		new Env( bias, List( Sg( attack, bias, shape ),
                            Sg( decay, peakLevel * sustainLevel + bias, shape ),
                            Sg( release, bias, shape )), 2 )
 
 	def asr( attack: AnyGE = 0.01f, level: AnyGE = 1, release: AnyGE = 1,
-            shape: EnvShape.Any = curveShape( -4 )) =
+            shape: EnvShape /*.Any*/ = curveShape( -4 )) =
 		new Env( 0, List( Sg( attack, level, shape ), Sg( release, 0, shape )), 1 )
 }
 
@@ -198,7 +198,7 @@ object AbstractEnv {
 
 trait AbstractEnv {
    val startLevel: AnyGE
-   val segments: Seq[ EnvSeg.Any ]
+   val segments: Seq[ EnvSeg /*.Any*/ ]
    def isSustained : Boolean
 // note: we do not define toSeq because the format is
 // significantly different so there is little sense in doing so
@@ -206,7 +206,7 @@ trait AbstractEnv {
    def toGE : Expands[ MultiGE ]
 }
 
-case class Env( startLevel: AnyGE, segments: Seq[ EnvSeg.Any ],
+case class Env( startLevel: AnyGE, segments: Seq[ EnvSeg /*.Any*/ ],
                 releaseNode: AnyGE = -99, loopNode: AnyGE = -99 )
 extends AbstractEnv {
 

@@ -94,7 +94,7 @@ extends /* YYY RatedGE with */ UGenProxy {
 
    def rate: Rate // YYY
    def numOutputs: Int // YYY
-   def outputs: IIdxSeq[ AnyUGenIn ] // YYY
+   def outputs: IIdxSeq[ UGenIn ] // YYY
 
 //   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1 )}
    def name = {
@@ -105,7 +105,7 @@ extends /* YYY RatedGE with */ UGenProxy {
    }
    def displayName = name
 //   def outputRates: Seq[ Rate ]
-   def inputs: Seq[ AnyUGenIn ]
+   def inputs: Seq[ UGenIn ]
    def numInputs = inputs.size
    def source = this
    def specialIndex = 0
@@ -126,8 +126,8 @@ extends /* YYY RatedGE with */ UGenProxy {
 }
 
 // a class for UGens with multiple outputs
-abstract class MultiOutUGen[ R <: Rate ]( outputRates: IIdxSeq[ R ], val inputs: IIdxSeq[ AnyUGenIn ])
-extends UGen with GE[R, UGenIn[ R ]]{
+abstract class MultiOutUGen /*[ R <: Rate ]*/( outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
+extends UGen with GE[ /*R,*/ UGenIn /*[ R ]*/]{
 // YYY
 //   // most multi out ugens use the same rate for all outputs,
 //   // therefore we have a simpler constructor
@@ -137,11 +137,11 @@ extends UGen with GE[R, UGenIn[ R ]]{
 //	final def outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map(
 //      tup => UGenOutProxy( this, tup._2, tup._1 ))
 
-   final def expand: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map( tup => UGenOutProxy( this, tup._2, tup._1 ))
-   final def outputs: IIdxSeq[ UGenIn[ R ]] = expand
+   final def expand: IIdxSeq[ UGenIn /*[ R ]*/] = outputRates.zipWithIndex.map( tup => UGenOutProxy( this, tup._2, tup._1 ))
+   final def outputs: IIdxSeq[ UGenIn /*[ R ]*/ ] = expand
 }
 
-abstract class ZeroOutUGen( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with HasSideEffect {
+abstract class ZeroOutUGen( val inputs: IIdxSeq[ UGenIn ]) extends UGen with HasSideEffect {
    final override def numOutputs = 0
    final def outputs = IIdxSeq.empty
 }
@@ -171,8 +171,8 @@ sealed trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
 }
 
 trait ZeroOutUGenSource[ +U <: ZeroOutUGen ] extends UGenSource[ U ]
-trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen[ R ]] extends UGenSource[ U ] with GE[ R, U ]
-trait MultiOutUGenSource[  R <: Rate, +U <: MultiOutUGen[ R ]]  extends UGenSource[ U ] with Multi[ U ] {
+trait SingleOutUGenSource[ /* R <: Rate,*/ +U <: SingleOutUGen /*[ R ]*/] extends UGenSource[ U ] with GE[ /* R,*/ U ]
+trait MultiOutUGenSource[  /*R <: Rate,*/ +U <: MultiOutUGen /*[ R ]*/]  extends UGenSource[ U ] with Multi[ U ] {
    def mexpand = expand
 }
 

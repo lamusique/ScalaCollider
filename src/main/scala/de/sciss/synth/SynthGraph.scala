@@ -91,11 +91,11 @@ private[synth] object UGenHelper {
 }
 
 object SynthGraph {
-   def wrapOut[ R <: Rate, S <: Rate ]( thunk: => Multi[ GE[ R, UGenIn[ R ]]], fadeTime: Option[Float] = Some(0.02f) )
-                                      ( implicit r: RateOrder[ control, R, S ]) =
+   def wrapOut /*[ R <: Rate, S <: Rate ]*/( thunk: => Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]], fadeTime: Option[Float] = Some(0.02f) )
+                                      /*( implicit r: RateOrder[ control, R, S ])*/ =
       SynthGraph {
          val res1 = thunk
-         val rate = r.in2 // .highest( res1.outputs.map( _.rate ): _* )
+         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
          val res2 = if( (rate == audio) || (rate == control) ) {
 //            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
             val res2 = res1
@@ -161,25 +161,25 @@ object SynthGraph {
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
       def addLazyGE( g: LazyGE ) {}
-      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
+      def addControlProxy( proxy: ControlProxyLike[ /* _,*/ _ ]) {}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
       private val lazyGEs        = MBuffer.empty[ LazyGE ]
-      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
+      private var controlProxies = MSet.empty[ ControlProxyLike[ /* _,*/ _ ]]
 
       def build = SynthGraph( lazyGEs.toIndexedSeq, controlProxies.toSet )
       def addLazyGE( g: LazyGE ) {
          lazyGEs += g
       }
 
-      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
+      def addControlProxy( proxy: ControlProxyLike[ /* _,*/ _ ]) {
          controlProxies += proxy
       }
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ LazyGE ], controlProxies: ISet[ ControlProxyLike[ _, _ ]]) {
+case class SynthGraph( sources: IIdxSeq[ LazyGE ], controlProxies: ISet[ ControlProxyLike[ /*_,*/ _ ]]) {
    def expand = UGenGraph.expand( this )
 }
 
@@ -240,7 +240,7 @@ object UGenGraph {
          UGenGraph( constants, controlValues, controlNames, richUGens )
       }
 
-      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _, _ ], (UGen, Int)]) :
+      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ /* _,*/ _ ], (UGen, Int)]) :
          (MBuffer[ IndexedUGen ], IIdxSeq[ Float ]) = {
 
          val constantMap   = MMap.empty[ Float, RichConstant ]
@@ -346,7 +346,7 @@ object UGenGraph {
        *    Manita, how simple things can get as soon as you
        *    clean up the sclang mess...
        */
-      private def buildControls( p: Traversable[ ControlProxyLike[ _, _ ]]): Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+      private def buildControls( p: Traversable[ ControlProxyLike[ /* _,*/ _ ]]): Map[ ControlProxyLike[ /* _,*/ _ ], (UGen, Int) ] = {
          p.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
             factory.build( builder, proxies.toSeq: _* )

@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 27 20:56:40 GMT 2011
+ * Created: Thu Jan 27 23:03:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -50,17 +50,17 @@ def ar(numChannels: Int, buf: AnyGE, loop: AnyGE = 0.0f) = apply(numChannels, bu
  * @see [[de.sciss.synth.ugen.VDiskIn]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends MultiOutUGenSource[audio, DiskInUGen] with HasSideEffect with AudioRated {
+case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends MultiOutUGenSource[DiskInUGen] with HasSideEffect with AudioRated {
    protected def expandUGens = {
-      val _buf: IIdxSeq[AnyUGenIn] = buf.expand
-      val _loop: IIdxSeq[AnyUGenIn] = loop.expand
+      val _buf: IIdxSeq[UGenIn] = buf.expand
+      val _loop: IIdxSeq[UGenIn] = loop.expand
       val _sz_buf = _buf.size
       val _sz_loop = _loop.size
       val _exp_ = maxInt(_sz_buf, _sz_loop)
       IIdxSeq.tabulate(_exp_)(i => DiskInUGen(numChannels, _buf(i.%(_sz_buf)), _loop(i.%(_sz_loop))))
    }
 }
-case class DiskInUGen(numChannels: Int, buf: AnyUGenIn, loop: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, loop)) with HasSideEffect with AudioRated
+case class DiskInUGen(numChannels: Int, buf: UGenIn, loop: UGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, loop)) with HasSideEffect with AudioRated
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
  * needs to be provides which is used to buffer the incoming signal.
@@ -84,7 +84,7 @@ object DiskOut {
  *                        (and not write anything to the file).
  * @param in              the signal to be recorded
  */
-def ar(buf: AnyGE, in: Multi[GE[audio, UGenIn[audio]]]) = apply(buf, in)
+def ar(buf: AnyGE, in: Multi[GE[UGenIn]]) = apply(buf, in)
 }
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
@@ -106,9 +106,9 @@ def ar(buf: AnyGE, in: Multi[GE[audio, UGenIn[audio]]]) = apply(buf, in)
  * @see [[de.sciss.synth.ugen.DiskIn]]
  * @see [[de.sciss.synth.ugen.RecordBuf]]
  */
-case class DiskOut(buf: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[audio, DiskOutUGen] with AudioRated with WritesBuffer {
+case class DiskOut(buf: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[DiskOutUGen] with AudioRated with WritesBuffer {
    protected def expandUGens = {
-      val _buf: IIdxSeq[AnyUGenIn] = buf.expand
+      val _buf: IIdxSeq[UGenIn] = buf.expand
       val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_buf = _buf.size
       val _sz_in = _in.size
@@ -116,7 +116,7 @@ case class DiskOut(buf: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[aud
       IIdxSeq.tabulate(_exp_)(i => DiskOutUGen(_buf(i.%(_sz_buf)), _in(i.%(_sz_in)).expand))
    }
 }
-case class DiskOutUGen(buf: AnyUGenIn, in: IIdxSeq[AnyUGenIn]) extends SingleOutUGen[audio](IIdxSeq[AnyUGenIn](buf).++(in)) with AudioRated with WritesBuffer
+case class DiskOutUGen(buf: UGenIn, in: IIdxSeq[UGenIn]) extends SingleOutUGen(IIdxSeq[UGenIn](buf).++(in)) with AudioRated with WritesBuffer
 /**
  * A UGen to stream in a signal from an audio file with variable playback speed.
  * Continuously plays a longer audio file
@@ -176,12 +176,12 @@ def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, loop: AnyGE = 0.0f, se
  * @see [[de.sciss.synth.ugen.DiskOut]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends MultiOutUGenSource[audio, VDiskInUGen] with HasSideEffect with AudioRated {
+case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends MultiOutUGenSource[VDiskInUGen] with HasSideEffect with AudioRated {
    protected def expandUGens = {
-      val _buf: IIdxSeq[AnyUGenIn] = buf.expand
-      val _speed: IIdxSeq[AnyUGenIn] = speed.expand
-      val _loop: IIdxSeq[AnyUGenIn] = loop.expand
-      val _sendID: IIdxSeq[AnyUGenIn] = sendID.expand
+      val _buf: IIdxSeq[UGenIn] = buf.expand
+      val _speed: IIdxSeq[UGenIn] = speed.expand
+      val _loop: IIdxSeq[UGenIn] = loop.expand
+      val _sendID: IIdxSeq[UGenIn] = sendID.expand
       val _sz_buf = _buf.size
       val _sz_speed = _speed.size
       val _sz_loop = _loop.size
@@ -190,4 +190,4 @@ case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, send
       IIdxSeq.tabulate(_exp_)(i => VDiskInUGen(numChannels, _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _loop(i.%(_sz_loop)), _sendID(i.%(_sz_sendID))))
    }
 }
-case class VDiskInUGen(numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, loop: AnyUGenIn, sendID: AnyUGenIn) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, speed, loop, sendID)) with HasSideEffect with AudioRated
+case class VDiskInUGen(numChannels: Int, buf: UGenIn, speed: UGenIn, loop: UGenIn, sendID: UGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq(buf, speed, loop, sendID)) with HasSideEffect with AudioRated

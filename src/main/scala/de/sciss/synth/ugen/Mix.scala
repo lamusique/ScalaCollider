@@ -45,14 +45,14 @@ object Mix {
    /**
     * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
     */
-	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) = {
+	def tabulate /*[ R <: Rate ]*/( n: Int )( fun: (Int) => Multi[ GE[ /*R,*/ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ R, R, R ])*/ = {
       Mix.Seq( IIdxSeq.tabulate( n )( i => fun( i )))
    }
 
    /**
     * A mixing idiom that corresponds to @Seq.fill@.
     */
-   def fill[ R <: Rate ]( n: Int )( thunk: => Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) = {
+   def fill /*[ R <: Rate ]*/( n: Int )( thunk: => Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ R, R, R ])*/ = {
       Mix.Seq( IIdxSeq.fill( n )( thunk ))
    }
 
@@ -62,26 +62,26 @@ object Mix {
     * Thus, any GE mixes down to a mono signal. Multi-output signals use the
     * other @apply@ method and expand to their original number of channels.
     */
-   def apply[ R <: Rate ]( elem: GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) : Mix[ R ] = Mix( Multi.disjoint( elem ))
+   def apply /*[ R <: Rate ]*/( elem: GE[ /*R,*/ UGenIn /*[ R ]*/])/*( implicit r: RateOrder[ R, R, R ])*/ : Mix /*[ R ]*/ = Mix( Multi.disjoint( elem ))
 
    /**
     * This is an alias for the @apply@ method using a @GE@ input. This can be used to feed in multi-output
     * signals which would, using the @apply@ method be not split and summed.
     */
-   def mono[ R <: Rate ]( elem: GE[ R, UGenIn[ R ]])( implicit r: RateOrder[ R, R, R ]) : Mix[ R ] = apply( elem )
+   def mono /*[ R <: Rate ]*/( elem: GE[ /*R,*/ UGenIn /*[ R ]*/])/*( implicit r: RateOrder[ R, R, R ])*/ : Mix /*[ R ]*/ = apply( elem )
 
-   def seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ GE[ R, UGenIn[ R ]]]])( implicit r: RateOrder[ R, R, R ]) = Seq( elems )
+   def seq /*[ R <: Rate ]*/( elems: IIdxSeq[ Multi[ GE[ /*R,*/ UGenIn /*[ R ]*/]]])/*( implicit r: RateOrder[ R, R, R ])*/ = Seq( elems )
 
-   case class Seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ GE[ R, UGenIn[ R ]]]])( implicit r: RateOrder[ R, R, R ])
-   extends LazyGE with GE[ R, UGenIn[ R ]] {
-      def rate = r.out
+   case class Seq /*[ R <: Rate ]*/( elems: IIdxSeq[ Multi[ GE[ /*R,*/ UGenIn /*[ R ]*/]]])/*( implicit r: RateOrder[ R, R, R ])*/
+   extends LazyGE with GE[ /* R,*/ UGenIn /*[ R ]*/] {
+      def rate = Rate.highest( elems.map( _.rate ): _* ) // r.out
 
       def force( b: UGenGraphBuilder ) { expand( b )}
-      def expand: IIdxSeq[ UGenIn[ R ]] = {
+      def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
          expand( UGenGraph.builder )
       }
-      private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn[ R ]] = b.visit( this /* cache */, expandUGens )
-      protected def expandUGens : IIdxSeq[ UGenIn[ R ]] = {
+      private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn /*[ R ]*/] = b.visit( this /* cache */, expandUGens )
+      protected def expandUGens : IIdxSeq[ UGenIn /*[ R ]*/] = {
          val seq  = elems.map( sum( _ ))
          if( seq.isEmpty ) return IIdxSeq.empty
          val szs  = seq.map( _.size )
@@ -92,7 +92,7 @@ object Mix {
       }
    }
 
-   private def sum[ R <: Rate ]( elems: Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ]) : IIdxSeq[ UGenIn[ R ]] = {
+   private def sum /*[ R <: Rate ]*/( elems: Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ R, R, R ])*/ : IIdxSeq[ UGenIn /*[ R ]*/] = {
       val _elems     = elems.mexpand
       val _sz_elems  = _elems.size
       if( _sz_elems > 0 ) _elems.reduceLeft( _ + _ ).expand else IIdxSeq.empty
@@ -115,16 +115,17 @@ object Mix {
  * Mix( Pan2.ar( SinOsc.ar :: Saw.ar :: Nil )) --> Pan2.ar( SinOsc.ar ) + Pan2.ar( Saw.ar )
  * }}}
  */
-case class Mix[ R <: Rate ]( elems: Multi[ GE[ R, UGenIn[ R ]]])( implicit r: RateOrder[ R, R, R ])
-extends LazyGE with GE[ R, UGenIn[ R ]] {
+case class Mix /*[ R <: Rate ]*/( elems: Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ R, R, R ])*/
+extends LazyGE with GE[ /* R,*/ UGenIn /*[ R ]*/] {
    import Mix._
 
-   def rate = r.out
+//   def rate = r.out
+   def rate = elems.rate
 
    def force( b: UGenGraphBuilder ) { expand( b )}
-   def expand: IIdxSeq[ UGenIn[ R ]] = {
+   def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
       expand( UGenGraph.builder )
    }
-   private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn[ R ]] = b.visit( this /* cache */, expandUGens )
-   protected def expandUGens : IIdxSeq[ UGenIn[ R ]] = sum( elems )
+   private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn /*[ R ]*/] = b.visit( this /* cache */, expandUGens )
+   protected def expandUGens : IIdxSeq[ UGenIn /*[ R ]*/] = sum( elems )
 }

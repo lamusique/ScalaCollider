@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 27 20:56:40 GMT 2011
+ * Created: Thu Jan 27 23:03:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -25,21 +25,21 @@ object CheckBadValues {
  * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
  *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
  */
-def ir(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[scalar](scalar, in, id, post)
+def ir(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply(scalar, in, id, post)
 /**
  * @param in              the signal to be tested
  * @param id              an identifier showing up with the values in the console
  * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
  *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
  */
-def kr(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[control](control, in, id, post)
+def kr(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply(control, in, id, post)
 /**
  * @param in              the signal to be tested
  * @param id              an identifier showing up with the values in the console
  * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
  *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
  */
-def ar(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[audio](audio, in, id, post)
+def ar(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply(audio, in, id, post)
 }
 /**
  * A UGen to test for infinity, not-a-number (NaN), and denormals.
@@ -52,11 +52,11 @@ def ar(in: AnyGE, id: AnyGE = 0.0f, post: AnyGE = 2.0f) = apply[audio](audio, in
  * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
  *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
  */
-case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE) extends SingleOutUGenSource[R, CheckBadValuesUGen[R]] with HasSideEffect {
+case class CheckBadValues(rate: Rate, in: AnyGE, id: AnyGE, post: AnyGE) extends SingleOutUGenSource[CheckBadValuesUGen] with HasSideEffect {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _id: IIdxSeq[AnyUGenIn] = id.expand
-      val _post: IIdxSeq[AnyUGenIn] = post.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _id: IIdxSeq[UGenIn] = id.expand
+      val _post: IIdxSeq[UGenIn] = post.expand
       val _sz_in = _in.size
       val _sz_id = _id.size
       val _sz_post = _post.size
@@ -64,4 +64,4 @@ case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE)
       IIdxSeq.tabulate(_exp_)(i => CheckBadValuesUGen(rate, _in(i.%(_sz_in)), _id(i.%(_sz_id)), _post(i.%(_sz_post))))
    }
 }
-case class CheckBadValuesUGen[R <: Rate](rate: R, in: AnyUGenIn, id: AnyUGenIn, post: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, id, post)) with HasSideEffect
+case class CheckBadValuesUGen(rate: Rate, in: UGenIn, id: UGenIn, post: UGenIn) extends SingleOutUGen(IIdxSeq(in, id, post)) with HasSideEffect

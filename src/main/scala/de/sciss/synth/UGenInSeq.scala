@@ -40,7 +40,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 ////   override private[synth] def ops = new UGenInSeqOps( this )
 //}
 
-case class UGenInSeq( elems: IIdxSeq[ AnyUGenIn ]) extends /* IIdxSeq[ U ] with */ MultiGE { //
+case class UGenInSeq( elems: IIdxSeq[ UGenIn ]) extends /* IIdxSeq[ U ] with */ MultiGE { //
 //   def expand = this
    def expand = elems // this
 //   def apply( idx: Int ) = elems( idx )
@@ -54,7 +54,7 @@ case class UGenInSeq( elems: IIdxSeq[ AnyUGenIn ]) extends /* IIdxSeq[ U ] with 
 ////   def length : Int = elems.length
 //}
 
-case class RatedUGenInSeq[ R <: Rate, G ]( rate: R, elems: Seq[ G ])( implicit view: G => GE[ R, UGenIn[ R ]]) extends GE[ R, UGenIn[ R ]] { //
+case class RatedUGenInSeq /*[ R <: Rate, G ]*/( rate: Rate, elems: Seq[ AnyGE ]) extends GE[ /* R,*/ UGenIn /*[ R ]*/] { //
    def expand = elems.flatMap( _.expand )( collection.breakOut )
 //   def expand = elems // this
 //   def apply( idx: Int ) = elems( idx )

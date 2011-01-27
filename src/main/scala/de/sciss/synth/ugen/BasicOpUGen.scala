@@ -29,23 +29,24 @@
 package de.sciss.synth.ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import de.sciss.synth.{SingleOutUGenSource, AnyUGenIn, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
+import de.sciss.synth.{SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
 import UGenHelper._
 
 /**
  *    @version 0.13, 03-Jan-11
  */
 object MulAdd {
-   def ar( in: GE[ audio, UGenIn[ audio ]],     mul: AnyGE, add: AnyGE ) : MulAdd[ audio ]   = apply[ audio ](   audio,   in, mul, add )
-   def kr( in: GE[ control, UGenIn[ control ]], mul: AnyGE, add: AnyGE ) : MulAdd[ control ] = apply[ control ]( control, in, mul, add )
-   def ir( in: GE[ scalar, UGenIn[ scalar ]],   mul: AnyGE, add: AnyGE ) : MulAdd[ scalar ]  = apply[ scalar ](  scalar,  in, mul, add )
+   def ar( in: GE[ /* audio,*/ UGenIn /*[ audio ] */],     mul: AnyGE, add: AnyGE ) : MulAdd /*[ audio ]*/   = apply /*[ audio ]*/(   audio,   in, mul, add )
+   def kr( in: GE[ /* control,*/ UGenIn /*[ control ]*/], mul: AnyGE, add: AnyGE ) : MulAdd /*[ control ]*/ = apply /*[ control ]*/( control, in, mul, add )
+   def ir( in: GE[ /* scalar,*/ UGenIn /*[ scalar ]*/],   mul: AnyGE, add: AnyGE ) : MulAdd /*[ scalar ]*/  = apply /*[ scalar ]*/(  scalar,  in, mul, add )
 }
 
-case class MulAdd[ R <: Rate ]( rate: R, in: GE[ R, UGenIn[ R ]], mul: AnyGE, add: AnyGE ) extends SingleOutUGenSource[ R, MulAddUGen[ R ]] {
+case class MulAdd /*[ R <: Rate ]*/( rate: Rate, in: GE[ /* R, */ UGenIn /*[ R ] */], mul: AnyGE, add: AnyGE )
+extends SingleOutUGenSource[ /* R, */ MulAddUGen /*[ R ]*/] {
    protected def expandUGens = {
-      val _in: IIdxSeq[ UGenIn[ R ]]    = in.expand
-      val _mul: IIdxSeq[ AnyUGenIn ]    = mul.expand
-      val _add: IIdxSeq[ AnyUGenIn ]    = add.expand
+      val _in: IIdxSeq[ UGenIn /*[ R ]*/]    = in.expand
+      val _mul: IIdxSeq[ UGenIn ]    = mul.expand
+      val _add: IIdxSeq[ UGenIn ]    = add.expand
       val _sz_in  = _in.size
       val _sz_mul = _mul.size
       val _sz_add = _add.size
@@ -62,7 +63,7 @@ case class MulAdd[ R <: Rate ]( rate: R, in: GE[ R, UGenIn[ R ]], mul: AnyGE, ad
 //            case (c(-1), c(0)) => -in0
 //            case (_,     c(0)) => in0 * mul0
 //            case (c(-1), _)    => add0 - in0
-            case _             => MulAddUGen[ R ]( rate, in0, mul0, add0 )
+            case _             => MulAddUGen /*[ R ]*/( rate, in0, mul0, add0 )
          }
       })
    }
@@ -88,13 +89,13 @@ object MulAddUGen {
 //      }
 }
 
-case class MulAddUGen[ R <: Rate ]( rate: R, in: AnyUGenIn, mul: AnyUGenIn, add: AnyUGenIn )
-extends SingleOutUGen[ R ]( IIdxSeq( in, mul, add )) {
+case class MulAddUGen /*[ R <: Rate ]*/( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn )
+extends SingleOutUGen /*[ R ]*/( IIdxSeq( in, mul, add )) {
    override def toString = in.toString + ".madd(" + mul + ", " + add + ")"
 }
 
-private[ugen] abstract class BasicOpUGen[ R <: Rate ]( override val specialIndex: Int, inputs: IIdxSeq[ AnyUGenIn ])
-extends SingleOutUGen[ R ]( inputs )
+private[ugen] abstract class BasicOpUGen /*[ R <: Rate ]*/( override val specialIndex: Int, inputs: IIdxSeq[ UGenIn ])
+extends SingleOutUGen /*[ R ]*/( inputs )
 
 /**
  *    Unary operations are generally constructed by calling one of the methods of <code>GEOps</code>.
@@ -108,7 +109,7 @@ object UnaryOp {
    import RichFloat._
 
    sealed abstract class Op( val id: Int ) {
-      def make[ R <: Rate ]( rate: R, a: GE[ R, UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
+      def make /*[ R <: Rate ] */( rate: Rate, a: GE[ /* R, */ UGenIn /*[ R ]*/]) = UnaryOp /*[ R ]*/( rate, this, a )
 //      protected[synth] def make1( a: UGenIn ) : GE = a match {
 //         case c(a)   => c( make1( a ))
 //         case _      => unop.apply( a.rate, this, a )
@@ -255,8 +256,8 @@ object UnaryOp {
 //   }
 }
 
-case class UnaryOp[ R <: Rate ]( rate: R, selector: UnaryOp.Op, a: GE[ R, UGenIn[ R ]])
-extends SingleOutUGenSource[ R, UnaryOpUGen[ R ]] {
+case class UnaryOp /*[ R <: Rate ]*/( rate: Rate, selector: UnaryOp.Op, a: GE[ /* R, */ UGenIn /*[ R ] */])
+extends SingleOutUGenSource[ /* R, */ UnaryOpUGen /*[ R ] */] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 
@@ -267,8 +268,8 @@ extends SingleOutUGenSource[ R, UnaryOpUGen[ R ]] {
 }
 
 // Note: only deterministic selectors are implemented!!
-case class UnaryOpUGen[ R <: Rate ]( rate: R, selector: UnaryOp.Op, a: UGenIn[ R ])
-extends BasicOpUGen[ R ]( selector.id, IIdxSeq( a )) {
+case class UnaryOpUGen /*[ R <: Rate ]*/( rate: Rate, selector: UnaryOp.Op, a: UGenIn /*[ R ]*/)
+extends BasicOpUGen /*[ R ]*/( selector.id, IIdxSeq( a )) {
    override def name = "UnaryOpUGen"
    override def toString = a.toString + "." + selector.name
    override def displayName = selector.name
@@ -285,7 +286,8 @@ object BinaryOp {
 
    sealed abstract class Op( val id: Int ) {
 //      def make[ R <: Rate ]( rate: R, a: GE[ UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
-      def make[ R <: Rate, S <: Rate, T <: Rate ]( rate: T, a: GE[ R, UGenIn[ R ]], b: GE[ S, UGenIn[ S ]]) = BinaryOp[ T ]( rate, this, a, b )
+      def make /*[ R <: Rate, S <: Rate, T <: Rate ]*/( /* rate: T, */ a: GE[ /* R, */ UGenIn /* [ R ] */],
+                                                        b: GE[ /* S, */ UGenIn /*[ S ]*/]) = BinaryOp /* [ T ] */( Rate.highest( a.rate, b.rate ), this, a, b )
 //      protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
 //         case (c(a), c(b)) => c( make1( a, b ))
 //         case _            => binop.apply( Rate.highest( a.rate, b.rate ), this, a, b )
@@ -499,14 +501,14 @@ object BinaryOp {
   */
 }
 
-case class BinaryOp[ R <: Rate ]( rate: R, selector: BinaryOp.Op, a: AnyGE, b: AnyGE )
-extends SingleOutUGenSource[ R, BinaryOpUGen[ R ]] {
+case class BinaryOp /*[ R <: Rate ]*/( rate: Rate, selector: BinaryOp.Op, a: AnyGE, b: AnyGE )
+extends SingleOutUGenSource[ /* R,*/ BinaryOpUGen /*[ R ]*/ ] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 
    protected def expandUGens = {
-      val _a: IIdxSeq[ AnyUGenIn ]  = a.expand
-      val _b: IIdxSeq[ AnyUGenIn ]  = b.expand
+      val _a: IIdxSeq[ UGenIn ]  = a.expand
+      val _b: IIdxSeq[ UGenIn ]  = b.expand
       val _sz_a   = _a.size
       val _sz_b   = _b.size
       val _exp_   = math.max( _sz_a, _sz_b )
@@ -516,8 +518,8 @@ extends SingleOutUGenSource[ R, BinaryOpUGen[ R ]] {
 }
 
 // Note: only deterministic selectors are implemented!!
-case class BinaryOpUGen[ R <: Rate ]( rate: R, selector: BinaryOp.Op, a: AnyUGenIn, b: AnyUGenIn )
-extends BasicOpUGen[ R ]( selector.id, IIdxSeq( a, b )) {
+case class BinaryOpUGen /*[ R <: Rate ]*/( rate: Rate, selector: BinaryOp.Op, a: UGenIn, b: UGenIn )
+extends BasicOpUGen /*[ R ]*/( selector.id, IIdxSeq( a, b )) {
    override def name = "BinaryOpUGen"
    override def toString = if( (selector.id <= 11) || ((selector.id >=14) && (selector.id <= 16)) ) {
       "(" + a + " " + selector.name + " " + b + ")"

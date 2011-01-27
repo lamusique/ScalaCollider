@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 27 20:56:40 GMT 2011
+ * Created: Thu Jan 27 23:03:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -15,12 +15,12 @@ object MouseX {
    def kr: MouseX = kr()
    def kr(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, warp: AnyGE = 0.0f, lag: AnyGE = 0.2f) = apply(lo, hi, warp, lag)
 }
-case class MouseX(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, MouseXUGen] with ControlRated {
+case class MouseX(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleOutUGenSource[MouseXUGen] with ControlRated {
    protected def expandUGens = {
-      val _lo: IIdxSeq[AnyUGenIn] = lo.expand
-      val _hi: IIdxSeq[AnyUGenIn] = hi.expand
-      val _warp: IIdxSeq[AnyUGenIn] = warp.expand
-      val _lag: IIdxSeq[AnyUGenIn] = lag.expand
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
+      val _warp: IIdxSeq[UGenIn] = warp.expand
+      val _lag: IIdxSeq[UGenIn] = lag.expand
       val _sz_lo = _lo.size
       val _sz_hi = _hi.size
       val _sz_warp = _warp.size
@@ -29,17 +29,17 @@ case class MouseX(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleO
       IIdxSeq.tabulate(_exp_)(i => MouseXUGen(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _warp(i.%(_sz_warp)), _lag(i.%(_sz_lag))))
    }
 }
-case class MouseXUGen(lo: AnyUGenIn, hi: AnyUGenIn, warp: AnyUGenIn, lag: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(lo, hi, warp, lag)) with ControlRated
+case class MouseXUGen(lo: UGenIn, hi: UGenIn, warp: UGenIn, lag: UGenIn) extends SingleOutUGen(IIdxSeq(lo, hi, warp, lag)) with ControlRated
 object MouseY {
    def kr: MouseY = kr()
    def kr(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, warp: AnyGE = 0.0f, lag: AnyGE = 0.2f) = apply(lo, hi, warp, lag)
 }
-case class MouseY(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, MouseYUGen] with ControlRated {
+case class MouseY(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleOutUGenSource[MouseYUGen] with ControlRated {
    protected def expandUGens = {
-      val _lo: IIdxSeq[AnyUGenIn] = lo.expand
-      val _hi: IIdxSeq[AnyUGenIn] = hi.expand
-      val _warp: IIdxSeq[AnyUGenIn] = warp.expand
-      val _lag: IIdxSeq[AnyUGenIn] = lag.expand
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
+      val _warp: IIdxSeq[UGenIn] = warp.expand
+      val _lag: IIdxSeq[UGenIn] = lag.expand
       val _sz_lo = _lo.size
       val _sz_hi = _hi.size
       val _sz_warp = _warp.size
@@ -48,16 +48,16 @@ case class MouseY(lo: AnyGE, hi: AnyGE, warp: AnyGE, lag: AnyGE) extends SingleO
       IIdxSeq.tabulate(_exp_)(i => MouseYUGen(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _warp(i.%(_sz_warp)), _lag(i.%(_sz_lag))))
    }
 }
-case class MouseYUGen(lo: AnyUGenIn, hi: AnyUGenIn, warp: AnyUGenIn, lag: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(lo, hi, warp, lag)) with ControlRated
+case class MouseYUGen(lo: UGenIn, hi: UGenIn, warp: UGenIn, lag: UGenIn) extends SingleOutUGen(IIdxSeq(lo, hi, warp, lag)) with ControlRated
 object MouseButton {
    def kr: MouseButton = kr()
    def kr(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, lag: AnyGE = 0.2f) = apply(lo, hi, lag)
 }
-case class MouseButton(lo: AnyGE, hi: AnyGE, lag: AnyGE) extends SingleOutUGenSource[control, MouseButtonUGen] with ControlRated {
+case class MouseButton(lo: AnyGE, hi: AnyGE, lag: AnyGE) extends SingleOutUGenSource[MouseButtonUGen] with ControlRated {
    protected def expandUGens = {
-      val _lo: IIdxSeq[AnyUGenIn] = lo.expand
-      val _hi: IIdxSeq[AnyUGenIn] = hi.expand
-      val _lag: IIdxSeq[AnyUGenIn] = lag.expand
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
+      val _lag: IIdxSeq[UGenIn] = lag.expand
       val _sz_lo = _lo.size
       val _sz_hi = _hi.size
       val _sz_lag = _lag.size
@@ -65,4 +65,4 @@ case class MouseButton(lo: AnyGE, hi: AnyGE, lag: AnyGE) extends SingleOutUGenSo
       IIdxSeq.tabulate(_exp_)(i => MouseButtonUGen(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _lag(i.%(_sz_lag))))
    }
 }
-case class MouseButtonUGen(lo: AnyUGenIn, hi: AnyUGenIn, lag: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(lo, hi, lag)) with ControlRated
+case class MouseButtonUGen(lo: UGenIn, hi: UGenIn, lag: UGenIn) extends SingleOutUGen(IIdxSeq(lo, hi, lag)) with ControlRated

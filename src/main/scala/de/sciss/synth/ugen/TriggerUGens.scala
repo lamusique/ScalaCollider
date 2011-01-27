@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Jan 27 20:56:40 GMT 2011
+ * Created: Thu Jan 27 23:03:33 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -27,13 +27,13 @@ object Trig1 {
  *                        from non-positive to positive.
  * @param dur             the duration for which the ugens holds the value of 1 when triggered
  */
-def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, in, dur)
+def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply(audio, in, dur)
 /**
  * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
  *                        from non-positive to positive.
  * @param dur             the duration for which the ugens holds the value of 1 when triggered
  */
-def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
+def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply(control, in, dur)
 }
 /**
  * A UGen which outputs a value of 1 for a given duration when triggered.
@@ -48,17 +48,17 @@ def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
  * 
  * @see [[de.sciss.synth.ugen.Trig]]
  */
-case class Trig1[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleOutUGenSource[R, Trig1UGen[R]] {
+case class Trig1(rate: Rate, in: AnyGE, dur: AnyGE) extends SingleOutUGenSource[Trig1UGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _dur: IIdxSeq[AnyUGenIn] = dur.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _dur: IIdxSeq[UGenIn] = dur.expand
       val _sz_in = _in.size
       val _sz_dur = _dur.size
       val _exp_ = maxInt(_sz_in, _sz_dur)
       IIdxSeq.tabulate(_exp_)(i => Trig1UGen(rate, _in(i.%(_sz_in)), _dur(i.%(_sz_dur))))
    }
 }
-case class Trig1UGen[R <: Rate](rate: R, in: AnyUGenIn, dur: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, dur))
+case class Trig1UGen(rate: Rate, in: UGenIn, dur: UGenIn) extends SingleOutUGen(IIdxSeq(in, dur))
 object Trig {
    
 /**
@@ -66,30 +66,30 @@ object Trig {
  *                        from non-positive to positive.
  * @param dur             the duration for which the ugens holds the value of the input signal when triggered
  */
-def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, in, dur)
+def ar(in: AnyGE, dur: AnyGE = 0.1f) = apply(audio, in, dur)
 /**
  * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
  *                        from non-positive to positive.
  * @param dur             the duration for which the ugens holds the value of the input signal when triggered
  */
-def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, in, dur)
+def kr(in: AnyGE, dur: AnyGE = 0.1f) = apply(control, in, dur)
 }
 /**
  * @param in              the trigger. This can be any signal. A trigger happens when the signal changes
  *                        from non-positive to positive.
  * @param dur             the duration for which the ugens holds the value of the input signal when triggered
  */
-case class Trig[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleOutUGenSource[R, TrigUGen[R]] {
+case class Trig(rate: Rate, in: AnyGE, dur: AnyGE) extends SingleOutUGenSource[TrigUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _dur: IIdxSeq[AnyUGenIn] = dur.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _dur: IIdxSeq[UGenIn] = dur.expand
       val _sz_in = _in.size
       val _sz_dur = _dur.size
       val _exp_ = maxInt(_sz_in, _sz_dur)
       IIdxSeq.tabulate(_exp_)(i => TrigUGen(rate, _in(i.%(_sz_in)), _dur(i.%(_sz_dur))))
    }
 }
-case class TrigUGen[R <: Rate](rate: R, in: AnyUGenIn, dur: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, dur))
+case class TrigUGen(rate: Rate, in: UGenIn, dur: UGenIn) extends SingleOutUGen(IIdxSeq(in, dur))
 /**
  * A UGen that sends a value from the server to all notified clients upon receiving triggers.
  * The message sent is `OSCMessage( "/tr", <(Int) nodeID>, <(Int) trigID>, <(Float) value> )`.
@@ -111,7 +111,7 @@ object SendTrig {
  * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
  *                        This is useful to distinguish between several SendTrig instances per SynthDef.
  */
-def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[audio](audio, trig, value, id)
+def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply(audio, trig, value, id)
 /**
  * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
  *                        when passing from non-positive to positive.
@@ -120,7 +120,7 @@ def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[audio](audio,
  * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
  *                        This is useful to distinguish between several SendTrig instances per SynthDef.
  */
-def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[control](control, trig, value, id)
+def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply(control, trig, value, id)
 }
 /**
  * A UGen that sends a value from the server to all notified clients upon receiving triggers.
@@ -140,11 +140,11 @@ def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[control](cont
  * 
  * @see [[de.sciss.synth.ugen.SendReply]]
  */
-case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) extends SingleOutUGenSource[R, SendTrigUGen[R]] with HasSideEffect {
+case class SendTrig(rate: Rate, trig: AnyGE, value: AnyGE, id: AnyGE) extends SingleOutUGenSource[SendTrigUGen] with HasSideEffect {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _value: IIdxSeq[AnyUGenIn] = value.expand
-      val _id: IIdxSeq[AnyUGenIn] = id.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _value: IIdxSeq[UGenIn] = value.expand
+      val _id: IIdxSeq[UGenIn] = id.expand
       val _sz_trig = _trig.size
       val _sz_value = _value.size
       val _sz_id = _id.size
@@ -152,7 +152,7 @@ case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) ex
       IIdxSeq.tabulate(_exp_)(i => SendTrigUGen(rate, _trig(i.%(_sz_trig)), _value(i.%(_sz_value)), _id(i.%(_sz_id))))
    }
 }
-case class SendTrigUGen[R <: Rate](rate: R, trig: AnyUGenIn, value: AnyUGenIn, id: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, value, id)) with HasSideEffect
+case class SendTrigUGen(rate: Rate, trig: UGenIn, value: UGenIn, id: UGenIn) extends SingleOutUGen(IIdxSeq(trig, value, id)) with HasSideEffect
 /**
  * A UGen that toggles like a flip-flop between zero and one upon receiving a trigger.
  * The flip-flop is initially outputing zero, so changes to one when the first trigger
@@ -164,12 +164,12 @@ object ToggleFF {
  * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
  *                        changes from non-positive to positive.
  */
-def kr(trig: AnyGE) = apply[control](control, trig)
+def kr(trig: AnyGE) = apply(control, trig)
 /**
  * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
  *                        changes from non-positive to positive.
  */
-def ar(trig: AnyGE) = apply[audio](audio, trig)
+def ar(trig: AnyGE) = apply(audio, trig)
 }
 /**
  * A UGen that toggles like a flip-flop between zero and one upon receiving a trigger.
@@ -179,28 +179,28 @@ def ar(trig: AnyGE) = apply[audio](audio, trig)
  * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
  *                        changes from non-positive to positive.
  */
-case class ToggleFF[R <: Rate](rate: R, trig: AnyGE) extends SingleOutUGenSource[R, ToggleFFUGen[R]] {
+case class ToggleFF(rate: Rate, trig: AnyGE) extends SingleOutUGenSource[ToggleFFUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       IIdxSeq.tabulate(_trig.size)(i => ToggleFFUGen(rate, _trig(i)))
    }
 }
-case class ToggleFFUGen[R <: Rate](rate: R, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig))
+case class ToggleFFUGen(rate: Rate, trig: UGenIn) extends SingleOutUGen(IIdxSeq(trig))
 object SetResetFF {
-   def kr(trig: AnyGE, reset: AnyGE) = apply[control](control, trig, reset)
-   def ar(trig: AnyGE, reset: AnyGE) = apply[audio](audio, trig, reset)
+   def kr(trig: AnyGE, reset: AnyGE) = apply(control, trig, reset)
+   def ar(trig: AnyGE, reset: AnyGE) = apply(audio, trig, reset)
 }
-case class SetResetFF[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE) extends SingleOutUGenSource[R, SetResetFFUGen[R]] {
+case class SetResetFF(rate: Rate, trig: AnyGE, reset: AnyGE) extends SingleOutUGenSource[SetResetFFUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _reset: IIdxSeq[AnyUGenIn] = reset.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _reset: IIdxSeq[UGenIn] = reset.expand
       val _sz_trig = _trig.size
       val _sz_reset = _reset.size
       val _exp_ = maxInt(_sz_trig, _sz_reset)
       IIdxSeq.tabulate(_exp_)(i => SetResetFFUGen(rate, _trig(i.%(_sz_trig)), _reset(i.%(_sz_reset))))
    }
 }
-case class SetResetFFUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset))
+case class SetResetFFUGen(rate: Rate, trig: UGenIn, reset: UGenIn) extends SingleOutUGen(IIdxSeq(trig, reset))
 /**
  * A sample-and-hold UGen. When triggered, a new value is taken from the input and
  * hold until the next trigger occurs.
@@ -215,13 +215,13 @@ object Latch {
  * @param trig            the trigger. The can be any signal. A trigger happens when the signal changes from
  *                        non-positive to positive.
  */
-def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
+def kr(in: AnyGE, trig: AnyGE) = apply(control, in, trig)
 /**
  * @param in              the input signal
  * @param trig            the trigger. The can be any signal. A trigger happens when the signal changes from
  *                        non-positive to positive.
  */
-def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
+def ar(in: AnyGE, trig: AnyGE) = apply(audio, in, trig)
 }
 /**
  * A sample-and-hold UGen. When triggered, a new value is taken from the input and
@@ -234,17 +234,17 @@ def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
  * @see [[de.sciss.synth.ugen.Gate]]
  * @see [[de.sciss.synth.ugen.Demand]]
  */
-case class Latch[R <: Rate](rate: R, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[R, LatchUGen[R]] {
+case class Latch(rate: Rate, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[LatchUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       val _sz_in = _in.size
       val _sz_trig = _trig.size
       val _exp_ = maxInt(_sz_in, _sz_trig)
       IIdxSeq.tabulate(_exp_)(i => LatchUGen(rate, _in(i.%(_sz_in)), _trig(i.%(_sz_trig))))
    }
 }
-case class LatchUGen[R <: Rate](rate: R, in: AnyUGenIn, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, trig))
+case class LatchUGen(rate: Rate, in: UGenIn, trig: UGenIn) extends SingleOutUGen(IIdxSeq(in, trig))
 /**
  * A gate or hold UGen.
  * It allows the input signal value to pass when the `gate` argument is positive,
@@ -259,13 +259,13 @@ object Gate {
  * @param gate            the signal specifying whether to pass the input signal (when greater than zero) or
  *                        whether to close the gate and hold the last value (when less than or equal to zero)
  */
-def kr(in: AnyGE, gate: AnyGE) = apply[control](control, in, gate)
+def kr(in: AnyGE, gate: AnyGE) = apply(control, in, gate)
 /**
  * @param in              the input signal to gate
  * @param gate            the signal specifying whether to pass the input signal (when greater than zero) or
  *                        whether to close the gate and hold the last value (when less than or equal to zero)
  */
-def ar(in: AnyGE, gate: AnyGE) = apply[audio](audio, in, gate)
+def ar(in: AnyGE, gate: AnyGE) = apply(audio, in, gate)
 }
 /**
  * A gate or hold UGen.
@@ -278,17 +278,17 @@ def ar(in: AnyGE, gate: AnyGE) = apply[audio](audio, in, gate)
  * 
  * @see [[de.sciss.synth.ugen.Latch]]
  */
-case class Gate[R <: Rate](rate: R, in: AnyGE, gate: AnyGE) extends SingleOutUGenSource[R, GateUGen[R]] {
+case class Gate(rate: Rate, in: AnyGE, gate: AnyGE) extends SingleOutUGenSource[GateUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _gate: IIdxSeq[AnyUGenIn] = gate.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _gate: IIdxSeq[UGenIn] = gate.expand
       val _sz_in = _in.size
       val _sz_gate = _gate.size
       val _exp_ = maxInt(_sz_in, _sz_gate)
       IIdxSeq.tabulate(_exp_)(i => GateUGen(rate, _in(i.%(_sz_in)), _gate(i.%(_sz_gate))))
    }
 }
-case class GateUGen[R <: Rate](rate: R, in: AnyUGenIn, gate: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, gate))
+case class GateUGen(rate: Rate, in: UGenIn, gate: UGenIn) extends SingleOutUGen(IIdxSeq(in, gate))
 /**
  * A Schmidt trigger UGen. Initially it outputs zero. When the input signal rises above `hi`,
  * its output switches to 1.0, which is hold until the signal falls below `lo`, switching the
@@ -301,12 +301,12 @@ object Schmidt {
  * @param lo              The low threshold.
  * @param hi              The high threshold.
  */
-def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[control](control, in, lo, hi)
+def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(control, in, lo, hi)
 /**
  * @param lo              The low threshold.
  * @param hi              The high threshold.
  */
-def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[audio](audio, in, lo, hi)
+def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(audio, in, lo, hi)
 }
 /**
  * A Schmidt trigger UGen. Initially it outputs zero. When the input signal rises above `hi`,
@@ -317,11 +317,11 @@ def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply[audio](audio, in, 
  * @param lo              The low threshold.
  * @param hi              The high threshold.
  */
-case class Schmidt[R <: Rate](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, SchmidtUGen[R]] {
+case class Schmidt(rate: Rate, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[SchmidtUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _lo: IIdxSeq[AnyUGenIn] = lo.expand
-      val _hi: IIdxSeq[AnyUGenIn] = hi.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
       val _sz_in = _in.size
       val _sz_lo = _lo.size
       val _sz_hi = _hi.size
@@ -329,16 +329,16 @@ case class Schmidt[R <: Rate](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends 
       IIdxSeq.tabulate(_exp_)(i => SchmidtUGen(rate, _in(i.%(_sz_in)), _lo(i.%(_sz_lo)), _hi(i.%(_sz_hi))))
    }
 }
-case class SchmidtUGen[R <: Rate](rate: R, in: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, lo, hi))
+case class SchmidtUGen(rate: Rate, in: UGenIn, lo: UGenIn, hi: UGenIn) extends SingleOutUGen(IIdxSeq(in, lo, hi))
 object PulseDivider {
-   def kr(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply[control](control, trig, div, start)
-   def ar(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply[audio](audio, trig, div, start)
+   def kr(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply(control, trig, div, start)
+   def ar(trig: AnyGE, div: AnyGE = 2.0f, start: AnyGE = 0.0f) = apply(audio, trig, div, start)
 }
-case class PulseDivider[R <: Rate](rate: R, trig: AnyGE, div: AnyGE, start: AnyGE) extends SingleOutUGenSource[R, PulseDividerUGen[R]] {
+case class PulseDivider(rate: Rate, trig: AnyGE, div: AnyGE, start: AnyGE) extends SingleOutUGenSource[PulseDividerUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _div: IIdxSeq[AnyUGenIn] = div.expand
-      val _start: IIdxSeq[AnyUGenIn] = start.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _div: IIdxSeq[UGenIn] = div.expand
+      val _start: IIdxSeq[UGenIn] = start.expand
       val _sz_trig = _trig.size
       val _sz_div = _div.size
       val _sz_start = _start.size
@@ -346,34 +346,34 @@ case class PulseDivider[R <: Rate](rate: R, trig: AnyGE, div: AnyGE, start: AnyG
       IIdxSeq.tabulate(_exp_)(i => PulseDividerUGen(rate, _trig(i.%(_sz_trig)), _div(i.%(_sz_div)), _start(i.%(_sz_start))))
    }
 }
-case class PulseDividerUGen[R <: Rate](rate: R, trig: AnyUGenIn, div: AnyUGenIn, start: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, div, start))
+case class PulseDividerUGen(rate: Rate, trig: UGenIn, div: UGenIn, start: UGenIn) extends SingleOutUGen(IIdxSeq(trig, div, start))
 object PulseCount {
-   def kr(trig: AnyGE, reset: AnyGE = 0.0f) = apply[control](control, trig, reset)
-   def ar(trig: AnyGE, reset: AnyGE = 0.0f) = apply[audio](audio, trig, reset)
+   def kr(trig: AnyGE, reset: AnyGE = 0.0f) = apply(control, trig, reset)
+   def ar(trig: AnyGE, reset: AnyGE = 0.0f) = apply(audio, trig, reset)
 }
-case class PulseCount[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE) extends SingleOutUGenSource[R, PulseCountUGen[R]] {
+case class PulseCount(rate: Rate, trig: AnyGE, reset: AnyGE) extends SingleOutUGenSource[PulseCountUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _reset: IIdxSeq[AnyUGenIn] = reset.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _reset: IIdxSeq[UGenIn] = reset.expand
       val _sz_trig = _trig.size
       val _sz_reset = _reset.size
       val _exp_ = maxInt(_sz_trig, _sz_reset)
       IIdxSeq.tabulate(_exp_)(i => PulseCountUGen(rate, _trig(i.%(_sz_trig)), _reset(i.%(_sz_reset))))
    }
 }
-case class PulseCountUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset))
+case class PulseCountUGen(rate: Rate, trig: UGenIn, reset: UGenIn) extends SingleOutUGen(IIdxSeq(trig, reset))
 object Stepper {
-   def kr(trig: AnyGE, reset: AnyGE = 0.0f, lo: AnyGE = 0.0f, hi: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, reset, lo, hi, step, resetVal)
-   def ar(trig: AnyGE, reset: AnyGE = 0.0f, lo: AnyGE = 0.0f, hi: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, reset, lo, hi, step, resetVal)
+   def kr(trig: AnyGE, reset: AnyGE = 0.0f, lo: AnyGE = 0.0f, hi: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply(control, trig, reset, lo, hi, step, resetVal)
+   def ar(trig: AnyGE, reset: AnyGE = 0.0f, lo: AnyGE = 0.0f, hi: AnyGE = 7.0f, step: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply(audio, trig, reset, lo, hi, step, resetVal)
 }
-case class Stepper[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE, lo: AnyGE, hi: AnyGE, step: AnyGE, resetVal: AnyGE) extends SingleOutUGenSource[R, StepperUGen[R]] {
+case class Stepper(rate: Rate, trig: AnyGE, reset: AnyGE, lo: AnyGE, hi: AnyGE, step: AnyGE, resetVal: AnyGE) extends SingleOutUGenSource[StepperUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _reset: IIdxSeq[AnyUGenIn] = reset.expand
-      val _lo: IIdxSeq[AnyUGenIn] = lo.expand
-      val _hi: IIdxSeq[AnyUGenIn] = hi.expand
-      val _step: IIdxSeq[AnyUGenIn] = step.expand
-      val _resetVal: IIdxSeq[AnyUGenIn] = resetVal.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _reset: IIdxSeq[UGenIn] = reset.expand
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
+      val _step: IIdxSeq[UGenIn] = step.expand
+      val _resetVal: IIdxSeq[UGenIn] = resetVal.expand
       val _sz_trig = _trig.size
       val _sz_reset = _reset.size
       val _sz_lo = _lo.size
@@ -384,7 +384,7 @@ case class Stepper[R <: Rate](rate: R, trig: AnyGE, reset: AnyGE, lo: AnyGE, hi:
       IIdxSeq.tabulate(_exp_)(i => StepperUGen(rate, _trig(i.%(_sz_trig)), _reset(i.%(_sz_reset)), _lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _step(i.%(_sz_step)), _resetVal(i.%(_sz_resetVal))))
    }
 }
-case class StepperUGen[R <: Rate](rate: R, trig: AnyUGenIn, reset: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn, step: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, reset, lo, hi, step, resetVal))
+case class StepperUGen(rate: Rate, trig: UGenIn, reset: UGenIn, lo: UGenIn, hi: UGenIn, step: UGenIn, resetVal: UGenIn) extends SingleOutUGen(IIdxSeq(trig, reset, lo, hi, step, resetVal))
 /**
  * A delay UGen for trigger signals. Other than a normal buffer delay,
  * any new trigger arriving in the time between the previous trigger
@@ -399,7 +399,7 @@ object TDelay {
  *                        amplitude 1.0.
  * @param dur             The delay time in seconds.
  */
-def kr(trig: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, trig, dur)
+def kr(trig: AnyGE, dur: AnyGE = 0.1f) = apply(control, trig, dur)
 /**
  * @param trig            The input trigger. A trigger is recognized when the signal passes from
  *                        non-positive to positive. Note that, no matter what the amplitude of
@@ -407,7 +407,7 @@ def kr(trig: AnyGE, dur: AnyGE = 0.1f) = apply[control](control, trig, dur)
  *                        amplitude 1.0.
  * @param dur             The delay time in seconds.
  */
-def ar(trig: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, trig, dur)
+def ar(trig: AnyGE, dur: AnyGE = 0.1f) = apply(audio, trig, dur)
 }
 /**
  * A delay UGen for trigger signals. Other than a normal buffer delay,
@@ -420,28 +420,28 @@ def ar(trig: AnyGE, dur: AnyGE = 0.1f) = apply[audio](audio, trig, dur)
  *                        amplitude 1.0.
  * @param dur             The delay time in seconds.
  */
-case class TDelay[R <: Rate](rate: R, trig: AnyGE, dur: AnyGE) extends SingleOutUGenSource[R, TDelayUGen[R]] {
+case class TDelay(rate: Rate, trig: AnyGE, dur: AnyGE) extends SingleOutUGenSource[TDelayUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _dur: IIdxSeq[AnyUGenIn] = dur.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _dur: IIdxSeq[UGenIn] = dur.expand
       val _sz_trig = _trig.size
       val _sz_dur = _dur.size
       val _exp_ = maxInt(_sz_trig, _sz_dur)
       IIdxSeq.tabulate(_exp_)(i => TDelayUGen(rate, _trig(i.%(_sz_trig)), _dur(i.%(_sz_dur))))
    }
 }
-case class TDelayUGen[R <: Rate](rate: R, trig: AnyUGenIn, dur: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, dur))
+case class TDelayUGen(rate: Rate, trig: UGenIn, dur: UGenIn) extends SingleOutUGen(IIdxSeq(trig, dur))
 object ZeroCrossing {
-   def kr(in: AnyGE) = apply[control](control, in)
-   def ar(in: AnyGE) = apply[audio](audio, in)
+   def kr(in: AnyGE) = apply(control, in)
+   def ar(in: AnyGE) = apply(audio, in)
 }
-case class ZeroCrossing[R <: Rate](rate: R, in: AnyGE) extends SingleOutUGenSource[R, ZeroCrossingUGen[R]] {
+case class ZeroCrossing(rate: Rate, in: AnyGE) extends SingleOutUGenSource[ZeroCrossingUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => ZeroCrossingUGen(rate, _in(i)))
    }
 }
-case class ZeroCrossingUGen[R <: Rate](rate: R, in: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in))
+case class ZeroCrossingUGen(rate: Rate, in: UGenIn) extends SingleOutUGen(IIdxSeq(in))
 /**
  * A UGen that returns time since last triggered.
  * The time returned is in seconds and is measured from the last received trigger.
@@ -455,12 +455,12 @@ object Timer {
  * @param trig            the trigger to update the output signal.
  *                        A trigger occurs when trig signal crosses from non-positive to positive.
  */
-def kr(trig: AnyGE) = apply[control](control, trig)
+def kr(trig: AnyGE) = apply(control, trig)
 /**
  * @param trig            the trigger to update the output signal.
  *                        A trigger occurs when trig signal crosses from non-positive to positive.
  */
-def ar(trig: AnyGE) = apply[audio](audio, trig)
+def ar(trig: AnyGE) = apply(audio, trig)
 }
 /**
  * A UGen that returns time since last triggered.
@@ -472,13 +472,13 @@ def ar(trig: AnyGE) = apply[audio](audio, trig)
  * @param trig            the trigger to update the output signal.
  *                        A trigger occurs when trig signal crosses from non-positive to positive.
  */
-case class Timer[R <: Rate](rate: R, trig: AnyGE) extends SingleOutUGenSource[R, TimerUGen[R]] {
+case class Timer(rate: Rate, trig: AnyGE) extends SingleOutUGenSource[TimerUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       IIdxSeq.tabulate(_trig.size)(i => TimerUGen(rate, _trig(i)))
    }
 }
-case class TimerUGen[R <: Rate](rate: R, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig))
+case class TimerUGen(rate: Rate, trig: UGenIn) extends SingleOutUGen(IIdxSeq(trig))
 /**
  * A UGen which starts a linear raise from zero each time it is
  * triggered.
@@ -496,7 +496,7 @@ object Sweep {
  *                        In SCLang this argument is named `rate`, while ScalaCollider uses
  *                        `speed` to avoid conflict with the UGen's calculation rate.
  */
-def kr(trig: AnyGE, speed: AnyGE) = apply[control](control, trig, speed)
+def kr(trig: AnyGE, speed: AnyGE) = apply(control, trig, speed)
 /**
  * @param trig            the trigger that restarts the ramp, when passing from
  *                        non-positive to positive
@@ -504,7 +504,7 @@ def kr(trig: AnyGE, speed: AnyGE) = apply[control](control, trig, speed)
  *                        In SCLang this argument is named `rate`, while ScalaCollider uses
  *                        `speed` to avoid conflict with the UGen's calculation rate.
  */
-def ar(trig: AnyGE, speed: AnyGE) = apply[audio](audio, trig, speed)
+def ar(trig: AnyGE, speed: AnyGE) = apply(audio, trig, speed)
 }
 /**
  * A UGen which starts a linear raise from zero each time it is
@@ -520,41 +520,41 @@ def ar(trig: AnyGE, speed: AnyGE) = apply[audio](audio, trig, speed)
  * @see [[de.sciss.synth.ugen.Phasor]]
  * @see [[de.sciss.synth.ugen.Line]]
  */
-case class Sweep[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE) extends SingleOutUGenSource[R, SweepUGen[R]] {
+case class Sweep(rate: Rate, trig: AnyGE, speed: AnyGE) extends SingleOutUGenSource[SweepUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _speed: IIdxSeq[AnyUGenIn] = speed.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _speed: IIdxSeq[UGenIn] = speed.expand
       val _sz_trig = _trig.size
       val _sz_speed = _speed.size
       val _exp_ = maxInt(_sz_trig, _sz_speed)
       IIdxSeq.tabulate(_exp_)(i => SweepUGen(rate, _trig(i.%(_sz_trig)), _speed(i.%(_sz_speed))))
    }
 }
-case class SweepUGen[R <: Rate](rate: R, trig: AnyUGenIn, speed: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, speed))
+case class SweepUGen(rate: Rate, trig: UGenIn, speed: UGenIn) extends SingleOutUGen(IIdxSeq(trig, speed))
 object Phasor {
    
 /**
  * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
  *                        be ignored (you need to feed it zero first)
  */
-def kr(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[control](control, trig, speed, lo, hi, resetVal)
+def kr(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply(control, trig, speed, lo, hi, resetVal)
 /**
  * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
  *                        be ignored (you need to feed it zero first)
  */
-def ar(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply[audio](audio, trig, speed, lo, hi, resetVal)
+def ar(trig: AnyGE, speed: AnyGE = 1.0f, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, resetVal: AnyGE = 0.0f) = apply(audio, trig, speed, lo, hi, resetVal)
 }
 /**
  * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
  *                        be ignored (you need to feed it zero first)
  */
-case class Phasor[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE, lo: AnyGE, hi: AnyGE, resetVal: AnyGE) extends SingleOutUGenSource[R, PhasorUGen[R]] {
+case class Phasor(rate: Rate, trig: AnyGE, speed: AnyGE, lo: AnyGE, hi: AnyGE, resetVal: AnyGE) extends SingleOutUGenSource[PhasorUGen] {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _speed: IIdxSeq[AnyUGenIn] = speed.expand
-      val _lo: IIdxSeq[AnyUGenIn] = lo.expand
-      val _hi: IIdxSeq[AnyUGenIn] = hi.expand
-      val _resetVal: IIdxSeq[AnyUGenIn] = resetVal.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _speed: IIdxSeq[UGenIn] = speed.expand
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
+      val _resetVal: IIdxSeq[UGenIn] = resetVal.expand
       val _sz_trig = _trig.size
       val _sz_speed = _speed.size
       val _sz_lo = _lo.size
@@ -564,112 +564,112 @@ case class Phasor[R <: Rate](rate: R, trig: AnyGE, speed: AnyGE, lo: AnyGE, hi: 
       IIdxSeq.tabulate(_exp_)(i => PhasorUGen(rate, _trig(i.%(_sz_trig)), _speed(i.%(_sz_speed)), _lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _resetVal(i.%(_sz_resetVal))))
    }
 }
-case class PhasorUGen[R <: Rate](rate: R, trig: AnyUGenIn, speed: AnyUGenIn, lo: AnyUGenIn, hi: AnyUGenIn, resetVal: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(trig, speed, lo, hi, resetVal))
+case class PhasorUGen(rate: Rate, trig: UGenIn, speed: UGenIn, lo: UGenIn, hi: UGenIn, resetVal: UGenIn) extends SingleOutUGen(IIdxSeq(trig, speed, lo, hi, resetVal))
 object Peak {
-   def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
-   def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
+   def kr(in: AnyGE, trig: AnyGE) = apply(control, in, trig)
+   def ar(in: AnyGE, trig: AnyGE) = apply(audio, in, trig)
 }
-case class Peak[R <: Rate](rate: R, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[R, PeakUGen[R]] {
+case class Peak(rate: Rate, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[PeakUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       val _sz_in = _in.size
       val _sz_trig = _trig.size
       val _exp_ = maxInt(_sz_in, _sz_trig)
       IIdxSeq.tabulate(_exp_)(i => PeakUGen(rate, _in(i.%(_sz_in)), _trig(i.%(_sz_trig))))
    }
 }
-case class PeakUGen[R <: Rate](rate: R, in: AnyUGenIn, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, trig))
+case class PeakUGen(rate: Rate, in: UGenIn, trig: UGenIn) extends SingleOutUGen(IIdxSeq(in, trig))
 object RunningMin {
-   def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
-   def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
+   def kr(in: AnyGE, trig: AnyGE) = apply(control, in, trig)
+   def ar(in: AnyGE, trig: AnyGE) = apply(audio, in, trig)
 }
-case class RunningMin[R <: Rate](rate: R, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[R, RunningMinUGen[R]] {
+case class RunningMin(rate: Rate, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[RunningMinUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       val _sz_in = _in.size
       val _sz_trig = _trig.size
       val _exp_ = maxInt(_sz_in, _sz_trig)
       IIdxSeq.tabulate(_exp_)(i => RunningMinUGen(rate, _in(i.%(_sz_in)), _trig(i.%(_sz_trig))))
    }
 }
-case class RunningMinUGen[R <: Rate](rate: R, in: AnyUGenIn, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, trig))
+case class RunningMinUGen(rate: Rate, in: UGenIn, trig: UGenIn) extends SingleOutUGen(IIdxSeq(in, trig))
 object RunningMax {
-   def kr(in: AnyGE, trig: AnyGE) = apply[control](control, in, trig)
-   def ar(in: AnyGE, trig: AnyGE) = apply[audio](audio, in, trig)
+   def kr(in: AnyGE, trig: AnyGE) = apply(control, in, trig)
+   def ar(in: AnyGE, trig: AnyGE) = apply(audio, in, trig)
 }
-case class RunningMax[R <: Rate](rate: R, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[R, RunningMaxUGen[R]] {
+case class RunningMax(rate: Rate, in: AnyGE, trig: AnyGE) extends SingleOutUGenSource[RunningMaxUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       val _sz_in = _in.size
       val _sz_trig = _trig.size
       val _exp_ = maxInt(_sz_in, _sz_trig)
       IIdxSeq.tabulate(_exp_)(i => RunningMaxUGen(rate, _in(i.%(_sz_in)), _trig(i.%(_sz_trig))))
    }
 }
-case class RunningMaxUGen[R <: Rate](rate: R, in: AnyUGenIn, trig: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, trig))
+case class RunningMaxUGen(rate: Rate, in: UGenIn, trig: UGenIn) extends SingleOutUGen(IIdxSeq(in, trig))
 object PeakFollower {
-   def kr(in: AnyGE, decay: AnyGE = 0.999f) = apply[control](control, in, decay)
-   def ar(in: AnyGE, decay: AnyGE = 0.999f) = apply[audio](audio, in, decay)
+   def kr(in: AnyGE, decay: AnyGE = 0.999f) = apply(control, in, decay)
+   def ar(in: AnyGE, decay: AnyGE = 0.999f) = apply(audio, in, decay)
 }
-case class PeakFollower[R <: Rate](rate: R, in: AnyGE, decay: AnyGE) extends SingleOutUGenSource[R, PeakFollowerUGen[R]] {
+case class PeakFollower(rate: Rate, in: AnyGE, decay: AnyGE) extends SingleOutUGenSource[PeakFollowerUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _decay: IIdxSeq[AnyUGenIn] = decay.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _decay: IIdxSeq[UGenIn] = decay.expand
       val _sz_in = _in.size
       val _sz_decay = _decay.size
       val _exp_ = maxInt(_sz_in, _sz_decay)
       IIdxSeq.tabulate(_exp_)(i => PeakFollowerUGen(rate, _in(i.%(_sz_in)), _decay(i.%(_sz_decay))))
    }
 }
-case class PeakFollowerUGen[R <: Rate](rate: R, in: AnyUGenIn, decay: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, decay))
+case class PeakFollowerUGen(rate: Rate, in: UGenIn, decay: UGenIn) extends SingleOutUGen(IIdxSeq(in, decay))
 object MostChange {
-   def kr(a: AnyGE, b: AnyGE) = apply[control](control, a, b)
-   def ar(a: AnyGE, b: AnyGE) = apply[audio](audio, a, b)
+   def kr(a: AnyGE, b: AnyGE) = apply(control, a, b)
+   def ar(a: AnyGE, b: AnyGE) = apply(audio, a, b)
 }
-case class MostChange[R <: Rate](rate: R, a: AnyGE, b: AnyGE) extends SingleOutUGenSource[R, MostChangeUGen[R]] {
+case class MostChange(rate: Rate, a: AnyGE, b: AnyGE) extends SingleOutUGenSource[MostChangeUGen] {
    protected def expandUGens = {
-      val _a: IIdxSeq[AnyUGenIn] = a.expand
-      val _b: IIdxSeq[AnyUGenIn] = b.expand
+      val _a: IIdxSeq[UGenIn] = a.expand
+      val _b: IIdxSeq[UGenIn] = b.expand
       val _sz_a = _a.size
       val _sz_b = _b.size
       val _exp_ = maxInt(_sz_a, _sz_b)
       IIdxSeq.tabulate(_exp_)(i => MostChangeUGen(rate, _a(i.%(_sz_a)), _b(i.%(_sz_b))))
    }
 }
-case class MostChangeUGen[R <: Rate](rate: R, a: AnyUGenIn, b: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(a, b))
+case class MostChangeUGen(rate: Rate, a: UGenIn, b: UGenIn) extends SingleOutUGen(IIdxSeq(a, b))
 object LeastChange {
-   def kr(a: AnyGE, b: AnyGE) = apply[control](control, a, b)
-   def ar(a: AnyGE, b: AnyGE) = apply[audio](audio, a, b)
+   def kr(a: AnyGE, b: AnyGE) = apply(control, a, b)
+   def ar(a: AnyGE, b: AnyGE) = apply(audio, a, b)
 }
-case class LeastChange[R <: Rate](rate: R, a: AnyGE, b: AnyGE) extends SingleOutUGenSource[R, LeastChangeUGen[R]] {
+case class LeastChange(rate: Rate, a: AnyGE, b: AnyGE) extends SingleOutUGenSource[LeastChangeUGen] {
    protected def expandUGens = {
-      val _a: IIdxSeq[AnyUGenIn] = a.expand
-      val _b: IIdxSeq[AnyUGenIn] = b.expand
+      val _a: IIdxSeq[UGenIn] = a.expand
+      val _b: IIdxSeq[UGenIn] = b.expand
       val _sz_a = _a.size
       val _sz_b = _b.size
       val _exp_ = maxInt(_sz_a, _sz_b)
       IIdxSeq.tabulate(_exp_)(i => LeastChangeUGen(rate, _a(i.%(_sz_a)), _b(i.%(_sz_b))))
    }
 }
-case class LeastChangeUGen[R <: Rate](rate: R, a: AnyUGenIn, b: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(a, b))
+case class LeastChangeUGen(rate: Rate, a: UGenIn, b: UGenIn) extends SingleOutUGen(IIdxSeq(a, b))
 object LastValue {
-   def kr(in: AnyGE, thresh: AnyGE = 0.01f) = apply[control](control, in, thresh)
-   def ar(in: AnyGE, thresh: AnyGE = 0.01f) = apply[audio](audio, in, thresh)
+   def kr(in: AnyGE, thresh: AnyGE = 0.01f) = apply(control, in, thresh)
+   def ar(in: AnyGE, thresh: AnyGE = 0.01f) = apply(audio, in, thresh)
 }
-case class LastValue[R <: Rate](rate: R, in: AnyGE, thresh: AnyGE) extends SingleOutUGenSource[R, LastValueUGen[R]] {
+case class LastValue(rate: Rate, in: AnyGE, thresh: AnyGE) extends SingleOutUGenSource[LastValueUGen] {
    protected def expandUGens = {
-      val _in: IIdxSeq[AnyUGenIn] = in.expand
-      val _thresh: IIdxSeq[AnyUGenIn] = thresh.expand
+      val _in: IIdxSeq[UGenIn] = in.expand
+      val _thresh: IIdxSeq[UGenIn] = thresh.expand
       val _sz_in = _in.size
       val _sz_thresh = _thresh.size
       val _exp_ = maxInt(_sz_in, _sz_thresh)
       IIdxSeq.tabulate(_exp_)(i => LastValueUGen(rate, _in(i.%(_sz_in)), _thresh(i.%(_sz_thresh))))
    }
 }
-case class LastValueUGen[R <: Rate](rate: R, in: AnyUGenIn, thresh: AnyUGenIn) extends SingleOutUGen[R](IIdxSeq(in, thresh))
+case class LastValueUGen(rate: Rate, in: UGenIn, thresh: UGenIn) extends SingleOutUGen(IIdxSeq(in, thresh))
 /**
  * A UGen which monitors another UGen to see when it is finished.
  * Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
@@ -686,7 +686,7 @@ object Done {
 /**
  * @param src             the UGen to track
  */
-def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
+def kr(src: GE[UGenIn with HasDoneFlag]) = apply(src)
 }
 /**
  * A UGen which monitors another UGen to see when it is finished.
@@ -701,13 +701,13 @@ def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = appl
  * @see [[de.sciss.synth.ugen.Line]]
  * @see [[de.sciss.synth.ugen.EnvGen]]
  */
-case class Done(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends SingleOutUGenSource[control, DoneUGen] with HasSideEffect with ControlRated {
+case class Done(src: GE[UGenIn with HasDoneFlag]) extends SingleOutUGenSource[DoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
+      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
       IIdxSeq.tabulate(_src.size)(i => DoneUGen(_src(i)))
    }
 }
-case class DoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
+case class DoneUGen(src: UGenIn with HasDoneFlag) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
 /**
  * A UGen which pauses and resumes another node.
  * Note that the UGen initially assumes the node is running, that is,
@@ -745,17 +745,17 @@ def kr(gate: AnyGE, node: AnyGE) = apply(gate, node)
  * @see [[de.sciss.synth.ugen.Free]]
  * @see [[de.sciss.synth.ugen.PauseSelf]]
  */
-case class Pause(gate: AnyGE, node: AnyGE) extends SingleOutUGenSource[control, PauseUGen] with HasSideEffect with ControlRated {
+case class Pause(gate: AnyGE, node: AnyGE) extends SingleOutUGenSource[PauseUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _gate: IIdxSeq[AnyUGenIn] = gate.expand
-      val _node: IIdxSeq[AnyUGenIn] = node.expand
+      val _gate: IIdxSeq[UGenIn] = gate.expand
+      val _node: IIdxSeq[UGenIn] = node.expand
       val _sz_gate = _gate.size
       val _sz_node = _node.size
       val _exp_ = maxInt(_sz_gate, _sz_node)
       IIdxSeq.tabulate(_exp_)(i => PauseUGen(_gate(i.%(_sz_gate)), _node(i.%(_sz_node))))
    }
 }
-case class PauseUGen(gate: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(gate, node)) with HasSideEffect with ControlRated
+case class PauseUGen(gate: UGenIn, node: UGenIn) extends SingleOutUGen(IIdxSeq(gate, node)) with HasSideEffect with ControlRated
 /**
  * A UGen that, when triggered, frees enclosing synth.
  * It frees the enclosing synth when the input signal crosses from non-positive to positive.
@@ -783,13 +783,13 @@ def kr(trig: AnyGE) = apply(trig)
  * @see [[de.sciss.synth.ugen.Free]]
  * @see [[de.sciss.synth.ugen.PauseSelf]]
  */
-case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control, FreeSelfUGen] with HasSideEffect with ControlRated {
+case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[FreeSelfUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       IIdxSeq.tabulate(_trig.size)(i => FreeSelfUGen(_trig(i)))
    }
 }
-case class FreeSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with HasSideEffect with ControlRated
+case class FreeSelfUGen(trig: UGenIn) extends SingleOutUGen(IIdxSeq(trig)) with HasSideEffect with ControlRated
 /**
  * A UGen that, when triggered, pauses enclosing synth.
  * It pauses the enclosing synth when the input signal crosses from non-positive to positive.
@@ -817,13 +817,13 @@ def kr(trig: AnyGE) = apply(trig)
  * @see [[de.sciss.synth.ugen.Pause]]
  * @see [[de.sciss.synth.ugen.FreeSelf]]
  */
-case class PauseSelf(trig: AnyGE) extends SingleOutUGenSource[control, PauseSelfUGen] with HasSideEffect with ControlRated {
+case class PauseSelf(trig: AnyGE) extends SingleOutUGenSource[PauseSelfUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
       IIdxSeq.tabulate(_trig.size)(i => PauseSelfUGen(_trig(i)))
    }
 }
-case class PauseSelfUGen(trig: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig)) with HasSideEffect with ControlRated
+case class PauseSelfUGen(trig: UGenIn) extends SingleOutUGen(IIdxSeq(trig)) with HasSideEffect with ControlRated
 /**
  * A UGen that, when triggered, frees a given node.
  * 
@@ -851,17 +851,17 @@ def kr(trig: AnyGE, node: AnyGE) = apply(trig, node)
  * @see [[de.sciss.synth.ugen.Pause]]
  * @see [[de.sciss.synth.ugen.FreeSelf]]
  */
-case class Free(trig: AnyGE, node: AnyGE) extends SingleOutUGenSource[control, FreeUGen] with HasSideEffect with ControlRated {
+case class Free(trig: AnyGE, node: AnyGE) extends SingleOutUGenSource[FreeUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _node: IIdxSeq[AnyUGenIn] = node.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _node: IIdxSeq[UGenIn] = node.expand
       val _sz_trig = _trig.size
       val _sz_node = _node.size
       val _exp_ = maxInt(_sz_trig, _sz_node)
       IIdxSeq.tabulate(_exp_)(i => FreeUGen(_trig(i.%(_sz_trig)), _node(i.%(_sz_node))))
    }
 }
-case class FreeUGen(trig: AnyUGenIn, node: AnyUGenIn) extends SingleOutUGen[control](IIdxSeq(trig, node)) with HasSideEffect with ControlRated
+case class FreeUGen(trig: UGenIn, node: UGenIn) extends SingleOutUGen(IIdxSeq(trig, node)) with HasSideEffect with ControlRated
 /**
  * A UGen that, when its input UGen is finished, frees enclosing synth.
  * This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
@@ -880,7 +880,7 @@ object FreeSelfWhenDone {
 /**
  * @param src             the input UGen which when finished will trigger the action.
  */
-def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
+def kr(src: GE[UGenIn with HasDoneFlag]) = apply(src)
 }
 /**
  * A UGen that, when its input UGen is finished, frees enclosing synth.
@@ -897,13 +897,13 @@ def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = appl
  * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
  * @see [[de.sciss.synth.ugen.Done]]
  */
-case class FreeSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends SingleOutUGenSource[control, FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
+case class FreeSelfWhenDone(src: GE[UGenIn with HasDoneFlag]) extends SingleOutUGenSource[FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
+      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
       IIdxSeq.tabulate(_src.size)(i => FreeSelfWhenDoneUGen(_src(i)))
    }
 }
-case class FreeSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
+case class FreeSelfWhenDoneUGen(src: UGenIn with HasDoneFlag) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
 /**
  * A UGen that, when its input UGen is finished, pauses enclosing synth.
  * This is essentially a shortcut for `PauseSelf.kr( Done.kr( src ))`, so instead
@@ -922,7 +922,7 @@ object PauseSelfWhenDone {
 /**
  * @param src             the input UGen which when finished will trigger the action.
  */
-def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = apply(src)
+def kr(src: GE[UGenIn with HasDoneFlag]) = apply(src)
 }
 /**
  * A UGen that, when its input UGen is finished, pauses enclosing synth.
@@ -939,10 +939,10 @@ def kr(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) = appl
  * @see [[de.sciss.synth.ugen.FreeSelfWhenDone]]
  * @see [[de.sciss.synth.ugen.Done]]
  */
-case class PauseSelfWhenDone(src: GE[R, UGenIn[R] with HasDoneFlag] forSome { type R <: Rate }) extends SingleOutUGenSource[control, PauseSelfWhenDoneUGen] with HasSideEffect with ControlRated {
+case class PauseSelfWhenDone(src: GE[UGenIn with HasDoneFlag]) extends SingleOutUGenSource[PauseSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _src: IIdxSeq[AnyUGenIn with HasDoneFlag] = src.expand
+      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
       IIdxSeq.tabulate(_src.size)(i => PauseSelfWhenDoneUGen(_src(i)))
    }
 }
-case class PauseSelfWhenDoneUGen(src: AnyUGenIn with HasDoneFlag) extends SingleOutUGen[control](IIdxSeq(src)) with HasSideEffect with ControlRated
+case class PauseSelfWhenDoneUGen(src: UGenIn with HasDoneFlag) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated

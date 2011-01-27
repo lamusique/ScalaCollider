@@ -32,7 +32,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 trait SynthGraphBuilder {
    def addLazyGE( g: LazyGE ) : Unit
-   def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
+   def addControlProxy( proxy: ControlProxyLike[ /* _, */ _ ]) : Unit
    def build : SynthGraph
 }
 
