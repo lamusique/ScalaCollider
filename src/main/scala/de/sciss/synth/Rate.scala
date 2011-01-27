@@ -78,16 +78,21 @@ sealed trait HigherRate[ R <: Rate, S <: Rate ] {
    def rate1: R
    def rate2: S
 }
-sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] {
+sealed trait MaybeRateOrder
+object NoRateOrder extends MaybeRateOrder
+sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] extends MaybeRateOrder {
    def in1: R
    def in2: S
    def out: T
 }
-trait RateRelations {
-   implicit val audioImp   = audio
-   implicit val controlImp = control
-   implicit val scalarImp  = scalar
-   implicit val demandImp  = demand
+trait Gugu {
+//   implicit val noRateOrder   = NoRateOrder
+}
+trait RateRelations extends Gugu {
+//   implicit val audioImp      = audio
+//   implicit val controlImp    = control
+//   implicit val scalarImp     = scalar
+//   implicit val demandImp     = demand
 
    private class HigherRateImpl[ R <: Rate, S <: Rate ]( val rate1: R, val rate2: S ) extends HigherRate[ R, S ]
    private class RateOrderImpl[ R <: Rate, S <: Rate, T <: Rate ]( val in1: R, val in2: S, val out: T ) extends RateOrder[ R, S, T ]
