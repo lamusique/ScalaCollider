@@ -62,9 +62,8 @@ object ScalaCollider {
       import ugen._
 
 //      val g = SynthGraph { Out.ar( 0, SinOsc.ar( mce( 333 :: 444 :: Nil )))}
-//      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr ) + "test".ir }
-//      val u = g.expand
-      def gugu( x: AnyGE ) = x + 33
+      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr ) + "test".ir }
+      val u = g.expand
    }
 
    def test( s: Server ) {

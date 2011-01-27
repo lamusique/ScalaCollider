@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sun Jan 09 18:05:58 GMT 2011
+ * Created: Thu Jan 27 18:02:28 GMT 2011
  * ScalaCollider-UGen version: 0.10
  */
 
@@ -12,56 +12,89 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object ControlRate {
-   def ir() = apply()
+   def ir = apply()
 }
-case class ControlRate() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class ControlRate() extends SingleOutUGenSource[scalar, ControlRateUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(ControlRateUGen())
+}
+case class ControlRateUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object SampleRate {
-   def ir() = apply()
+   def ir = apply()
 }
-case class SampleRate() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class SampleRate() extends SingleOutUGenSource[scalar, SampleRateUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(SampleRateUGen())
+}
+case class SampleRateUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object SampleDur {
-   def ir() = apply()
+   def ir = apply()
 }
 case class SampleDur() extends SingleOutUGenSource[scalar, SampleDurUGen] with ScalarRated {
-   protected def expandUGens = IIdxSeq( SampleDurUGen() )
+   protected def expandUGens = IIdxSeq(SampleDurUGen())
 }
 case class SampleDurUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object ControlDur {
-   def ir() = apply()
+   def ir = apply()
 }
-case class ControlDur() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class ControlDur() extends SingleOutUGenSource[scalar, ControlDurUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(ControlDurUGen())
+}
+case class ControlDurUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object SubsampleOffset {
-   def ir() = apply()
+   def ir = apply()
 }
-case class SubsampleOffset() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class SubsampleOffset() extends SingleOutUGenSource[scalar, SubsampleOffsetUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(SubsampleOffsetUGen())
+}
+case class SubsampleOffsetUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object RadiansPerSample {
-   def ir() = apply()
+   def ir = apply()
 }
-case class RadiansPerSample() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class RadiansPerSample() extends SingleOutUGenSource[scalar, RadiansPerSampleUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(RadiansPerSampleUGen())
+}
+case class RadiansPerSampleUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumInputBuses {
-   def ir() = apply()
+   def ir = apply()
 }
-case class NumInputBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumInputBuses() extends SingleOutUGenSource[scalar, NumInputBusesUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(NumInputBusesUGen())
+}
+case class NumInputBusesUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumOutputBuses {
-   def ir() = apply()
+   def ir = apply()
 }
-case class NumOutputBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumOutputBuses() extends SingleOutUGenSource[scalar, NumOutputBusesUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(NumOutputBusesUGen())
+}
+case class NumOutputBusesUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumAudioBuses {
-   def ir() = apply()
+   def ir = apply()
 }
-case class NumAudioBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumAudioBuses() extends SingleOutUGenSource[scalar, NumAudioBusesUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(NumAudioBusesUGen())
+}
+case class NumAudioBusesUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumControlBuses {
-   def ir() = apply()
+   def ir = apply()
 }
-case class NumControlBuses() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumControlBuses() extends SingleOutUGenSource[scalar, NumControlBusesUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(NumControlBusesUGen())
+}
+case class NumControlBusesUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumBuffers {
-   def ir() = apply()
+   def ir = apply()
 }
-case class NumBuffers() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumBuffers() extends SingleOutUGenSource[scalar, NumBuffersUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(NumBuffersUGen())
+}
+case class NumBuffersUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object NumRunningSynths {
-   def ir() = apply()
+   def ir = apply()
 }
-case class NumRunningSynths() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
+case class NumRunningSynths() extends SingleOutUGenSource[scalar, NumRunningSynthsUGen] with ScalarRated {
+   protected def expandUGens = IIdxSeq(NumRunningSynthsUGen())
+}
+case class NumRunningSynthsUGen() extends SingleOutUGen[scalar](IIdxSeq.empty) with ScalarRated
 object BufSampleRate {
    def ir(buf: AnyGE) = apply[scalar](scalar, buf)
    def kr(buf: AnyGE) = apply[control](control, buf)
