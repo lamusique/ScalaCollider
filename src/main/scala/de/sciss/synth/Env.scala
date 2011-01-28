@@ -193,7 +193,7 @@ object Env extends AbstractEnvFactory[ Env ] {
 }
 
 object AbstractEnv {
-   implicit def toGE( env: AbstractEnv ) : Expands[ MultiGE ] = env.toGE
+   implicit def toGE( env: AbstractEnv ) : Multi[ AnyGE ] = env.toGE
 }
 
 trait AbstractEnv {
@@ -203,40 +203,40 @@ trait AbstractEnv {
 // note: we do not define toSeq because the format is
 // significantly different so there is little sense in doing so
 //	def toSeq : Seq[ GE ] ...
-   def toGE : Expands[ MultiGE ]
+   def toGE : Multi[ AnyGE ]
 }
 
 case class Env( startLevel: AnyGE, segments: Seq[ EnvSeg /*.Any*/ ],
                 releaseNode: AnyGE = -99, loopNode: AnyGE = -99 )
 extends AbstractEnv {
 
-	def toGE : Expands[ MultiGE ] = {
+	def toGE : Multi[ AnyGE ] = {
       val segmIdx    = segments.toIndexedSeq
       val sizeGE: AnyGE = segmIdx.size
       val res: IIdxSeq[ AnyGE ] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap( seg =>
          IIdxSeq[ AnyGE ]( seg.targetLevel, seg.dur, seg.shape.idGE, seg.shape.curvatureGE ))
 //      error( "NOT YET" )
-      res
+      geSeqToGE[ UGenIn ]( res )
    }
 
    def isSustained = releaseNode != Constant( -99 )
 }
 
-// YYY
-//object IEnv extends AbstractEnvFactory[ IEnv ] {
-//   protected def create( startLevel: GE, segments: Sg* ) =
-//      new IEnv( startLevel, segments )
-//}
-//
-//case class IEnv( startLevel: AnyGE, segments: Seq[ EnvSeg ], offset: GE = 0 )
-//extends AbstractEnv {
-//	def toSeq : IIdxSeq[ AnyGE ] = {
-//      val segmIdx    = segments.toIndexedSeq
-//      val sizeGE: AnyGE = segmIdx.size
-//      val totalDur   = segmIdx.foldLeft[ AnyGE ]( 0 )( (sum, next) => sum + next.dur )
-//      offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap( seg =>
-//         Vector( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
-//   }
-//
-//   def isSustained = false
-//}
+object IEnv extends AbstractEnvFactory[ IEnv ] {
+   protected def create( startLevel: AnyGE, segments: Sg* ) =
+      new IEnv( startLevel, segments )
+}
+
+case class IEnv( startLevel: AnyGE, segments: Seq[ EnvSeg ], offset: AnyGE = 0 )
+extends AbstractEnv {
+	def toGE : Multi[ AnyGE ] = {
+      val segmIdx    = segments.toIndexedSeq
+      val sizeGE: AnyGE = segmIdx.size
+      val totalDur   = segmIdx.foldLeft[ AnyGE ]( 0 )( (sum, next) => sum + next.dur )
+      val res = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap( seg =>
+         IIdxSeq( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
+      geSeqToGE[ UGenIn ]( res )
+   }
+
+   def isSustained = false
+}

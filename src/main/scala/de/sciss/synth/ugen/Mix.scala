@@ -62,7 +62,7 @@ object Mix {
     * Thus, any GE mixes down to a mono signal. Multi-output signals use the
     * other @apply@ method and expand to their original number of channels.
     */
-   def apply /*[ R <: Rate ]*/( elem: GE[ /*R,*/ UGenIn /*[ R ]*/])/*( implicit r: RateOrder[ R, R, R ])*/ : Mix /*[ R ]*/ = Mix( Multi.disjoint( elem ))
+   def apply /*[ R <: Rate ]*/( elem: GE[ /*R,*/ UGenIn /*[ R ]*/])/*( implicit r: RateOrder[ R, R, R ])*/ : Mix /*[ R ]*/ = Mix( Multi.Disjoint( elem ))
 
    /**
     * This is an alias for the @apply@ method using a @GE@ input. This can be used to feed in multi-output
@@ -73,14 +73,14 @@ object Mix {
    def seq /*[ R <: Rate ]*/( elems: IIdxSeq[ Multi[ GE[ /*R,*/ UGenIn /*[ R ]*/]]])/*( implicit r: RateOrder[ R, R, R ])*/ = Seq( elems )
 
    case class Seq /*[ R <: Rate ]*/( elems: IIdxSeq[ Multi[ GE[ /*R,*/ UGenIn /*[ R ]*/]]])/*( implicit r: RateOrder[ R, R, R ])*/
-   extends LazyGE with GE[ /* R,*/ UGenIn /*[ R ]*/] {
+   extends LazyExpander[ UGenIn ] with GE[ /* R,*/ UGenIn /*[ R ]*/] {
       def rate = Rate.highest( elems.map( _.rate ): _* ) // r.out
 
-      def force( b: UGenGraphBuilder ) { expand( b )}
-      def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
-         expand( UGenGraph.builder )
-      }
-      private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn /*[ R ]*/] = b.visit( this /* cache */, expandUGens )
+//      def force( b: UGenGraphBuilder ) { expand( b )}
+//      def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
+//         expand( UGenGraph.builder )
+//      }
+//      private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn /*[ R ]*/] = b.visit( this /* cache */, expandUGens )
       protected def expandUGens : IIdxSeq[ UGenIn /*[ R ]*/] = {
          val seq  = elems.map( sum( _ ))
          if( seq.isEmpty ) return IIdxSeq.empty
@@ -116,16 +116,16 @@ object Mix {
  * }}}
  */
 case class Mix /*[ R <: Rate ]*/( elems: Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ R, R, R ])*/
-extends LazyGE with GE[ /* R,*/ UGenIn /*[ R ]*/] {
+extends LazyExpander[ UGenIn ] with GE[ /* R,*/ UGenIn /*[ R ]*/] {
    import Mix._
 
 //   def rate = r.out
    def rate = elems.rate
 
-   def force( b: UGenGraphBuilder ) { expand( b )}
-   def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
-      expand( UGenGraph.builder )
-   }
-   private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn /*[ R ]*/] = b.visit( this /* cache */, expandUGens )
+//   def force( b: UGenGraphBuilder ) { expand( b )}
+//   def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
+//      expand( UGenGraph.builder )
+//   }
+//   private def expand( b: UGenGraphBuilder ): IIdxSeq[ UGenIn /*[ R ]*/] = b.visit( this /* cache */, expandUGens )
    protected def expandUGens : IIdxSeq[ UGenIn /*[ R ]*/] = sum( elems )
 }

@@ -30,13 +30,10 @@ package de.sciss.synth
 
 import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 
-/**
- *    @version 0.15, 21-May-10
- */
-trait UGenProxy {
-   def source : UGen
-   def outputIndex : Int
-}
+//trait UGenProxy[ S <: UGen ] extends UGenIn {
+//   def source : S
+//   def outputIndex : Int
+//}
 
 //trait ExclusiveUGen     // marker trait: UGen can only occur once in a synthdef
 
@@ -86,7 +83,7 @@ trait WritesFFT extends HasSideEffect with IsIndividual
 trait WritesBus extends HasSideEffect with IsIndividual     // XXX eventually: WritesBus[T] { def bus: T }
 
 abstract class UGen
-extends /* YYY RatedGE with */ UGenProxy {
+/* extends /* YYY RatedGE with */ UGenProxy */ {
    // ---- constructor ----
    UGenGraph.builder.addUGen( this )
 
@@ -94,7 +91,7 @@ extends /* YYY RatedGE with */ UGenProxy {
 
    def rate: Rate // YYY
    def numOutputs: Int // YYY
-   def outputs: IIdxSeq[ UGenIn ] // YYY
+   def outputs: IIdxSeq[ UGenIn ] // YYY   XXX could be UGenProxy
 
 //   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1 )}
    def name = {
@@ -126,19 +123,15 @@ extends /* YYY RatedGE with */ UGenProxy {
 }
 
 // a class for UGens with multiple outputs
-abstract class MultiOutUGen /*[ R <: Rate ]*/( outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
-extends UGen with GE[ /*R,*/ UGenIn /*[ R ]*/]{
-// YYY
-//   // most multi out ugens use the same rate for all outputs,
-//   // therefore we have a simpler constructor
-//   def this( rate: Rate, numOutputs: Int, inputs: UGenIn* ) = this( Vector.fill( numOutputs )( rate ), inputs: _* )
-   
+abstract class MultiOutUGen[ +Repr <: UGen ]( outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
+//   extends UGen with GE[ /*R,*/ UGenIn /*[ R ]*/]
+extends UGen with GE[ UGenProxy[ Repr ]] {
    final override def numOutputs = outputRates.size
 //	final def outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map(
 //      tup => UGenOutProxy( this, tup._2, tup._1 ))
 
-   final def expand: IIdxSeq[ UGenIn /*[ R ]*/] = outputRates.zipWithIndex.map( tup => UGenOutProxy( this, tup._2, tup._1 ))
-   final def outputs: IIdxSeq[ UGenIn /*[ R ]*/ ] = expand
+   final def expand: IIdxSeq[ UGenProxy[ Repr ]] = outputRates.zipWithIndex.map( tup => UGenOutProxy[ Repr ]( this, tup._2, tup._1 ))
+   final def outputs: IIdxSeq[ UGenProxy[ Repr ]] = expand
 }
 
 abstract class ZeroOutUGen( val inputs: IIdxSeq[ UGenIn ]) extends UGen with HasSideEffect {
@@ -146,15 +139,16 @@ abstract class ZeroOutUGen( val inputs: IIdxSeq[ UGenIn ]) extends UGen with Has
    final def outputs = IIdxSeq.empty
 }
 
-trait LazyGE /* extends Expands[ UGen ] */ {
+trait Lazy /* extends Expands[ UGen ] */ {
    // ---- constructor ----
-   SynthGraph.builder.addLazyGE( this )
+   SynthGraph.builder.addLazy( this )
 
    def force( b: UGenGraphBuilder ) : Unit
 }
 
-sealed trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
-   private lazy val cache = new LazyGECache( this )
+//sealed trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ]
+/* sealed */ trait LazyExpander[ +U ] extends Lazy with Expands[ U ] {
+   private lazy val cache = new LazyCache( this )
 
 //
 //   // ---- constructor ----
@@ -170,9 +164,9 @@ sealed trait UGenSource[ +U <: UGen ] extends LazyGE with Expands[ U ] {
    protected def expandUGens : IIdxSeq[ U ]
 }
 
-trait ZeroOutUGenSource[ +U <: ZeroOutUGen ] extends UGenSource[ U ]
-trait SingleOutUGenSource[ /* R <: Rate,*/ +U <: SingleOutUGen /*[ R ]*/] extends UGenSource[ U ] with GE[ /* R,*/ U ]
-trait MultiOutUGenSource[  /*R <: Rate,*/ +U <: MultiOutUGen /*[ R ]*/]  extends UGenSource[ U ] with Multi[ U ] {
+trait ZeroOutUGenSource[ +U <: ZeroOutUGen ] extends LazyExpander[ U ]
+trait SingleOutUGenSource[ /* R <: Rate,*/ +U <: SingleOutUGen[ U ]] extends LazyExpander[ U ] with GE[ /* R,*/ U ]
+trait MultiOutUGenSource[  /*R <: Rate,*/ +U <: MultiOutUGen[ U ]] extends LazyExpander[ U ] with Multi[ U ] {
    def mexpand = expand
 }
 
@@ -183,7 +177,7 @@ trait MultiOutUGenSource[  /*R <: Rate,*/ +U <: MultiOutUGen /*[ R ]*/]  extends
 //   }
 //}
 
-class LazyGECache[ +T <: LazyGE ]( val self: T ) extends Proxy with LazyGE {
+class LazyCache[ +T <: Lazy ]( val self: T ) extends Proxy with Lazy {
    override val hashCode: Int = self.hashCode
    def force( b: UGenGraphBuilder ) = self.force( b )
 }

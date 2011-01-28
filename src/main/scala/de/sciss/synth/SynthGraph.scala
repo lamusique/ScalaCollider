@@ -97,8 +97,9 @@ object SynthGraph {
          val res1 = thunk
          val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
          val res2 = if( (rate == audio) || (rate == control) ) {
-//            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
-            val res2 = res1
+            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
+            val res2: Multi[ AnyGE ] = o getOrElse res1
+//            val res2 = res1
             val out = "out".kr
 //            if( rate == audio ) {
                Out( rate, out, res2 )
@@ -108,17 +109,16 @@ object SynthGraph {
          } else res1
       }
 
-// YYY
-//	def makeFadeEnv( fadeTime: Float ) : GE[ control, UGenIn[ control ]] = {
-//		val dt			= "fadeTime".kr( fadeTime )
-//		val gate       = "gate".kr( 1 )
-//		val startVal	= (dt <= 0)
-//      // this is slightly more costly than what sclang does
-//      // (using non-linear shape plus an extra unary op),
-//      // but it fadeout is much smoother this way...
-//		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
-//         gate, timeScale = dt, doneAction = freeSelf ).squared
-//	}
+	def makeFadeEnv( fadeTime: Float ) : AnyGE = {
+		val dt			= "fadeTime".kr( fadeTime )
+		val gate       = "gate".kr( 1 )
+		val startVal	= (dt <= 0)
+      // this is slightly more costly than what sclang does
+      // (using non-linear shape plus an extra unary op),
+      // but it fadeout is much smoother this way...
+		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+         gate, timeScale = dt, doneAction = freeSelf ).squared
+	}
 
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def replaceZeroesWithSilence( ge: GE ) : GE = {
@@ -160,17 +160,17 @@ object SynthGraph {
 
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
-      def addLazyGE( g: LazyGE ) {}
+      def addLazy( g: Lazy ) {}
       def addControlProxy( proxy: ControlProxyLike[ /* _,*/ _ ]) {}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
-      private val lazyGEs        = MBuffer.empty[ LazyGE ]
+      private val lazies         = MBuffer.empty[ Lazy ]
       private var controlProxies = MSet.empty[ ControlProxyLike[ /* _,*/ _ ]]
 
-      def build = SynthGraph( lazyGEs.toIndexedSeq, controlProxies.toSet )
-      def addLazyGE( g: LazyGE ) {
-         lazyGEs += g
+      def build = SynthGraph( lazies.toIndexedSeq, controlProxies.toSet )
+      def addLazy( g: Lazy ) {
+         lazies += g
       }
 
       def addControlProxy( proxy: ControlProxyLike[ /* _,*/ _ ]) {
@@ -179,7 +179,7 @@ object SynthGraph {
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ LazyGE ], controlProxies: ISet[ ControlProxyLike[ /*_,*/ _ ]]) {
+case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ /*_,*/ _ ]]) {
    def expand = UGenGraph.expand( this )
 }
 
@@ -213,7 +213,7 @@ object UGenGraph {
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
 //      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
       def addUGen( ugen: UGen ) {}
-      def visit[ U <: AnyRef ]( src: LazyGE, init: => U ) : U = outOfContext
+      def visit[ U <: AnyRef ]( src: Lazy, init: => U ) : U = outOfContext
 
       private def outOfContext : Nothing = error( "Out of context" )
    }
@@ -228,7 +228,7 @@ object UGenGraph {
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
 //      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
-      private val sourceMap      = MMap.empty[ LazyGE, AnyRef ]
+      private val sourceMap      = MMap.empty[ Lazy, AnyRef ]
 
       def build = {
          graph.sources.foreach( _.force( builder ))
@@ -264,7 +264,7 @@ object UGenGraph {
                   constants    :+= value
                   rc
                }
-               case up: UGenProxy => {
+               case up: UGenProxy[ _ ] => {
                   val iui         = ugenMap( up.source )
                   iu.parents     += iui
                   iui.children   += iu
@@ -318,7 +318,7 @@ object UGenGraph {
          sorted
       }
 
-      def visit[ U <: AnyRef ]( src: LazyGE, init: => U ) : U = {
+      def visit[ U <: AnyRef ]( src: Lazy, init: => U ) : U = {
          sourceMap.getOrElse( src, {
             val exp = init
             sourceMap += src -> exp

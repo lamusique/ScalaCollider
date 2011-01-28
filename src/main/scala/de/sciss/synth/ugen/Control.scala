@@ -73,7 +73,7 @@ object TrigControl {
    def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = TrigControl( values, name )
    def kr( values: Float* ) : TrigControl = kr( IIdxSeq( values: _* ))
 }
-case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ /* control,*/ TrigControlUGen ] {
+case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ /* control,*/ TrigControlUGen ] with ControlRated {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( TrigControlUGen( values.size, specialIndex ))
@@ -98,7 +98,7 @@ object AudioControl {
    def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = AudioControl( values, name )
    def ar( values: Float* ) : AudioControl = ar( IIdxSeq( values: _* ))
 }
-case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ /* audio, */ AudioControlUGen ] {
+case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ /* audio, */ AudioControlUGen ] with AudioRated {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( AudioControlUGen( values.size, specialIndex ))

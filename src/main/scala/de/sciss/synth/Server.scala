@@ -174,6 +174,8 @@ object Server {
       t.printStackTrace()
    }
 
+   implicit def defaultGroup( s: Server ) = s.defaultGroup
+
    abstract sealed class Condition
    case object Running extends Condition
 //   case object Booting extends Condition

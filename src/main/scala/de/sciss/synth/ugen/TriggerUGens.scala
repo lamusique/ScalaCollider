@@ -880,7 +880,7 @@ object FreeSelfWhenDone {
 /**
  * @param src             the input UGen which when finished will trigger the action.
  */
-def kr(src: GE[UGenIn with HasDoneFlag]) = apply(src)
+def kr(src: GE[UGenProxy[ UGen with HasDoneFlag]]) = apply(src)
 }
 /**
  * A UGen that, when its input UGen is finished, frees enclosing synth.
@@ -897,13 +897,13 @@ def kr(src: GE[UGenIn with HasDoneFlag]) = apply(src)
  * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
  * @see [[de.sciss.synth.ugen.Done]]
  */
-case class FreeSelfWhenDone(src: GE[UGenIn with HasDoneFlag]) extends SingleOutUGenSource[FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
+case class FreeSelfWhenDone(src: GE[UGenProxy[ UGen with HasDoneFlag]]) extends SingleOutUGenSource[FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
+      val _src: IIdxSeq[UGenProxy[ UGen with HasDoneFlag]] = src.expand
       IIdxSeq.tabulate(_src.size)(i => FreeSelfWhenDoneUGen(_src(i)))
    }
 }
-case class FreeSelfWhenDoneUGen(src: UGenIn with HasDoneFlag) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
+case class FreeSelfWhenDoneUGen(src: UGenProxy[ UGen with HasDoneFlag]) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
 /**
  * A UGen that, when its input UGen is finished, pauses enclosing synth.
  * This is essentially a shortcut for `PauseSelf.kr( Done.kr( src ))`, so instead

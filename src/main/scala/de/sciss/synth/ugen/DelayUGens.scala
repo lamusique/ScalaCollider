@@ -370,7 +370,9 @@ case class PlayBuf(rate: Rate, numChannels: Int, buf: AnyGE, speed: AnyGE, trig:
       IIdxSeq.tabulate(_exp_)(i => PlayBufUGen(rate, numChannels, _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _trig(i.%(_sz_trig)), _startPos(i.%(_sz_startPos)), _loop(i.%(_sz_loop)), _doneAction(i.%(_sz_doneAction))))
    }
 }
-case class PlayBufUGen(rate: Rate, numChannels: Int, buf: UGenIn, speed: UGenIn, trig: UGenIn, startPos: UGenIn, loop: UGenIn, doneAction: UGenIn) extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
+case class PlayBufUGen(rate: Rate, numChannels: Int, buf: UGenIn, speed: UGenIn, trig: UGenIn, startPos: UGenIn, loop: UGenIn, doneAction: UGenIn)
+extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
+
 object RecordBuf {
    def kr(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
    def ar(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(audio, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)

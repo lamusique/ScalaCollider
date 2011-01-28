@@ -31,7 +31,7 @@ package de.sciss.synth
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 trait SynthGraphBuilder {
-   def addLazyGE( g: LazyGE ) : Unit
+   def addLazy( g: Lazy ) : Unit
    def addControlProxy( proxy: ControlProxyLike[ /* _, */ _ ]) : Unit
    def build : SynthGraph
 }
@@ -43,7 +43,7 @@ trait UGenGraphBuilder {
    def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
    def build : UGenGraph
 
-   def visit[ U <: AnyRef ]( src: LazyGE, init: => U ) : U
+   def visit[ U <: AnyRef ]( src: Lazy, init: => U ) : U
 
 //   private var indivCnt = 0
 //   def individuate : Int = {

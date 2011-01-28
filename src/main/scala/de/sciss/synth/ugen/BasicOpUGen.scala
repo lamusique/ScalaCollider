@@ -29,7 +29,7 @@
 package de.sciss.synth.ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import de.sciss.synth.{SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
+import de.sciss.synth.{LazyExpander, SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
 import UGenHelper._
 
 /**
@@ -42,7 +42,7 @@ object MulAdd {
 }
 
 case class MulAdd /*[ R <: Rate ]*/( rate: Rate, in: GE[ /* R, */ UGenIn /*[ R ] */], mul: AnyGE, add: AnyGE )
-extends SingleOutUGenSource[ /* R, */ MulAddUGen /*[ R ]*/] {
+extends LazyExpander[ UGenIn ] with GE[ UGenIn ] {
    protected def expandUGens = {
       val _in: IIdxSeq[ UGenIn /*[ R ]*/]    = in.expand
       val _mul: IIdxSeq[ UGenIn ]    = mul.expand
@@ -56,13 +56,12 @@ extends SingleOutUGenSource[ /* R, */ MulAddUGen /*[ R ]*/] {
          val mul0 = _mul( i % _sz_mul )
          val add0 = _add( i % _sz_add )
          (mul0, add0) match {
-// YYY
-//            case (c(0),  _)    => add0
-//            case (c(1),  c(0)) => in0
-//            case (c(1),  _)    => in0 + add0
-//            case (c(-1), c(0)) => -in0
-//            case (_,     c(0)) => in0 * mul0
-//            case (c(-1), _)    => add0 - in0
+            case (c(0),  _)    => add0
+            case (c(1),  c(0)) => in0
+            case (c(1),  _)    => BinaryOpUGen( rate, BinaryOp.Plus, in0, add0 )
+            case (c(-1), c(0)) => UnaryOpUGen( rate, UnaryOp.Neg, in0 )
+            case (_,     c(0)) => BinaryOpUGen( rate, BinaryOp.Times, in0, mul0 )
+            case (c(-1), _)    => BinaryOpUGen( rate, BinaryOp.Minus, add0, in0 )
             case _             => MulAddUGen /*[ R ]*/( rate, in0, mul0, add0 )
          }
       })
@@ -471,14 +470,14 @@ object BinaryOp {
    case object Wrap2          extends Op( 45 ) {
       protected def make1( a: Float, b: Float ) = rf_wrap2( a, b )
    }
+   case object Firstarg       extends Op( 46 ) {
 // YYY
-//   case object Firstarg       extends Op( 46 ) {
 //      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
 //         case (c(a), c(b)) => c( make1( a, b ))
 //         case _            => FirstargUGen( Rate.highest( a.rate, b.rate ), a, b )
 //      }
-//      protected def make1( a: Float, b: Float ) = a
-//   }
+      protected def make1( a: Float, b: Float ) = a
+   }
 
 // case object Rrand          extends Op( 47 )
 // case object ExpRRand       extends Op( 48 )
@@ -532,10 +531,9 @@ extends BasicOpUGen /*[ R ]*/( selector.id, IIdxSeq( a, b )) {
 // Special case since it should not be erased. Might be that we
 // better transform BinaryOpUGen from case class to regular class with extractor?
 
-// YYY
-//case class FirstargUGen( rate: Rate, a: UGenIn, b: UGenIn )
-//extends BasicOpUGen( BinaryOpUGen.Firstarg.id, a, b ) with HasSideEffect {
-//   override def name = "BinaryOpUGen"
-//   override def displayName = "firstarg"
-//   override def toString = a.toString + "." + displayName + "(" + b + ")"
-//}
+case class FirstargUGen( rate: Rate, a: UGenIn, b: UGenIn )
+extends BasicOpUGen( BinaryOp.Firstarg.id, IIdxSeq( a, b )) with HasSideEffect {
+   override def name = "BinaryOpUGen"
+   override def displayName = "firstarg"
+   override def toString = a.toString + "." + displayName + "(" + b + ")"
+}

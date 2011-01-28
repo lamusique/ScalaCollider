@@ -48,6 +48,11 @@ sealed trait UGenIn /* [ R <: Rate ] */ extends /* RatedGE */ GE[ /* R, */ UGenI
    final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = IIdxSeq( this )
 }
 
+trait UGenProxy[ +S <: UGen ] extends UGenIn {
+   def source : UGen // S
+   def outputIndex : Int
+}
+
 object Constant {
    @inline private def cn( f: Float )     = Constant( f )
    @inline private def cn( d: Double )    = Constant( d.toFloat )
@@ -117,7 +122,7 @@ case class Constant( value: Float ) extends UGenIn /* [scalar] */ with ScalarRat
  *    hence can directly function as input to another UGen without expansion.
  */
 //abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenIn
-abstract class SingleOutUGen /* [ R <: Rate ] */( val inputs: IIdxSeq[ UGenIn ]) extends UGen with UGenIn /* [ R ] */ {
+abstract class SingleOutUGen[ +Repr <: UGen ]( val inputs: IIdxSeq[ UGenIn ]) extends UGen with UGenProxy[ Repr ] {
    final def outputs = expand
    final def numOutputs = 1
 }
@@ -133,8 +138,8 @@ abstract class SingleOutUGen /* [ R <: Rate ] */( val inputs: IIdxSeq[ UGenIn ])
 //   def displayName = source.displayName + " \\ " + outputIndex
 //}
 
-case class UGenOutProxy /* [ R <: Rate ] */( source: UGen, outputIndex: Int, rate: Rate /* RRR R */ )
-extends UGenIn /* [ R ] */ with UGenProxy {
+case class UGenOutProxy[ S <: UGen ]( source: UGen, outputIndex: Int, rate: Rate /* RRR R */ )
+extends /* UGenIn[ R ] with */ UGenProxy[ S ] {
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex
 }

@@ -28,9 +28,9 @@
 
 package de.sciss
 
-import de.sciss.osc.{ OSCMessage }
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
+import osc.{OSCPacket, OSCMessage}
 import synth._
 package synth {
    abstract sealed class LowPriorityImplicits {
@@ -59,11 +59,11 @@ package synth {
  *
  * @version	0.14, 28-Aug-10
  */
-package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.synth.RateRelations {
+package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.sciss.synth.RateRelations */ {
    // GEs
 
 // RRR   type AnyUGenIn = UGenIn[ _ <: Rate ]
-   type MultiGE   = Expands[ UGenIn ]
+//   type MultiGE   = Expands[ UGenIn ]
    type AnyGE     = GE[ /* R, */ _ <: UGenIn /* [ R ] */ ] // forSome { type R <: Rate }
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
@@ -91,31 +91,42 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //   implicit def geOps( ge: GE ) = ge.ops
 
    // problem with automatic application: http://lampsvn.epfl.ch/trac/scala/ticket/3152
-   implicit def mce( x: Seq[ AnyGE ]) : GE[ /* R, */ UGenIn /*[ R ] */] = {
-      new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-//      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
+//   implicit def mce( x: Seq[ AnyGE ]) : GE[ /* R, */ UGenIn /*[ R ] */] = {
+//      new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+////      val outputs: IIdxSeq[ UGenIn[ R ]] = x.flatMap( _.expand )( breakOut )
+////      outputs match {
+////         case IIdxSeq( mono ) => mono
+////         case _               => new RatedUGenInSeq( rate, outputs )
+//////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+////      }
+//   }
+//
+//   implicit def seqOfGEToGE[ G <% AnyGE ]( x: Seq[ G ]) : AnyGE = {
+//      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
 //      outputs match {
 //         case IIdxSeq( mono ) => mono
-//         case _               => new RatedUGenInSeq( rate, outputs )
+//         case _               => new UGenInSeq( outputs )
+////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+//      }
+//   }
+   implicit def geSeqToGE[ U <: UGenIn ]( x: Seq[ GE[ U ]]) : GE[ U ] = {
+      x match {
+         case Seq( single ) => single // Multi.Joint( single )
+         case _ => GESeq( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+      }
+//      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
+//      outputs match {
+//         case IIdxSeq( mono ) => mono
+//         case _               => new UGenInSeq( outputs )
 ////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
    }
-
-   implicit def seqOfGEToGE( x: Seq[ MultiGE ]) : MultiGE = {
-      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
-      outputs match {
-         case IIdxSeq( mono ) => mono
-         case _               => new UGenInSeq( outputs )
-//         case _               => new RatedUGenInSeq( x.head.rate, outputs )
-      }
-   }
 //   implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   // or should we add a view bound to seqOfGEToGE?
-//   implicit def seqOfFloatToGE( x: Seq[ Float ])   = new UGenInSeq( x.map( Constant( _ ))( breakOut ))
-//   implicit def seqOfIntToGE( x: Seq[ Int ])       = new UGenInSeq( x.map( i => Constant( i.toFloat ))( breakOut ))
-//   implicit def seqOfDoubleToGE( x: Seq[ Double ]) = new UGenInSeq( x.map( d => Constant( d.toFloat ))( breakOut ))
+   // or should we add a view bound to seqOfGEToGE?
+   implicit def floatSeqToGE( x: Seq[ Float ])   = GESeq( x.map( Constant( _ ))( breakOut ))
+   implicit def intSeqToGE( x: Seq[ Int ])       = GESeq( x.map( i => Constant( i.toFloat ))( breakOut ))
+   implicit def doubleSeqToGE( x: Seq[ Double ]) = GESeq( x.map( d => Constant( d.toFloat ))( breakOut ))
 
    // control mapping
    implicit def intFloatControlSet( tup: (Int, Float) )                    = SingleControlSetMap( tup._1, tup._2 )
@@ -149,27 +160,27 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    // Buffer convenience
 //   implicit def actionToCompletion( fun: Buffer => Unit ) : Buffer.Completion = Buffer.action( fun )
 //   import Buffer.{ Completion => Comp }
-   def message[T]( msg: => OSCMessage ) = Completion[T]( Some( _ => msg ), None )
-   def message[T]( msg: T => OSCMessage ) = Completion[T]( Some( msg ), None )
+   def message[T]( msg: => OSCPacket ) = Completion[T]( Some( _ => msg ), None )
+   def message[T]( msg: T => OSCPacket ) = Completion[T]( Some( msg ), None )
    def action[T]( action: => Unit ) = Completion[T]( None, Some( _ => action ))
    def action[T]( action: T => Unit ) = Completion[T]( None, Some( action ))
-   def complete[T]( msg: => OSCMessage, action: => Unit ) = Completion[T]( Some( _ => msg ), Some( _ => action ))
-   def complete[T]( msg: T => OSCMessage, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
-   def complete[T]( msg: => OSCMessage, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
-   def complete[T]( msg: T => OSCMessage, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
-   implicit def messageToCompletion[T]( msg: OSCMessage ) = message[T]( msg )
-   implicit def messageToOption( msg: OSCMessage ) = Some( msg )
+   def complete[T]( msg: => OSCPacket, action: => Unit ) = Completion[T]( Some( _ => msg ), Some( _ => action ))
+   def complete[T]( msg: T => OSCPacket, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
+   def complete[T]( msg: => OSCPacket, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
+   def complete[T]( msg: T => OSCPacket, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
+   implicit def messageToCompletion[T]( msg: OSCPacket ) = message[T]( msg )
+   implicit def messageToOption( msg: OSCPacket ) = Some( msg )
 
    // Nodes
 //   implicit def intToNode( id: Int ) : Node = new Group( Server.default, id )
-   implicit def serverToGroup( s: Server ) : Group = s.defaultGroup
+//   implicit def serverToGroup( s: Server ) : Group = s.defaultGroup
 
 //  implicit def stringToStringOrInt( x: String ) = new StringOrInt( x )
 //  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
   
    // explicit methods
    def play /*[ R <: Rate, S <: Rate ] */( thunk: => Multi[ GE[ /* R, */ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
-   def play /*[ R <: Rate, S <: Rate ] */( target: Node = Server.default.defaultGroup, outBus: Int = 0,
+   def play /*[ R <: Rate, S <: Rate ] */( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[Float] = Some( 0.02f ),
              addAction: AddAction = addToHead )( thunk: => Multi[ GE[ /* R, */ UGenIn /*[ R ]*/]])/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {
       val fun = new GraphFunction( thunk )

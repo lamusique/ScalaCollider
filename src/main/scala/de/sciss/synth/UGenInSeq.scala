@@ -40,12 +40,12 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 ////   override private[synth] def ops = new UGenInSeqOps( this )
 //}
 
-case class UGenInSeq( elems: IIdxSeq[ UGenIn ]) extends /* IIdxSeq[ U ] with */ MultiGE { //
-//   def expand = this
-   def expand = elems // this
-//   def apply( idx: Int ) = elems( idx )
-//   def length : Int = elems.length
-}
+//case class UGenInSeq( elems: IIdxSeq[ UGenIn ]) extends /* IIdxSeq[ U ] with */ MultiGE { //
+////   def expand = this
+//   def expand = elems // this
+////   def apply( idx: Int ) = elems( idx )
+////   def length : Int = elems.length
+//}
 
 //case class RatedUGenInSeq[ R <: Rate, +U <: UGenIn[ R ]]( rate: R, elems: IIdxSeq[ U ]) extends /* IIdxSeq[ U ] with */ GE[ R, U ] { //
 ////   def expand = this
@@ -54,18 +54,21 @@ case class UGenInSeq( elems: IIdxSeq[ UGenIn ]) extends /* IIdxSeq[ U ] with */ 
 ////   def length : Int = elems.length
 //}
 
-case class RatedUGenInSeq /*[ R <: Rate, G ]*/( rate: Rate, elems: Seq[ AnyGE ]) extends GE[ /* R,*/ UGenIn /*[ R ]*/] { //
-   def expand = elems.flatMap( _.expand )( collection.breakOut )
-//   def expand = elems // this
-//   def apply( idx: Int ) = elems( idx )
-//   def length : Int = elems.length
-}
-
-//object GESeq {
-//   def apply[ R <: Rate, U <: UGenIn[ R ]]( elems: U* )( implicit rate: R ) = new GESeq[ R, U ]( elems: _* )( rate )
+//case class RatedUGenInSeq /*[ R <: Rate, G ]*/( rate: Rate, elems: Seq[ AnyGE ]) extends GE[ /* R,*/ UGenIn /*[ R ]*/] { //
+//   def expand = elems.flatMap( _.expand )( collection.breakOut )
+////   def expand = elems // this
+////   def apply( idx: Int ) = elems( idx )
+////   def length : Int = elems.length
 //}
-//class GESeq[ R <: Rate, +U <: UGenIn[ R ]] private ( elems: U* )( implicit val rate: R ) extends IIdxSeq[ U ] with GE[ R, U ] {
+
+object GESeq {
+//   def apply[ R <: Rate, U <: UGenIn[ R ]]( elems: U* )( implicit rate: R ) = new GESeq[ R, U ]( elems: _* )( rate )
+   implicit def toIndexedSeq[ U <: UGenIn ]( g: GESeq[ U ]) : IIdxSeq[ GE[ U ]] = g.elems
+}
+case class GESeq[ U <: UGenIn ]( elems: IIdxSeq[ GE[ U ]]) extends GE[ U ] {
+   def rate = Rate.highest( elems.map( _.rate ): _* ) // XXX THIS IS PROBLEMATIC !!!
+   def expand : IIdxSeq[ U ] = elems.flatMap( _.expand )
 //   def expand = this
 //   def apply( idx: Int ) = elems( idx )
 //   def length : Int = elems.length
-//}
+}

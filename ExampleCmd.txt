@@ -12,13 +12,9 @@
 // - careful with number divisons, e.g. 2/6 yields
 //   0.333... in sclang, and 0 in scala. Use 2.0/6 instead
 
-// working around some problems...
-def mc[R <: Rate]( elems: GE[R, UGenIn[R]]*)(implicit r: R) = mce(elems)
-type ArGE = GE[audio, UGenIn[audio]]
-
 // analog bubbles
 val x = play {
-    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(mc(8, 7.23)).madd(3, 80)).midicps // glissando function
+    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(List(8, 7.23)).madd(3, 80)).midicps // glissando function
     CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
 }
 
@@ -28,7 +24,7 @@ val df = SynthDef("AnalogBubbles") {
     val f1 = "freq1".kr(0.4)
     val f2 = "freq2".kr(8)
     val d  = "detune".kr(0.90375)
-    val f = LFSaw.ar(f1).madd(24, LFSaw.ar(mc(f2, f2*d)).madd(3, 80)).midicps // glissando function
+    val f = LFSaw.ar(f1).madd(24, LFSaw.ar(List(f2, f2*d)).madd(3, 80)).midicps // glissando function
     val x = CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
     Out.ar( 0, x )
 }
@@ -45,8 +41,8 @@ s.freeAll
 val x = play {
     CombL.ar(
         RLPF.ar(LFPulse.ar(FSinOsc.kr(0.05).madd(80,160),0,0.4)*0.05, 
-            FSinOsc.kr(mc(0.6, 0.7)).madd(3600, 4000), 0.2),
-        0.3, mc(0.2, 0.25), 2)
+            FSinOsc.kr(List(0.6, 0.7)).madd(3600, 4000), 0.2),
+        0.3, List(0.2, 0.25), 2)
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,7 +55,7 @@ val x = play {
 //////////////////////////////////////////////////////////////////////////
 
 // scratchy
-val x = play { RHPF.ar((BrownNoise.ar(mc(0.5,0.5))-0.49).max(0) * 20, 5000, 1) }
+val x = play { RHPF.ar((BrownNoise.ar(List(0.5,0.5))-0.49).max(0) * 20, 5000, 1) }
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +78,7 @@ val x = play {
     Mix.tabulate(p) { i =>
         val sig = FSinOsc.ar( f * (i+1) ) * // freq of partial
             LFNoise1.kr(
-                mc( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate 
+                List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate 
                 0.02,    // amplitude scale
                offset    // amplitude offset
             ).max( 0 )   // clip negative amplitudes to zero
@@ -96,7 +92,7 @@ val x = play {
 val x = play {
     val f = 80       // fundamental frequency
     val p = 10       // number of partials per channel
-    val trig = XLine.kr(mc(10,10), 0.1, 60, doneAction=freeSelf) // trigger probability decreases over time
+    val trig = XLine.kr(List(10,10), 0.1, 60, doneAction=freeSelf) // trigger probability decreases over time
     Mix.tabulate(p){ i =>
         val sig = FSinOsc.ar(
                 f * (i+1)     // freq of partial
@@ -155,7 +151,7 @@ val x = play {
         LFNoise1.kr(0.2).madd(2000, 2400),
         0.2)
     val y = z * 0.6
-    z + mc(
+    z + List(
           CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1) 
         + CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1),
           CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1)
@@ -177,7 +173,7 @@ val x = play {
                 Rand(-1, 1)
             )
         }
-        + LFNoise2.ar(LFNoise2.kr(mc(0.4,0.4)).madd(90, 620)) * LFNoise2.kr(mc(0.3,0.3)).madd(0.15, 0.18),
+        + LFNoise2.ar(LFNoise2.kr(List(0.4,0.4)).madd(90, 620)) * LFNoise2.kr(List(0.3,0.3)).madd(0.15, 0.18),
         0.3, 0.3, 3)
 }
 
@@ -242,10 +238,10 @@ val x = play {
     val z = DelayN.ar(s, 0.048)
 
     // 'c' length modulated comb delays in parallel :
-    val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(mc((for(i <- 0 until c) yield Rand(0,0.1)):_*)).madd(0.04, 0.05), 15))
+    val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(List((for(i <- 0 until c) yield Rand(0,0.1)):_*)).madd(0.04, 0.05), 15))
 
     // chain of 'a' allpass delays on each of two channels (2 times 'a' total) :
-    val x = (0 until a).foldLeft(y: ArGE)( (y,i) => AllpassN.ar(y, 0.050, mc(Rand(0,0.050),Rand(0,0.050)), 1))
+    val x = (0 until a).foldLeft[AnyGE](y)( (y,i) => AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1))
 
     // add original sound to reverb and play it :
     s+(0.2*x)
@@ -262,10 +258,10 @@ val x = play {
     val z = DelayN.ar(s, 0.048, 0.048)
 
     // 6 modulated comb delays in parallel :
-    val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(mc(Seq.fill(6)(Rand(0,0.1)):_*)).madd(0.04, 0.05), 15))
+    val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(List(Seq.fill(6)(Rand(0,0.1)):_*)).madd(0.04, 0.05), 15))
 
     // chain of 4 allpass delays on each of two channels (8 total) :
-    val x = (0 until 4).foldLeft(y: ArGE)( (y, i) => AllpassN.ar(y, 0.050, mc(Rand(0,0.050),Rand(0,0.050)), 1))
+    val x = (0 until 4).foldLeft[AnyGE](y)( (y, i) => AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1))
 
     // add original sound to reverb and play it :
     s+x
@@ -300,7 +296,7 @@ val x = play {
     val lfoDepth = MouseY.kr(200, 8000, 1)
     val lfoRate = MouseX.kr(4, 60, 1)
     val freq = LFSaw.kr(lfoRate).madd(lfoDepth, lfoDepth * 1.2)
-    val filtered = RLPF.ar(WhiteNoise.ar(mc(0.03,0.03)), freq, 0.1)
+    val filtered = RLPF.ar(WhiteNoise.ar(List(0.03,0.03)), freq, 0.1)
     CombN.ar(filtered, 0.3, 0.3, 2) + filtered
 }
 
@@ -340,7 +336,7 @@ val x = play {
     }
 
     // add some reverb via allpass delays
-    val x = (1 to 5).foldLeft(signal: ArGE)( (sig, _) => AllpassN.ar(sig, 0.05, mc(Rand(0,0.05),Rand(0,0.05)), 1))
+    val x = (1 to 5).foldLeft[AnyGE](signal)( (sig, _) => AllpassN.ar(sig, 0.05, List(Rand(0,0.05),Rand(0,0.05)), 1))
     LeakDC.ar( x, 0.995)    // delays build up a lot of DC, so leak it out here.
 }
 
@@ -376,8 +372,8 @@ val x = play {
     val speed0 = MouseX.kr(-10, 10)
     val speed1 = speed0 - DelayN.kr(speed0, 0.1, 0.1)
     val speed = MouseButton.kr(1, 0, 0.3) + speed1
-    val sig = PlayBuf.ar(1, buf.id, speed * BufRateScale.kr(buf.id), loop = 1)
-    mc( sig, sig )
+    val sig: AnyGE= PlayBuf.ar(1, buf.id, speed * BufRateScale.kr(buf.id), loop = 1)
+    List( sig, sig ) : AnyGE // hmmm... todo XXX
 }
 
 // move mouse to scrub the record.
@@ -396,7 +392,7 @@ val x = play {
    val trig = "trig".tr             // trigger control
 //   val freq = "freq".kr(440 -> 4.0) // lag control (lag time 4 seconds)
    val freq = "freq".kr(440) // lag control not yet implemented :-(
-   SinOsc.ar(freq + mc(0, 1)) * Decay2.kr(trig, 0.005, 1.0)
+   SinOsc.ar(freq + List(0, 1)) * Decay2.kr(trig, 0.005, 1.0)
 }
 
 x.set("trig" -> 1)
@@ -437,7 +433,7 @@ x.free
 // requires that the iTextPDF v5 jar is in the system classpath
 
 val df = SynthDef("AnalogBubbles", SynthGraph.wrapOut({
-    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(mc(8, 7.23)).madd(3, 80)).midicps // glissando function
+    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(List(8, 7.23)).madd(3, 80)).midicps // glissando function
     CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
 }, None).expand)
 val f = viewDef( df )
@@ -469,12 +465,12 @@ val df = SynthDef( "mag-above" ) {
    val in   = WhiteNoise.ar( 0.2 )
    val fft  = FFT( "buf".kr, in )
    val flt  = PV_MagAbove( fft, MouseX.kr( 0, 10 ))
-   val ifft = IFFT( flt ) * mc( 0.5, 0.5 )
+   val ifft = IFFT( flt ) * List( 0.5, 0.5 )
    Out.ar( "out".kr( 0 ), ifft )
 }
 df.recv( s )
 val x = Synth.play( "mag-above", List( "buf" -> b.id ))
-x.free
+x.free; b.free
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -484,8 +480,8 @@ import Float.{ PositiveInfinity => inf }
 
 val x = play {
    val freq = DemandEnvGen.ar(
-      Dseq( mc( 204, 400, 201, 502, 300, 200 ), inf ),
-      Drand( mc( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
+      Dseq( List( 204, 400, 201, 502, 300, 200 ), inf ),
+      Drand( List( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
       cubShape.id )
-   SinOsc.ar( freq * mc( 1, 1.01 )) * 0.1
+   SinOsc.ar( freq * List( 1, 1.01 )) * 0.1
 }

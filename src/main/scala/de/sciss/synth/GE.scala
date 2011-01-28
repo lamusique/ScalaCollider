@@ -30,7 +30,7 @@ package de.sciss.synth
 
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
+import ugen.{Impulse, LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 
 trait Expands[ +R ] {
    def expand: IIdxSeq[ R ]
@@ -38,11 +38,13 @@ trait Expands[ +R ] {
 }
 
 object Multi {
-   implicit def flatten[ /* R <: Rate,*/ U <: UGenIn /*[ R ]*/]( m: Multi[ GE[ /* R,*/ U ]])/*( implicit r: R )*/ : GE[ /* R,*/ U ] = Flatten( /* r, */ m )
-   def joint[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.Joint( g )
-   def disjoint[ R <: Rate ]( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) : Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]] = Multi.Disjoint( g )
+   implicit def flatten[ U <: UGenIn ]( m: Multi[ GE[ U ]]) : GE[ U ] = Flatten( m )
 
-   case class Flatten[ /* R <: Rate, */ U <: UGenIn /*[ R ]*/]( /* rate: Rate,*/ m: Multi[ GE[ /* R, */ U ]]) extends GE[ /* R, */ U ] {
+//   def joint[ G <: AnyGE ]( g: G ) = Multi.Joint( g )
+//   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
+//   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
+
+   case class Flatten[ U <: UGenIn ]( m: Multi[ GE[ U ]]) extends GE[ U ] {
       def rate = m.rate
       override def toString = "Multi.flatten(" + m + ")"
       def expand : IIdxSeq[ U ] = {
@@ -51,16 +53,23 @@ object Multi {
    }
 
    case class Joint[ G <: AnyGE ]( g: G ) extends Multi[ G ] {
+      def rate = g.rate
       def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
    }
 
    case class Disjoint[ R <: Rate ]( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) extends Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]] {
+      def rate = g.rate
       def mexpand = IIdxSeq( g.expand: _* )
    }
+
+//   case class Group( elems: IIdxSeq[ AnyGE ]) extends AnyGE {
+//
+//   }
 }
 
 trait Multi[ +G <: AnyGE ] {
    def mexpand: IIdxSeq[ G ]
+   def rate: Rate // RRR
 }
 
 /**
@@ -73,12 +82,13 @@ trait Multi[ +G <: AnyGE ] {
  *    @version 0.11, 26-Aug-10
  */
 object GE {
-   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.joint( g )
+   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.Joint( g )
 }
 trait GE[ /* R <: Rate, */ +U <: UGenIn /* [ R ] */] extends Expands[ U ] /* with Multi[ GE[ R, U ]] */ {
    ge =>
 
 //   type Rate = R
+
    def rate: Rate // RRR R
 
 //   def expand: IIdxSeq[ U ]
@@ -114,51 +124,53 @@ trait GE[ /* R <: Rate, */ +U <: UGenIn /* [ R ] */] extends Expands[ U ] /* wit
 //   }
 
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def poll: GE = poll()
-
-   /**
-    * Polls the output values of this graph element, and prints the result to the console.
-    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
-    *
-    * @param   trig     a signal to trigger the printing. If this is a constant, it is
-    *    interpreted as a frequency value and an `Impulse` generator of that frequency
-    *    is used instead.
-    * @param   label    a string to print along with the values, in order to identify
-    *    different polls. Using the special label `"#auto"` (default) will generated
-    *    automatic useful labels using information from the polled graph element
-    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
-    *    (similar to `SendTrig`)
-    *
-    * @see  [[de.sciss.synth.ugen.Poll]]
-    */
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def poll( trig: GE = 10, label: String = "#auto", trigID: GE = -1 ) : GE = {
+//   def poll: AnyGE = poll()
+//
+//   /**
+//    * Polls the output values of this graph element, and prints the result to the console.
+//    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
+//    *
+//    * @param   trig     a signal to trigger the printing. If this is a constant, it is
+//    *    interpreted as a frequency value and an `Impulse` generator of that frequency
+//    *    is used instead.
+//    * @param   label    a string to print along with the values, in order to identify
+//    *    different polls. Using the special label `"#auto"` (default) will generated
+//    *    automatic useful labels using information from the polled graph element
+//    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
+//    *    (similar to `SendTrig`)
+//    *
+//    * @see  [[de.sciss.synth.ugen.Poll]]
+//    */
+//   def poll( trig: AnyGE = 10, label: String = "#auto", trigID: AnyGE = -1 ) : AnyGE = {
 //      import SynthGraph._
 //
 //      val trig0 = trig match {
 //         case Constant( freq ) => {
-//            val res: GE = outputs.map( in => Impulse( in.rate match {
-//               case `scalar`  => control
-//               case _         => in.rate
-//            }, freq, 0 ))
-//            res
+////            val res: GE = outputs.map( in => Impulse( in.rate match {
+////               case `scalar`  => control
+////               case _         => in.rate
+////            }, freq, 0 ))
+////            res
+//            Impulse( rate, freq, 0 )
 //         }
 //         case _ => trig
 //      }
-//      val labels: IIdxSeq[ String ] = if( label == "#auto" ) {
-//         ge match {
-//            case seq: UGenInSeq => outputs.zipWithIndex.map( tup => "#" + tup._2 + " " + tup._1.displayName )
-//            case _ => outputs.map( _.displayName )
-//         }
-//      } else {
-//         if( numOutputs == 1 ) Vector( label ) else Vector.tabulate( numOutputs )( "#" + _ + " " + label )
-//      }
+////      val labels: IIdxSeq[ String ] =
+//////         if( label == "#auto" ) {
+//////         ge match {
+//////            case seq: UGenInSeq => outputs.zipWithIndex.map( tup => "#" + tup._2 + " " + tup._1.displayName )
+//////            case _ => outputs.map( _.displayName )
+//////         }
+//////      } else {
+////         if( numOutputs == 1 ) IIdxSeq( label ) else IIdxSeq.tabulate( numOutputs )( "#" + _ + " " + label )
+//////      }
 //
-//      for( (Seq( t, g, i ), ch) <- expand( trig0, ge, trigID ).zipWithIndex )
-//         yield Poll( g.rate match {
-//               case `audio`   => audio
-//               case _         => g.rate
-//            }, t, g, labels( ch ), i )
+//      Poll( rate, trig, ge, tridID  )
+////      for( (Seq( t, g, i ), ch) <- expand( trig0, ge, trigID ).zipWithIndex )
+////         yield Poll( g.rate match {
+////               case `audio`   => audio
+////               case _         => g.rate
+////            }, t, g, labels( ch ), i )
 //   }
 
    import UnaryOp._
@@ -350,9 +362,8 @@ trait GE[ /* R <: Rate, */ +U <: UGenIn /* [ R ] */] extends Expands[ U ] /* wit
    def wrap2 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = 
       Wrap2.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 
-// YYY
-//   def firstarg /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Firstarg.make /*[ R, S, T ]*/( /* r.out,*/ this, b ) // sclang uses camel case instead
+   def firstarg /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
+      Firstarg.make /*[ R, S, T ]*/( /* r.out,*/ this, b ) // sclang uses camel case instead
    
 // def rrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE    = Rrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 // def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
@@ -364,14 +375,15 @@ trait GE[ /* R <: Rate, */ +U <: UGenIn /* [ R ] */] extends Expands[ U ] /* wit
 //         yield LinLin( rate, ax, sl, sh, dl, dh ))
 //   }
 
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = Rate.highest( this ) match {
-//      case `demand` => (this - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
+   def linlin( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) : AnyGE = Rate.highest( this ) match {
+      case `demand` => (this - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
 //      case r => LinLin.make /*[ R, S, T ]*/( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-//   }
-//
-//   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = Rate.highest( this ) match {
-//      case `demand` => (dstHi / dstLo).pow( (this - srcLo) / (srcHi - srcLo) ) * dstLo
+      case r => LinLin( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+   }
+
+   def linexp( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) : AnyGE = Rate.highest( this ) match {
+      case `demand` => (dstHi / dstLo).pow( (this - srcLo) / (srcHi - srcLo) ) * dstLo
 //      case r => LinExp.make /*[ R, S, T ]*/( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-//   }
+      case r => LinExp( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+   }
 }

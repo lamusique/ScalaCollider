@@ -117,7 +117,7 @@ case class Buffer( server: Server, id: Int ) extends Model {
 
    def free { server ! freeMsg }
 
-	def free( completion: Option[ OSCMessage ] = None ) {
+	def free( completion: Option[ OSCPacket ] = None ) {
 		server ! freeMsg( completion, true )
 	}
 
@@ -130,7 +130,7 @@ case class Buffer( server: Server, id: Int ) extends Model {
     *                      <code>false</code> here, and manually release the id, using the <code>release</code>
     *                      method
     */
-	def freeMsg( completion: Option[ OSCMessage ] = None, release: Boolean = true ) = {
+	def freeMsg( completion: Option[ OSCPacket ] = None, release: Boolean = true ) = {
       if( release ) this.release
       OSCBufferFreeMessage( id, completion )
 	}
@@ -147,13 +147,13 @@ case class Buffer( server: Server, id: Int ) extends Model {
 
    def close { server ! closeMsg }
 
-   def close( completion: Option[ OSCMessage ]) {
+   def close( completion: Option[ OSCPacket ]) {
       server ! closeMsg( completion )
    }
 
 	def closeMsg: OSCBufferCloseMessage = closeMsg( None )
 
-	def closeMsg( completion: Option[ OSCMessage ] = None ) =
+	def closeMsg( completion: Option[ OSCPacket ] = None ) =
       OSCBufferCloseMessage( id, completion )
 
 //	def alloc { server ! allocMsg }
@@ -317,15 +317,13 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    // ---- utility methods ----
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def play : Synth = play()
-//   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
-//      scplay( server, out ) { // working around nasty compiler bug
-//         val ply0 = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
-//         val ply  = ply0.expand.head // YYY
-//         if( !loop ) FreeSelfWhenDone.kr( ply )
-//         ply * "amp".kr( amp )
-//      }
+   def play : Synth = play()
+   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
+      scplay( server, out ) { // working around nasty compiler bug
+         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
+         if( !loop ) FreeSelfWhenDone.kr( ply )
+         ply * "amp".kr( amp )
+      }
 
    private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ OSCPacket ] = {
       val a = completion.action
