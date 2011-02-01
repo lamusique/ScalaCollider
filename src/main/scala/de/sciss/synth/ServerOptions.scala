@@ -2,7 +2,7 @@
  *  ServerOptions.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -32,7 +32,8 @@ import collection.mutable.ListBuffer
 import io.{ AudioFileType, SampleFormat }
 import java.io.File
 import de.sciss.osc.{ OSCTransport, TCP, UDP }
-import java.net.{DatagramSocket, ServerSocket}
+import java.net.{InetAddress, DatagramSocket, ServerSocket}
+import java.nio.channels.DatagramChannel
 
 /**
  * 	@version    0.14, 27-May-10
@@ -299,6 +300,39 @@ class ServerOptionsBuilder extends ServerOptionsLike {
 
    def toRealtimeArgs : List[ String ]    = ServerOptionsBuilder.toRealtimeArgs( this )
    def toNonRealtimeArgs : List[ String ] = ServerOptionsBuilder.toNonRealtimeArgs( this )
+
+   /**
+    * Picks and assigns a random free port for the server. This implies that
+    * the server will be running on the local machine.
+    *
+    * As a result, this method will change this option builder's `port` value.
+    * The caller must ensure that the `host` and `transport` fields have been
+    * decided on before calling this method. Later changes of either of these
+    * will render the result invalid.
+    *
+    * This method will fail with runtime exception if the host is not local.
+    */
+   def pickPort() {
+      require( isLocal )
+      transport match {
+         case UDP =>
+            val tmp = new DatagramSocket()
+            port = tmp.getLocalPort()
+            tmp.close()
+         case TCP =>
+            val tmp = new ServerSocket( 0 )
+            port = tmp.getLocalPort()
+            tmp.close()
+      }
+   }
+
+   /**
+    * Checks if the currently set `host` is located on the local machine.
+    */
+   def isLocal : Boolean = {
+      val hostAddr = InetAddress.getByName( host )
+      hostAddr.isLoopbackAddress || hostAddr.isSiteLocalAddress
+   }
 
    def build : ServerOptions = new Impl(
       programPath, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
