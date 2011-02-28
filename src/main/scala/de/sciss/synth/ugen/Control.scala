@@ -53,18 +53,18 @@ case class Control[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option
 extends MultiOutUGenSource[ R, ControlUGen[ R ]] {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
-      IIdxSeq( ControlUGen( rate, values.size, specialIndex ))
+      IIdxSeq( new ControlUGen( rate, values.size, specialIndex ))
    }
 }
 
-case class ControlUGen[ R <: Rate ]( rate: R, numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen[ R ]( IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty ) with HasSideEffect
+class ControlUGen[ R <: Rate ]( rate: R, numChannels: Int, override val specialIndex: Int )
+extends MultiOutUGen[ R ]( "Control", rate, IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty ) with HasSideEffect
 
 case class ControlProxy[ R <: Rate ]( rate: R, values: IIdxSeq[ Float ], name: Option[ String ])( val factory: ControlFactory[ R ])
 extends AbstractControlProxy[ R, ControlProxy[ R ]]( IIdxSeq.fill( values.size )( rate ))
 
 class ControlFactory[ R <: Rate ]( rate: R ) extends AbstractControlFactory[ ControlProxy[ R ]] {
-   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = ControlUGen( rate, numChannels, specialIndex )
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new ControlUGen( rate, numChannels, specialIndex )
 }
 
 // ---------- TrigControl ----------
@@ -76,12 +76,12 @@ object TrigControl {
 case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ control, TrigControlUGen ] with ControlRated {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
-      IIdxSeq( TrigControlUGen( values.size, specialIndex ))
+      IIdxSeq( new TrigControlUGen( values.size, specialIndex ))
    }
 }
 
-case class TrigControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen[ control ]( IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) with ControlRated with HasSideEffect
+class TrigControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
+extends MultiOutUGen[ control ]( "TrigControl", control, IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) /* with ControlRated */ with HasSideEffect
 
 case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill[ control ]( values.size )( control )) with ControlRated {
@@ -89,7 +89,7 @@ extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill[ control
 }
 
 object TrigControlFactory extends AbstractControlFactory[ TrigControlProxy ] {
-   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = TrigControlUGen( numChannels, specialIndex )
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new TrigControlUGen( numChannels, specialIndex )
 }
 
 // ---------- AudioControl ----------
@@ -101,12 +101,12 @@ object AudioControl {
 case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ audio, AudioControlUGen ] with AudioRated {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
-      IIdxSeq( AudioControlUGen( values.size, specialIndex ))
+      IIdxSeq( new AudioControlUGen( values.size, specialIndex ))
    }
 }
 
-case class AudioControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen[ audio ]( IIdxSeq.fill[ audio ]( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
+class AudioControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
+extends MultiOutUGen[ audio ]( "AudioControl", audio, IIdxSeq.fill[ audio ]( numChannels )( audio ), IIdxSeq.empty ) /* with AudioRated */ with HasSideEffect
 
 case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
 extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill[ audio ]( values.size )( audio )) with AudioRated {
@@ -114,5 +114,5 @@ extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill[ audio ](
 }
 
 object AudioControlFactory extends AbstractControlFactory[ AudioControlProxy ] {
-   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = AudioControlUGen( numChannels, specialIndex )
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new AudioControlUGen( numChannels, specialIndex )
 }

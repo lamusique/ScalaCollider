@@ -38,8 +38,8 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo
-      test2
-//      System.exit( 1 )
+//      test2
+      System.exit( 1 )
    }
 
    def printInfo {

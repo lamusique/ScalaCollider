@@ -129,10 +129,9 @@ case class Constant( value: Float ) extends GE[ scalar, Constant ] with UGenIn w
  *    hence can directly function as input to another UGen without expansion.
  */
 //abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenIn
-abstract class SingleOutUGen /*[ +Repr <: UGen ] */( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with UGenProxy {
+class SingleOutUGen( val name: String, val rate: Rate, val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with UGenProxy {
 //   final def outputs = expand
    final def numOutputs = 1
-
    final def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( UGenOutProxy( this, 0, rate ))
 }
 

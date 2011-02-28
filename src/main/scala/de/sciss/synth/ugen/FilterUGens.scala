@@ -98,17 +98,17 @@ def ar(in: GE[audio, UGenIn], time: AnyGE = 0.1f) = apply(audio, in, time)
  * @see [[de.sciss.synth.ugen.Lag2]]
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
-case class Lag[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], time: AnyGE) extends SingleOutUGenSource[R, LagUGen] {
+case class Lag[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], time: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _time: IIdxSeq[UGenIn] = time.expand
       val _sz_in = _in.size
       val _sz_time = _time.size
       val _exp_ = maxInt(_sz_in, _sz_time)
-      IIdxSeq.tabulate(_exp_)(i => LagUGen(rate, _in(i.%(_sz_in)), _time(i.%(_sz_time))))
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Lag", rate, IIdxSeq( _in(i.%(_sz_in)), _time(i.%(_sz_time)))))
    }
 }
-case class LagUGen(rate: Rate, in: UGenIn, time: UGenIn) extends SingleOutUGen(IIdxSeq(in, time))
+//case class LagUGen(rate: Rate, in: UGenIn, time: UGenIn) extends SingleOutUGen(IIdxSeq(in, time))
 /**
  * A cascaded exponential lag
  * UGen. `Lag2.kr(in, time)` is equivalent to `Lag.kr(Lag.kr(in, time), time)`,
@@ -800,17 +800,17 @@ object LPF {
    def kr(in: GE[control, UGenIn], freq: AnyGE = 440.0f) = apply(control, in, freq)
    def ar(in: GE[audio, UGenIn], freq: AnyGE = 440.0f) = apply(audio, in, freq)
 }
-case class LPF[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], freq: AnyGE) extends SingleOutUGenSource[R, LPFUGen] {
+case class LPF[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], freq: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _freq: IIdxSeq[UGenIn] = freq.expand
       val _sz_in = _in.size
       val _sz_freq = _freq.size
       val _exp_ = maxInt(_sz_in, _sz_freq)
-      IIdxSeq.tabulate(_exp_)(i => LPFUGen(rate, _in(i.%(_sz_in)), _freq(i.%(_sz_freq))))
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("LPF", rate, IIdxSeq( _in(i.%(_sz_in)), _freq(i.%(_sz_freq)))))
    }
 }
-case class LPFUGen(rate: Rate, in: UGenIn, freq: UGenIn) extends SingleOutUGen(IIdxSeq(in, freq))
+//case class LPFUGen(rate: Rate, in: UGenIn, freq: UGenIn) extends SingleOutUGen(IIdxSeq(in, freq))
 //object HPF {
 //   def kr(in: GE[UGenIn], freq: AnyGE = 440.0f) = apply(control, in, freq)
 //   def ar(in: GE[UGenIn], freq: AnyGE = 440.0f) = apply(audio, in, freq)

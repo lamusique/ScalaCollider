@@ -17,13 +17,13 @@ object WhiteNoise {
    def ar: WhiteNoise[audio] = ar()
    def ar(mul: AnyGE = 1.0f) = apply[audio](audio, mul)
 }
-case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSource[R, BinaryOpUGen] with UsesRandSeed {
+case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSource[R, UGenIn] with UsesRandSeed {
    protected def expandUGens = {
       val _mul: IIdxSeq[UGenIn] = mul.expand
-      IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen(rate, BinaryOp.Times, WhiteNoiseUGen(rate), _mul(i)))
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(rate, new SingleOutUGen("WhiteNoise", rate, IIdxSeq.empty), _mul(i)))
    }
 }
-case class WhiteNoiseUGen(rate: Rate) extends SingleOutUGen(IIdxSeq.empty) with UsesRandSeed
+//case class WhiteNoiseUGen(rate: Rate) extends SingleOutUGen(IIdxSeq.empty) with UsesRandSeed
 //object GrayNoise {
 //   def kr: GrayNoise = kr()
 //   def kr(mul: GE[UGenIn] = 1.0f) = apply(control, mul)

@@ -77,17 +77,18 @@ object Out {
    def kr(bus: AnyGE, in: AnyMulti) = apply(control, bus, in)
    def ir(bus: AnyGE, in: AnyMulti) = apply(scalar, bus, in)
 }
-case class Out[ R <: Rate ](rate: R, bus: AnyGE, in: AnyMulti ) extends ZeroOutUGenSource[OutUGen] with WritesBus {
+case class Out[ R <: Rate ](rate: R, bus: AnyGE, in: AnyMulti ) extends ZeroOutUGenSource[ZeroOutUGen] with WritesBus {
    protected def expandUGens = {
       val _bus: IIdxSeq[UGenIn] = bus.expand
       val _in: IIdxSeq[AnyGE] = in.mexpand
       val _sz_bus = _bus.size
       val _sz_in = _in.size
       val _exp_ = maxInt(_sz_bus, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => OutUGen(rate, _bus(i.%(_sz_bus)), _in(i.%(_sz_in)).expand))
+//      IIdxSeq.tabulate(_exp_)(i => OutUGen(rate, _bus(i.%(_sz_bus)), _in(i.%(_sz_in)).expand))
+      IIdxSeq.tabulate(_exp_)(i => new ZeroOutUGen("Out", rate, IIdxSeq( _bus(i.%(_sz_bus))) ++ _in(i.%(_sz_in)).expand))
    }
 }
-case class OutUGen(rate: Rate, bus: UGenIn, in: IIdxSeq[UGenIn]) extends ZeroOutUGen(IIdxSeq[UGenIn](bus).++(in)) with WritesBus
+//case class OutUGen(rate: Rate, bus: UGenIn, in: IIdxSeq[UGenIn]) extends ZeroOutUGen(IIdxSeq[UGenIn](bus).++(in)) with WritesBus
 //object LocalOut {
 //   def kr(in: Multi[AnyGE]) = apply(control, in)
 //   def ar(in: Multi[GE[UGenIn]]) = apply(audio, in)
@@ -104,13 +105,14 @@ object In {
    def kr(bus: AnyGE, numChannels: Int = 1) = apply[control](control, bus, numChannels)
    def ar(bus: AnyGE, numChannels: Int = 1) = apply[audio](audio, bus, numChannels)
 }
-case class In[ R <: Rate ](rate: R, bus: AnyGE, numChannels: Int) extends MultiOutUGenSource[R, InUGen[ R ]] {
+case class In[ R <: Rate ](rate: R, bus: AnyGE, numChannels: Int) extends MultiOutUGenSource[R, MultiOutUGen[ R ]] {
    protected def expandUGens = {
       val _bus: IIdxSeq[UGenIn] = bus.expand
-      IIdxSeq.tabulate(_bus.size)(i => InUGen[ R ](rate, _bus(i), numChannels))
+//      IIdxSeq.tabulate(_bus.size)(i => InUGen[ R ](rate, _bus(i), numChannels))
+      IIdxSeq.tabulate(_bus.size)(i => new MultiOutUGen[ R ]("In", rate, IIdxSeq.fill(numChannels)(rate), IIdxSeq( _bus(i) )))
    }
 }
-case class InUGen[ R <: Rate ](rate: R, bus: UGenIn, numChannels: Int) extends MultiOutUGen[ R ](IIdxSeq.fill(numChannels)(rate), IIdxSeq(bus))
+//case class InUGen[ R <: Rate ](rate: R, bus: UGenIn, numChannels: Int) extends MultiOutUGen[ R ](IIdxSeq.fill(numChannels)(rate), IIdxSeq(bus))
 //object LagIn {
 //   def kr(bus: AnyGE, numChannels: Int = 1, lag: AnyGE = 0.1f) = apply(control, bus, numChannels, lag)
 //}

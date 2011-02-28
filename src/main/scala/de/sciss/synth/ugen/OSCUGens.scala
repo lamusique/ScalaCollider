@@ -269,17 +269,17 @@ def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq
  * @see [[de.sciss.synth.ugen.Osc]]
  * @see [[de.sciss.synth.ugen.FSinOsc]]
  */
-case class SinOsc[ R <: Rate ](rate: R, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, SinOscUGen] {
+case class SinOsc[ R <: Rate ](rate: R, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
    protected def expandUGens = {
       val _freq: IIdxSeq[UGenIn] = freq.expand
       val _phase: IIdxSeq[UGenIn] = phase.expand
       val _sz_freq = _freq.size
       val _sz_phase = _phase.size
       val _exp_ = maxInt(_sz_freq, _sz_phase)
-      IIdxSeq.tabulate(_exp_)(i => SinOscUGen(rate, _freq(i.%(_sz_freq)), _phase(i.%(_sz_phase))))
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("SinOsc", rate, IIdxSeq( _freq(i.%(_sz_freq)), _phase(i.%(_sz_phase)))))
    }
 }
-case class SinOscUGen(rate: Rate, freq: UGenIn, phase: UGenIn) extends SingleOutUGen(IIdxSeq(freq, phase))
+//case class SinOscUGen(rate: Rate, freq: UGenIn, phase: UGenIn) extends SingleOutUGen(IIdxSeq(freq, phase))
 //object SinOscFB {
 //   def ar: SinOscFB = ar()
 //   def ar(freq: AnyGE = 440.0f, feedback: AnyGE = 0.0f) = apply(audio, freq, feedback)
