@@ -12,12 +12,12 @@ package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import UGenHelper._
 object WhiteNoise {
-   def kr: WhiteNoise = kr()
-   def kr(mul: GE[UGenIn] = 1.0f) = apply(control, mul)
-   def ar: WhiteNoise = ar()
-   def ar(mul: GE[UGenIn] = 1.0f) = apply(audio, mul)
+   def kr: WhiteNoise[control] = kr()
+   def kr(mul: AnyGE = 1.0f) = apply[control](control, mul)
+   def ar: WhiteNoise[audio] = ar()
+   def ar(mul: AnyGE = 1.0f) = apply[audio](audio, mul)
 }
-case class WhiteNoise(rate: Rate, mul: GE[UGenIn]) extends SingleOutUGenSource[BinaryOpUGen] with UsesRandSeed {
+case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSource[R, BinaryOpUGen] with UsesRandSeed {
    protected def expandUGens = {
       val _mul: IIdxSeq[UGenIn] = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOpUGen(rate, BinaryOp.Times, WhiteNoiseUGen(rate), _mul(i)))

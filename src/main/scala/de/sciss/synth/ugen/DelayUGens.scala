@@ -352,7 +352,7 @@ def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, st
 * @see [[de.sciss.synth.ugen.BufRateScale]]
 * @see [[de.sciss.synth.ugen.BufFrames]]
 */
-case class PlayBuf[ R <: Rate ](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[PlayBufUGen] with HasSideEffect with HasDoneFlag {
+case class PlayBuf[ R <: Rate ](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[PlayBufUGen[ R ]] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
@@ -367,11 +367,11 @@ case class PlayBuf[ R <: Rate ](rate: R, numChannels: Int, buf: AnyGE, speed: An
       val _sz_loop = _loop.size
       val _sz_doneAction = _doneAction.size
       val _exp_ = maxInt(_sz_buf, _sz_speed, _sz_trig, _sz_startPos, _sz_loop, _sz_doneAction)
-      IIdxSeq.tabulate(_exp_)(i => PlayBufUGen(rate, numChannels, _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _trig(i.%(_sz_trig)), _startPos(i.%(_sz_startPos)), _loop(i.%(_sz_loop)), _doneAction(i.%(_sz_doneAction))))
+      IIdxSeq.tabulate(_exp_)(i => PlayBufUGen[ R ](rate, numChannels, _buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _trig(i.%(_sz_trig)), _startPos(i.%(_sz_startPos)), _loop(i.%(_sz_loop)), _doneAction(i.%(_sz_doneAction))))
    }
 }
-case class PlayBufUGen(rate: Rate, numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, trig: AnyUGenIn, startPos: AnyUGenIn, loop: AnyUGenIn, doneAction: AnyUGenIn)
-extends MultiOutUGen(IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
+case class PlayBufUGen[ R <: Rate ](rate: R, numChannels: Int, buf: AnyUGenIn, speed: AnyUGenIn, trig: AnyUGenIn, startPos: AnyUGenIn, loop: AnyUGenIn, doneAction: AnyUGenIn)
+extends MultiOutUGen[ R ](IIdxSeq.fill(numChannels)(rate), IIdxSeq(buf, speed, trig, startPos, loop, doneAction)) with HasSideEffect with HasDoneFlag
 
 //object RecordBuf {
 //   def kr(in: Multi[AnyGE], buf: AnyGE, offset: AnyGE = 0.0f, recLevel: AnyGE = 1.0f, preLevel: AnyGE = 0.0f, run: AnyGE = 1.0f, loop: AnyGE = 1.0f, trig: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)

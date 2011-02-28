@@ -251,13 +251,13 @@ object SinOsc {
  * @param freq            frequency in Hertz
  * @param phase           phase offset or modulator in radians
  */
-def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply(audio, freq, phase)
+def ar(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[audio](audio, freq, phase)
    def kr: SinOsc[control] = kr()
 /**
  * @param freq            frequency in Hertz
  * @param phase           phase offset or modulator in radians
  */
-def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply(control, freq, phase)
+def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq, phase)
 }
 /**
  * A Sinusoidal (sine tone) oscillator UGen.

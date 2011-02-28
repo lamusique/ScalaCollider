@@ -132,7 +132,7 @@ extends UGen with GE[ R, UGenIn ] { // UGenProxy[ Repr ]] {
 
 //   final def expand: IIdxSeq[ UGenProxy[ Repr ]] = outputRates.zipWithIndex.map( tup => UGenOutProxy[ Repr ]( this, tup._2, tup._1 ))
 //   final def outputs: IIdxSeq[ UGenProxy[ Repr ]] = expand
-   final def expand: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map( tup => UGenOutProxy[ Repr ]( this, tup._2, tup._1 ))
+   final def expand: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map( tup => UGenOutProxy( this, tup._2, tup._1 ))
    final def outputs: IIdxSeq[ UGenIn ] = expand
 }
 
@@ -168,7 +168,7 @@ trait Lazy /* extends Expands[ UGen ] */ {
 
 trait ZeroOutUGenSource[ +U <: ZeroOutUGen ] extends LazyExpander[ U ]
 trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen ] extends LazyExpander[ U ] with GE[ R, U ]
-trait MultiOutUGenSource[  /*R <: Rate,*/ +U <: MultiOutUGen ] extends LazyExpander[ U ] with Multi[ U ] {
+trait MultiOutUGenSource[ +U <: MultiOutUGen[ _ <: Rate ]] extends LazyExpander[ U ] with Multi[ U ] {
    def mexpand = expand
 }
 

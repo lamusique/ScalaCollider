@@ -264,13 +264,13 @@ object UGenGraph {
                   constants    :+= value
                   rc
                }
-               case up: UGenProxy[ _ ] => {
+               case up: UGenProxy => {
                   val iui         = ugenMap( up.source )
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, up.outputIndex )
                }
-               case ControlOutProxy( proxy, outputIndex, _ ) => {
+               case ControlUGenOutProxy( proxy, outputIndex, _ ) => {
                   val (ugen, off) = ctrlProxyMap( proxy )
                   val iui         = ugenMap( ugen )
                   iu.parents     += iui

@@ -299,7 +299,7 @@ import UGenHelper._
 object K2A {
    def ar(in: AnyGE) = apply(in)
 }
-case class K2A(in: AnyGE) extends SingleOutUGenSource[K2AUGen] with AudioRated {
+case class K2A(in: AnyGE) extends SingleOutUGenSource[audio, K2AUGen] with AudioRated {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => K2AUGen(_in(i)))
@@ -309,7 +309,7 @@ case class K2AUGen(in: UGenIn) extends SingleOutUGen(IIdxSeq(in)) with AudioRate
 object A2K {
    def kr(in: AnyGE) = apply(in)
 }
-case class A2K(in: AnyGE) extends SingleOutUGenSource[A2KUGen] with ControlRated {
+case class A2K(in: AnyGE) extends SingleOutUGenSource[control, A2KUGen] with ControlRated {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => A2KUGen(_in(i)))
@@ -319,7 +319,7 @@ case class A2KUGen(in: UGenIn) extends SingleOutUGen(IIdxSeq(in)) with ControlRa
 object T2K {
    def kr(in: AnyGE) = apply(in)
 }
-case class T2K(in: AnyGE) extends SingleOutUGenSource[T2KUGen] with ControlRated {
+case class T2K(in: AnyGE) extends SingleOutUGenSource[control, T2KUGen] with ControlRated {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => T2KUGen(_in(i)))
@@ -329,7 +329,7 @@ case class T2KUGen(in: UGenIn) extends SingleOutUGen(IIdxSeq(in)) with ControlRa
 object T2A {
    def ar(in: AnyGE) = apply(in)
 }
-case class T2A(in: AnyGE) extends SingleOutUGenSource[T2AUGen] with AudioRated {
+case class T2A(in: AnyGE) extends SingleOutUGenSource[audio, T2AUGen] with AudioRated {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => T2AUGen(_in(i)))
@@ -340,13 +340,13 @@ object DC {
    def kr(in: Multi[AnyGE]) = apply(control, in)
    def ar(in: Multi[AnyGE]) = apply(audio, in)
 }
-case class DC(rate: Rate, in: Multi[AnyGE]) extends MultiOutUGenSource[DCUGen] {
+case class DC[ R <: Rate ](rate: R, in: Multi[AnyGE]) extends MultiOutUGenSource[DCUGen[ R ]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyGE] = in.mexpand
-      IIdxSeq.tabulate(_in.size)(i => DCUGen(rate, _in(i).expand))
+      IIdxSeq.tabulate(_in.size)(i => DCUGen[ R ](rate, _in(i).expand))
    }
 }
-case class DCUGen(rate: Rate, in: IIdxSeq[UGenIn]) extends MultiOutUGen(IIdxSeq.fill(in.size)(rate), in)
+case class DCUGen[ R <: Rate ](rate: R, in: IIdxSeq[UGenIn]) extends MultiOutUGen[ R ](IIdxSeq.fill(in.size)(rate), in)
 object Silent {
    def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
@@ -354,7 +354,7 @@ object Silent {
 case class Silent(numChannels: Int) extends MultiOutUGenSource[SilentUGen] with AudioRated {
    protected def expandUGens = IIdxSeq(SilentUGen(numChannels))
 }
-case class SilentUGen(numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
+case class SilentUGen(numChannels: Int) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
 /**
  * A line generator UGen that moves from a start value to the end value in a given duration.
  * 
@@ -363,7 +363,7 @@ case class SilentUGen(numChannels: Int) extends MultiOutUGen(IIdxSeq.fill(numCha
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
 object Line {
-   def ar: Line = ar()
+   def ar: Line[audio] = ar()
 /**
  * @param start           Starting value. Note that this is read only once at initialization
  * @param end             Ending value. Note that this is read only once at initialization
@@ -371,8 +371,8 @@ object Line {
  * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
  *                        given duration
  */
-def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(audio, start, end, dur, doneAction)
-   def kr: Line = kr()
+def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, start, end, dur, doneAction)
+   def kr: Line[control] = kr()
 /**
  * @param start           Starting value. Note that this is read only once at initialization
  * @param end             Ending value. Note that this is read only once at initialization
@@ -380,7 +380,7 @@ def ar(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: An
  * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
  *                        given duration
  */
-def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, start, end, dur, doneAction)
+def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, start, end, dur, doneAction)
 }
 /**
  * A line generator UGen that moves from a start value to the end value in a given duration.
@@ -395,7 +395,7 @@ def kr(start: AnyGE = 0.0f, end: AnyGE = 1.0f, dur: AnyGE = 1.0f, doneAction: An
  * @see [[de.sciss.synth.ugen.EnvGen]]
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
-case class Line(rate: Rate, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[LineUGen] with HasSideEffect with HasDoneFlag {
+case class Line[ R <: Rate ](rate: R, start: AnyGE, end: AnyGE, dur: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, LineUGen] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
       val _start: IIdxSeq[UGenIn] = start.expand
       val _end: IIdxSeq[UGenIn] = end.expand
@@ -436,7 +436,7 @@ case class LineUGen(rate: Rate, start: UGenIn, end: UGenIn, dur: UGenIn, doneAct
 //   def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(control, in, lo, hi)
 //   def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(audio, in, lo, hi)
 //}
-case class Wrap(rate: Rate, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[WrapUGen] {
+case class Wrap[ R <: Rate ](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, WrapUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _lo: IIdxSeq[UGenIn] = lo.expand
@@ -454,7 +454,7 @@ object Fold {
    def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(control, in, lo, hi)
    def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(audio, in, lo, hi)
 }
-case class Fold(rate: Rate, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[FoldUGen] {
+case class Fold[ R <: Rate ](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, FoldUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _lo: IIdxSeq[UGenIn] = lo.expand
@@ -472,7 +472,7 @@ object Clip {
    def kr(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(control, in, lo, hi)
    def ar(in: AnyGE, lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) = apply(audio, in, lo, hi)
 }
-case class Clip(rate: Rate, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[ClipUGen] {
+case class Clip[ R <: Rate ](rate: R, in: AnyGE, lo: AnyGE, hi: AnyGE) extends SingleOutUGenSource[R, ClipUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _lo: IIdxSeq[UGenIn] = lo.expand
@@ -572,11 +572,11 @@ case class ClipUGen(rate: Rate, in: UGenIn, lo: UGenIn, hi: UGenIn) extends Sing
 //}
 //case class InRectUGen(rate: Rate, x: UGenIn, y: UGenIn, left: UGenIn, top: UGenIn, right: UGenIn, bottom: UGenIn) extends SingleOutUGen(IIdxSeq(x, y, left, top, right, bottom))
 object LinExp {
-   def ir(in: AnyGE, srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 1.0f, dstHi: AnyGE = 2.0f) = apply(scalar, in, srcLo, srcHi, dstLo, dstHi)
-   def kr(in: AnyGE, srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 1.0f, dstHi: AnyGE = 2.0f) = apply(control, in, srcLo, srcHi, dstLo, dstHi)
-   def ar(in: AnyGE, srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 1.0f, dstHi: AnyGE = 2.0f) = apply(audio, in, srcLo, srcHi, dstLo, dstHi)
+   def ir(in: GE[ scalar, UGenIn ], srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 1.0f, dstHi: AnyGE = 2.0f) = apply[scalar](scalar, in, srcLo, srcHi, dstLo, dstHi)
+   def kr(in: GE[ control, UGenIn ], srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 1.0f, dstHi: AnyGE = 2.0f) = apply[control](control, in, srcLo, srcHi, dstLo, dstHi)
+   def ar(in: GE[ audio, UGenIn ], srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 1.0f, dstHi: AnyGE = 2.0f) = apply[audio](audio, in, srcLo, srcHi, dstLo, dstHi)
 }
-case class LinExp(rate: Rate, in: AnyGE, srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE) extends SingleOutUGenSource[LinExpUGen] {
+case class LinExp[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE) extends SingleOutUGenSource[R, LinExpUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _srcLo: IIdxSeq[UGenIn] = srcLo.expand
@@ -594,11 +594,11 @@ case class LinExp(rate: Rate, in: AnyGE, srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyG
 }
 case class LinExpUGen(rate: Rate, in: UGenIn, srcLo: UGenIn, srcHi: UGenIn, dstLo: UGenIn, dstHi: UGenIn) extends SingleOutUGen(IIdxSeq(in, srcLo, srcHi, dstLo, dstHi))
 object LinLin {
-   def ir(in: AnyGE, srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 0.0f, dstHi: AnyGE = 1.0f) = apply(scalar, in, srcLo, srcHi, dstLo, dstHi)
-   def kr(in: AnyGE, srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 0.0f, dstHi: AnyGE = 1.0f) = apply(control, in, srcLo, srcHi, dstLo, dstHi)
-   def ar(in: AnyGE, srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 0.0f, dstHi: AnyGE = 1.0f) = apply(audio, in, srcLo, srcHi, dstLo, dstHi)
+   def ir(in: GE[ scalar, UGenIn ], srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 0.0f, dstHi: AnyGE = 1.0f) = apply(scalar, in, srcLo, srcHi, dstLo, dstHi)
+   def kr(in: GE[ control, UGenIn ], srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 0.0f, dstHi: AnyGE = 1.0f) = apply(control, in, srcLo, srcHi, dstLo, dstHi)
+   def ar(in: GE[ audio, UGenIn ], srcLo: AnyGE = 0.0f, srcHi: AnyGE = 1.0f, dstLo: AnyGE = 0.0f, dstHi: AnyGE = 1.0f) = apply(audio, in, srcLo, srcHi, dstLo, dstHi)
 }
-case class LinLin(rate: Rate, in: AnyGE, srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE) extends SingleOutUGenSource[LinLinUGen] {
+case class LinLin[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE) extends SingleOutUGenSource[R, LinLinUGen] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _srcLo: IIdxSeq[UGenIn] = srcLo.expand
@@ -619,7 +619,7 @@ object EnvGen {
    def kr(envelope: Multi[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
    def ar(envelope: Multi[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
 }
-case class EnvGen(rate: Rate, envelope: Multi[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[EnvGenUGen] {
+case class EnvGen[ R <: Rate ](rate: R, envelope: Multi[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, EnvGenUGen] {
    protected def expandUGens = {
       val _gate: IIdxSeq[UGenIn] = gate.expand
       val _levelScale: IIdxSeq[UGenIn] = levelScale.expand

@@ -109,18 +109,18 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 ////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
 //   }
-   implicit def geSeqToGE[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]]) : GE[ R, U ] = {
-      x match {
-         case Seq( single ) => single // Multi.Joint( single )
-         case _ => GESeq( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-      }
+//   implicit def geSeqToGE[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]]) : GE[ R, U ] = {
+//      x match {
+//         case Seq( single ) => single // Multi.Joint( single )
+//         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+//      }
 //      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
 //      outputs match {
 //         case IIdxSeq( mono ) => mono
 //         case _               => new UGenInSeq( outputs )
 ////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
-   }
+//   }
 //   implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
    // or should we add a view bound to seqOfGEToGE?

@@ -29,7 +29,8 @@
 package de.sciss.synth.ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import de.sciss.synth.{LazyExpander, SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
+import de.sciss.synth.{LazyExpander, SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c,
+   GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
 import UGenHelper._
 
 /**

@@ -36,7 +36,7 @@ import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferA
              OSCBufferQueryMessage, OSCBufferSetMessage, OSCBufferSetnMessage, OSCBufferWriteMessage,
              OSCBufferZeroMessage }
 import Model._
-import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
+import ugen.{BufRateScale, PlayBuf}
 
 /**
  * 	@version	0.18, 17-May-10
