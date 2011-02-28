@@ -59,8 +59,14 @@ sealed abstract class Rate {
 //case object audio   extends audio
 //case object demand  extends demand
 
-case object scalar  extends Rate { final val id = 0; final val methodName = "ir" }
-case object control extends Rate { final val id = 1; final val methodName = "kr" }
+case object scalar extends Rate {
+   val id = 0
+   val methodName = "ir"
+}
+case object control extends Rate {
+   val id = 1
+   val methodName = "kr"
+}
 case object audio   extends Rate { final val id = 2; final val methodName = "ar" }
 case object demand  extends Rate { final val id = 3; final val methodName = "dr" }
 
