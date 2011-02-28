@@ -48,27 +48,33 @@ sealed abstract class Rate {
    val methodName: String
 }
 
-//sealed trait scalar  extends Rate { final val id = 0; final val methodName = "ir" }
-//sealed trait control extends Rate { final val id = 1; final val methodName = "kr" }
-//sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
-//sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
-//case object scalar  extends scalar
-//case object control extends control {
-//   implicit val rate = control
-//}
-//case object audio   extends audio
-//case object demand  extends demand
+sealed trait scalar  extends Rate { final val id = 0; final val methodName = "ir" }
+sealed trait control extends Rate { final val id = 1; final val methodName = "kr" }
+sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
+sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
+case object scalar  extends scalar {
+   implicit val rate = scalar
+}
+case object control extends control {
+   implicit val rate = control
+}
+case object audio extends audio {
+   implicit val rate = audio
+}
+case object demand extends demand {
+   implicit val rate = demand
+}
 
-case object scalar extends Rate {
-   val id = 0
-   val methodName = "ir"
-}
-case object control extends Rate {
-   val id = 1
-   val methodName = "kr"
-}
-case object audio   extends Rate { final val id = 2; final val methodName = "ar" }
-case object demand  extends Rate { final val id = 3; final val methodName = "dr" }
+//case object scalar extends Rate {
+//   val id = 0
+//   val methodName = "ir"
+//}
+//case object control extends Rate {
+//   val id = 1
+//   val methodName = "kr"
+//}
+//case object audio   extends Rate { final val id = 2; final val methodName = "ar" }
+//case object demand  extends Rate { final val id = 3; final val methodName = "dr" }
 
 //trait RatedGE[ +R <: Rate, +U <: UGenIn[ R ]] extends GE[ U ] {
 //   def rate : Rate // R

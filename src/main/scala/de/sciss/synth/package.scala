@@ -67,10 +67,10 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    type AnyGE     = GE[ _ <: Rate, UGenIn ] // forSome { type R <: Rate }
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
-   type audio     = audio.type
-   type control   = control.type
-   type scalar    = scalar.type
-   type demand    = demand.type
+//   type audio     = audio.type
+//   type control   = control.type
+//   type scalar    = scalar.type
+//   type demand    = demand.type
 
    /**
     * This conversion is particularly important to balance priorities,
