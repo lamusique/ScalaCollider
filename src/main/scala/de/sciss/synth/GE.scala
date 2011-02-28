@@ -83,6 +83,20 @@ trait Multi[ R <: Rate, +G <: GE[ R, UGenIn ]] {
  */
 object GE {
    implicit def bubble[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
+
+   implicit def fromSeq[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]])( implicit rate: R  ) : GE[ R, U ] = {
+      x match {
+         case Seq( single ) => single // Multi.Joint( single )
+//         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+         case _ => GESeq[ R, U ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+      }
+//      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
+//      outputs match {
+//         case IIdxSeq( mono ) => mono
+//         case _               => new UGenInSeq( outputs )
+////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+//      }
+   }
 }
 trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U ]] */ {
    ge =>

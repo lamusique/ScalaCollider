@@ -67,6 +67,11 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    type AnyGE     = GE[ _ <: Rate, UGenIn ] // forSome { type R <: Rate }
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
+   type audio     = audio.type
+   type control   = control.type
+   type scalar    = scalar.type
+   type demand    = demand.type
+
    /**
     * This conversion is particularly important to balance priorities,
     * as the plain pair of `intToGE` and `enrichFloat` have equal
@@ -109,19 +114,19 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 ////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
 //   }
-   implicit def geSeqToGE[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]])( implicit rate: R  ) : GE[ R, U ] = {
-      x match {
-         case Seq( single ) => single // Multi.Joint( single )
-//         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-         case _ => GESeq[ R, U ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-      }
-//      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
-//      outputs match {
-//         case IIdxSeq( mono ) => mono
-//         case _               => new UGenInSeq( outputs )
-////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+//   implicit def geSeqToGE[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]])( implicit rate: R  ) : GE[ R, U ] = {
+//      x match {
+//         case Seq( single ) => single // Multi.Joint( single )
+////         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+//         case _ => GESeq[ R, U ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
 //      }
-   }
+////      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
+////      outputs match {
+////         case IIdxSeq( mono ) => mono
+////         case _               => new UGenInSeq( outputs )
+//////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
+////      }
+//   }
 //   implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
    // or should we add a view bound to seqOfGEToGE?
@@ -130,25 +135,25 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
 //   implicit def doubleSeqToGE( x: Seq[ Double ]) = GESeq[ scalar, Constant ]( x.map( d => Constant( d.toFloat ))( breakOut )  : IIdxSeq[ Constant ])
 
    // control mapping
-   implicit def intFloatControlSet( tup: (Int, Float) )                    = SingleControlSetMap( tup._1, tup._2 )
-   implicit def intIntControlSet( tup: (Int, Int) )                        = SingleControlSetMap( tup._1, tup._2.toFloat )
-   implicit def intDoubleControlSet( tup: (Int, Double) )                  = SingleControlSetMap( tup._1, tup._2.toFloat )
-   implicit def stringFloatControlSet( tup: (String, Float) )              = SingleControlSetMap( tup._1, tup._2 )
-   implicit def stringIntControlSet( tup: (String, Int) )                  = SingleControlSetMap( tup._1, tup._2.toFloat )
-   implicit def stringDoubleControlSet( tup: (String, Double) )            = SingleControlSetMap( tup._1, tup._2.toFloat )
-   implicit def intFloatsControlSet( tup: (Int, IIdxSeq[ Float ]))         = MultiControlSetMap( tup._1, tup._2 )
-   implicit def stringFloatsControlSet( tup: (String, IIdxSeq[ Float ]))   = MultiControlSetMap( tup._1, tup._2 )
+//   implicit def intFloatControlSet( tup: (Int, Float) )                    = SingleControlSetMap( tup._1, tup._2 )
+//   implicit def intIntControlSet( tup: (Int, Int) )                        = SingleControlSetMap( tup._1, tup._2.toFloat )
+//   implicit def intDoubleControlSet( tup: (Int, Double) )                  = SingleControlSetMap( tup._1, tup._2.toFloat )
+//   implicit def stringFloatControlSet( tup: (String, Float) )              = SingleControlSetMap( tup._1, tup._2 )
+//   implicit def stringIntControlSet( tup: (String, Int) )                  = SingleControlSetMap( tup._1, tup._2.toFloat )
+//   implicit def stringDoubleControlSet( tup: (String, Double) )            = SingleControlSetMap( tup._1, tup._2.toFloat )
+//   implicit def intFloatsControlSet( tup: (Int, IIdxSeq[ Float ]))         = MultiControlSetMap( tup._1, tup._2 )
+//   implicit def stringFloatsControlSet( tup: (String, IIdxSeq[ Float ]))   = MultiControlSetMap( tup._1, tup._2 )
 
-   implicit def intIntControlKBus( tup: (Int, Int) )                 = SingleControlKBusMap( tup._1, tup._2 )
-   implicit def stringIntControlKBus( tup: (String, Int) )           = SingleControlKBusMap( tup._1, tup._2 )
-   implicit def intIntControlABus( tup: (Int, Int) )                 = SingleControlABusMap( tup._1, tup._2 )
-   implicit def stringIntControlABus( tup: (String, Int) )           = SingleControlABusMap( tup._1, tup._2 )
-//   implicit def intIntIntControlBus( tup: (Int, Int, Int) )        = MultiControlBusMap( tup._1, tup._2, tup._3 )
-//   implicit def stringIntIntControlBus( tup: (String, Int, Int) )  = MultiControlBusMap( tup._1, tup._2, tup._3 )
-   implicit def intKBusControlKBus( tup: (Int, ControlBus) )         = MultiControlKBusMap( tup._1, tup._2.index, tup._2.numChannels )
-   implicit def stringKBusControlKBus( tup: (String, ControlBus) )   = MultiControlKBusMap( tup._1, tup._2.index, tup._2.numChannels )
-   implicit def intABusControlABus( tup: (Int, AudioBus) )           = MultiControlABusMap( tup._1, tup._2.index, tup._2.numChannels )
-   implicit def stringABusControlABus( tup: (String, AudioBus) )     = MultiControlABusMap( tup._1, tup._2.index, tup._2.numChannels )
+//   implicit def intIntControlKBus( tup: (Int, Int) )                 = SingleControlKBusMap( tup._1, tup._2 )
+//   implicit def stringIntControlKBus( tup: (String, Int) )           = SingleControlKBusMap( tup._1, tup._2 )
+//   implicit def intIntControlABus( tup: (Int, Int) )                 = SingleControlABusMap( tup._1, tup._2 )
+//   implicit def stringIntControlABus( tup: (String, Int) )           = SingleControlABusMap( tup._1, tup._2 )
+////   implicit def intIntIntControlBus( tup: (Int, Int, Int) )        = MultiControlBusMap( tup._1, tup._2, tup._3 )
+////   implicit def stringIntIntControlBus( tup: (String, Int, Int) )  = MultiControlBusMap( tup._1, tup._2, tup._3 )
+//   implicit def intKBusControlKBus( tup: (Int, ControlBus) )         = MultiControlKBusMap( tup._1, tup._2.index, tup._2.numChannels )
+//   implicit def stringKBusControlKBus( tup: (String, ControlBus) )   = MultiControlKBusMap( tup._1, tup._2.index, tup._2.numChannels )
+//   implicit def intABusControlABus( tup: (Int, AudioBus) )           = MultiControlABusMap( tup._1, tup._2.index, tup._2.numChannels )
+//   implicit def stringABusControlABus( tup: (String, AudioBus) )     = MultiControlABusMap( tup._1, tup._2.index, tup._2.numChannels )
 
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
@@ -169,7 +174,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.s
    def complete[T]( msg: T => OSCPacket, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
    def complete[T]( msg: => OSCPacket, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
    def complete[T]( msg: T => OSCPacket, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
-   implicit def messageToCompletion[T]( msg: OSCPacket ) = message[T]( msg )
+//   implicit def messageToCompletion[T]( msg: OSCPacket ) = message[T]( msg )
    implicit def messageToOption( msg: OSCPacket ) = Some( msg )
 
    // Nodes

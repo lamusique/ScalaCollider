@@ -26,11 +26,11 @@
  *  Changelog:
  */
 
-package de.sciss.synth.ugen
+package de.sciss.synth
+package ugen
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import collection.breakOut
-import de.sciss.synth._
 
 /**
  *    @version 0.12, 17-May-10
@@ -84,7 +84,7 @@ case class TrigControlUGen private[ugen]( numChannels: Int, override val special
 extends MultiOutUGen[ control ]( IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) with ControlRated with HasSideEffect
 
 case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill( values.size )( control )) with ControlRated {
+extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill[ control ]( values.size )( control )) with ControlRated {
    def factory = TrigControlFactory
 }
 
@@ -106,10 +106,10 @@ case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) exten
 }
 
 case class AudioControlUGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen[ audio ]( IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
+extends MultiOutUGen[ audio ]( IIdxSeq.fill[ audio ]( numChannels )( audio ), IIdxSeq.empty ) with AudioRated with HasSideEffect
 
 case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill( values.size )( audio )) with AudioRated {
+extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill[ audio ]( values.size )( audio )) with AudioRated {
    def factory = AudioControlFactory
 }
 

@@ -38,6 +38,8 @@ import ugen.{ControlFactory, AudioControlProxy, ControlProxy, TrigControlProxy}
 object ControlProxyFactory {
    private val controlIrFactory = new ControlFactory[ scalar ]( scalar )
    private val controlKrFactory = new ControlFactory[ control ]( control )
+
+//   implicit def fromString( name: String ) = new ControlProxyFactory( name )
 }
 class ControlProxyFactory( name: String ) {
    import ControlProxyFactory._

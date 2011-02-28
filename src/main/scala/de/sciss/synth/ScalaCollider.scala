@@ -73,8 +73,8 @@ object ScalaCollider {
          val f1  = "freq1".kr( 0.4 )
          val f2  = "freq2".kr( 8 )
          val d   = "detune".kr( 0.90375 )
-         val f   = LFSaw.ar( f1 ).madd( 24, LFSaw.ar( geSeqToGE( List( f2, f2 * d ))( control )).madd( 3, 80 )).midicps // glissando function
-//         val f   = LFSaw.ar( f1 ).madd( 24, LFSaw.ar( f2 ).madd( 3, 80 )).midicps // glissando function
+//         val f   = LFSaw.ar( f1 ).madd( 24, LFSaw.ar( List( f2, f2 * d )).madd( 3, 80 )).midicps // glissando function
+         val f   = LFSaw.ar( f1 ).madd( 24, LFSaw.ar( f2 ).madd( 3, 80 )).midicps // glissando function
          val x   = CombN.ar( SinOsc.ar( f ) * 0.04, 0.2, 0.2, 4 ) // echoing sine wave
 //         val exp = Out.ar( 0, x ).expand
 //         println( exp )
