@@ -63,10 +63,10 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 object GESeq {
 //   def apply[ R <: Rate, U <: UGenIn[ R ]]( elems: U* )( implicit rate: R ) = new GESeq[ R, U ]( elems: _* )( rate )
-   implicit def toIndexedSeq[ U <: UGenIn ]( g: GESeq[ U ]) : IIdxSeq[ GE[ U ]] = g.elems
+   implicit def toIndexedSeq[ R <: Rate, U <: UGenIn ]( g: GESeq[ R, U ]) : IIdxSeq[ GE[ R, U ]] = g.elems
 }
-case class GESeq[ U <: UGenIn ]( elems: IIdxSeq[ GE[ U ]]) extends GE[ U ] {
-   def rate = Rate.highest( elems.map( _.rate ): _* ) // XXX THIS IS PROBLEMATIC !!!
+case class GESeq[ R <: Rate, U <: UGenIn ]( rate: R, elems: IIdxSeq[ GE[ R, U ]]) extends GE[ R, U ] {
+//   def rate = Rate.highest( elems.map( _.rate ): _* ) // XXX THIS IS PROBLEMATIC !!!
    def expand : IIdxSeq[ U ] = elems.flatMap( _.expand )
 //   def expand = this
 //   def apply( idx: Int ) = elems( idx )

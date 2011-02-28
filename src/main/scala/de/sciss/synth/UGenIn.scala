@@ -37,7 +37,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
  *
  *    @version 0.12, 28-Dec-10
  */
-sealed trait UGenIn /* [ R <: Rate ] */ extends /* RatedGE */ GE[ /* R, */ UGenIn /* [ R ] */ ] {
+sealed trait UGenIn { // [ R <: Rate ] extends /* RatedGE */ GE[ R, UGenIn[ R ]] {
 // RRR   type Rate = R
 
 // YYY
@@ -45,10 +45,10 @@ sealed trait UGenIn /* [ R <: Rate ] */ extends /* RatedGE */ GE[ /* R, */ UGenI
 
 //   final def outputs: IIdxSeq[ UGenIn ] = Vector( this )
    def rate : Rate // RRR R
-   final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = IIdxSeq( this )
+//   final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = IIdxSeq( this )
 }
 
-trait UGenProxy[ +S <: UGen ] extends UGenIn {
+trait UGenProxy extends UGenIn { // [ R <: Rate /*, +S <: UGen[ R ] */] extends GE[ R ] { // extends UGenIn[ R ] {
    def source : UGen // S
    def outputIndex : Int
 }
@@ -63,7 +63,7 @@ object Constant {
  *    These constants are stored in a separate table of
  *    the synth graph.
  */
-case class Constant( value: Float ) extends UGenIn /* [scalar] */ with ScalarRated {
+case class Constant( value: Float ) extends GE[ scalar, UGenIn ] with ScalarRated {
    import Constant._
    
    override def toString = value.toString
@@ -122,8 +122,8 @@ case class Constant( value: Float ) extends UGenIn /* [scalar] */ with ScalarRat
  *    hence can directly function as input to another UGen without expansion.
  */
 //abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenIn
-abstract class SingleOutUGen[ +Repr <: UGen ]( val inputs: IIdxSeq[ UGenIn ]) extends UGen with UGenProxy[ Repr ] {
-   final def outputs = expand
+abstract class SingleOutUGen /*[ +Repr <: UGen ] */( val inputs: IIdxSeq[ AnyUGenIn ]) extends UGen with UGenProxy {
+//   final def outputs = expand
    final def numOutputs = 1
 }
 
@@ -153,8 +153,8 @@ extends /* UGenIn[ R ] with */ UGenProxy[ S ] {
  *    returned from the ControlProxyFactory class, that is, using the package
  *    implicits, from calls such as "myControl".kr.
  */
-case class ControlOutProxy /* [ R <: Rate ] */( source: ControlProxyLike[ /* R, */ _ ], outputIndex: Int, rate: Rate /* RRR R */ )
-extends UGenIn /* [ R ] */ {
+case class ControlOutProxy[ R <: Rate ]( source: ControlProxyLike[ R, _ ], outputIndex: Int, rate: R )
+extends GE[ R, UGenIn ] { // UGenIn[ R ] {
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex 
 }

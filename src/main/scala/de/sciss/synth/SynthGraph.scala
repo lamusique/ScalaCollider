@@ -91,34 +91,34 @@ private[synth] object UGenHelper {
 }
 
 object SynthGraph {
-   def wrapOut /*[ R <: Rate, S <: Rate ]*/( thunk: => Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]], fadeTime: Option[Float] = Some(0.02f) )
+   def wrapOut /*[ R <: Rate, S <: Rate ]*/( thunk: => Multi[ AnyGE ], fadeTime: Option[Float] = Some(0.02f) )
                                       /*( implicit r: RateOrder[ control, R, S ])*/ =
       SynthGraph {
-         val res1 = thunk
-         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
-         val res2 = if( (rate == audio) || (rate == control) ) {
-            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
-            val res2: Multi[ AnyGE ] = o getOrElse res1
-//            val res2 = res1
-            val out = "out".kr
-//            if( rate == audio ) {
-               Out( rate, out, res2 )
-//            } else {
-//               Out.kr( out, res2 )
-//            }
-         } else res1
+//         val res1 = thunk
+//         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
+//         val res2 = if( (rate == audio) || (rate == control) ) {
+//            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
+//            val res2: Multi[ AnyGE ] = o getOrElse res1
+////            val res2 = res1
+//            val out = "out".kr
+////            if( rate == audio ) {
+//               Out( rate, out, res2 )
+////            } else {
+////               Out.kr( out, res2 )
+////            }
+//         } else res1
       }
 
-	def makeFadeEnv( fadeTime: Float ) : AnyGE = {
-		val dt			= "fadeTime".kr( fadeTime )
-		val gate       = "gate".kr( 1 )
-		val startVal	= (dt <= 0)
-      // this is slightly more costly than what sclang does
-      // (using non-linear shape plus an extra unary op),
-      // but it fadeout is much smoother this way...
-		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
-         gate, timeScale = dt, doneAction = freeSelf ).squared
-	}
+//	def makeFadeEnv( fadeTime: Float ) : AnyGE = {
+//		val dt			= "fadeTime".kr( fadeTime )
+//		val gate       = "gate".kr( 1 )
+//		val startVal	= (dt <= 0)
+//      // this is slightly more costly than what sclang does
+//      // (using non-linear shape plus an extra unary op),
+//      // but it fadeout is much smoother this way...
+//		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+//         gate, timeScale = dt, doneAction = freeSelf ).squared
+//	}
 
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def replaceZeroesWithSilence( ge: GE ) : GE = {
@@ -161,25 +161,25 @@ object SynthGraph {
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
       def addLazy( g: Lazy ) {}
-      def addControlProxy( proxy: ControlProxyLike[ /* _,*/ _ ]) {}
+      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
       private val lazies         = MBuffer.empty[ Lazy ]
-      private var controlProxies = MSet.empty[ ControlProxyLike[ /* _,*/ _ ]]
+      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
       def build = SynthGraph( lazies.toIndexedSeq, controlProxies.toSet )
       def addLazy( g: Lazy ) {
          lazies += g
       }
 
-      def addControlProxy( proxy: ControlProxyLike[ /* _,*/ _ ]) {
+      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
          controlProxies += proxy
       }
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ /*_,*/ _ ]]) {
+case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _, _ ]]) {
    def expand = UGenGraph.expand( this )
 }
 
@@ -240,7 +240,7 @@ object UGenGraph {
          UGenGraph( constants, controlValues, controlNames, richUGens )
       }
 
-      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ /* _,*/ _ ], (UGen, Int)]) :
+      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _, _ ], (UGen, Int)]) :
          (MBuffer[ IndexedUGen ], IIdxSeq[ Float ]) = {
 
          val constantMap   = MMap.empty[ Float, RichConstant ]
@@ -346,7 +346,7 @@ object UGenGraph {
        *    Manita, how simple things can get as soon as you
        *    clean up the sclang mess...
        */
-      private def buildControls( p: Traversable[ ControlProxyLike[ /* _,*/ _ ]]): Map[ ControlProxyLike[ /* _,*/ _ ], (UGen, Int) ] = {
+      private def buildControls( p: Traversable[ ControlProxyLike[ _, _ ]]): Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
          p.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
             factory.build( builder, proxies.toSeq: _* )

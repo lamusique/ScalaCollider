@@ -897,7 +897,7 @@ def kr(src: GE[UGenProxy[ UGen with HasDoneFlag]]) = apply(src)
  * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
  * @see [[de.sciss.synth.ugen.Done]]
  */
-case class FreeSelfWhenDone(src: GE[UGenProxy[ UGen with HasDoneFlag]]) extends SingleOutUGenSource[FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
+case class FreeSelfWhenDone(src: GE[UGenProxy[ AnyUGenIn with HasDoneFlag]]) extends SingleOutUGenSource[FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
    protected def expandUGens = {
       val _src: IIdxSeq[UGenProxy[ UGen with HasDoneFlag]] = src.expand
       IIdxSeq.tabulate(_src.size)(i => FreeSelfWhenDoneUGen(_src(i)))
