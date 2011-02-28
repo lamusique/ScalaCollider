@@ -91,7 +91,7 @@ private[synth] object UGenHelper {
 }
 
 object SynthGraph {
-   def wrapOut /*[ R <: Rate, S <: Rate ]*/( thunk: => Multi[ AnyGE ], fadeTime: Option[Float] = Some(0.02f) )
+   def wrapOut /*[ R <: Rate, S <: Rate ]*/( thunk: => AnyMulti, fadeTime: Option[Float] = Some(0.02f) )
                                       /*( implicit r: RateOrder[ control, R, S ])*/ =
       SynthGraph {
 //         val res1 = thunk

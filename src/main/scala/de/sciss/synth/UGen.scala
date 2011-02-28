@@ -168,7 +168,7 @@ trait Lazy /* extends Expands[ UGen ] */ {
 
 trait ZeroOutUGenSource[ +U <: ZeroOutUGen ] extends LazyExpander[ U ]
 trait SingleOutUGenSource[ R <: Rate, +U <: SingleOutUGen ] extends LazyExpander[ U ] with GE[ R, U ]
-trait MultiOutUGenSource[ +U <: MultiOutUGen[ _ <: Rate ]] extends LazyExpander[ U ] with Multi[ U ] {
+trait MultiOutUGenSource[ R <: Rate, +U <: MultiOutUGen[ R ]] extends LazyExpander[ U ] with Multi[ R, U ] {
    def mexpand = expand
 }
 

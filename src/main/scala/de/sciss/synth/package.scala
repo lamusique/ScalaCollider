@@ -59,11 +59,11 @@ package synth {
  *
  * @version	0.14, 28-Aug-10
  */
-package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.sciss.synth.RateRelations */ {
+package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.synth.RateRelations {
    // GEs
 
    type AnyUGenIn = UGenIn // [ _ <: Rate ]
-//   type MultiGE   = Expands[ UGenIn ]
+   type AnyMulti  = Multi[ R, GE[ R, UGenIn]] forSome { type R <: Rate }
    type AnyGE     = GE[ _ <: Rate, UGenIn ] // forSome { type R <: Rate }
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
@@ -109,18 +109,19 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 ////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
 //   }
-//   implicit def geSeqToGE[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]]) : GE[ R, U ] = {
-//      x match {
-//         case Seq( single ) => single // Multi.Joint( single )
+   implicit def geSeqToGE[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]])( implicit rate: R  ) : GE[ R, U ] = {
+      x match {
+         case Seq( single ) => single // Multi.Joint( single )
 //         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-//      }
+         case _ => GESeq[ R, U ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+      }
 //      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
 //      outputs match {
 //         case IIdxSeq( mono ) => mono
 //         case _               => new UGenInSeq( outputs )
 ////         case _               => new RatedUGenInSeq( x.head.rate, outputs )
 //      }
-//   }
+   }
 //   implicit def doneActionToGE( x: DoneAction ) = Constant( x.id )
 
    // or should we add a view bound to seqOfGEToGE?
@@ -152,7 +153,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
    implicit def thunkToGraphFunction[ /*R <: Rate, S <: Rate,*/ T ]( thunk: => T )
-      ( implicit view: T => Multi[ AnyGE ] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction( thunk )
+      ( implicit view: T => AnyMulti /*, r: RateOrder[ control, R, S ] */) = new GraphFunction( thunk )
 
 //   // Misc
 //   implicit def stringToOption( x: String ) = Some( x )
@@ -179,10 +180,10 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
   
    // explicit methods
-   def play /*[ R <: Rate, S <: Rate ] */( thunk: => Multi[ AnyGE ])/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
+   def play /*[ R <: Rate, S <: Rate ] */( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
    def play /*[ R <: Rate, S <: Rate ] */( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[Float] = Some( 0.02f ),
-             addAction: AddAction = addToHead )( thunk: => Multi[ AnyGE ])/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {
+             addAction: AddAction = addToHead )( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {
       val fun = new GraphFunction( thunk )
       fun.play( target, outBus, fadeTime, addAction )
    }

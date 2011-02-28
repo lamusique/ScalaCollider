@@ -38,38 +38,38 @@ trait Expands[ +R ] {
 }
 
 object Multi {
-//   implicit def flatten[ U <: UGenIn[ _ <: Rate ]]( m: Multi[ GE[ U ]]) : GE[ U ] = Flatten( m )
-//
-////   def joint[ G <: AnyGE ]( g: G ) = Multi.Joint( g )
-////   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
-////   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
-//
-//   case class Flatten[ U <: UGenIn ]( m: Multi[ GE[ U ]]) extends GE[ U ] {
-//      def rate = m.rate
-//      override def toString = "Multi.flatten(" + m + ")"
-//      def expand : IIdxSeq[ U ] = {
-//         m.mexpand.flatMap( _.expand )
-//      }
-//   }
-//
-//   case class Joint[ G <: AnyGE ]( g: G ) extends Multi[ G ] {
-//      def rate = g.rate
-//      def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
-//   }
-//
-//   case class Disjoint[ R <: Rate ]( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) extends Multi[ GE[ /* R,*/ UGenIn /*[ R ]*/]] {
+   implicit def flatten[ R <: Rate, U <: UGenIn ]( m: Multi[ R, GE[ R, U ]]) : GE[ R, U ] = Flatten( m )
+
+//   def joint[ G <: AnyGE ]( g: G ) = Multi.Joint( g )
+//   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
+//   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
+
+   case class Flatten[ R <: Rate, U <: UGenIn ]( m: Multi[ R, GE[ R, U ]]) extends GE[ R, U ] {
+      def rate = m.rate
+      override def toString = "Multi.flatten(" + m + ")"
+      def expand : IIdxSeq[ U ] = {
+         m.mexpand.flatMap( _.expand )
+      }
+   }
+
+   case class Joint[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) extends Multi[ R, G ] {
+      def rate = g.rate
+      def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
+   }
+
+//   case class Disjoint[ R <: Rate, U <: UGenIn ]( g: GE[ R, U ]) extends Multi[ GE[ R, U ]] {
 //      def rate = g.rate
 //      def mexpand = IIdxSeq( g.expand: _* )
 //   }
+
+//   case class Group( elems: IIdxSeq[ AnyGE ]) extends AnyGE {
 //
-////   case class Group( elems: IIdxSeq[ AnyGE ]) extends AnyGE {
-////
-////   }
+//   }
 }
 
-trait Multi[ +G <: AnyGE ] {
+trait Multi[ R <: Rate, +G <: GE[ R, UGenIn ]] {
    def mexpand: IIdxSeq[ G ]
-   def rate: Rate // RRR
+   def rate: R
 }
 
 /**
@@ -82,7 +82,7 @@ trait Multi[ +G <: AnyGE ] {
  *    @version 0.11, 26-Aug-10
  */
 object GE {
-//   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ G ] = Multi.Joint( g )
+   implicit def bubble[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
 }
 trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U ]] */ {
    ge =>
@@ -190,7 +190,7 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
 //   def sqrt : GE[ /* R,*/ UGenIn /*[ R ]*/]      = Sqrt.make /*[ R ]*/( rate, this )
 //   def exp : GE[ /* R,*/ UGenIn /*[ R ]*/]       = Exp.make /*[ R ]*/( rate, this )
 //   def reciprocal : GE[ /* R,*/ UGenIn /*[ R ]*/]= Reciprocal.make /*[ R ]*/( rate, this )
-//   def midicps : GE[ /*R,*/ UGenIn /*[ R ]*/]   = Midicps.make /*[ R ]*/( rate, this )
+   def midicps : GE[ R, UGenIn ]   = Midicps.make[ R ]( rate, this )
 //   def cpsmidi : GE[ /*R,*/ UGenIn /*[ R ]*/]   = Cpsmidi.make /*[ R ]*/( rate, this )
 //   def midiratio : GE[ /*R,*/ UGenIn /*[ R ]*/] = Midiratio.make /*[ R ]*/( rate, this )
 //   def ratiomidi : GE[ /*R,*/ UGenIn /*[ R ]*/] = Ratiomidi.make /*[ R ]*/( rate, this )

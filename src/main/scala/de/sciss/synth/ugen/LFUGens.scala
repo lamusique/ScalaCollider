@@ -118,57 +118,57 @@ import UGenHelper._
 //   }
 //}
 //case class LFPulseUGen(rate: Rate, freq: UGenIn, iphase: UGenIn, width: UGenIn) extends SingleOutUGen(IIdxSeq(freq, iphase, width))
-///**
-// * A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
-// * that is it does not use band-limiting. For a band-limited version use
-// * `Saw` instead. The signal range is -1 to +1.
-// *
-// * @see [[de.sciss.synth.ugen.Saw]]
-// */
-//object LFSaw {
-//   def kr: LFSaw = kr()
-///**
-// * @param freq            oscillator frequency in Hertz
-// * @param iphase          initial phase offset. For efficiency reasons this is a
-// *                        value ranging from -1 to 1 (thus equal to the initial output value).
-// *                        Note that a phase of zero (default) means the wave starts at 0 and
-// *                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
-// */
-//def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply(control, freq, iphase)
-//   def ar: LFSaw = ar()
-///**
-// * @param freq            oscillator frequency in Hertz
-// * @param iphase          initial phase offset. For efficiency reasons this is a
-// *                        value ranging from -1 to 1 (thus equal to the initial output value).
-// *                        Note that a phase of zero (default) means the wave starts at 0 and
-// *                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
-// */
-//def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply(audio, freq, iphase)
-//}
-///**
-// * A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
-// * that is it does not use band-limiting. For a band-limited version use
-// * `Saw` instead. The signal range is -1 to +1.
-// *
-// * @param freq            oscillator frequency in Hertz
-// * @param iphase          initial phase offset. For efficiency reasons this is a
-// *                        value ranging from -1 to 1 (thus equal to the initial output value).
-// *                        Note that a phase of zero (default) means the wave starts at 0 and
-// *                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
-// *
-// * @see [[de.sciss.synth.ugen.Saw]]
-// */
-//case class LFSaw(rate: Rate, freq: AnyGE, iphase: AnyGE) extends SingleOutUGenSource[LFSawUGen] {
-//   protected def expandUGens = {
-//      val _freq: IIdxSeq[UGenIn] = freq.expand
-//      val _iphase: IIdxSeq[UGenIn] = iphase.expand
-//      val _sz_freq = _freq.size
-//      val _sz_iphase = _iphase.size
-//      val _exp_ = maxInt(_sz_freq, _sz_iphase)
-//      IIdxSeq.tabulate(_exp_)(i => LFSawUGen(rate, _freq(i.%(_sz_freq)), _iphase(i.%(_sz_iphase))))
-//   }
-//}
-//case class LFSawUGen(rate: Rate, freq: UGenIn, iphase: UGenIn) extends SingleOutUGen(IIdxSeq(freq, iphase))
+/**
+* A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
+* that is it does not use band-limiting. For a band-limited version use
+* `Saw` instead. The signal range is -1 to +1.
+*
+* @see [[de.sciss.synth.ugen.Saw]]
+*/
+object LFSaw {
+   def kr: LFSaw[control] = kr()
+/**
+* @param freq            oscillator frequency in Hertz
+* @param iphase          initial phase offset. For efficiency reasons this is a
+*                        value ranging from -1 to 1 (thus equal to the initial output value).
+*                        Note that a phase of zero (default) means the wave starts at 0 and
+*                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
+*/
+def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[control](control, freq, iphase)
+   def ar: LFSaw[audio] = ar()
+/**
+* @param freq            oscillator frequency in Hertz
+* @param iphase          initial phase offset. For efficiency reasons this is a
+*                        value ranging from -1 to 1 (thus equal to the initial output value).
+*                        Note that a phase of zero (default) means the wave starts at 0 and
+*                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
+*/
+def ar(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply[audio](audio, freq, iphase)
+}
+/**
+* A sawtooth oscillator UGen. The oscillator is creating an aliased sawtooth,
+* that is it does not use band-limiting. For a band-limited version use
+* `Saw` instead. The signal range is -1 to +1.
+*
+* @param freq            oscillator frequency in Hertz
+* @param iphase          initial phase offset. For efficiency reasons this is a
+*                        value ranging from -1 to 1 (thus equal to the initial output value).
+*                        Note that a phase of zero (default) means the wave starts at 0 and
+*                        rises to +1 before jumping down to -1. Use a phase of 1 to have the wave start at -1.
+*
+* @see [[de.sciss.synth.ugen.Saw]]
+*/
+case class LFSaw[ R <: Rate ](rate: R, freq: AnyGE, iphase: AnyGE) extends SingleOutUGenSource[R, LFSawUGen] {
+   protected def expandUGens = {
+      val _freq: IIdxSeq[UGenIn] = freq.expand
+      val _iphase: IIdxSeq[UGenIn] = iphase.expand
+      val _sz_freq = _freq.size
+      val _sz_iphase = _iphase.size
+      val _exp_ = maxInt(_sz_freq, _sz_iphase)
+      IIdxSeq.tabulate(_exp_)(i => LFSawUGen(rate, _freq(i.%(_sz_freq)), _iphase(i.%(_sz_iphase))))
+   }
+}
+case class LFSawUGen(rate: Rate, freq: UGenIn, iphase: UGenIn) extends SingleOutUGen(IIdxSeq(freq, iphase))
 //object LFPar {
 //   def kr: LFPar = kr()
 //   def kr(freq: AnyGE = 440.0f, iphase: AnyGE = 0.0f) = apply(control, freq, iphase)
@@ -337,10 +337,10 @@ case class T2A(in: AnyGE) extends SingleOutUGenSource[audio, T2AUGen] with Audio
 }
 case class T2AUGen(in: UGenIn) extends SingleOutUGen(IIdxSeq(in)) with AudioRated
 object DC {
-   def kr(in: Multi[AnyGE]) = apply(control, in)
-   def ar(in: Multi[AnyGE]) = apply(audio, in)
+   def kr(in: AnyMulti ) = apply(control, in)
+   def ar(in: AnyMulti ) = apply(audio, in)
 }
-case class DC[ R <: Rate ](rate: R, in: Multi[AnyGE]) extends MultiOutUGenSource[DCUGen[ R ]] {
+case class DC[ R <: Rate ](rate: R, in: AnyMulti) extends MultiOutUGenSource[R, DCUGen[ R ]] {
    protected def expandUGens = {
       val _in: IIdxSeq[AnyGE] = in.mexpand
       IIdxSeq.tabulate(_in.size)(i => DCUGen[ R ](rate, _in(i).expand))
@@ -351,7 +351,7 @@ object Silent {
    def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
 }
-case class Silent(numChannels: Int) extends MultiOutUGenSource[SilentUGen] with AudioRated {
+case class Silent(numChannels: Int) extends MultiOutUGenSource[audio, SilentUGen] with AudioRated {
    protected def expandUGens = IIdxSeq(SilentUGen(numChannels))
 }
 case class SilentUGen(numChannels: Int) extends MultiOutUGen[audio](IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty) with AudioRated
@@ -616,10 +616,10 @@ case class LinLin[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], srcLo: AnyGE, srcHi
 }
 case class LinLinUGen(rate: Rate, in: UGenIn, srcLo: UGenIn, srcHi: UGenIn, dstLo: UGenIn, dstHi: UGenIn) extends SingleOutUGen(IIdxSeq(in, srcLo, srcHi, dstLo, dstHi))
 object EnvGen {
-   def kr(envelope: Multi[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
-   def ar(envelope: Multi[AnyGE], gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def kr(envelope: AnyMulti, gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def ar(envelope: AnyMulti, gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
 }
-case class EnvGen[ R <: Rate ](rate: R, envelope: Multi[AnyGE], gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, EnvGenUGen] {
+case class EnvGen[ R <: Rate ](rate: R, envelope: AnyMulti, gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R, EnvGenUGen] {
    protected def expandUGens = {
       val _gate: IIdxSeq[UGenIn] = gate.expand
       val _levelScale: IIdxSeq[UGenIn] = levelScale.expand
