@@ -1,3 +1,5 @@
+package de.sciss.synth.util
+
 /*
  *  Expands.scala
  *  (ScalaCollider)
@@ -25,8 +27,6 @@
  *
  *  Changelog:
  */
-
-package de.sciss.synth
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 

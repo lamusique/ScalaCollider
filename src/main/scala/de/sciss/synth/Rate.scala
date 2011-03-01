@@ -37,10 +37,49 @@ object Rate {
    def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
    def lowest( ge: AnyGE ) : Rate = lowest( ge.expand.map( _.rate ): _* )
 
-//   def apply[ R <: Rate ] : R = R match {
-//      case scalar => scalar
-//      case scalar => scalar
-//   }
+   object > {
+//   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new Impl[ demand, audio ] // (   demand,  audio   )
+//   implicit val demandGtControl:  HigherRate[ demand,  control ] = new Impl[ demand, control ] // ( demand,  control )
+//   implicit val demandGtScalar:   HigherRate[ demand,  scalar  ] = new Impl[ demand, scalar ] // (  demand,  scalar  )
+
+      implicit def allGtScalar[ R <: Rate ] : >[ R, scalar ]   = new Impl[ R, scalar ]
+      implicit def demandGtAll[ R <: Rate ] : >[ demand, R ]   = new Impl[ demand, R ]
+      implicit val audioGtControl: >[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
+//   implicit def same[ R <: Rate ] : HigherRate[ R, R ]               = new Impl[ R, R ]
+//   implicit val audioGtScalar:    HigherRate[ audio,   scalar  ] = new Impl[ audio, scalar ] // (   audio,   scalar  )
+//   implicit val controlGtScalar:  HigherRate[ control, scalar  ] = new Impl[ control, scalar ] // ( control, scalar  )
+
+      private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends >[ R, S ]
+   }
+   sealed trait >[ -R <: Rate, S <: Rate ]
+
+   object >= {
+      implicit def allGtScalar[ R <: Rate ] : >=[ R, scalar ]  = new Impl[ R, scalar ]
+      implicit def demandGtAll[ R <: Rate ] : >=[ demand, R ]  = new Impl[ demand, R ]
+      implicit val audioGtControl: >=[ audio, control ]        = new Impl[ audio, control ] // (  audio,   control )
+      implicit def same[ R <: Rate ] : >=[ R, R ]              = new Impl[ R, R ]
+      private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends >=[ R, S ]
+   }
+   sealed trait >=[ -R <: Rate, S <: Rate ]
+
+   sealed trait OrderLowImplicits {
+//   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrderUnknown[ R, S ]()
+      implicit def unknown[ R <: Rate, S <: Rate ] : Order[ R, S, Rate ] = new Impl[ R, S, Rate ] // RateOrderUnknown[ R, S ]()
+      protected class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends Order[ R, S, T ]
+   }
+   object Order extends OrderLowImplicits {
+      implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : Order[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
+//   implicit val bothScalar = new Impl[ scalar, scalar, scalar ]
+//   implicit val bothControl= new Impl[ control, control, control ]
+//   implicit val bothAudio  = new Impl[ audio, audio, audio ]
+//   implicit val bothDemand = new Impl[ demand, demand, demand ]
+      implicit def gt[ R <: Rate, S <: Rate ]( implicit rel: >[ R, S ]) : Order[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
+      implicit def lt[ R <: Rate, S <: Rate ]( implicit rel: >[ S, R ]) : Order[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
+
+      private class Impl[ R <: Rate, S <: Rate, T <: Rate ] extends Order[ R, S, T ]
+   }
+//sealed trait MaybeRateOrder[ -R <: Rate, -S <: Rate, -T <: Rate ]
+   sealed trait Order[ -R <: Rate, S <: Rate, T <: Rate ]
 }
 
 /**
@@ -68,89 +107,7 @@ case object demand extends demand {
 //   implicit val rate = demand
 }
 
-//case object scalar extends Rate {
-//   val id = 0
-//   val methodName = "ir"
-//}
-//case object control extends Rate {
-//   val id = 1
-//   val methodName = "kr"
-//}
-//case object audio   extends Rate { final val id = 2; final val methodName = "ar" }
-//case object demand  extends Rate { final val id = 3; final val methodName = "dr" }
-
-//trait RatedGE[ +R <: Rate, +U <: UGenIn[ R ]] extends GE[ U ] {
-//   def rate : Rate // R
-//   def madd( mul: RatedGE[ Rate, AnyUGenIn ], add: RatedGE[ Rate, AnyUGenIn ]) : RatedGE[ R, UGenIn[ R ]] = {
-//      (rate match {
-//         case `audio`   => MulAdd.ar( this, mul, add )
-//         case `control` => MulAdd.kr( this, mul, add )
-//         case `scalar`  => this * mul + add
-//         case r         => error( "Illegal rate " + r )
-//      }).asInstanceOf[ RatedGE[ R, UGenIn[ R ]]]
-//   }
-//}
-
 //trait ScalarRated  { def rate: scalar = scalar }
 //trait ControlRated { def rate: control = control }
 //trait AudioRated   { def rate: audio = audio }
 //trait DemandRated  { def rate: demand = demand }
-
-object HigherRate {
-//   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new Impl[ demand, audio ] // (   demand,  audio   )
-//   implicit val demandGtControl:  HigherRate[ demand,  control ] = new Impl[ demand, control ] // ( demand,  control )
-//   implicit val demandGtScalar:   HigherRate[ demand,  scalar  ] = new Impl[ demand, scalar ] // (  demand,  scalar  )
-
-   implicit def allGtScalar[ R <: Rate ] : HigherRate[ R, scalar ]   = new Impl[ R, scalar ]
-   implicit def demandGtAll[ R <: Rate ] : HigherRate[ demand, R ]   = new Impl[ demand, R ]
-   implicit val audioGtControl: HigherRate[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
-//   implicit def same[ R <: Rate ] : HigherRate[ R, R ]               = new Impl[ R, R ]
-//   implicit val audioGtScalar:    HigherRate[ audio,   scalar  ] = new Impl[ audio, scalar ] // (   audio,   scalar  )
-//   implicit val controlGtScalar:  HigherRate[ control, scalar  ] = new Impl[ control, scalar ] // ( control, scalar  )
-
-   private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends HigherRate[ R, S ]
-}
-sealed trait HigherRate[ -R <: Rate, S <: Rate ] {
-//   def rate1: R
-//   def rate2: S
-}
-
-object HigherEqualRate {
-   implicit def allGtScalar[ R <: Rate ] : HigherEqualRate[ R, scalar ]   = new Impl[ R, scalar ]
-   implicit def demandGtAll[ R <: Rate ] : HigherEqualRate[ demand, R ]   = new Impl[ demand, R ]
-   implicit val audioGtControl: HigherEqualRate[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
-   implicit def equal[ R <: Rate ] : HigherEqualRate[ R, R ] = new Impl[ R, R ]
-   private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends HigherEqualRate[ R, S ]
-}
-sealed trait HigherEqualRate[ -R <: Rate, S <: Rate ]
-
-sealed trait RateOrderLowImplicits {
-//   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrderUnknown[ R, S ]()
-   implicit def unknown[ R <: Rate, S <: Rate ] : RateOrder[ R, S, Rate ] = new Impl[ R, S, Rate ] // RateOrderUnknown[ R, S ]()
-   protected class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends RateOrder[ R, S, T ]
-}
-object RateOrder extends RateOrderLowImplicits {
-   implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : RateOrder[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
-//   implicit val bothScalar = new Impl[ scalar, scalar, scalar ]
-//   implicit val bothControl= new Impl[ control, control, control ]
-//   implicit val bothAudio  = new Impl[ audio, audio, audio ]
-//   implicit val bothDemand = new Impl[ demand, demand, demand ]
-   implicit def greater[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
-   implicit def less[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
-
-//   private class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends RateOrder[ R, S, T ]
-}
-//sealed trait MaybeRateOrder[ -R <: Rate, -S <: Rate, -T <: Rate ]
-sealed trait RateOrder[ -R <: Rate, S <: Rate, T <: Rate ]
-
-//case class RateOrderUnknown[ R <: Rate, S <: Rate ]() extends RateOrder[ R, S, Rate ] {
-//   def getOrElse( r: => R, s: => S ) = Rate.highest( r, s )
-//}
-
-//sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] extends MaybeRateOrder[ R, S, T ] {
-////   def in1: R
-////   def in2: S
-////   def out: T
-//
-////   def getOrElse( r: => R, s: => S ) : T = out
-//}
