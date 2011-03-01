@@ -200,61 +200,61 @@ trait GE[ R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* wi
    import UnaryOp._
 
    // unary ops
-   def unary_- : GE[ R ]   = Neg.make[ R ]( /* rate, */ this )
-//// def bitNot : GE	         = BitNot.make( this )
-//   def abs : GE[ /* R,*/ UGenIn /*[ R ]*/]       = Abs.make /*[ R ]*/( rate, this )
-//// def toFloat : GE	         = UnOp.make( 'asFloat, this )
-//// def toInteger : GE	      = UnOp.make( 'asInteger, this )
-//   def ceil : GE[ /* R,*/ UGenIn /*[ R ]*/]      = Ceil.make /*[ R ]*/( rate, this )
-//   def floor : GE[ /* R,*/ UGenIn /*[ R ]*/]     = Floor.make /*[ R ]*/( rate, this )
-//   def frac : GE[ /* R,*/ UGenIn /*[ R ]*/]      = Frac.make /*[ R ]*/( rate, this )
-//   def signum : GE[ /* R,*/ UGenIn /*[ R ]*/]    = Signum.make /*[ R ]*/( rate, this )
-//   def squared : GE[ /* R,*/ UGenIn /*[ R ]*/]   = Squared.make /*[ R ]*/( rate, this )
-//   def cubed : GE[ /* R,*/ UGenIn /*[ R ]*/]     = Cubed.make /*[ R ]*/( rate, this )
-//   def sqrt : GE[ /* R,*/ UGenIn /*[ R ]*/]      = Sqrt.make /*[ R ]*/( rate, this )
-//   def exp : GE[ /* R,*/ UGenIn /*[ R ]*/]       = Exp.make /*[ R ]*/( rate, this )
-//   def reciprocal : GE[ /* R,*/ UGenIn /*[ R ]*/]= Reciprocal.make /*[ R ]*/( rate, this )
-   def midicps : GE[ R ]   = Midicps.make[ R ]( /* rate, */ this )
-//   def cpsmidi : GE[ /*R,*/ UGenIn /*[ R ]*/]   = Cpsmidi.make /*[ R ]*/( rate, this )
-//   def midiratio : GE[ /*R,*/ UGenIn /*[ R ]*/] = Midiratio.make /*[ R ]*/( rate, this )
-//   def ratiomidi : GE[ /*R,*/ UGenIn /*[ R ]*/] = Ratiomidi.make /*[ R ]*/( rate, this )
-//   def dbamp : GE[ /*R,*/ UGenIn /*[ R ]*/]     = Dbamp.make /*[ R ]*/( rate, this )
-//   def ampdb : GE[ /*R,*/ UGenIn /*[ R ]*/]     = Ampdb.make /*[ R ]*/( rate, this )
-//   def octcps : GE[ /*R,*/ UGenIn /*[ R ]*/]    = Octcps.make /*[ R ]*/( rate, this )
-//   def cpsoct : GE[ /*R,*/ UGenIn /*[ R ]*/]    = Cpsoct.make /*[ R ]*/( rate, this )
-//   def log : GE[ /*R,*/ UGenIn /*[ R ]*/]       = Log.make /*[ R ]*/( rate, this )
-//   def log2 : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Log2.make /*[ R ]*/( rate, this )
-//   def log10 : GE[ /*R,*/ UGenIn /*[ R ]*/]     = Log10.make /*[ R ]*/( rate, this )
-//   def sin : GE[ /*R,*/ UGenIn /*[ R ]*/]       = Sin.make /*[ R ]*/( rate, this )
-//   def cos : GE[ /*R,*/ UGenIn /*[ R ]*/]       = Cos.make /*[ R ]*/( rate, this )
-//   def tan : GE[ /*R,*/ UGenIn /*[ R ]*/]       = Tan.make /*[ R ]*/( rate, this )
-//   def asin : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Asin.make /*[ R ]*/( rate, this )
-//   def acos : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Acos.make /*[ R ]*/( rate, this )
-//   def atan : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Atan.make /*[ R ]*/( rate, this )
-//   def sinh : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Sinh.make /*[ R ]*/( rate, this )
-//   def cosh : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Cosh.make /*[ R ]*/( rate, this )
-//   def tanh : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Tanh.make /*[ R ]*/( rate, this )
-//// def rand : GE              = UnOp.make( 'rand, this )
-//// def rand2 : GE             = UnOp.make( 'rand2, this )
-//// def linrand : GE           = UnOp.make( 'linrand, this )
-//// def bilinrand : GE         = UnOp.make( 'bilinrand, this )
-//// def sum3rand : GE          = UnOp.make( 'sum3rand, this )
-//   def distort : GE[ /*R,*/ UGenIn /*[ R ]*/]   = Distort.make /*[ R ]*/( rate, this )
-//   def softclip : GE[ /*R,*/ UGenIn /*[ R ]*/]  = Softclip.make /*[ R ]*/( rate, this )
-//// def coin : GE              = UnOp.make( 'coin, this )
-//// def even : GE              = UnOp.make( 'even, this )
-//// def odd : GE               = UnOp.make( 'odd, this )
-//// def rectWindow : GE        = UnOp.make( 'rectWindow, this )
-//// def hanWindow : GE         = UnOp.make( 'hanWindow, this )
-//// def welWindow : GE         = UnOp.make( 'sum3rand, this )
-//// def triWindow : GE         = UnOp.make( 'triWindow, this )
-//   def ramp : GE[ /*R,*/ UGenIn /*[ R ]*/]      = Ramp.make /*[ R ]*/( rate, this )
-//   def scurve : GE[ /*R,*/ UGenIn /*[ R ]*/]    = Scurve.make /*[ R ]*/( rate, this )
-//// def isPositive : GE        = UnOp.make( 'isPositive, this )
-//// def isNegative : GE        = UnOp.make( 'isNegative, this )
-//// def isStrictlyPositive : GE= UnOp.make( 'isStrictlyPositive, this )
-//// def rho : GE               = UnOp.make( 'rho, this )
-//// def theta : GE             = UnOp.make( 'theta, this )
+   def unary_- : GE[ R ]   = Neg.make[ R ]( this )
+// def bitNot : GE	         = BitNot.make( this )
+   def abs : GE[ R ]       = Abs.make [ R ](  this )
+// def toFloat : GE	         = UnOp.make( 'asFloat, this )
+// def toInteger : GE	      = UnOp.make( 'asInteger, this )
+   def ceil : GE[ R ]      = Ceil.make[ R ]( this )
+   def floor : GE[ R ]     = Floor.make[ R ]( this )
+   def frac : GE[ R ]      = Frac.make[ R ]( this )
+   def signum : GE[ R ]    = Signum.make[ R ]( this )
+   def squared : GE[ R ]   = Squared.make[ R ]( this )
+   def cubed : GE[ R ]     = Cubed.make[ R ]( this )
+   def sqrt : GE[ R ]      = Sqrt.make[ R ]( this )
+   def exp : GE[ R ]       = Exp.make[ R ]( this )
+   def reciprocal : GE[ R ]= Reciprocal.make[ R ]( this )
+   def midicps : GE[ R ]   = Midicps.make[ R ]( this )
+   def cpsmidi : GE[ R ]   = Cpsmidi.make[ R ]( this )
+   def midiratio : GE[ R ] = Midiratio.make[ R ]( this )
+   def ratiomidi : GE[ R ] = Ratiomidi.make[ R ]( this )
+   def dbamp : GE[ R ]     = Dbamp.make[ R ]( this )
+   def ampdb : GE[ R ]     = Ampdb.make[ R ]( this )
+   def octcps : GE[ R ]    = Octcps.make[ R ]( this )
+   def cpsoct : GE[ R ]    = Cpsoct.make[ R ]( this )
+   def log : GE[ R ]       = Log.make[ R ]( this )
+   def log2 : GE[ R ]      = Log2.make[ R ]( this )
+   def log10 : GE[ R ]     = Log10.make[ R ]( this )
+   def sin : GE[ R ]       = Sin.make[ R ]( this )
+   def cos : GE[ R ]       = Cos.make[ R ]( this )
+   def tan : GE[ R ]       = Tan.make[ R ]( this )
+   def asin : GE[ R ]      = Asin.make[ R ]( this )
+   def acos : GE[ R ]      = Acos.make[ R ]( this )
+   def atan : GE[ R ]      = Atan.make[ R ]( this )
+   def sinh : GE[ R ]      = Sinh.make[ R ]( this )
+   def cosh : GE[ R ]      = Cosh.make[ R ]( this )
+   def tanh : GE[ R ]      = Tanh.make[ R ]( this )
+// def rand : GE              = UnOp.make( 'rand, this )
+// def rand2 : GE             = UnOp.make( 'rand2, this )
+// def linrand : GE           = UnOp.make( 'linrand, this )
+// def bilinrand : GE         = UnOp.make( 'bilinrand, this )
+// def sum3rand : GE          = UnOp.make( 'sum3rand, this )
+   def distort : GE[ R ]   = Distort.make[ R ]( this )
+   def softclip : GE[ R ]  = Softclip.make[ R ]( this )
+// def coin : GE              = UnOp.make( 'coin, this )
+// def even : GE              = UnOp.make( 'even, this )
+// def odd : GE               = UnOp.make( 'odd, this )
+// def rectWindow : GE        = UnOp.make( 'rectWindow, this )
+// def hanWindow : GE         = UnOp.make( 'hanWindow, this )
+// def welWindow : GE         = UnOp.make( 'sum3rand, this )
+// def triWindow : GE         = UnOp.make( 'triWindow, this )
+   def ramp : GE[ R ]      = Ramp.make[ R ]( this )
+   def scurve : GE[ R ]    = Scurve.make[ R ]( this )
+// def isPositive : GE        = UnOp.make( 'isPositive, this )
+// def isNegative : GE        = UnOp.make( 'isNegative, this )
+// def isStrictlyPositive : GE= UnOp.make( 'isStrictlyPositive, this )
+// def rho : GE               = UnOp.make( 'rho, this )
+// def theta : GE             = UnOp.make( 'theta, this )
 
    import BinaryOp._
 
@@ -270,136 +270,101 @@ trait GE[ R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* wi
 
    def *[ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Times, b )
 
-//// def div( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = IDiv.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def / /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Div.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def % /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Mod.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def === /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Eq.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def !== /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Neq.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def < /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Lt.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def > /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Gt.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def <= /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Leq.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def >= /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Geq.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def min /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Min.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
+// def div( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = IDiv.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+
+   def / [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Div, b )
+
+   def % [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Mod, b )
+
+   def === [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Eq, b )
+
+   def !== [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Neq, b )
+
+   def < [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Lt, b )
+
+   def > [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Gt, b )
+
+   def <= [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Leq, b )
+
+   def >= [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Geq, b )
+
+   def min [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Min, b )
+
    def max[ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Max, b )
 
-//   def & /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      BitAnd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def | /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      BitOr.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def ^ /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      BitXor.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//// def Lcm( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = Lcm.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//// def Gcd( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = Gcd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def round /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Round.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def roundup /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Roundup.make /*[ R, S, T ]*/( /* r.out,*/ this, b ) // sclang uses camel case instead
-//
-//   def trunc /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Trunc.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def atan2 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Atan2.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def hypot /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Hypot.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def hypotx /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Hypotx.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def pow /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Pow.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//// def <<( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE       = <<.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//// def >>( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE       = >>.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//// def unsgnRghtShift( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE = UnsgnRghtShift.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//// def fill( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE     = Fill.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def ring1 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Ring1.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def ring2 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Ring2.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def ring3 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Ring3.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def ring4 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Ring4.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def difsqr /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Difsqr.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def sumsqr /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Sumsqr.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def sqrsum /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Sqrsum.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def sqrdif /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Sqrdif.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def absdif /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Absdif.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def thresh /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Thresh.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def amclip /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Amclip.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def scaleneg /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Scaleneg.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def clip2 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Clip2.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def excess /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Excess.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def fold2 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Fold2.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def wrap2 /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Wrap2.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   def firstarg /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Firstarg.make /*[ R, S, T ]*/( /* r.out,*/ this, b ) // sclang uses camel case instead
-//
-//// def rrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE    = Rrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//// def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
-//   // other ugens
-////   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = {
-////      val rate = Rate.highest( a.outputs.map( _.rate ))
-////      simplify( for( List( ax, sl, sh, dl, dh ) <- expand( a, srcLo, srcHi, dstLo, dstHi ))
-////         yield LinLin( rate, ax, sl, sh, dl, dh ))
-////   }
-//
+   def & [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( BitAnd, b )
+
+   def | [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( BitOr, b )
+
+   def ^ [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( BitXor, b )
+
+// def Lcm( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = Lcm.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+// def Gcd( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = Gcd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+
+   def round [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Round, b )
+
+   def roundup [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Roundup, b )
+
+   def trunc [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Trunc, b )
+
+   def atan2 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Atan2, b )
+
+   def hypot [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Hypot, b )
+
+   def hypotx [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Hypotx, b )
+
+   def pow [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Pow, b )
+
+// def <<( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE       = <<.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+// def >>( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE       = >>.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+// def unsgnRghtShift( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE = UnsgnRghtShift.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+// def fill( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE     = Fill.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+
+   def ring1 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Ring1, b )
+
+   def ring2 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Ring2, b )
+
+   def ring3 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Ring3, b )
+
+   def ring4 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Ring4, b )
+
+   def difsqr [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Difsqr, b )
+
+   def sumsqr [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Sumsqr, b )
+
+   def sqrsum [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Sqrsum, b )
+
+   def sqrdif [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Sqrdif, b )
+
+   def absdif [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Absdif, b )
+
+   def thresh [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Thresh, b )
+
+   def amclip [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Amclip, b )
+
+   def scaleneg [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Scaleneg, b )
+
+   def clip2 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Clip2, b )
+
+   def excess [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Excess, b )
+
+   def fold2 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Fold2, b )
+
+   def wrap2 [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Wrap2, b )
+
+   def firstarg [ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Firstarg, b )
+
+// def rrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE    = Rrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+// def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+
+   // other ugens
+//   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE = {
+//      val rate = Rate.highest( a.outputs.map( _.rate ))
+//      simplify( for( List( ax, sl, sh, dl, dh ) <- expand( a, srcLo, srcHi, dstLo, dstHi ))
+//         yield LinLin( rate, ax, sl, sh, dl, dh ))
+//   }
+
+// BBB
 //   def linlin( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) : AnyGE = Rate.highest( this ) match {
 //      case `demand` => (this - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
 ////      case r => LinLin.make /*[ R, S, T ]*/( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX

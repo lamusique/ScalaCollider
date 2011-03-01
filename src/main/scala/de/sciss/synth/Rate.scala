@@ -28,8 +28,6 @@
 
 package de.sciss.synth
 
-import ugen.MulAdd
-
 /**
  *    @version 0.12, 28-Dec-10
  */
@@ -142,32 +140,3 @@ sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] extends MaybeRateOrder
 
 //   def getOrElse( r: => R, s: => S ) : T = out
 }
-//trait RateRelations {
-////   implicit val audioImp   = audio
-////   implicit val controlImp = control
-////   implicit val scalarImp  = scalar
-////   implicit val demandImp  = demand
-//
-////   type audio     = audio.type
-////   type control   = control.type
-////   type scalar    = scalar.type
-////   type demand    = demand.type
-//
-//////   implicit val demandGtDemand:   HigherRate[ demand,  demand  ] = new HigherRate.Impl( demand,  demand  )
-////   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new HigherRate.Impl[ demand, audio ]( demand,  audio   )
-////   implicit val demandGtControl:  HigherRate[ demand,  control ] = new HigherRate.Impl[ demand, control ]( demand,  control )
-////   implicit val demandGtScalar:   HigherRate[ demand,  scalar  ] = new HigherRate.Impl[ demand, scalar ]( demand,  scalar  )
-//////   implicit val audioGtAudio:     HigherRate[ audio,   audio   ] = new HigherRate.Impl( audio,   audio   )
-////   implicit val audioGtControl:   HigherRate[ audio,   control ] = new HigherRate.Impl[ audio, control ]( audio,   control )
-////   implicit val audioGtScalar:    HigherRate[ audio,   scalar  ] = new HigherRate.Impl[ audio, scalar ]( audio,   scalar  )
-//////   implicit val controlGtControl: HigherRate[ control, control ] = new HigherRate.Impl( control, control )
-////   implicit val controlGtScalar:  HigherRate[ control, scalar  ] = new HigherRate.Impl[ control, scalar ]( control, scalar  )
-//////   implicit val scalarGtScalar:   HigherRate[ scalar,  scalar  ] = new HigherRate.Impl( scalar,  scalar  )
-//
-////   implicit def rateOrder1[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrder.Impl[ R, S, R ]( rel.rate1, rel.rate2, rel.rate1 )
-////   implicit def rateOrder2[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrder.Impl[ R, S, S ]( rel.rate2, rel.rate1, rel.rate1 )
-////   implicit val rateOrder3 : RateOrder[ scalar, scalar, scalar ] = new RateOrder.Impl[ scalar, scalar, scalar ]( scalar, scalar, scalar )
-////   implicit val rateOrder4 : RateOrder[ control, control, control ] = new RateOrder.Impl[ control, control, control ]( control, control, control )
-////   implicit val rateOrder5 : RateOrder[ audio, audio, audio ] = new RateOrder.Impl[ audio, audio, audio ]( audio, audio, audio )
-////   implicit val rateOrder6 : RateOrder[ demand, demand, demand ] = new RateOrder.Impl[ demand, demand, demand ]( demand, demand, demand )
-//}

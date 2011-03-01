@@ -105,9 +105,9 @@ object MulAddUGen {
 //extends SingleOutUGen( inputs )
 
 /**
- *    Unary operations are generally constructed by calling one of the methods of <code>GEOps</code>.
+ *    Unary operations are generally constructed by calling one of the methods of <code>GE</code>.
  *
- *    @see  GEOps
+ *    @see  GE
  *    @see  BinaryOpUGen
  */
 object UnaryOp {

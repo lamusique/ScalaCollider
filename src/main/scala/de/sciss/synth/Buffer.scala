@@ -28,7 +28,7 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{ OSCBundle, OSCMessage, OSCPacket }
+import de.sciss.osc.{ OSCBundle, OSCPacket }
 import de.sciss.synth.{ Completion => Comp, play => scplay }
 import de.sciss.synth.io.{ AudioFileType, SampleFormat }
 import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferAllocReadMessage,
@@ -36,7 +36,7 @@ import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferA
              OSCBufferQueryMessage, OSCBufferSetMessage, OSCBufferSetnMessage, OSCBufferWriteMessage,
              OSCBufferZeroMessage }
 import Model._
-import ugen.{BufRateScale, PlayBuf}
+import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
 
 /**
  * 	@version	0.18, 17-May-10
@@ -317,6 +317,7 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    // ---- utility methods ----
+// BBB
 //   def play : Synth = play()
 //   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
 //      scplay( server, out ) { // working around nasty compiler bug

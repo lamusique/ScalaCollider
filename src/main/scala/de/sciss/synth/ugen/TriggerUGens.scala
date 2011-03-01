@@ -869,47 +869,47 @@ case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control] with HasSi
 //   }
 //}
 //case class FreeUGen(trig: UGenIn, node: UGenIn) extends SingleOutUGen(IIdxSeq(trig, node)) with HasSideEffect with ControlRated
-///**
-// * A UGen that, when its input UGen is finished, frees enclosing synth.
-// * This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
-// * of providing a trigger signal it reads directly the done flag of an
-// * appropriate ugen (such as `Line` or `PlayBuf`).
-// *
-// * This UGen outputs its input signal for convenience.
-// *
-// * @see [[de.sciss.synth.ugen.Free]]
-// * @see [[de.sciss.synth.ugen.FreeSelf]]
-// * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
-// * @see [[de.sciss.synth.ugen.Done]]
-// */
-//object FreeSelfWhenDone {
-//
-///**
-// * @param src             the input UGen which when finished will trigger the action.
-// */
-//def kr(src: GE[UGenProxy[ UGen with HasDoneFlag]]) = apply(src)
-//}
-///**
-// * A UGen that, when its input UGen is finished, frees enclosing synth.
-// * This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
-// * of providing a trigger signal it reads directly the done flag of an
-// * appropriate ugen (such as `Line` or `PlayBuf`).
-// *
-// * This UGen outputs its input signal for convenience.
-// *
-// * @param src             the input UGen which when finished will trigger the action.
-// *
-// * @see [[de.sciss.synth.ugen.Free]]
-// * @see [[de.sciss.synth.ugen.FreeSelf]]
-// * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
-// * @see [[de.sciss.synth.ugen.Done]]
-// */
-//case class FreeSelfWhenDone(src: GE[UGenProxy[ AnyUGenIn with HasDoneFlag]]) extends SingleOutUGenSource[FreeSelfWhenDoneUGen] with HasSideEffect with ControlRated {
-//   protected def expandUGens = {
-//      val _src: IIdxSeq[UGenProxy[ UGen with HasDoneFlag]] = src.expand
-//      IIdxSeq.tabulate(_src.size)(i => FreeSelfWhenDoneUGen(_src(i)))
-//   }
-//}
+/**
+* A UGen that, when its input UGen is finished, frees enclosing synth.
+* This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
+* of providing a trigger signal it reads directly the done flag of an
+* appropriate ugen (such as `Line` or `PlayBuf`).
+*
+* This UGen outputs its input signal for convenience.
+*
+* @see [[de.sciss.synth.ugen.Free]]
+* @see [[de.sciss.synth.ugen.FreeSelf]]
+* @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
+* @see [[de.sciss.synth.ugen.Done]]
+*/
+object FreeSelfWhenDone {
+
+/**
+* @param src             the input UGen which when finished will trigger the action.
+*/
+def kr(src: AnyGE with HasDoneFlag) = apply(src)
+}
+/**
+* A UGen that, when its input UGen is finished, frees enclosing synth.
+* This is essentially a shortcut for `FreeSelf.kr( Done.kr( src ))`, so instead
+* of providing a trigger signal it reads directly the done flag of an
+* appropriate ugen (such as `Line` or `PlayBuf`).
+*
+* This UGen outputs its input signal for convenience.
+*
+* @param src             the input UGen which when finished will trigger the action.
+*
+* @see [[de.sciss.synth.ugen.Free]]
+* @see [[de.sciss.synth.ugen.FreeSelf]]
+* @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
+* @see [[de.sciss.synth.ugen.Done]]
+*/
+case class FreeSelfWhenDone(src: AnyGE with HasDoneFlag) extends SingleOutUGenSource[control] with HasSideEffect with ControlRated {
+   protected def expandUGens = {
+      val _src: IIdxSeq[UGenIn] = src.expand
+      IIdxSeq.tabulate(_src.size)(i => new SingleOutUGen("FreeSelfWhenDone", control, IIdxSeq( _src(i))))
+   }
+}
 //case class FreeSelfWhenDoneUGen(src: UGenProxy[ UGen with HasDoneFlag]) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
 ///**
 // * A UGen that, when its input UGen is finished, pauses enclosing synth.

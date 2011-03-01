@@ -26,6 +26,7 @@
 // *  Changelog:
 // *    28-Jan-10   integrated IEnv
 // */
+// BBB
 //
 //package de.sciss.synth
 //

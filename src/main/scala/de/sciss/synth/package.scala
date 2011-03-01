@@ -135,38 +135,12 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //   implicit def intSeqToGE( x: Seq[ Int ])       = GESeq[ scalar, Constant ]( x.map( i => Constant( i.toFloat ))( breakOut ) : IIdxSeq[ Constant ])
 //   implicit def doubleSeqToGE( x: Seq[ Double ]) = GESeq[ scalar, Constant ]( x.map( d => Constant( d.toFloat ))( breakOut )  : IIdxSeq[ Constant ])
 
-   // control mapping
-//   implicit def intFloatControlSet( tup: (Int, Float) )                    = SingleControlSetMap( tup._1, tup._2 )
-//   implicit def intIntControlSet( tup: (Int, Int) )                        = SingleControlSetMap( tup._1, tup._2.toFloat )
-//   implicit def intDoubleControlSet( tup: (Int, Double) )                  = SingleControlSetMap( tup._1, tup._2.toFloat )
-//   implicit def stringFloatControlSet( tup: (String, Float) )              = SingleControlSetMap( tup._1, tup._2 )
-//   implicit def stringIntControlSet( tup: (String, Int) )                  = SingleControlSetMap( tup._1, tup._2.toFloat )
-//   implicit def stringDoubleControlSet( tup: (String, Double) )            = SingleControlSetMap( tup._1, tup._2.toFloat )
-//   implicit def intFloatsControlSet( tup: (Int, IIdxSeq[ Float ]))         = MultiControlSetMap( tup._1, tup._2 )
-//   implicit def stringFloatsControlSet( tup: (String, IIdxSeq[ Float ]))   = MultiControlSetMap( tup._1, tup._2 )
-
-//   implicit def intIntControlKBus( tup: (Int, Int) )                 = SingleControlKBusMap( tup._1, tup._2 )
-//   implicit def stringIntControlKBus( tup: (String, Int) )           = SingleControlKBusMap( tup._1, tup._2 )
-//   implicit def intIntControlABus( tup: (Int, Int) )                 = SingleControlABusMap( tup._1, tup._2 )
-//   implicit def stringIntControlABus( tup: (String, Int) )           = SingleControlABusMap( tup._1, tup._2 )
-////   implicit def intIntIntControlBus( tup: (Int, Int, Int) )        = MultiControlBusMap( tup._1, tup._2, tup._3 )
-////   implicit def stringIntIntControlBus( tup: (String, Int, Int) )  = MultiControlBusMap( tup._1, tup._2, tup._3 )
-//   implicit def intKBusControlKBus( tup: (Int, ControlBus) )         = MultiControlKBusMap( tup._1, tup._2.index, tup._2.numChannels )
-//   implicit def stringKBusControlKBus( tup: (String, ControlBus) )   = MultiControlKBusMap( tup._1, tup._2.index, tup._2.numChannels )
-//   implicit def intABusControlABus( tup: (Int, AudioBus) )           = MultiControlABusMap( tup._1, tup._2.index, tup._2.numChannels )
-//   implicit def stringABusControlABus( tup: (String, AudioBus) )     = MultiControlABusMap( tup._1, tup._2.index, tup._2.numChannels )
-
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
    implicit def thunkToGraphFunction[ /*R <: Rate, S <: Rate,*/ T ]( thunk: => T )
       ( implicit view: T => AnyMulti /*, r: RateOrder[ control, R, S ] */) = new GraphFunction( thunk )
 
-//   // Misc
-//   implicit def stringToOption( x: String ) = Some( x )
-
    // Buffer convenience
-//   implicit def actionToCompletion( fun: Buffer => Unit ) : Buffer.Completion = Buffer.action( fun )
-//   import Buffer.{ Completion => Comp }
    def message[T]( msg: => OSCPacket ) = Completion[T]( Some( _ => msg ), None )
    def message[T]( msg: T => OSCPacket ) = Completion[T]( Some( msg ), None )
    def action[T]( action: => Unit ) = Completion[T]( None, Some( _ => action ))
@@ -175,16 +149,8 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
    def complete[T]( msg: T => OSCPacket, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
    def complete[T]( msg: => OSCPacket, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
    def complete[T]( msg: T => OSCPacket, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
-//   implicit def messageToCompletion[T]( msg: OSCPacket ) = message[T]( msg )
    implicit def messageToOption( msg: OSCPacket ) = Some( msg )
 
-   // Nodes
-//   implicit def intToNode( id: Int ) : Node = new Group( Server.default, id )
-//   implicit def serverToGroup( s: Server ) : Group = s.defaultGroup
-
-//  implicit def stringToStringOrInt( x: String ) = new StringOrInt( x )
-//  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
-  
    // explicit methods
 
 // we remove the overloading as it causes problems with the GE -> Multi conversion
