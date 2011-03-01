@@ -687,7 +687,7 @@ object Done {
 /**
 * @param src             the UGen to track
 */
-def kr(src: GE[Rate, UGenIn with HasDoneFlag]) = apply(src)
+def kr(src: AnyGE with HasDoneFlag) = apply(src)
 }
 /**
 * A UGen which monitors another UGen to see when it is finished.
@@ -702,10 +702,14 @@ def kr(src: GE[Rate, UGenIn with HasDoneFlag]) = apply(src)
 * @see [[de.sciss.synth.ugen.Line]]
 * @see [[de.sciss.synth.ugen.EnvGen]]
 */
-case class Done(src: GE[Rate, UGenIn with HasDoneFlag]) extends SingleOutUGenSource[control, SingleOutUGen] with HasSideEffect with ControlRated {
+case class Done(src: AnyGE with HasDoneFlag) extends SingleOutUGenSource[control] with HasSideEffect with ControlRated {
    protected def expandUGens = {
-      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
-      IIdxSeq.tabulate(_src.size)(i => new SingleOutUGen("Done", control, IIdxSeq( _src(i))))
+      val _src: IIdxSeq[UGenIn] = src.expand
+      _src.headOption match {
+         case Some( _src_ch ) => IIdxSeq( new SingleOutUGen("Done", control, IIdxSeq( _src_ch )))
+         case None => Console.err.println( "Warning: Done omitted due to zero-outputs input" ); IIdxSeq.empty
+      }
+//      IIdxSeq.tabulate(_src.size)(i => new SingleOutUGen("Done", control, IIdxSeq( _src(i))))
    }
 }
 //case class DoneUGen(src: UGenIn with HasDoneFlag) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
@@ -757,39 +761,41 @@ case class Done(src: GE[Rate, UGenIn with HasDoneFlag]) extends SingleOutUGenSou
 //   }
 //}
 //case class PauseUGen(gate: UGenIn, node: UGenIn) extends SingleOutUGen(IIdxSeq(gate, node)) with HasSideEffect with ControlRated
-///**
-// * A UGen that, when triggered, frees enclosing synth.
-// * It frees the enclosing synth when the input signal crosses from non-positive to positive.
-// *
-// * This UGen outputs its input signal for convenience.
-// *
-// * @see [[de.sciss.synth.ugen.Free]]
-// * @see [[de.sciss.synth.ugen.PauseSelf]]
-// */
-//object FreeSelf {
-//
-///**
-// * @param trig            the input signal which will trigger the action.
-// */
-//def kr(trig: AnyGE) = apply(trig)
-//}
-///**
-// * A UGen that, when triggered, frees enclosing synth.
-// * It frees the enclosing synth when the input signal crosses from non-positive to positive.
-// *
-// * This UGen outputs its input signal for convenience.
-// *
-// * @param trig            the input signal which will trigger the action.
-// *
-// * @see [[de.sciss.synth.ugen.Free]]
-// * @see [[de.sciss.synth.ugen.PauseSelf]]
-// */
-//case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[FreeSelfUGen] with HasSideEffect with ControlRated {
-//   protected def expandUGens = {
-//      val _trig: IIdxSeq[UGenIn] = trig.expand
-//      IIdxSeq.tabulate(_trig.size)(i => FreeSelfUGen(_trig(i)))
-//   }
-//}
+/**
+* A UGen that, when triggered, frees enclosing synth.
+* It frees the enclosing synth when the input signal crosses from non-positive to positive.
+*
+* This UGen outputs its input signal for convenience.
+*
+* @see [[de.sciss.synth.ugen.Free]]
+* @see [[de.sciss.synth.ugen.PauseSelf]]
+*/
+object FreeSelf {
+
+/**
+* @param trig            the input signal which will trigger the action.
+*/
+def kr(trig: AnyGE) = apply(trig)
+}
+/**
+* A UGen that, when triggered, frees enclosing synth.
+* It frees the enclosing synth when the input signal crosses from non-positive to positive.
+*
+* This UGen outputs its input signal for convenience.
+*
+* @param trig            the input signal which will trigger the action.
+*
+* @see [[de.sciss.synth.ugen.Free]]
+* @see [[de.sciss.synth.ugen.PauseSelf]]
+*/
+case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control] with HasSideEffect with ControlRated {
+   protected def expandUGens = {
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _exp_sz = _trig.size
+//      if( _exp_sz == 0 ) Console.err.println( "Warning: FreeSelf omitted due to zero-outputs input" ); IIdxSeq.empty
+      IIdxSeq.tabulate(_exp_sz)(i => new SingleOutUGen("FreeSelf", control, IIdxSeq(_trig(i))))
+   }
+}
 //case class FreeSelfUGen(trig: UGenIn) extends SingleOutUGen(IIdxSeq(trig)) with HasSideEffect with ControlRated
 ///**
 // * A UGen that, when triggered, pauses enclosing synth.

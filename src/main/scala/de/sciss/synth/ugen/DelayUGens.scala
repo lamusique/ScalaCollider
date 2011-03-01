@@ -214,7 +214,7 @@ object BufRateScale {
    def ir(buf: AnyGE) = apply(scalar, buf)
    def kr(buf: AnyGE) = apply(control, buf)
 }
-case class BufRateScale[ R <: Rate ](rate: R, buf: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
+case class BufRateScale[ R <: Rate ](rate: R, buf: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _buf: IIdxSeq[UGenIn] = buf.expand
 //      IIdxSeq.tabulate(_buf.size)(i => BufRateScaleUGen(rate, _buf(i)))
@@ -353,7 +353,7 @@ def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, st
 * @see [[de.sciss.synth.ugen.BufRateScale]]
 * @see [[de.sciss.synth.ugen.BufFrames]]
 */
-case class PlayBuf[ R <: Rate ](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[R, MultiOutUGen[ R ]] with HasSideEffect with HasDoneFlag {
+case class PlayBuf[ R <: Rate ](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[R] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
       val _buf: IIdxSeq[AnyUGenIn] = buf.expand
       val _speed: IIdxSeq[AnyUGenIn] = speed.expand
@@ -746,7 +746,7 @@ object CombN {
    def ar(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[audio](audio, in, maxDelayTime, delayTime, decayTime)
    def kr(in: AnyGE, maxDelayTime: AnyGE = 0.2f, delayTime: AnyGE = 0.2f, decayTime: AnyGE = 1.0f) = apply[control](control, in, maxDelayTime, delayTime, decayTime)
 }
-case class CombN[ R <: Rate ](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
+case class CombN[ R <: Rate ](rate: R, in: AnyGE, maxDelayTime: AnyGE, delayTime: AnyGE, decayTime: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _maxDelayTime: IIdxSeq[UGenIn] = maxDelayTime.expand

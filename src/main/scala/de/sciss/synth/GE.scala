@@ -38,35 +38,35 @@ trait Expands[ +R ] {
 }
 
 object Multi {
-   implicit def flatten[ R <: Rate, U <: UGenIn ]( m: Multi[ R, GE[ R, U ]]) : GE[ R, U ] = Flatten( m )
+   implicit def flatten[ R <: Rate ]( m: Multi[ R, GE[ R ]]) : GE[ R ] = Flatten( m )
 
 //   def joint[ G <: AnyGE ]( g: G ) = Multi.Joint( g )
 //   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
 //   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
 
-   case class Flatten[ R <: Rate, U <: UGenIn ]( m: Multi[ R, GE[ R, U ]]) extends GE[ R, U ] {
+   case class Flatten[ R <: Rate ]( m: Multi[ R, GE[ R ]]) extends GE[ R ] {
       def rate = m.rate
       override def toString = "Multi.flatten(" + m + ")"
-      def expand : IIdxSeq[ U ] = {
+      def expand : IIdxSeq[ UGenIn ] = {
          m.mexpand.flatMap( _.expand )
       }
    }
 
-   case class Joint[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) extends Multi[ R, G ] {
+   case class Joint[ R <: Rate, G <: GE[ R ]]( g: G ) extends Multi[ R, G ] {
       def rate = g.rate
       def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
    }
 
-   case class Disjoint[ R <: Rate, U <: UGenIn ]( g: GE[ R, U ]) extends Multi[ R, GE[ R, U ]] {
+   case class Disjoint[ R <: Rate ]( g: GE[ R ]) extends Multi[ R, GE[ R ]] {
       def rate = g.rate
-      def mexpand : IIdxSeq[ GE[ R, U ]] = {
+      def mexpand : IIdxSeq[ GE[ R ]] = {
          implicit val r = g.rate
-         g.expand.map( new WrapUGenIn[ R, U ]( _ ))
+         g.expand.map( new WrapUGenIn[ R ]( _ ))
       }
    }
 
-   private class WrapUGenIn[ R <: Rate, U <: UGenIn ]( in: U )( implicit val rate: R ) extends GE[ R, U ] {
-      def expand: IIdxSeq[ U ] = IIdxSeq( in )
+   private class WrapUGenIn[ R <: Rate ]( in: UGenIn )( implicit val rate: R ) extends GE[ R ] {
+      def expand: IIdxSeq[ UGenIn ] = IIdxSeq( in )
    }
 
 //   case class Group( elems: IIdxSeq[ AnyGE ]) extends AnyGE {
@@ -74,7 +74,7 @@ object Multi {
 //   }
 }
 
-trait Multi[ R <: Rate, +G <: GE[ R, UGenIn ]] {
+trait Multi[ R <: Rate, +G <: GE[ R ]] {
    def mexpand: IIdxSeq[ G ]
    def rate: R
 }
@@ -90,14 +90,14 @@ trait Multi[ R <: Rate, +G <: GE[ R, UGenIn ]] {
  */
 object GE {
    // XXX is the ever in effect?
-   implicit def bubbleGen[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
-   implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
+   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
+   implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ R, GE[ R ]] = Multi.Joint( g )
 
-   implicit def fromSeq[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]])( implicit rate: R  ) : GE[ R, U ] = {
+   implicit def fromSeq[ R <: Rate ]( x: Seq[ GE[ R ]])( implicit rate: R ) : GE[ R ] = {
       x match {
          case Seq( single ) => single // Multi.Joint( single )
 //         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-         case _ => GESeq[ R, U ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+         case _ => GESeq[ R ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
       }
 //      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
 //      outputs match {
@@ -107,13 +107,14 @@ object GE {
 //      }
    }
 }
-trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U ]] */ {
+trait GE[ R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* with Multi[ GE[ R, U ]] */ {
    ge =>
 
 //   type Rate = R
 
    def rate: R
 
+//   def expand: IIdxSeq[ U ]
 //   def expand: IIdxSeq[ U ]
 //   final def mexpand = IIdxSeq( ge )
 
@@ -199,7 +200,7 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
    import UnaryOp._
 
    // unary ops
-   def unary_- : GE[ R, UGenIn ]   = Neg.make /*[ R ]*/( rate, this )
+   def unary_- : GE[ R ]   = Neg.make /*[ R ]*/( rate, this )
 //// def bitNot : GE	         = BitNot.make( this )
 //   def abs : GE[ /* R,*/ UGenIn /*[ R ]*/]       = Abs.make /*[ R ]*/( rate, this )
 //// def toFloat : GE	         = UnOp.make( 'asFloat, this )
@@ -213,7 +214,7 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
 //   def sqrt : GE[ /* R,*/ UGenIn /*[ R ]*/]      = Sqrt.make /*[ R ]*/( rate, this )
 //   def exp : GE[ /* R,*/ UGenIn /*[ R ]*/]       = Exp.make /*[ R ]*/( rate, this )
 //   def reciprocal : GE[ /* R,*/ UGenIn /*[ R ]*/]= Reciprocal.make /*[ R ]*/( rate, this )
-   def midicps : GE[ R, UGenIn ]   = Midicps.make[ R ]( rate, this )
+   def midicps : GE[ R ]   = Midicps.make[ R ]( rate, this )
 //   def cpsmidi : GE[ /*R,*/ UGenIn /*[ R ]*/]   = Cpsmidi.make /*[ R ]*/( rate, this )
 //   def midiratio : GE[ /*R,*/ UGenIn /*[ R ]*/] = Midiratio.make /*[ R ]*/( rate, this )
 //   def ratiomidi : GE[ /*R,*/ UGenIn /*[ R ]*/] = Ratiomidi.make /*[ R ]*/( rate, this )
@@ -258,16 +259,16 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
    import BinaryOp._
 
    // binary ops
-   private def binOp[ S <: Rate, T <: Rate ]( op: BinaryOp.Op, b: GE[ S, UGenIn ])
-                                            ( implicit r: MaybeRateOrder[ R, S, T ]) : GE[ T, UGenIn ] =
+   private def binOp[ S <: Rate, T <: Rate ]( op: BinaryOp.Op, b: GE[ S ])
+                                            ( implicit r: MaybeRateOrder[ R, S, T ]) : GE[ T ] =
       op.make( r.getOrElse( this.rate, b.rate ), this, b )
 
-   def +[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Plus, b )
+   def +[ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Plus, b )
 //      Plus.make /*[ R, S, T ]*/( r.getOrElse( this.rate, b.rate ), this, b )
    
-   def -[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Minus, b )
+   def -[ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Minus, b )
 
-   def *[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Times, b )
+   def *[ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Times, b )
 
 //// def div( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = IDiv.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 //
@@ -298,8 +299,7 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
 //   def min /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
 //      Min.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 //
-   def max[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn /*[ S ]*/])( implicit r: RateOrder[ R, S, T ]) =
-      Max.make[ R, S, T ]( r.out, this, b )
+   def max[ S <: Rate, T <: Rate ]( b: GE[ S ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Max, b )
 
 //   def & /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
 //      BitAnd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )

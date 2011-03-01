@@ -17,7 +17,7 @@ object WhiteNoise {
    def ar: WhiteNoise[audio] = ar()
    def ar(mul: AnyGE = 1.0f) = apply[audio](audio, mul)
 }
-case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSource[R, UGenIn] with UsesRandSeed {
+case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
    protected def expandUGens = {
       val _mul: IIdxSeq[UGenIn] = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(rate, new SingleOutUGen("WhiteNoise", rate, IIdxSeq.empty), _mul(i)))
@@ -240,7 +240,7 @@ object LFNoise1 {
    def ar: LFNoise1[audio] = ar()
    def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
 }
-case class LFNoise1[ R <: Rate ](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] with UsesRandSeed {
+case class LFNoise1[ R <: Rate ](rate: R, freq: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
    protected def expandUGens = {
       val _freq: IIdxSeq[UGenIn] = freq.expand
       IIdxSeq.tabulate(_freq.size)(i => new SingleOutUGen("LFNoise1", rate, IIdxSeq( _freq(i))))
@@ -260,7 +260,7 @@ case class LFNoise1[ R <: Rate ](rate: R, freq: AnyGE) extends SingleOutUGenSour
 //   }
 //}
 //case class LFNoise2UGen(rate: Rate, freq: UGenIn) extends SingleOutUGen(IIdxSeq(freq)) with UsesRandSeed
-case class Rand(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) extends SingleOutUGenSource[scalar, SingleOutUGen] with ScalarRated with UsesRandSeed {
+case class Rand(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) extends SingleOutUGenSource[scalar] with ScalarRated with UsesRandSeed {
    protected def expandUGens = {
       val _lo: IIdxSeq[UGenIn] = lo.expand
       val _hi: IIdxSeq[UGenIn] = hi.expand

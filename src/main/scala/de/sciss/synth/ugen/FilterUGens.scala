@@ -77,12 +77,12 @@ object Lag {
  * @param in              input signal.
  * @param time            60 dB lag time in seconds.
  */
-def kr(in: GE[control, UGenIn], time: AnyGE = 0.1f) = apply(control, in, time)
+def kr(in: GE[control], time: AnyGE = 0.1f) = apply(control, in, time)
 /**
  * @param in              input signal.
  * @param time            60 dB lag time in seconds.
  */
-def ar(in: GE[audio, UGenIn], time: AnyGE = 0.1f) = apply(audio, in, time)
+def ar(in: GE[audio], time: AnyGE = 0.1f) = apply(audio, in, time)
 }
 /**
  * An exponential lag UGen.
@@ -98,7 +98,7 @@ def ar(in: GE[audio, UGenIn], time: AnyGE = 0.1f) = apply(audio, in, time)
  * @see [[de.sciss.synth.ugen.Lag2]]
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
-case class Lag[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], time: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
+case class Lag[ R <: Rate ](rate: R, in: GE[ R ], time: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _time: IIdxSeq[UGenIn] = time.expand
@@ -797,10 +797,10 @@ case class Lag[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], time: AnyGE) extends S
 //}
 //case class APFUGen(rate: Rate, in: UGenIn, freq: UGenIn, radius: UGenIn) extends SingleOutUGen(IIdxSeq(in, freq, radius))
 object LPF {
-   def kr(in: GE[control, UGenIn], freq: AnyGE = 440.0f) = apply(control, in, freq)
-   def ar(in: GE[audio, UGenIn], freq: AnyGE = 440.0f) = apply(audio, in, freq)
+   def kr(in: GE[control], freq: AnyGE = 440.0f) = apply(control, in, freq)
+   def ar(in: GE[audio], freq: AnyGE = 440.0f) = apply(audio, in, freq)
 }
-case class LPF[ R <: Rate ](rate: R, in: GE[ R, UGenIn ], freq: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
+case class LPF[ R <: Rate ](rate: R, in: GE[ R ], freq: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _freq: IIdxSeq[UGenIn] = freq.expand

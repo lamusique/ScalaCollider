@@ -38,8 +38,8 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo
-//      test2
-      System.exit( 1 )
+      test2
+//      System.exit( 1 )
    }
 
    def printInfo {
@@ -54,17 +54,17 @@ object ScalaCollider {
 //      so.port = 44444
       Server.test( so.build ) { s =>
          println( "Booted." )
-         test( s )
+         test3( s )
       }
    }
 
-   def test3 {
-//      import ugen._
-//
-////      val g = SynthGraph { Out.ar( 0, SinOsc.ar( mce( 333 :: 444 :: Nil )))}
-//      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr ) + "test".ir }
-//      val u = g.expand
-   }
+//   def test3 {
+////      import ugen._
+////
+//////      val g = SynthGraph { Out.ar( 0, SinOsc.ar( mce( 333 :: 444 :: Nil )))}
+////      val g = SynthGraph { SinOsc.ar( "freq".kr, "phase".kr ) + "test".ir }
+////      val u = g.expand
+//   }
 
    def test( s: Server ) {
       import ugen._
@@ -95,11 +95,15 @@ object ScalaCollider {
 // harmonic swimming
 //      implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
 
-      val syn = play() {
+//      val syn = play() { }
+
+      val syn = (SynthDef( "test" ) {
          val f = 50       // fundamental frequency
          val p = 20       // number of partials per channel
-         val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
-         Mix.tabulate(p) { i =>
+//         val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
+         val offset = Line.kr(0, -0.02, 60 ) // causes sound to separate and fade
+         FreeSelf.kr( Done.kr( offset ))
+         var sig = Mix.tabulate(p) { i =>
               val sig = SinOsc.ar( f * (i+1) ) * // freq of partial
                   LFNoise1.kr(
                       List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate
@@ -108,14 +112,15 @@ object ScalaCollider {
                   ).max( 0 )   // clip negative amplitudes to zero
               sig // GE.bubble( sig )
           }
-      }
+         Out.ar( 0, sig )
+      }).play
    }
 
-   def test4( g: GE[audio, UGenIn]) = g + 33
+   def test4( g: GE[audio]) = g + 33
 //   def test5[ R <: Rate ]( g: GE[ R, UGenIn ]) : AnyGE = g + 33
    def test6( g: AnyGE ) : AnyGE = g + 33
-   def test7( g: GE[audio, UGenIn]) {
-      val h: GE[audio, UGenIn] = test4( g )
+   def test7( g: GE[audio]) {
+      val h: GE[audio] = test4( g )
 //      val i: GE[control, UGenIn] = test4( g )
    }
 

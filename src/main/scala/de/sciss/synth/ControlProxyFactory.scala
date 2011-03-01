@@ -113,7 +113,7 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ _ <: Rate, T ]
    protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen
 }
 
-trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R, AnyUGenIn ] /* extends RatedGE[ U ] */ {
+trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R ] /* extends RatedGE[ U ] */ {
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
    def displayName: String // YYY

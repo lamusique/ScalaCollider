@@ -68,7 +68,7 @@ object Constant {
  *    These constants are stored in a separate table of
  *    the synth graph.
  */
-case class Constant( value: Float ) extends GE[ scalar, Constant ] with UGenIn with ScalarRated {
+case class Constant( value: Float ) extends GE[ scalar ] with UGenIn with ScalarRated {
    import Constant._
    
    override def toString = value.toString

@@ -269,7 +269,7 @@ def kr(freq: AnyGE = 440.0f, phase: AnyGE = 0.0f) = apply[control](control, freq
  * @see [[de.sciss.synth.ugen.Osc]]
  * @see [[de.sciss.synth.ugen.FSinOsc]]
  */
-case class SinOsc[ R <: Rate ](rate: R, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] {
+case class SinOsc[ R <: Rate ](rate: R, freq: AnyGE, phase: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _freq: IIdxSeq[UGenIn] = freq.expand
       val _phase: IIdxSeq[UGenIn] = phase.expand
