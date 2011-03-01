@@ -77,12 +77,12 @@ object Lag {
  * @param in              input signal.
  * @param time            60 dB lag time in seconds.
  */
-def kr(in: GE[control], time: AnyGE = 0.1f) = apply(control, in, time)
+def kr(in: GE[control], time: AnyGE = 0.1f) = apply(in, time)
 /**
  * @param in              input signal.
  * @param time            60 dB lag time in seconds.
  */
-def ar(in: GE[audio], time: AnyGE = 0.1f) = apply(audio, in, time)
+def ar(in: GE[audio], time: AnyGE = 0.1f) = apply(in, time)
 }
 /**
  * An exponential lag UGen.
@@ -98,14 +98,14 @@ def ar(in: GE[audio], time: AnyGE = 0.1f) = apply(audio, in, time)
  * @see [[de.sciss.synth.ugen.Lag2]]
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
-case class Lag[ R <: Rate ](rate: R, in: GE[ R ], time: AnyGE) extends SingleOutUGenSource[R] {
+case class Lag[ R <: Rate ](/*rate: R,*/ in: GE[ R ], time: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _time: IIdxSeq[UGenIn] = time.expand
       val _sz_in = _in.size
       val _sz_time = _time.size
       val _exp_ = maxInt(_sz_in, _sz_time)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Lag", rate, IIdxSeq( _in(i.%(_sz_in)), _time(i.%(_sz_time)))))
+      IIdxSeq.tabulate(_exp_)(i => { val __in = _in(i.%(_sz_in)); new SingleOutUGen("Lag", __in.rate, IIdxSeq( __in, _time(i.%(_sz_time))))})
    }
 }
 //case class LagUGen(rate: Rate, in: UGenIn, time: UGenIn) extends SingleOutUGen(IIdxSeq(in, time))
@@ -797,17 +797,17 @@ case class Lag[ R <: Rate ](rate: R, in: GE[ R ], time: AnyGE) extends SingleOut
 //}
 //case class APFUGen(rate: Rate, in: UGenIn, freq: UGenIn, radius: UGenIn) extends SingleOutUGen(IIdxSeq(in, freq, radius))
 object LPF {
-   def kr(in: GE[control], freq: AnyGE = 440.0f) = apply(control, in, freq)
-   def ar(in: GE[audio], freq: AnyGE = 440.0f) = apply(audio, in, freq)
+   def kr(in: GE[control], freq: AnyGE = 440.0f) = apply(in, freq)
+   def ar(in: GE[audio], freq: AnyGE = 440.0f) = apply(in, freq)
 }
-case class LPF[ R <: Rate ](rate: R, in: GE[ R ], freq: AnyGE) extends SingleOutUGenSource[R] {
+case class LPF[ R <: Rate ](/*rate: R,*/ in: GE[ R ], freq: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       val _freq: IIdxSeq[UGenIn] = freq.expand
       val _sz_in = _in.size
       val _sz_freq = _freq.size
       val _exp_ = maxInt(_sz_in, _sz_freq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("LPF", rate, IIdxSeq( _in(i.%(_sz_in)), _freq(i.%(_sz_freq)))))
+      IIdxSeq.tabulate(_exp_)(i => { val __in = _in(i.%(_sz_in)); new SingleOutUGen("LPF", __in.rate, IIdxSeq( __in, _freq(i.%(_sz_freq))))})
    }
 }
 //case class LPFUGen(rate: Rate, in: UGenIn, freq: UGenIn) extends SingleOutUGen(IIdxSeq(in, freq))
