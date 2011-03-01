@@ -58,16 +58,16 @@ sealed trait control extends Rate { final val id = 1; final val methodName = "kr
 sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
 sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
 case object scalar  extends scalar {
-   implicit val rate = scalar
+//   implicit val rate = scalar
 }
 case object control extends control {
-   implicit val rate = control
+//   implicit val rate = control
 }
 case object audio extends audio {
-   implicit val rate = audio
+//   implicit val rate = audio
 }
 case object demand extends demand {
-   implicit val rate = demand
+//   implicit val rate = demand
 }
 
 //case object scalar extends Rate {

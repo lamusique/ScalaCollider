@@ -93,11 +93,11 @@ object GE {
    implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
    implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ /* R, */ GE[ R ]] = Multi.Joint( g )
 
-   implicit def fromSeq[ R <: Rate ]( x: Seq[ GE[ R ]])( implicit rate: R ) : GE[ R ] = {
+   implicit def fromSeq[ R <: Rate ]( x: Seq[ GE[ R ]])/* ( implicit rate: R ) */ : GE[ R ] = {
       x match {
          case Seq( single ) => single // Multi.Joint( single )
 //         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-         case _ => GESeq[ R ]( rate, x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+         case _ => GESeq[ R ]( /* rate, */ x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
       }
 //      val outputs: IIdxSeq[ UGenIn ] = x.flatMap( _.expand )( breakOut )
 //      outputs match {
