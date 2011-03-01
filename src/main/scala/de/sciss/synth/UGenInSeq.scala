@@ -66,7 +66,6 @@ object GESeq {
    implicit def toIndexedSeq[ R <: Rate, U <: UGenIn ]( g: GESeq[ R ]) : IIdxSeq[ GE[ R ]] = g.elems
 }
 case class GESeq[ R <: Rate ]( rate: R, elems: IIdxSeq[ GE[ R ]]) extends GE[ R ] {
-//   def rate = Rate.highest( elems.map( _.rate ): _* ) // XXX THIS IS PROBLEMATIC !!!
    def expand : IIdxSeq[ UGenIn ] = elems.flatMap( _.expand )
 //   def expand = this
 //   def apply( idx: Int ) = elems( idx )

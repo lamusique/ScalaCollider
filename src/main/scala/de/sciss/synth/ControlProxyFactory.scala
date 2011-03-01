@@ -137,9 +137,9 @@ extends ControlProxyLike[ R, Impl ] {
    final def expand: IIdxSeq[ AnyUGenIn /* [ R ] */ ] = outputRates.zipWithIndex.map(
       tup => ControlUGenOutProxy /* [ R ] */ ( this, tup._2, tup._1 ))
 
-   final override def toString: String = {
-      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
-   }
+//   final override def toString: String = {
+//      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
+//   }
 
    def displayName = {
       val cn = getClass.getName

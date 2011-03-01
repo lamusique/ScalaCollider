@@ -20,7 +20,7 @@ object WhiteNoise {
 case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
    protected def expandUGens = {
       val _mul: IIdxSeq[UGenIn] = mul.expand
-      IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(rate, new SingleOutUGen("WhiteNoise", rate, IIdxSeq.empty), _mul(i)))
+      IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(/*rate,*/ new SingleOutUGen("WhiteNoise", rate, IIdxSeq.empty), _mul(i)))
    }
 }
 //case class WhiteNoiseUGen(rate: Rate) extends SingleOutUGen(IIdxSeq.empty) with UsesRandSeed

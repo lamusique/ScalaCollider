@@ -75,7 +75,6 @@ object Mix {
 
    case class Seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ R, GE[ R ]]])( implicit val rate: R ) /*( implicit r: RateOrder[ R, R, R ])*/
    extends LazyExpander[ UGenIn ] with GE[ R ] {
-//      def rate = Rate.highest( elems.map( _.rate ): _* ) // r.out
 
 //      def force( b: UGenGraphBuilder ) { expand( b )}
 //      def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
@@ -89,14 +88,15 @@ object Mix {
          val zip  = seq.zip( szs )
          val sz   = UGenHelper.maxInt( szs: _* )
          IIdxSeq.tabulate( sz )( i => zip.map( tup => tup._1.apply( i % tup._2 ))
-            .reduceLeft( (a, b) => BinaryOp.Plus.make1( rate, a, b )))
+            .reduceLeft( (a, b) => BinaryOp.Plus.make1( /* rate, */ a, b )))
       }
    }
 
    private def sum[ R <: Rate ]( elems: Multi[ R, GE[ R ]])/*( implicit r: RateOrder[ R, R, R ])*/ : IIdxSeq[ UGenIn /*[ R ]*/] = {
       val _elems     = elems.mexpand
       val _sz_elems  = _elems.size
-      implicit val r = MaybeRateOrder.same( elems.rate )
+//      implicit val r = MaybeRateOrder.same( elems.rate )
+      implicit val r = MaybeRateOrder.same[ R ] // ( elems.rate )
       if( _sz_elems > 0 ) _elems.reduceLeft( _ + _ ).expand else IIdxSeq.empty
    }
 }
@@ -121,8 +121,7 @@ case class Mix[ R <: Rate ]( elems: Multi[ R, GE[ R ]])/*( implicit r: RateOrder
 extends LazyExpander[ UGenIn ] with GE[ R ] {
    import Mix._
 
-//   def rate = r.out
-   def rate = elems.rate
+//   def rate = elems.rate
 
 //   def force( b: UGenGraphBuilder ) { expand( b )}
 //   def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {

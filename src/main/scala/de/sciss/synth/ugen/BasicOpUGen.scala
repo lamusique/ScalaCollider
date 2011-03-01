@@ -37,12 +37,12 @@ import UGenHelper._
  *    @version 0.13, 03-Jan-11
  */
 object MulAdd {
-   def ar( in: GE[ audio ],   mul: AnyGE, add: AnyGE ) : MulAdd[ audio ]   = apply[ audio ](   audio,   in, mul, add )
-   def kr( in: GE[ control ], mul: AnyGE, add: AnyGE ) : MulAdd[ control ] = apply[ control ]( control, in, mul, add )
-   def ir( in: GE[ scalar ],  mul: AnyGE, add: AnyGE ) : MulAdd[ scalar ]  = apply[ scalar ](  scalar,  in, mul, add )
+   def ar( in: GE[ audio ],   mul: AnyGE, add: AnyGE ) : MulAdd[ audio ]   = apply[ audio ](   /* audio, */   in, mul, add )
+   def kr( in: GE[ control ], mul: AnyGE, add: AnyGE ) : MulAdd[ control ] = apply[ control ]( /* control, */ in, mul, add )
+   def ir( in: GE[ scalar ],  mul: AnyGE, add: AnyGE ) : MulAdd[ scalar ]  = apply[ scalar ](  /* scalar, */  in, mul, add )
 }
 
-case class MulAdd[ R <: Rate ]( rate: R, in: GE[ R ], mul: AnyGE, add: AnyGE )
+case class MulAdd[ R <: Rate ]( /* rate: R, */ in: GE[ R ], mul: AnyGE, add: AnyGE )
 extends LazyExpander[ UGenIn ] with GE[ R ] {
    protected def expandUGens = {
       val _in: IIdxSeq[ UGenIn ]    = in.expand
@@ -59,11 +59,16 @@ extends LazyExpander[ UGenIn ] with GE[ R ] {
          (mul0, add0) match {
             case (c(0),  _)    => add0
             case (c(1),  c(0)) => in0
-            case (c(1),  _)    => new BinaryOpUGen( rate, BinaryOp.Plus, in0, add0 )
-            case (c(-1), c(0)) => new UnaryOpUGen( rate, UnaryOp.Neg, in0 )
-            case (_,     c(0)) => new BinaryOpUGen( rate, BinaryOp.Times, in0, mul0 )
-            case (c(-1), _)    => new BinaryOpUGen( rate, BinaryOp.Minus, add0, in0 )
-            case _             => new SingleOutUGen( "MulAdd", rate, IIdxSeq( in0, mul0, add0 ))
+//            case (c(1),  _)    => new BinaryOpUGen( rate, BinaryOp.Plus, in0, add0 )
+//            case (c(-1), c(0)) => new UnaryOpUGen( rate, UnaryOp.Neg, in0 )
+//            case (_,     c(0)) => new BinaryOpUGen( rate, BinaryOp.Times, in0, mul0 )
+//            case (c(-1), _)    => new BinaryOpUGen( rate, BinaryOp.Minus, add0, in0 )
+//            case _             => new SingleOutUGen( "MulAdd", rate, IIdxSeq( in0, mul0, add0 ))
+            case (c(1),  _)    => new BinaryOpUGen( in0.rate, BinaryOp.Plus, in0, add0 )
+            case (c(-1), c(0)) => new UnaryOpUGen( in0.rate, UnaryOp.Neg, in0 )
+            case (_,     c(0)) => new BinaryOpUGen( in0.rate, BinaryOp.Times, in0, mul0 )
+            case (c(-1), _)    => new BinaryOpUGen( in0.rate, BinaryOp.Minus, add0, in0 )
+            case _             => new SingleOutUGen( "MulAdd", in0.rate, IIdxSeq( in0, mul0, add0 ))
          }
       })
    }
@@ -111,7 +116,7 @@ object UnaryOp {
    import RichFloat._
 
    sealed abstract class Op( val id: Int ) {
-      def make[ R <: Rate ]( rate: R, a: GE[ R ]) = UnaryOp[ R ]( rate, this, a )
+      def make[ R <: Rate ]( /* rate: R, */ a: GE[ R ]) = UnaryOp[ R ]( /* rate, */ this, a )
 //      protected[synth] def make1( a: UGenIn ) : GE = a match {
 //         case c(a)   => c( make1( a ))
 //         case _      => unop.apply( a.rate, this, a )
@@ -258,14 +263,14 @@ object UnaryOp {
 //   }
 }
 
-case class UnaryOp[ R <: Rate ]( rate: R, selector: UnaryOp.Op, a: GE[ R ])
+case class UnaryOp[ R <: Rate ]( /* rate: R, */ selector: UnaryOp.Op, a: GE[ R ])
 extends SingleOutUGenSource[ R ] {
 //   override def toString = a.toString + "." + selector.name
 //   override def displayName = selector.name
 
    protected def expandUGens = {
       val _a = a.expand
-      IIdxSeq.tabulate( _a.size )( i => new UnaryOpUGen( rate, selector, _a( i )))
+      IIdxSeq.tabulate( _a.size )( i => { val __a = _a( i ); new UnaryOpUGen( __a.rate, selector, __a )})
    }
 
    override def toString = a.toString + "." + selector.name
@@ -293,10 +298,11 @@ object BinaryOp {
       op =>
 
 //      def make[ R <: Rate ]( rate: R, a: GE[ UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
-      def make[ R <: Rate, S <: Rate, T <: Rate ]( rate: T, a: GE[ R ], b: GE[ S ]) : GE[ T ] = BinaryOp[ T ]( rate, this, a, b )
-      protected[synth] def make1( rate: Rate, a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
+      def make[ R <: Rate, S <: Rate, T <: Rate ]( /* rate: T, */ a: GE[ R ], b: GE[ S ]) : GE[ T ] = BinaryOp[ T ]( /* rate, */ this, a, b )
+      protected[synth] def make1( /* rate: Rate, */ a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (c(a), c(b)) => c( make1( a, b ))
-         case _            => new BinaryOpUGen( rate, op, a, b) // binop.apply( Rate.highest( a.rate, b.rate ), this, a, b )
+//         case _            => new BinaryOpUGen( rate, op, a, b) // binop.apply( Rate.highest( a.rate, b.rate ), this, a, b )
+         case _            => new BinaryOpUGen( Rate.highest( a.rate, b.rate ), op, a, b) // binop.apply( Rate.highest( a.rate, b.rate ), this, a, b )
       }
 
       protected def make1( a: Float, b: Float ) : Float
@@ -478,8 +484,8 @@ object BinaryOp {
       protected def make1( a: Float, b: Float ) = rf_wrap2( a, b )
    }
    case object Firstarg       extends Op( 46 ) {
-      override def make[ R <: Rate, S <: Rate, T <: Rate ]( rate: T, a: GE[ R ], b: GE[ S ]) : GE[ T ] =
-         de.sciss.synth.ugen.Firstarg[ T ]( rate, a, b )
+      override def make[ R <: Rate, S <: Rate, T <: Rate ]( /* rate: T, */ a: GE[ R ], b: GE[ S ]) : GE[ T ] =
+         de.sciss.synth.ugen.Firstarg[ T ]( /* rate, */ a, b )
 
       protected def make1( a: Float, b: Float ) = a
    }
@@ -519,7 +525,7 @@ trait BinaryOpLike[ R <: Rate ] extends SingleOutUGenSource[ R ] {
       val _exp_   = math.max( _sz_a, _sz_b )
 //      // YYY optimize
 //      IIdxSeq.tabulate( _exp_ )( i => new BinaryOpUGen( rate, selector, _a( i % _sz_a ), _b( i % _sz_b )))
-      IIdxSeq.tabulate( _exp_ )( i => selector.make1( rate, _a( i % _sz_a ), _b( i % _sz_b )))
+      IIdxSeq.tabulate( _exp_ )( i => selector.make1( /* rate, */ _a( i % _sz_a ), _b( i % _sz_b )))
    }
 
    override def toString = if( (selector.id <= 11) || ((selector.id >=14) && (selector.id <= 16)) ) {
@@ -529,10 +535,10 @@ trait BinaryOpLike[ R <: Rate ] extends SingleOutUGenSource[ R ] {
    }
 }
 
-case class BinaryOp[ R <: Rate ]( rate: R, selector: BinaryOp.Op, a: AnyGE, b: AnyGE )
+case class BinaryOp[ R <: Rate ]( /* rate: R, */ selector: BinaryOp.Op, a: AnyGE, b: AnyGE )
 extends BinaryOpLike[ R ]
 
-case class Firstarg[ R <: Rate ]( rate: R, a: AnyGE, b: AnyGE )
+case class Firstarg[ R <: Rate ]( /* rate: R, */ a: AnyGE, b: AnyGE )
 extends BinaryOpLike[ R ] with HasSideEffect {
    def selector = BinaryOp.Firstarg
 }
