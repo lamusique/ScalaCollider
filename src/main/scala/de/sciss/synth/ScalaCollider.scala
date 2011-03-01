@@ -54,7 +54,7 @@ object ScalaCollider {
 //      so.port = 44444
       Server.test( so.build ) { s =>
          println( "Booted." )
-         test3( s )
+         test( s )
       }
    }
 
