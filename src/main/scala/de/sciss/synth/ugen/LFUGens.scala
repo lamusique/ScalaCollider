@@ -618,8 +618,8 @@ case class LinLin[ R <: Rate ](rate: R, in: GE[ R ], srcLo: AnyGE, srcHi: AnyGE,
 }
 //case class LinLinUGen(rate: Rate, in: UGenIn, srcLo: UGenIn, srcHi: UGenIn, dstLo: UGenIn, dstHi: UGenIn) extends SingleOutUGen(IIdxSeq(in, srcLo, srcHi, dstLo, dstHi))
 object EnvGen {
-   def kr(envelope: AnyMulti, gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
-   def ar(envelope: AnyMulti, gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply(audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def kr(envelope: AnyMulti, gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[control](control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
+   def ar(envelope: AnyMulti, gate: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
 }
 case class EnvGen[ R <: Rate ](rate: R, envelope: AnyMulti, gate: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R] {
    protected def expandUGens = {

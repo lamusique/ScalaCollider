@@ -137,8 +137,8 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
-   implicit def thunkToGraphFunction[ /*R <: Rate, S <: Rate,*/ T ]( thunk: => T )
-      ( implicit view: T => AnyMulti /*, r: RateOrder[ control, R, S ] */) = new GraphFunction( thunk )
+   implicit def thunkToGraphFunction[ R <: Rate, /* S <: Rate,*/ T ]( thunk: => T )
+      ( implicit view: T => Multi[ GE[ R ]] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction( thunk )
 
    // Buffer convenience
    def message[T]( msg: => OSCPacket ) = Completion[T]( Some( _ => msg ), None )
@@ -155,9 +155,9 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
 // we remove the overloading as it causes problems with the GE -> Multi conversion
 //   def play /*[ R <: Rate, S <: Rate ] */( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
-   def play /*[ R <: Rate, S <: Rate ] */( target: Node = Server.default, outBus: Int = 0,
+   def play[ R <: Rate /*, S <: Rate */ ]( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[Float] = Some( 0.02f ),
-             addAction: AddAction = addToHead )( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {
+             addAction: AddAction = addToHead )( thunk: => Multi[ GE[ R ]])/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {
       val fun = new GraphFunction( thunk )
       fun.play( target, outBus, fadeTime, addAction )
    }

@@ -93,6 +93,8 @@ object GE {
    implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
    implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ /* R, */ GE[ R ]] = Multi.Joint( g )
 
+//   implicit def fromAnySeq( x: Seq[ AnyGE ]) : AnyGE = fromSeq[ Rate ]( x )
+
    implicit def fromSeq[ R <: Rate ]( x: Seq[ GE[ R ]])/* ( implicit rate: R ) */ : GE[ R ] = {
       x match {
          case Seq( single ) => single // Multi.Joint( single )

@@ -89,6 +89,13 @@ trait ServerOptionsLike {
    def firstPrivateBus: Int = outputBusChannels + inputBusChannels
 }
 
+object ServerOptions {
+   /**
+    * Implicit conversion which allows you to use a `ServerOptionsBuilder`
+    * wherever a `ServerOptions` is required.
+    */
+   implicit def build( sob: ServerOptionsBuilder ) : ServerOptions = sob.build
+}
 abstract class ServerOptions extends ServerOptionsLike
 
 object ServerOptionsBuilder {

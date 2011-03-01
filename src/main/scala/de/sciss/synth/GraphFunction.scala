@@ -42,7 +42,7 @@ object GraphFunction {
    }
 }
 
-class GraphFunction /*[ R <: Rate, S <: Rate ]*/( thunk: => AnyMulti ) /*( implicit r: RateOrder[ control, R, S ])*/ {
+class GraphFunction[ R <: Rate ]( thunk: => Multi[ GE[ R ]]) /*( implicit r: RateOrder[ control, R, S ])*/ {
    import GraphFunction._
    
    def play : Synth = {
@@ -55,7 +55,7 @@ class GraphFunction /*[ R <: Rate, S <: Rate ]*/( thunk: => AnyMulti ) /*( impli
 
 		val server = target.server
 		val defName    = "temp_" + uniqueID // more clear than using hashCode
-		val synthDef   = SynthDef( defName, SynthGraph.wrapOut( thunk, fadeTime ).expand )
+		val synthDef   = SynthDef( defName, SynthGraph.wrapOut[ R ]( thunk, fadeTime ).expand )
 		val synth      = new Synth( server )
 		val bytes      = synthDef.toBytes
 		val synthMsg   = synth.newMsg( synthDef.name, target, List( "i_out" -> outBus, "out" -> outBus ), addAction )

@@ -32,9 +32,6 @@ import java.io.{ ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, 
 import java.nio.ByteBuffer
 import de.sciss.synth.{ Completion => Comp }
 import osc.{OSCSyncedMessage, OSCSynthDefFreeMessage, OSCSynthDefLoadMessage, OSCSynthDefRecvMessage}
-import ugen.Control
-import collection.immutable.{ IndexedSeq => IIdxSeq, Iterable => IIterable, Seq => ISeq, Stack, Vector }
-import collection.breakOut
 import File.{ separator => sep }
 import actors.TIMEOUT
 import de.sciss.osc.{OSCBundle, OSCMessage, OSCPacket}
@@ -174,19 +171,6 @@ case class SynthDef( name: String, graph: UGenGraph ) {
          i += 1
       })
    }
-
-//   private def checkInputs {
-//      var seenErr = false
-//      ugens.foreach( ugen => {
-//         val err = ugen.checkInputs
-//         if( err.isDefined ) {
-//            seenErr = true
-//            if( verbose ) println( ugen.getClass.toString + " " + err )
-////          ugen.dumpArgs
-//         }
-//      })
-//      if( seenErr ) { throw new Exception( "SynthDef " + name + " build failed" )}
-//   }
 }
 
 object SynthDef {
@@ -208,14 +192,14 @@ object SynthDef {
       val os	= new FileOutputStream( path )
 	   val dos	= new DataOutputStream( new BufferedOutputStream( os ))
 
-//    try {
-      dos.writeInt( 0x53436766 ) 		// magic cookie
-      dos.writeInt( 1 ) 				   // version
-      dos.writeShort( defs.size ) 		// number of defs in file.
-      defs.foreach( _.write( dos ))
-//    }
-//    finally {
-      dos.close
-//    }
+      try {
+         dos.writeInt( 0x53436766 ) 		// magic cookie
+         dos.writeInt( 1 ) 				   // version
+         dos.writeShort( defs.size ) 		// number of defs in file.
+         defs.foreach( _.write( dos ))
+      }
+      finally {
+         dos.close
+      }
    }
 }

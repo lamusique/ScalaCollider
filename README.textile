@@ -72,6 +72,10 @@ Finally, to boot the server:
 
 Please refer to @ExampleCmd.txt@ for some example code. There is also an introductory video for the "Swing frontend":http://github.com/Sciss/ScalaColliderSwing at "www.screencast.com/t/YjUwNDZjMT":http://www.screencast.com/t/YjUwNDZjMT
 
-h3. download
+h3. download and resources
 
 The current version can be downloaded from "github.com/Sciss/ScalaCollider":http://github.com/Sciss/ScalaCollider
+
+More information is available from the wiki at "github.com/Sciss/ScalaCollider/wiki":http://github.com/Sciss/ScalaCollider/wiki
+
+A mailing list is available at "groups.google.com/group/scalacollider":http://groups.google.com/group/scalacollider

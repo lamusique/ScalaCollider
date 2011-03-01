@@ -91,10 +91,10 @@ private[synth] object UGenHelper {
 }
 
 object SynthGraph {
-   def wrapOut /*[ R <: Rate, S <: Rate ]*/( thunk: => AnyMulti, fadeTime: Option[Float] = Some(0.02f) )
+   def wrapOut[ R <: Rate ]( thunk: => Multi[ GE[ R ]], fadeTime: Option[Float] = Some(0.02f) )
                                       /*( implicit r: RateOrder[ control, R, S ])*/ =
       SynthGraph {
-//         val res1 = thunk
+         val res1 = thunk
 //         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
 //         val res2 = if( (rate == audio) || (rate == control) ) {
 //            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
@@ -106,19 +106,20 @@ object SynthGraph {
 ////            } else {
 ////               Out.kr( out, res2 )
 ////            }
-//         } else res1
+//         } else
+            res1
       }
 
-//	def makeFadeEnv( fadeTime: Float ) : AnyGE = {
-//		val dt			= "fadeTime".kr( fadeTime )
-//		val gate       = "gate".kr( 1 )
-//		val startVal	= (dt <= 0)
-//      // this is slightly more costly than what sclang does
-//      // (using non-linear shape plus an extra unary op),
-//      // but it fadeout is much smoother this way...
-//		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
-//         gate, timeScale = dt, doneAction = freeSelf ).squared
-//	}
+	def makeFadeEnv( fadeTime: Float ) : GE[control] = {
+		val dt			= "fadeTime".kr( fadeTime )
+		val gate       = "gate".kr( 1 )
+		val startVal	= (dt <= 0)
+      // this is slightly more costly than what sclang does
+      // (using non-linear shape plus an extra unary op),
+      // but it fadeout is much smoother this way...
+		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+         gate, timeScale = dt, doneAction = freeSelf ).squared
+	}
 
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def replaceZeroesWithSilence( ge: GE ) : GE = {
