@@ -234,18 +234,18 @@ case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSou
 //   }
 //}
 //case class LFNoise0UGen(rate: Rate, freq: UGenIn) extends SingleOutUGen(IIdxSeq(freq)) with UsesRandSeed
-//object LFNoise1 {
-//   def kr: LFNoise1 = kr()
-//   def kr(freq: AnyGE = 500.0f) = apply(control, freq)
-//   def ar: LFNoise1 = ar()
-//   def ar(freq: AnyGE = 500.0f) = apply(audio, freq)
-//}
-//case class LFNoise1(rate: Rate, freq: AnyGE) extends SingleOutUGenSource[LFNoise1UGen] with UsesRandSeed {
-//   protected def expandUGens = {
-//      val _freq: IIdxSeq[UGenIn] = freq.expand
-//      IIdxSeq.tabulate(_freq.size)(i => LFNoise1UGen(rate, _freq(i)))
-//   }
-//}
+object LFNoise1 {
+   def kr: LFNoise1[control] = kr()
+   def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
+   def ar: LFNoise1[audio] = ar()
+   def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
+}
+case class LFNoise1[ R <: Rate ](rate: R, freq: AnyGE) extends SingleOutUGenSource[R, SingleOutUGen] with UsesRandSeed {
+   protected def expandUGens = {
+      val _freq: IIdxSeq[UGenIn] = freq.expand
+      IIdxSeq.tabulate(_freq.size)(i => new SingleOutUGen("LFNoise1", rate, IIdxSeq( _freq(i))))
+   }
+}
 //case class LFNoise1UGen(rate: Rate, freq: UGenIn) extends SingleOutUGen(IIdxSeq(freq)) with UsesRandSeed
 //object LFNoise2 {
 //   def kr: LFNoise2 = kr()
@@ -260,16 +260,16 @@ case class WhiteNoise[ R <: Rate ](rate: R, mul: AnyGE) extends SingleOutUGenSou
 //   }
 //}
 //case class LFNoise2UGen(rate: Rate, freq: UGenIn) extends SingleOutUGen(IIdxSeq(freq)) with UsesRandSeed
-//case class Rand(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) extends SingleOutUGenSource[RandUGen] with ScalarRated with UsesRandSeed {
-//   protected def expandUGens = {
-//      val _lo: IIdxSeq[UGenIn] = lo.expand
-//      val _hi: IIdxSeq[UGenIn] = hi.expand
-//      val _sz_lo = _lo.size
-//      val _sz_hi = _hi.size
-//      val _exp_ = maxInt(_sz_lo, _sz_hi)
-//      IIdxSeq.tabulate(_exp_)(i => RandUGen(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi))))
-//   }
-//}
+case class Rand(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) extends SingleOutUGenSource[scalar, SingleOutUGen] with ScalarRated with UsesRandSeed {
+   protected def expandUGens = {
+      val _lo: IIdxSeq[UGenIn] = lo.expand
+      val _hi: IIdxSeq[UGenIn] = hi.expand
+      val _sz_lo = _lo.size
+      val _sz_hi = _hi.size
+      val _exp_ = maxInt(_sz_lo, _sz_hi)
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Rand", scalar, IIdxSeq( _lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)))))
+   }
+}
 //case class RandUGen(lo: UGenIn, hi: UGenIn) extends SingleOutUGen(IIdxSeq(lo, hi)) with ScalarRated with UsesRandSeed
 //case class IRand(lo: AnyGE = 0.0f, hi: AnyGE = 127.0f) extends SingleOutUGenSource[IRandUGen] with ScalarRated with UsesRandSeed {
 //   protected def expandUGens = {

@@ -1,20 +1,21 @@
-///*
-// * TriggerUGens.scala
-// * (ScalaCollider-UGens)
-// *
-// * This is a synthetically generated file.
-// * Created: Thu Jan 27 23:03:33 GMT 2011
-// * ScalaCollider-UGen version: 0.10
-// */
-//
-//package de.sciss.synth
-//package ugen
-//import collection.immutable.{IndexedSeq => IIdxSeq}
-//import UGenHelper._
+/*
+* TriggerUGens.scala
+* (ScalaCollider-UGens)
+*
+* This is a synthetically generated file.
+* Created: Thu Jan 27 23:03:33 GMT 2011
+* ScalaCollider-UGen version: 0.10
+*/
+
+package de.sciss.synth
+package ugen
+import collection.immutable.{IndexedSeq => IIdxSeq}
+import UGenHelper._
 ///**
 // * A UGen which outputs a value of 1 for a given duration when triggered.
 // *
 // * When a trigger occurs at the input, a value of 1 is output for the specified duration,
+// * otherwise zero is output. When a new trigger occurs while this ugens outputs 1, the
 // * otherwise zero is output. When a new trigger occurs while this ugens outputs 1, the
 // * hold-time is reset to the duration.
 // *
@@ -670,43 +671,43 @@
 //   }
 //}
 //case class LastValueUGen(rate: Rate, in: UGenIn, thresh: UGenIn) extends SingleOutUGen(IIdxSeq(in, thresh))
-///**
-// * A UGen which monitors another UGen to see when it is finished.
-// * Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
-// * and the Buffer delay UGens set a 'done' flag when they are finished playing. This UGen echoes that flag
-// * as an explicit output signal when it is set to track a particular UGen. When the tracked UGen changes
-// * to done, the output signal changes from zero to one.
-// *
-// * @see [[de.sciss.synth.ugen.PlayBuf]]
-// * @see [[de.sciss.synth.ugen.Line]]
-// * @see [[de.sciss.synth.ugen.EnvGen]]
-// */
-//object Done {
-//
-///**
-// * @param src             the UGen to track
-// */
-//def kr(src: GE[UGenIn with HasDoneFlag]) = apply(src)
-//}
-///**
-// * A UGen which monitors another UGen to see when it is finished.
-// * Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
-// * and the Buffer delay UGens set a 'done' flag when they are finished playing. This UGen echoes that flag
-// * as an explicit output signal when it is set to track a particular UGen. When the tracked UGen changes
-// * to done, the output signal changes from zero to one.
-// *
-// * @param src             the UGen to track
-// *
-// * @see [[de.sciss.synth.ugen.PlayBuf]]
-// * @see [[de.sciss.synth.ugen.Line]]
-// * @see [[de.sciss.synth.ugen.EnvGen]]
-// */
-//case class Done(src: GE[UGenIn with HasDoneFlag]) extends SingleOutUGenSource[DoneUGen] with HasSideEffect with ControlRated {
-//   protected def expandUGens = {
-//      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
-//      IIdxSeq.tabulate(_src.size)(i => DoneUGen(_src(i)))
-//   }
-//}
+/**
+* A UGen which monitors another UGen to see when it is finished.
+* Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
+* and the Buffer delay UGens set a 'done' flag when they are finished playing. This UGen echoes that flag
+* as an explicit output signal when it is set to track a particular UGen. When the tracked UGen changes
+* to done, the output signal changes from zero to one.
+*
+* @see [[de.sciss.synth.ugen.PlayBuf]]
+* @see [[de.sciss.synth.ugen.Line]]
+* @see [[de.sciss.synth.ugen.EnvGen]]
+*/
+object Done {
+
+/**
+* @param src             the UGen to track
+*/
+def kr(src: GE[Rate, UGenIn with HasDoneFlag]) = apply(src)
+}
+/**
+* A UGen which monitors another UGen to see when it is finished.
+* Some UGens, such as `PlayBuf`, `RecordBuf`, `Line`, `XLine`, `EnvGen`, `Linen`, `BufRd`, `BufWr`, `DbufRd`,
+* and the Buffer delay UGens set a 'done' flag when they are finished playing. This UGen echoes that flag
+* as an explicit output signal when it is set to track a particular UGen. When the tracked UGen changes
+* to done, the output signal changes from zero to one.
+*
+* @param src             the UGen to track
+*
+* @see [[de.sciss.synth.ugen.PlayBuf]]
+* @see [[de.sciss.synth.ugen.Line]]
+* @see [[de.sciss.synth.ugen.EnvGen]]
+*/
+case class Done(src: GE[Rate, UGenIn with HasDoneFlag]) extends SingleOutUGenSource[control, SingleOutUGen] with HasSideEffect with ControlRated {
+   protected def expandUGens = {
+      val _src: IIdxSeq[UGenIn with HasDoneFlag] = src.expand
+      IIdxSeq.tabulate(_src.size)(i => new SingleOutUGen("Done", control, IIdxSeq( _src(i))))
+   }
+}
 //case class DoneUGen(src: UGenIn with HasDoneFlag) extends SingleOutUGen(IIdxSeq(src)) with HasSideEffect with ControlRated
 ///**
 // * A UGen which pauses and resumes another node.

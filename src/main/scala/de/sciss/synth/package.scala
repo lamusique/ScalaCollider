@@ -59,7 +59,7 @@ package synth {
  *
  * @version	0.14, 28-Aug-10
  */
-package object synth extends de.sciss.synth.LowPriorityImplicits with de.sciss.synth.RateRelations {
+package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.sciss.synth.RateRelations */ {
    // GEs
 
    type AnyUGenIn = UGenIn // [ _ <: Rate ]

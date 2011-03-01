@@ -85,6 +85,34 @@ object ScalaCollider {
       }
       df.debugDump
       df.play( s )
+
+////implicit def gugu[ R <: Rate ]( g: GE[ R, UGenIn ]) = Multi.joint
+   }
+
+   def test3( s: Server ) {
+      import ugen._
+
+// harmonic swimming
+      implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
+
+      val syn = play() {
+          val f = 50       // fundamental frequency
+          val p = 20       // number of partials per channel
+          val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
+//         val x: AnyMulti = Mix.tabulate(p) { i =>
+          val y = Mix.fill(p) { val i = 1
+              val sig = SinOsc.ar( f * (i+1) ) * // freq of partial
+                  LFNoise1.kr(
+                      List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate
+                      0.02,    // amplitude scale
+                     offset    // amplitude offset
+                  ).max( 0 )   // clip negative amplitudes to zero
+              sig // GE.bubble( sig )
+          }
+//         bubble( y )
+//         null: Node
+         y
+      }
    }
 
 //   def test {

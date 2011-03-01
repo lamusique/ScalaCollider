@@ -294,7 +294,7 @@ object BinaryOp {
 
 //      def make[ R <: Rate ]( rate: R, a: GE[ UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
       def make[ R <: Rate, S <: Rate, T <: Rate ]( rate: T, a: GE[ R, UGenIn ],
-                                                        b: GE[ S, UGenIn ]) : BinaryOpLike[ T ] = BinaryOp[ T ]( rate, this, a, b )
+                                                        b: GE[ S, UGenIn ]) : GE[ T, UGenIn ] = BinaryOp[ T ]( rate, this, a, b )
       protected[synth] def make1( rate: Rate, a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (c(a), c(b)) => c( make1( a, b ))
          case _            => new BinaryOpUGen( rate, op, a, b) // binop.apply( Rate.highest( a.rate, b.rate ), this, a, b )
@@ -480,7 +480,7 @@ object BinaryOp {
    }
    case object Firstarg       extends Op( 46 ) {
       override def make[ R <: Rate, S <: Rate, T <: Rate ]( rate: T, a: GE[ R, UGenIn ],
-                                                            b: GE[ S, UGenIn ]) : BinaryOpLike[ T ] = de.sciss.synth.ugen.Firstarg[ T ]( rate, a, b )
+                                                            b: GE[ S, UGenIn ]) : GE[ T, UGenIn ] = de.sciss.synth.ugen.Firstarg[ T ]( rate, a, b )
 
       protected def make1( a: Float, b: Float ) = a
    }

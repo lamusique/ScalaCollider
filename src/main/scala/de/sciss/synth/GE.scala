@@ -57,10 +57,17 @@ object Multi {
       def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
    }
 
-//   case class Disjoint[ R <: Rate, U <: UGenIn ]( g: GE[ R, U ]) extends Multi[ GE[ R, U ]] {
-//      def rate = g.rate
-//      def mexpand = IIdxSeq( g.expand: _* )
-//   }
+   case class Disjoint[ R <: Rate, U <: UGenIn ]( g: GE[ R, U ]) extends Multi[ R, GE[ R, U ]] {
+      def rate = g.rate
+      def mexpand : IIdxSeq[ GE[ R, U ]] = {
+         implicit val r = g.rate
+         g.expand.map( new WrapUGenIn[ R, U ]( _ ))
+      }
+   }
+
+   private class WrapUGenIn[ R <: Rate, U <: UGenIn ]( in: U )( implicit val rate: R ) extends GE[ R, U ] {
+      def expand: IIdxSeq[ U ] = IIdxSeq( in )
+   }
 
 //   case class Group( elems: IIdxSeq[ AnyGE ]) extends AnyGE {
 //
@@ -106,7 +113,7 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
    def rate: R
 
 //   def expand: IIdxSeq[ U ]
-   final def mexpand = IIdxSeq( ge )
+//   final def mexpand = IIdxSeq( ge )
 
    /**
     * Decomposes the graph element into its distinct outputs. For a single-output UGen
@@ -287,9 +294,9 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
 //   def min /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
 //      Min.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 //
-//   def max /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
-//      Max.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-//
+   def max[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn /*[ S ]*/])( implicit r: RateOrder[ R, S, T ]) =
+      Max.make[ R, S, T ]( r.out, this, b )
+
 //   def & /*[ S <: Rate, T <: Rate ]*/( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ =
 //      BitAnd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 //
