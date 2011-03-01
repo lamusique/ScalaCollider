@@ -64,7 +64,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
 //   type AnyUGenIn = UGenIn // [ _ <: Rate ]
 //   type AnyMulti  = Multi[ R, GE[ R /*, UGenIn */]] forSome { type R <: Rate }
-   type AnyGE     = GE[ _ <: Rate /*, UGenIn */ ] // forSome { type R <: Rate }
+   type AnyGE     = GE[ _ <: Rate ] // _ <: Rate /*, UGenIn */ ] // forSome { type R <: Rate }
    type AnyMulti  = Multi[ AnyGE ]
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
@@ -134,6 +134,9 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //   implicit def floatSeqToGE( x: Seq[ Float ])   = GESeq[ scalar, Constant ]( x.map( Constant( _ ))( breakOut ) : IIdxSeq[ Constant ])
 //   implicit def intSeqToGE( x: Seq[ Int ])       = GESeq[ scalar, Constant ]( x.map( i => Constant( i.toFloat ))( breakOut ) : IIdxSeq[ Constant ])
 //   implicit def doubleSeqToGE( x: Seq[ Double ]) = GESeq[ scalar, Constant ]( x.map( d => Constant( d.toFloat ))( breakOut )  : IIdxSeq[ Constant ])
+
+   // multi support ; doesn't work here in scala 2.8.1 -- get sucky "is not an enclosing class" bugs
+//   implicit def bubbleGE[ R <: Rate, G <% GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
 
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )

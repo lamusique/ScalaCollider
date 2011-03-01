@@ -42,7 +42,7 @@ object MulAdd {
    def ir( in: GE[ scalar ],  mul: AnyGE, add: AnyGE ) : MulAdd[ scalar ]  = apply[ scalar ](  /* scalar, */  in, mul, add )
 }
 
-case class MulAdd[ R <: Rate ]( /* rate: R, */ in: GE[ R ], mul: AnyGE, add: AnyGE )
+case class MulAdd[ +R <: Rate ]( /* rate: R, */ in: GE[ R ], mul: AnyGE, add: AnyGE )
 extends LazyExpander[ UGenIn ] with GE[ R ] {
    protected def expandUGens = {
       val _in: IIdxSeq[ UGenIn ]    = in.expand

@@ -237,8 +237,10 @@ extends AbstractEnv {
          IIdxSeq[ AnyGE ]( seg.targetLevel, seg.dur, seg.shape.idGE, seg.shape.curvatureGE ))
 //      error( "NOT YET" )
 //      type X <: Rate
-      GE.fromSeq[ Rate ]( res )
+//      GE.fromSeq[ Rate ]( res )
       // res1// : AnyMulti // geSeqToGE[ UGenIn ]( res )
+//      GE.fromSeq( res.toSeq )
+      GE.fromAnySeq( res )
    }
 
    def isSustained = releaseNode != Constant( -99 )
@@ -256,9 +258,15 @@ extends AbstractEnv {
       val sizeGE: AnyGE = segmIdx.size
       val totalDur   = segmIdx.foldLeft[ AnyGE ]( 0 )( (sum, next) => sum + next.dur )
       val res: IIdxSeq[ AnyGE ] = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap( seg =>
-         IIdxSeq( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
+         IIdxSeq[ AnyGE ]( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
       //geSeqToGE[ UGenIn ]( res )
-      (res: AnyGE) : AnyMulti
+//      (res: AnyGE) : AnyMulti
+
+//      GE.bubbleGE( res ) // GE.fromAnySeq( res )
+//      Multi.bubbleGen( res )
+//      GE.fromSeq[ Rate ]( res )
+//      GE.fromSeq( res )
+      GE.fromAnySeq( res )
    }
 
    def isSustained = false

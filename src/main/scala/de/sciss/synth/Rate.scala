@@ -100,6 +100,7 @@ object HigherRate {
 //   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new Impl[ demand, audio ] // (   demand,  audio   )
 //   implicit val demandGtControl:  HigherRate[ demand,  control ] = new Impl[ demand, control ] // ( demand,  control )
 //   implicit val demandGtScalar:   HigherRate[ demand,  scalar  ] = new Impl[ demand, scalar ] // (  demand,  scalar  )
+
    implicit def allGtScalar[ R <: Rate ] : HigherRate[ R, scalar ]   = new Impl[ R, scalar ]
    implicit def demandGtAll[ R <: Rate ] : HigherRate[ demand, R ]   = new Impl[ demand, R ]
    implicit val audioGtControl: HigherRate[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
@@ -118,14 +119,18 @@ sealed trait MaybeRateOrderLowImplicits {
 }
 object MaybeRateOrder extends MaybeRateOrderLowImplicits {
    implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : RateOrder[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
+//   implicit val bothScalar = new Impl[ scalar, scalar, scalar ]
+//   implicit val bothControl= new Impl[ control, control, control ]
+//   implicit val bothAudio  = new Impl[ audio, audio, audio ]
+//   implicit val bothDemand = new Impl[ demand, demand, demand ]
    implicit def greater[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
    implicit def less[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
 
    private class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends RateOrder[ R, S, T ]
 }
-sealed trait MaybeRateOrder[ R <: Rate, S <: Rate, T <: Rate ] {
-//   def getOrElse( r: => R, s: => S ) : T
-}
+//sealed trait MaybeRateOrder[ -R <: Rate, -S <: Rate, -T <: Rate ]
+sealed trait MaybeRateOrder[ R <: Rate, S <: Rate, T <: Rate ]
+
 case class RateOrderUnknown[ R <: Rate, S <: Rate ]() extends MaybeRateOrder[ R, S, Rate ] {
 //   def getOrElse( r: => R, s: => S ) = Rate.highest( r, s )
 }

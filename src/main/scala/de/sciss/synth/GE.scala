@@ -32,53 +32,6 @@ import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import ugen.{LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 
-trait Expands[ +R ] {
-   def expand: IIdxSeq[ R ]
-//   def expandSize: Int
-}
-
-object Multi {
-   implicit def flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) : GE[ R ] = Flatten( m )
-
-//   def joint[ G <: AnyGE ]( g: G ) = Multi.Joint( g )
-//   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
-//   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
-
-   case class Flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) extends GE[ R ] {
-//      def rate = m.rate
-      override def toString = "Multi.flatten(" + m + ")"
-      def expand : IIdxSeq[ UGenIn ] = {
-         m.mexpand.flatMap( _.expand )
-      }
-   }
-
-   case class Joint[ /* R <: Rate, */ G <: AnyGE ]( g: G ) extends Multi[ /* R, */ G ] {
-//      def rate = g.rate
-      def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
-   }
-
-   case class Disjoint[ R <: Rate ]( g: GE[ R ]) extends Multi[ /* R, */ GE[ R ]] {
-//      def rate = g.rate
-      def mexpand : IIdxSeq[ GE[ R ]] = {
-//         implicit val r = g.rate
-         g.expand.map( new WrapUGenIn[ R ]( _ ))
-      }
-   }
-
-   private class WrapUGenIn[ R <: Rate ]( in: UGenIn )/*( implicit val rate: R )*/ extends GE[ R ] {
-      def expand: IIdxSeq[ UGenIn ] = IIdxSeq( in )
-   }
-
-//   case class Group( elems: IIdxSeq[ AnyGE ]) extends AnyGE {
-//
-//   }
-}
-
-trait Multi[ /* R <: Rate, */ +G <: AnyGE /* GE[ R ] */] {
-   def mexpand: IIdxSeq[ G ]
-//   def rate: R
-}
-
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
  *    Graph elements can be decomposed into a sequence of UGenIn objects.
@@ -90,11 +43,19 @@ trait Multi[ /* R <: Rate, */ +G <: AnyGE /* GE[ R ] */] {
  */
 object GE {
    // XXX is the ever in effect?
-   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
-   implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ /* R, */ GE[ R ]] = Multi.Joint( g )
+//   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
+   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
+//   implicit def bubbleGE[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
 
-//   implicit def fromAnySeq( x: Seq[ AnyGE ]) : AnyGE = fromSeq[ Rate ]( x )
+   implicit def fromAnySeq( x: Seq[ AnyGE ]) : GE[ Rate ] = {
+      x match {
+         case Seq( single ) => single // Multi.Joint( single )
+//         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+         case _ => GESeqGaga( /* rate, */ x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
+      }
+   }
 
+   // XXX is the ever in effect?
    implicit def fromSeq[ R <: Rate ]( x: Seq[ GE[ R ]])/* ( implicit rate: R ) */ : GE[ R ] = {
       x match {
          case Seq( single ) => single // Multi.Joint( single )
@@ -109,7 +70,7 @@ object GE {
 //      }
    }
 }
-trait GE[ R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* with Multi[ GE[ R, U ]] */ {
+trait GE[ /* +R */ R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* with Multi[ GE[ R, U ]] */ {
    ge =>
 
 //   type Rate = R

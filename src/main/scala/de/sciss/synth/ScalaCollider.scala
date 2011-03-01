@@ -116,12 +116,13 @@ object ScalaCollider {
       }).play
    }
 
-   def test4( g: GE[audio]) = g + 33
+//   def test4( g: GE[audio]) = g + 33
+   def test4( g: GE[audio]) /* : GE[audio] */ = g + 33
 //   def test5[ R <: Rate ]( g: GE[ R, UGenIn ]) : AnyGE = g + 33
    def test6( g: AnyGE ) : AnyGE = g + 33
    def test7( g: GE[audio]) {
       val h: GE[audio] = test4( g )
-//      val i: GE[control, UGenIn] = test4( g )
+//      val i: GE[control] = test4( g )
    }
 
 //   def test {
