@@ -104,20 +104,32 @@ object HigherRate {
    implicit def allGtScalar[ R <: Rate ] : HigherRate[ R, scalar ]   = new Impl[ R, scalar ]
    implicit def demandGtAll[ R <: Rate ] : HigherRate[ demand, R ]   = new Impl[ demand, R ]
    implicit val audioGtControl: HigherRate[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
+//   implicit def same[ R <: Rate ] : HigherRate[ R, R ]               = new Impl[ R, R ]
 //   implicit val audioGtScalar:    HigherRate[ audio,   scalar  ] = new Impl[ audio, scalar ] // (   audio,   scalar  )
 //   implicit val controlGtScalar:  HigherRate[ control, scalar  ] = new Impl[ control, scalar ] // ( control, scalar  )
 
    private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends HigherRate[ R, S ]
 }
-sealed trait HigherRate[ R <: Rate, S <: Rate ] {
+sealed trait HigherRate[ -R <: Rate, S <: Rate ] {
 //   def rate1: R
 //   def rate2: S
 }
 
-sealed trait MaybeRateOrderLowImplicits {
-   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrderUnknown[ R, S ]()
+object HigherEqualRate {
+   implicit def allGtScalar[ R <: Rate ] : HigherEqualRate[ R, scalar ]   = new Impl[ R, scalar ]
+   implicit def demandGtAll[ R <: Rate ] : HigherEqualRate[ demand, R ]   = new Impl[ demand, R ]
+   implicit val audioGtControl: HigherEqualRate[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
+   implicit def equal[ R <: Rate ] : HigherEqualRate[ R, R ] = new Impl[ R, R ]
+   private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends HigherEqualRate[ R, S ]
 }
-object MaybeRateOrder extends MaybeRateOrderLowImplicits {
+sealed trait HigherEqualRate[ -R <: Rate, S <: Rate ]
+
+sealed trait RateOrderLowImplicits {
+//   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrderUnknown[ R, S ]()
+   implicit def unknown[ R <: Rate, S <: Rate ] : RateOrder[ R, S, Rate ] = new Impl[ R, S, Rate ] // RateOrderUnknown[ R, S ]()
+   protected class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends RateOrder[ R, S, T ]
+}
+object RateOrder extends RateOrderLowImplicits {
    implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : RateOrder[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
 //   implicit val bothScalar = new Impl[ scalar, scalar, scalar ]
 //   implicit val bothControl= new Impl[ control, control, control ]
@@ -126,19 +138,19 @@ object MaybeRateOrder extends MaybeRateOrderLowImplicits {
    implicit def greater[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
    implicit def less[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
 
-   private class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends RateOrder[ R, S, T ]
+//   private class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends RateOrder[ R, S, T ]
 }
 //sealed trait MaybeRateOrder[ -R <: Rate, -S <: Rate, -T <: Rate ]
-sealed trait MaybeRateOrder[ R <: Rate, S <: Rate, T <: Rate ]
+sealed trait RateOrder[ -R <: Rate, S <: Rate, T <: Rate ]
 
-case class RateOrderUnknown[ R <: Rate, S <: Rate ]() extends MaybeRateOrder[ R, S, Rate ] {
+//case class RateOrderUnknown[ R <: Rate, S <: Rate ]() extends RateOrder[ R, S, Rate ] {
 //   def getOrElse( r: => R, s: => S ) = Rate.highest( r, s )
-}
+//}
 
-sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] extends MaybeRateOrder[ R, S, T ] {
-//   def in1: R
-//   def in2: S
-//   def out: T
-
-//   def getOrElse( r: => R, s: => S ) : T = out
-}
+//sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] extends MaybeRateOrder[ R, S, T ] {
+////   def in1: R
+////   def in2: S
+////   def out: T
+//
+////   def getOrElse( r: => R, s: => S ) : T = out
+//}

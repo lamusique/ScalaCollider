@@ -95,8 +95,8 @@ object Mix {
    private def sum[ R <: Rate ]( elems: Multi[ /* R, */ GE[ R ]])/*( implicit r: RateOrder[ R, R, R ])*/ : IIdxSeq[ UGenIn /*[ R ]*/] = {
       val _elems     = elems.mexpand
       val _sz_elems  = _elems.size
-//      implicit val r = MaybeRateOrder.same( elems.rate )
-      implicit val r = MaybeRateOrder.same[ R ] // ( elems.rate )
+//      implicit val r = RateOrder.same( elems.rate )
+      implicit val r = RateOrder.same[ R ] // ( elems.rate )
       if( _sz_elems > 0 ) _elems.reduceLeft( _ + _ ).expand else IIdxSeq.empty
    }
 }

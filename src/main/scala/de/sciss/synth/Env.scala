@@ -240,7 +240,7 @@ extends AbstractEnv {
 //      GE.fromSeq[ Rate ]( res )
       // res1// : AnyMulti // geSeqToGE[ UGenIn ]( res )
 //      GE.fromSeq( res.toSeq )
-      GE.fromAnySeq( res )
+      GE.fromSeq[ Rate ]( res )
    }
 
    def isSustained = releaseNode != Constant( -99 )
@@ -266,7 +266,7 @@ extends AbstractEnv {
 //      Multi.bubbleGen( res )
 //      GE.fromSeq[ Rate ]( res )
 //      GE.fromSeq( res )
-      GE.fromAnySeq( res )
+      GE.fromSeq[ Rate ]( res )
    }
 
    def isSustained = false

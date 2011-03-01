@@ -29,20 +29,19 @@
 package de.sciss.synth.ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import de.sciss.synth.{LazyExpander, SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c,
-   GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
+import de.sciss.synth.{HigherEqualRate, LazyExpander, SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
 import UGenHelper._
 
 /**
  *    @version 0.13, 03-Jan-11
  */
 object MulAdd {
-   def ar( in: GE[ audio ],   mul: AnyGE, add: AnyGE ) : MulAdd[ audio ]   = apply[ audio ](   /* audio, */   in, mul, add )
-   def kr( in: GE[ control ], mul: AnyGE, add: AnyGE ) : MulAdd[ control ] = apply[ control ]( /* control, */ in, mul, add )
-   def ir( in: GE[ scalar ],  mul: AnyGE, add: AnyGE ) : MulAdd[ scalar ]  = apply[ scalar ](  /* scalar, */  in, mul, add )
+   def ar[ S <: Rate, T <: Rate ]( in: GE[ audio ],   mul: GE[ S ], add: GE[ T ])( implicit r1: HigherEqualRate[ audio,   S ], r2: HigherEqualRate[ audio,   T ]) : MulAdd[ audio,   S, T ] = apply[ audio, S, T ](   in, mul, add )
+   def kr[ S <: Rate, T <: Rate ]( in: GE[ control ], mul: GE[ S ], add: GE[ T ])( implicit r1: HigherEqualRate[ control, S ], r2: HigherEqualRate[ control, T ]) : MulAdd[ control, S, T ] = apply[ control, S, T ]( in, mul, add )
+   def ir[ S <: Rate, T <: Rate ]( in: GE[ scalar ],  mul: GE[ S ], add: GE[ T ])( implicit r1: HigherEqualRate[ scalar,  S ], r2: HigherEqualRate[ scalar,  T ]) : MulAdd[ scalar,  S, T ] = apply[ scalar, S, T ](  in, mul, add )
 }
 
-case class MulAdd[ +R <: Rate ]( /* rate: R, */ in: GE[ R ], mul: AnyGE, add: AnyGE )
+case class MulAdd[ +R <: Rate, S <: Rate, T <: Rate ]( in: GE[ R ], mul: GE[ S ], add: AnyGE ) ( implicit r1: HigherEqualRate[ R, S ], r2: HigherEqualRate[ R, T ])
 extends LazyExpander[ UGenIn ] with GE[ R ] {
    protected def expandUGens = {
       val _in: IIdxSeq[ UGenIn ]    = in.expand
