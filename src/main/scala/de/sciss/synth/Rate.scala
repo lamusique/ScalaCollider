@@ -112,17 +112,37 @@ sealed trait HigherRate[ R <: Rate, S <: Rate ] {
    def rate1: R
    def rate2: S
 }
-object RateOrder {
-   implicit def same[ R <: Rate ]( implicit rate: R ) : RateOrder[ R, R, R ] = new Impl[ R, R, R ]( rate, rate, rate )
-   implicit def greater[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrder.Impl[ R, S, R ]( rel.rate1, rel.rate2, rel.rate1 )
-   implicit def less[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrder.Impl[ R, S, S ]( rel.rate2, rel.rate1, rel.rate1 )
 
-   private [synth] class Impl[ R <: Rate, S <: Rate, T <: Rate ]( val in1: R, val in2: S, val out: T ) extends RateOrder[ R, S, T ]
+sealed trait MaybeRateOrderLowImplicits {
+   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrderUnknown[ R, S ]()
 }
-sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] {
-   def in1: R
-   def in2: S
+object MaybeRateOrder extends MaybeRateOrderLowImplicits {
+   implicit def same[ R <: Rate ]( implicit rate: R ) : RateOrder[ R, R, R ] = new RateOrder.Impl[ R, R, R ]( /* rate, rate, */ rate )
+   implicit def greater[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrder.Impl[ R, S, R ]( /* rel.rate1, rel.rate2, */ rel.rate1 )
+   implicit def less[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrder.Impl[ R, S, S ]( /* rel.rate2, rel.rate1, */ rel.rate1 )
+}
+sealed trait MaybeRateOrder[ R <: Rate, S <: Rate, T <: Rate ] {
+//   def orElse( r: R, s: S, t: T ) : RateOrder[ R, S, T ]
+//   def orElse( t: => T ) : RateOrder[ R, S, T ]
+   def getOrElse( r: => R, s: => S ) : T
+}
+case class RateOrderUnknown[ R <: Rate, S <: Rate ]() extends MaybeRateOrder[ R, S, Rate ]{
+   def getOrElse( r: => R, s: => S ) = Rate.highest( r, s )
+}
+
+object RateOrder {
+//   implicit def same[ R <: Rate ]( implicit rate: R ) : RateOrder[ R, R, R ] = new Impl[ R, R, R ]( rate, rate, rate )
+//   implicit def greater[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ R, S ]) : RateOrder[ R, S, R ] = new RateOrder.Impl[ R, S, R ]( rel.rate1, rel.rate2, rel.rate1 )
+//   implicit def less[ R <: Rate, S <: Rate ]( implicit rel: HigherRate[ S, R ]) : RateOrder[ R, S, S ] = new RateOrder.Impl[ R, S, S ]( rel.rate2, rel.rate1, rel.rate1 )
+
+   private [synth] class Impl[ R <: Rate, S <: Rate, T <: Rate ]( /* val in1: R, val in2: S, */ val out: T ) extends RateOrder[ R, S, T ]
+}
+sealed trait RateOrder[ R <: Rate, S <: Rate, T <: Rate ] extends MaybeRateOrder[ R, S, T ] {
+//   def in1: R
+//   def in2: S
    def out: T
+
+   def getOrElse( r: => R, s: => S ) : T = out
 }
 //trait RateRelations {
 ////   implicit val audioImp   = audio

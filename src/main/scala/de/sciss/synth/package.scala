@@ -185,7 +185,9 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //  implicit def intToStringOrInt( x: Int ) = new StringOrInt( x )
   
    // explicit methods
-   def play /*[ R <: Rate, S <: Rate ] */( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
+
+// we remove the overloading as it causes problems with the GE -> Multi conversion
+//   def play /*[ R <: Rate, S <: Rate ] */( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
    def play /*[ R <: Rate, S <: Rate ] */( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[Float] = Some( 0.02f ),
              addAction: AddAction = addToHead )( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {

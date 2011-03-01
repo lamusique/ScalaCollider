@@ -89,7 +89,9 @@ trait Multi[ R <: Rate, +G <: GE[ R, UGenIn ]] {
  *    @version 0.11, 26-Aug-10
  */
 object GE {
-   implicit def bubble[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
+   // XXX is the ever in effect?
+   implicit def bubbleGen[ R <: Rate, G <: GE[ R, UGenIn ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
+   implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
 
    implicit def fromSeq[ R <: Rate, U <: UGenIn ]( x: Seq[ GE[ R, U ]])( implicit rate: R  ) : GE[ R, U ] = {
       x match {
@@ -256,14 +258,16 @@ trait GE[ R <: Rate, +U <: UGenIn ] extends Expands[ U ] /* with Multi[ GE[ R, U
    import BinaryOp._
 
    // binary ops
-   def +[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: RateOrder[ R, S, T ]) =
-      Plus.make /*[ R, S, T ]*/( r.out, this, b )
-   
-   def -[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: RateOrder[ R, S, T ]) =
-      Minus.make /*[ R, S, T ]*/( r.out, this, b )
+   private def binOp[ S <: Rate, T <: Rate ]( op: BinaryOp.Op, b: GE[ S, UGenIn ])
+                                            ( implicit r: MaybeRateOrder[ R, S, T ]) : GE[ T, UGenIn ] =
+      op.make( r.getOrElse( this.rate, b.rate ), this, b )
 
-   def *[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: RateOrder[ R, S, T ]) =
-      Times.make /*[ R, S, T ]*/( r.out, this, b )
+   def +[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Plus, b )
+//      Plus.make /*[ R, S, T ]*/( r.getOrElse( this.rate, b.rate ), this, b )
+   
+   def -[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Minus, b )
+
+   def *[ S <: Rate, T <: Rate ]( b: GE[ S, UGenIn ])( implicit r: MaybeRateOrder[ R, S, T ]) = binOp( Times, b )
 
 //// def div( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/*( implicit r: RateOrder[ R, S, T ])*/ = : GE      = IDiv.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 //

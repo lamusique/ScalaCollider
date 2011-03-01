@@ -93,14 +93,13 @@ object ScalaCollider {
       import ugen._
 
 // harmonic swimming
-      implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
+//      implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
 
       val syn = play() {
-          val f = 50       // fundamental frequency
-          val p = 20       // number of partials per channel
-          val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
-//         val x: AnyMulti = Mix.tabulate(p) { i =>
-          val y = Mix.fill(p) { val i = 1
+         val f = 50       // fundamental frequency
+         val p = 20       // number of partials per channel
+         val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
+         Mix.tabulate(p) { i =>
               val sig = SinOsc.ar( f * (i+1) ) * // freq of partial
                   LFNoise1.kr(
                       List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate
@@ -109,10 +108,15 @@ object ScalaCollider {
                   ).max( 0 )   // clip negative amplitudes to zero
               sig // GE.bubble( sig )
           }
-//         bubble( y )
-//         null: Node
-         y
       }
+   }
+
+   def test4( g: GE[audio, UGenIn]) = g + 33
+//   def test5[ R <: Rate ]( g: GE[ R, UGenIn ]) : AnyGE = g + 33
+   def test6( g: AnyGE ) : AnyGE = g + 33
+   def test7( g: GE[audio, UGenIn]) {
+      val h: GE[audio, UGenIn] = test4( g )
+//      val i: GE[control, UGenIn] = test4( g )
    }
 
 //   def test {
