@@ -91,10 +91,10 @@ case object demand extends demand {
 //   }
 //}
 
-trait ScalarRated  { def rate: scalar = scalar }
-trait ControlRated { def rate: control = control }
-trait AudioRated   { def rate: audio = audio }
-trait DemandRated  { def rate: demand = demand }
+//trait ScalarRated  { def rate: scalar = scalar }
+//trait ControlRated { def rate: control = control }
+//trait AudioRated   { def rate: audio = audio }
+//trait DemandRated  { def rate: demand = demand }
 
 object HigherRate {
 //   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new Impl[ demand, audio ] // (   demand,  audio   )

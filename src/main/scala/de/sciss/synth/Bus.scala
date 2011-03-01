@@ -56,7 +56,7 @@ object Bus {
 	}
 }
 
-trait Bus {
+sealed trait Bus {
    def rate: Rate
    def index: Int
    def numChannels: Int
@@ -65,8 +65,10 @@ trait Bus {
 }
 
 case class ControlBus( server: Server, index: Int, numChannels: Int )
-extends Bus with ControlRated {
+extends Bus {
 	private var released = false
+
+   def rate : Rate = control
 
 	def free {
 	   if( released ) error( this.toString + " : has already been freed" )
@@ -128,8 +130,10 @@ extends Bus with ControlRated {
 }
 
 case class AudioBus( server: Server, index: Int, numChannels: Int )
-extends Bus with AudioRated {
+extends Bus {
    private var released = false
+
+   def rate : Rate = audio
 
    def free {
       if( released ) error( this.toString + " : has already been freed" )

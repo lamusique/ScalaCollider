@@ -299,7 +299,7 @@ case class LFSaw[ R <: Rate ](rate: R, freq: AnyGE, iphase: AnyGE) extends Singl
 object K2A {
    def ar(in: AnyGE) = apply(in)
 }
-case class K2A(in: AnyGE) extends SingleOutUGenSource[audio] with AudioRated {
+case class K2A(in: AnyGE) extends SingleOutUGenSource[audio] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => new SingleOutUGen("K2A", audio, IIdxSeq( _in(i))))
@@ -309,7 +309,7 @@ case class K2A(in: AnyGE) extends SingleOutUGenSource[audio] with AudioRated {
 object A2K {
    def kr(in: AnyGE) = apply(in)
 }
-case class A2K(in: AnyGE) extends SingleOutUGenSource[control] with ControlRated {
+case class A2K(in: AnyGE) extends SingleOutUGenSource[control] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => new SingleOutUGen("A2K", control, IIdxSeq( _in(i))))
@@ -319,7 +319,7 @@ case class A2K(in: AnyGE) extends SingleOutUGenSource[control] with ControlRated
 object T2K {
    def kr(in: AnyGE) = apply(in)
 }
-case class T2K(in: AnyGE) extends SingleOutUGenSource[control] with ControlRated {
+case class T2K(in: AnyGE) extends SingleOutUGenSource[control] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => new SingleOutUGen("T2K", control, IIdxSeq( _in(i))))
@@ -329,7 +329,7 @@ case class T2K(in: AnyGE) extends SingleOutUGenSource[control] with ControlRated
 object T2A {
    def ar(in: AnyGE) = apply(in)
 }
-case class T2A(in: AnyGE) extends SingleOutUGenSource[audio] with AudioRated {
+case class T2A(in: AnyGE) extends SingleOutUGenSource[audio] {
    protected def expandUGens = {
       val _in: IIdxSeq[UGenIn] = in.expand
       IIdxSeq.tabulate(_in.size)(i => new SingleOutUGen("T2A", audio, IIdxSeq( _in(i))))
@@ -352,7 +352,7 @@ object Silent {
    def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
 }
-case class Silent(numChannels: Int) extends MultiOutUGenSource[audio] with AudioRated {
+case class Silent(numChannels: Int) extends MultiOutUGenSource[audio] {
 //   protected def expandUGens = IIdxSeq(SilentUGen(numChannels))
    protected def expandUGens = IIdxSeq(new MultiOutUGen[audio]("Silent", audio, IIdxSeq.fill(numChannels)(audio), IIdxSeq.empty))
 }

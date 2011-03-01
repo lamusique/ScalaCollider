@@ -260,7 +260,7 @@ case class LFNoise1[ R <: Rate ](rate: R, freq: AnyGE) extends SingleOutUGenSour
 //   }
 //}
 //case class LFNoise2UGen(rate: Rate, freq: UGenIn) extends SingleOutUGen(IIdxSeq(freq)) with UsesRandSeed
-case class Rand(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) extends SingleOutUGenSource[scalar] with ScalarRated with UsesRandSeed {
+case class Rand(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f) extends SingleOutUGenSource[scalar] with UsesRandSeed {
    protected def expandUGens = {
       val _lo: IIdxSeq[UGenIn] = lo.expand
       val _hi: IIdxSeq[UGenIn] = hi.expand

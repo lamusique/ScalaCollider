@@ -702,7 +702,7 @@ def kr(src: AnyGE with HasDoneFlag) = apply(src)
 * @see [[de.sciss.synth.ugen.Line]]
 * @see [[de.sciss.synth.ugen.EnvGen]]
 */
-case class Done(src: AnyGE with HasDoneFlag) extends SingleOutUGenSource[control] with HasSideEffect with ControlRated {
+case class Done(src: AnyGE with HasDoneFlag) extends SingleOutUGenSource[control] with HasSideEffect {
    protected def expandUGens = {
       val _src: IIdxSeq[UGenIn] = src.expand
       _src.headOption match {
@@ -788,7 +788,7 @@ def kr(trig: AnyGE) = apply(trig)
 * @see [[de.sciss.synth.ugen.Free]]
 * @see [[de.sciss.synth.ugen.PauseSelf]]
 */
-case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control] with HasSideEffect with ControlRated {
+case class FreeSelf(trig: AnyGE) extends SingleOutUGenSource[control] with HasSideEffect {
    protected def expandUGens = {
       val _trig: IIdxSeq[UGenIn] = trig.expand
       val _exp_sz = _trig.size
@@ -904,7 +904,7 @@ def kr(src: AnyGE with HasDoneFlag) = apply(src)
 * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
 * @see [[de.sciss.synth.ugen.Done]]
 */
-case class FreeSelfWhenDone(src: AnyGE with HasDoneFlag) extends SingleOutUGenSource[control] with HasSideEffect with ControlRated {
+case class FreeSelfWhenDone(src: AnyGE with HasDoneFlag) extends SingleOutUGenSource[control] with HasSideEffect {
    protected def expandUGens = {
       val _src: IIdxSeq[UGenIn] = src.expand
       IIdxSeq.tabulate(_src.size)(i => new SingleOutUGen("FreeSelfWhenDone", control, IIdxSeq( _src(i))))

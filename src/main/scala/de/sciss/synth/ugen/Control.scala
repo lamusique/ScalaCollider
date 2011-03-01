@@ -73,7 +73,7 @@ object TrigControl {
    def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = TrigControl( values, name )
    def kr( values: Float* ) : TrigControl = kr( IIdxSeq( values: _* ))
 }
-case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ control ] with ControlRated {
+case class TrigControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ control ] {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( new TrigControlUGen( values.size, specialIndex ))
@@ -84,7 +84,7 @@ class TrigControlUGen private[ugen]( numChannels: Int, override val specialIndex
 extends MultiOutUGen[ control ]( "TrigControl", control, IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty ) /* with ControlRated */ with HasSideEffect
 
 case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill[ control ]( values.size )( control )) with ControlRated {
+extends AbstractControlProxy[ control, TrigControlProxy ]( IIdxSeq.fill[ control ]( values.size )( control )) {
    def factory = TrigControlFactory
 }
 
@@ -98,7 +98,7 @@ object AudioControl {
    def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = AudioControl( values, name )
    def ar( values: Float* ) : AudioControl = ar( IIdxSeq( values: _* ))
 }
-case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ audio ] with AudioRated {
+case class AudioControl( values: IIdxSeq[ Float ], name: Option[ String ]) extends MultiOutUGenSource[ audio ] {
    protected def expandUGens = {
       val specialIndex = UGenGraph.builder.addControl( values, name )
       IIdxSeq( new AudioControlUGen( values.size, specialIndex ))
@@ -109,7 +109,7 @@ class AudioControlUGen private[ugen]( numChannels: Int, override val specialInde
 extends MultiOutUGen[ audio ]( "AudioControl", audio, IIdxSeq.fill[ audio ]( numChannels )( audio ), IIdxSeq.empty ) /* with AudioRated */ with HasSideEffect
 
 case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill[ audio ]( values.size )( audio )) with AudioRated {
+extends AbstractControlProxy[ audio, AudioControlProxy ]( IIdxSeq.fill[ audio ]( values.size )( audio )) {
    def factory = AudioControlFactory
 }
 
