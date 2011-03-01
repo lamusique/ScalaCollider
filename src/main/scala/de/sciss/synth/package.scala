@@ -62,9 +62,10 @@ package synth {
 package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.sciss.synth.RateRelations */ {
    // GEs
 
-   type AnyUGenIn = UGenIn // [ _ <: Rate ]
-   type AnyMulti  = Multi[ R, GE[ R /*, UGenIn */]] forSome { type R <: Rate }
+//   type AnyUGenIn = UGenIn // [ _ <: Rate ]
+//   type AnyMulti  = Multi[ R, GE[ R /*, UGenIn */]] forSome { type R <: Rate }
    type AnyGE     = GE[ _ <: Rate /*, UGenIn */ ] // forSome { type R <: Rate }
+   type AnyMulti  = Multi[ AnyGE ]
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
 //   type audio     = audio.type

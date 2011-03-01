@@ -45,7 +45,7 @@ object Mix {
    /**
     * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
     */
-	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => Multi[ R, GE[ R ]])( implicit rate: R ) : Mix.Seq[ R ] =
+	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => Multi[ /* R, */ GE[ R ]])( implicit rate: R ) : Mix.Seq[ R ] =
       Mix.Seq( IIdxSeq.tabulate( n )( i => fun( i )))
 
 //   def tabulate[ R <: Rate, G ]( n: Int )( fun: (Int) => G )( implicit rate: R, view: G => Multi[ R, GE[ R, UGenIn ]]) : Mix.Seq[ R ] =
@@ -54,7 +54,7 @@ object Mix {
    /**
     * A mixing idiom that corresponds to @Seq.fill@.
     */
-   def fill[ R <: Rate ]( n: Int )( thunk: => Multi[ R, GE[ R ]])( implicit rate: R ) : Mix.Seq[ R ] =
+   def fill[ R <: Rate ]( n: Int )( thunk: => Multi[ /* R, */ GE[ R ]])( implicit rate: R ) : Mix.Seq[ R ] =
       Mix.Seq( IIdxSeq.fill( n )( thunk ))
 
    /**
@@ -71,9 +71,9 @@ object Mix {
     */
    def mono[ R <: Rate ]( elem: GE[ R ])( implicit rate: R ) : Mix[ R ] = apply( elem )
 
-   def seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ R, GE[ R ]]])( implicit rate: R ) = Seq( elems )
+   def seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ /* R, */ GE[ R ]]])( implicit rate: R ) = Seq( elems )
 
-   case class Seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ R, GE[ R ]]])( implicit val rate: R ) /*( implicit r: RateOrder[ R, R, R ])*/
+   case class Seq[ R <: Rate ]( elems: IIdxSeq[ Multi[ /* R, */ GE[ R ]]])( implicit val rate: R ) /*( implicit r: RateOrder[ R, R, R ])*/
    extends LazyExpander[ UGenIn ] with GE[ R ] {
 
 //      def force( b: UGenGraphBuilder ) { expand( b )}
@@ -92,7 +92,7 @@ object Mix {
       }
    }
 
-   private def sum[ R <: Rate ]( elems: Multi[ R, GE[ R ]])/*( implicit r: RateOrder[ R, R, R ])*/ : IIdxSeq[ UGenIn /*[ R ]*/] = {
+   private def sum[ R <: Rate ]( elems: Multi[ /* R, */ GE[ R ]])/*( implicit r: RateOrder[ R, R, R ])*/ : IIdxSeq[ UGenIn /*[ R ]*/] = {
       val _elems     = elems.mexpand
       val _sz_elems  = _elems.size
 //      implicit val r = MaybeRateOrder.same( elems.rate )
@@ -117,7 +117,7 @@ object Mix {
 * Mix( Pan2.ar( SinOsc.ar :: Saw.ar :: Nil )) --> Pan2.ar( SinOsc.ar ) + Pan2.ar( Saw.ar )
 * }}}
 */
-case class Mix[ R <: Rate ]( elems: Multi[ R, GE[ R ]])/*( implicit r: RateOrder[ R, R, R ])*/
+case class Mix[ R <: Rate ]( elems: Multi[ /* R, */ GE[ R ]])/*( implicit r: RateOrder[ R, R, R ])*/
 extends LazyExpander[ UGenIn ] with GE[ R ] {
    import Mix._
 

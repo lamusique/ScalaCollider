@@ -134,7 +134,7 @@ extends ControlProxyLike[ R, Impl ] {
 //	final def outputs: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map(
 //      tup => ControlOutProxy[ R ]( this, tup._2, tup._1 ))
 
-   final def expand: IIdxSeq[ AnyUGenIn /* [ R ] */ ] = outputRates.zipWithIndex.map(
+   final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = outputRates.zipWithIndex.map(
       tup => ControlUGenOutProxy /* [ R ] */ ( this, tup._2, tup._1 ))
 
 //   final override def toString: String = {

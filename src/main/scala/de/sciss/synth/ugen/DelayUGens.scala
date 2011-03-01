@@ -355,12 +355,12 @@ def ar(numChannels: Int, buf: AnyGE, speed: AnyGE = 1.0f, trig: AnyGE = 1.0f, st
 */
 case class PlayBuf[ R <: Rate ](rate: R, numChannels: Int, buf: AnyGE, speed: AnyGE, trig: AnyGE, startPos: AnyGE, loop: AnyGE, doneAction: AnyGE) extends MultiOutUGenSource[R] with HasSideEffect with HasDoneFlag {
    protected def expandUGens = {
-      val _buf: IIdxSeq[AnyUGenIn] = buf.expand
-      val _speed: IIdxSeq[AnyUGenIn] = speed.expand
-      val _trig: IIdxSeq[AnyUGenIn] = trig.expand
-      val _startPos: IIdxSeq[AnyUGenIn] = startPos.expand
-      val _loop: IIdxSeq[AnyUGenIn] = loop.expand
-      val _doneAction: IIdxSeq[AnyUGenIn] = doneAction.expand
+      val _buf: IIdxSeq[UGenIn] = buf.expand
+      val _speed: IIdxSeq[UGenIn] = speed.expand
+      val _trig: IIdxSeq[UGenIn] = trig.expand
+      val _startPos: IIdxSeq[UGenIn] = startPos.expand
+      val _loop: IIdxSeq[UGenIn] = loop.expand
+      val _doneAction: IIdxSeq[UGenIn] = doneAction.expand
       val _sz_buf = _buf.size
       val _sz_speed = _speed.size
       val _sz_trig = _trig.size

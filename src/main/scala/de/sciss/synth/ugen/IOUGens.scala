@@ -73,7 +73,7 @@ import UGenHelper._
 //}
 //case class ReplaceOutUGen(bus: UGenIn, in: IIdxSeq[UGenIn]) extends ZeroOutUGen(IIdxSeq[UGenIn](bus).++(in)) with AudioRated with WritesBus
 object Out {
-   def ar(bus: AnyGE, in: Multi[audio, GE[audio]]) = apply(audio, bus, in)
+   def ar(bus: AnyGE, in: Multi[/* audio, */ GE[audio]]) = apply(audio, bus, in)
    def kr(bus: AnyGE, in: AnyMulti) = apply(control, bus, in)
    def ir(bus: AnyGE, in: AnyMulti) = apply(scalar, bus, in)
 }

@@ -38,13 +38,13 @@ trait Expands[ +R ] {
 }
 
 object Multi {
-   implicit def flatten[ R <: Rate ]( m: Multi[ R, GE[ R ]]) : GE[ R ] = Flatten( m )
+   implicit def flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) : GE[ R ] = Flatten( m )
 
 //   def joint[ G <: AnyGE ]( g: G ) = Multi.Joint( g )
 //   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
 //   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
 
-   case class Flatten[ R <: Rate ]( m: Multi[ R, GE[ R ]]) extends GE[ R ] {
+   case class Flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) extends GE[ R ] {
 //      def rate = m.rate
       override def toString = "Multi.flatten(" + m + ")"
       def expand : IIdxSeq[ UGenIn ] = {
@@ -52,12 +52,12 @@ object Multi {
       }
    }
 
-   case class Joint[ R <: Rate, G <: GE[ R ]]( g: G ) extends Multi[ R, G ] {
+   case class Joint[ /* R <: Rate, */ G <: AnyGE ]( g: G ) extends Multi[ /* R, */ G ] {
 //      def rate = g.rate
       def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
    }
 
-   case class Disjoint[ R <: Rate ]( g: GE[ R ]) extends Multi[ R, GE[ R ]] {
+   case class Disjoint[ R <: Rate ]( g: GE[ R ]) extends Multi[ /* R, */ GE[ R ]] {
 //      def rate = g.rate
       def mexpand : IIdxSeq[ GE[ R ]] = {
 //         implicit val r = g.rate
@@ -74,7 +74,7 @@ object Multi {
 //   }
 }
 
-trait Multi[ R <: Rate, +G <: GE[ R ]] {
+trait Multi[ /* R <: Rate, */ +G <: AnyGE /* GE[ R ] */] {
    def mexpand: IIdxSeq[ G ]
 //   def rate: R
 }
@@ -90,8 +90,8 @@ trait Multi[ R <: Rate, +G <: GE[ R ]] {
  */
 object GE {
    // XXX is the ever in effect?
-   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ R, G ] = Multi.Joint( g )
-   implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ R, GE[ R ]] = Multi.Joint( g )
+   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
+   implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ /* R, */ GE[ R ]] = Multi.Joint( g )
 
    implicit def fromSeq[ R <: Rate ]( x: Seq[ GE[ R ]])( implicit rate: R ) : GE[ R ] = {
       x match {

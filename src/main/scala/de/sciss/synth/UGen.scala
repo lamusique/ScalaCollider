@@ -91,7 +91,7 @@ abstract class UGen
 
    def rate: Rate // YYY
    def numOutputs: Int // YYY
-   def outputs: IIdxSeq[ AnyUGenIn ] // YYY   XXX could be UGenProxy
+   def outputs: IIdxSeq[ UGenIn ] // YYY   XXX could be UGenProxy
 
 //   def name = { val cn = getClass.getName; cn.substring( cn.lastIndexOf( '.' ) + 1 )}
 //   def name = {
@@ -103,7 +103,7 @@ abstract class UGen
    def name : String
    def displayName = name
 //   def outputRates: Seq[ Rate ]
-   def inputs: Seq[ AnyUGenIn ]
+   def inputs: Seq[ UGenIn ]
    def numInputs = inputs.size
    def source = this
    def specialIndex = 0
@@ -124,7 +124,7 @@ abstract class UGen
 }
 
 // a class for UGens with multiple outputs
-class MultiOutUGen[ R <: Rate /*, +Repr <: UGen */ ]( val name: String, val rate: R, outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ AnyUGenIn ])
+class MultiOutUGen[ R <: Rate /*, +Repr <: UGen */ ]( val name: String, val rate: R, outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
 //   extends UGen with GE[ /*R,*/ UGenIn /*[ R ]*/]
 extends UGen with GE[ R ] { // UGenProxy[ Repr ]] {
    final override def numOutputs = outputRates.size
@@ -169,7 +169,7 @@ trait Lazy /* extends Expands[ UGen ] */ {
 
 trait ZeroOutUGenSource extends LazyExpander[ ZeroOutUGen ]
 trait SingleOutUGenSource[ R <: Rate ] extends LazyExpander[ UGenIn ] with GE[ R ]
-trait MultiOutUGenSource[ R <: Rate ] extends LazyExpander[ MultiOutUGen[ R ]] with Multi[ R, GE[ R ]] {
+trait MultiOutUGenSource[ R <: Rate ] extends LazyExpander[ MultiOutUGen[ R ]] with Multi[ /* R, */ GE[ R ]] {
    def mexpand = expand
 }
 
