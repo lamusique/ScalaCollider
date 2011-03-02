@@ -85,11 +85,6 @@ case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float
    }
 }
 
-private[synth] object UGenHelper {
-//   def maxInt( i: Int, is: Int* ) : Int = is.foldLeft( i )( math.max( _, _ ))
-   def maxInt( is: Int* ) : Int = is.reduceLeft( math.max( _, _ ))
-}
-
 object SynthGraph {
    def wrapOut[ R <: Rate ]( thunk: => Multi[ GE[ R ]], fadeTime: Option[Float] = Some(0.02f) )
                                       /*( implicit r: RateOrder[ control, R, S ])*/ =
@@ -117,7 +112,7 @@ object SynthGraph {
       // this is slightly more costly than what sclang does
       // (using non-linear shape plus an extra unary op),
       // but it fadeout is much smoother this way...
-		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+		EnvGen.kr( Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 ),
          gate, timeScale = dt, doneAction = freeSelf ).squared
 	}
 

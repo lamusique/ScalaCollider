@@ -26,11 +26,12 @@
  *  Changelog:
  */
 
-package de.sciss.synth.ugen
+package de.sciss.synth
+package ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import de.sciss.synth.{LazyExpander, SingleOutUGenSource, AnyGE, scalar, control, audio, Constant => c, GE, Rate, RichFloat, HasSideEffect, SingleOutUGen, UGenHelper, UGenIn}
-import UGenHelper._
+import de.sciss.synth.{Constant => c}
+import util.UGenHelper._
 
 /**
  *    @version 0.13, 03-Jan-11
@@ -112,7 +113,7 @@ object MulAddUGen {
 object UnaryOp {
    unop =>
 
-   import RichFloat._
+   import RichNumber._
 
    sealed abstract class Op( val id: Int ) {
       def make[ R <: Rate ]( /* rate: R, */ a: GE[ R ]) = UnaryOp[ R ]( /* rate, */ this, a )
@@ -313,7 +314,7 @@ object BinaryOp {
       }
    }
 
-   import RichFloat._
+   import RichNumber._
 
    case object Plus           extends Op(  0 ) {
       override val name = "+"

@@ -450,7 +450,7 @@ case class OSCNodeFreeMessage( ids: Int* )
 extends OSCMessage( "/n_free", ids: _* )
 with OSCSyncCmd
 
-case class OSCNodeMapMessage( id: Int, mappings: SingleControlKBusMap* )
+case class OSCNodeMapMessage( id: Int, mappings: ControlKBusMap.Single* )
 extends OSCMessage( "/n_map", (id +: mappings.flatMap( _.toMapSeq )): _* )
 with OSCSyncCmd
 
@@ -458,7 +458,7 @@ case class OSCNodeMapnMessage( id: Int, mappings: ControlKBusMap* )
 extends OSCMessage( "/n_mapn", (id +: mappings.flatMap( _.toMapnSeq )): _* )
 with OSCSyncCmd
 
-case class OSCNodeMapaMessage( id: Int, mappings: SingleControlABusMap* )
+case class OSCNodeMapaMessage( id: Int, mappings: ControlABusMap.Single* )
 extends OSCMessage( "/n_mapa", (id +: mappings.flatMap( _.toMapaSeq )): _* )
 with OSCSyncCmd
 

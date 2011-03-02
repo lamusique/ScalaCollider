@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import UGenHelper._
+import util.UGenHelper._
 ///**
 // * A UGen that reports the server's current control rate. This is equivalent to the reciprocal
 // * of `ControlDur`

@@ -1,3 +1,5 @@
+package de.sciss.synth.util
+
 /*
  *  NodeIDAllocator.scala
  *  (ScalaCollider)
@@ -25,8 +27,6 @@
  *
  *  Changelog:
  */
-
-package de.sciss.synth
 
 /**
  *    @version	0.12, 22-Apr-10

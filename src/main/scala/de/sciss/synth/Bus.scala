@@ -29,30 +29,28 @@
 package de.sciss.synth
 
 import osc.{ OSCControlBusGetMessage, OSCControlBusSetMessage, OSCControlBusSetnMessage }
-
-class AllocatorExhaustedException( reason: String )
-extends RuntimeException( reason )
+import util.AllocatorExhaustedException
 
 /**
  *    @version	0.12, 10-May-10
  */
 object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val alloc = server.busses.allocControl( numChannels )
-		if( alloc == -1 ) {
+		val id = server.busses.allocControl( numChannels )
+		if( id == -1 ) {
             throw new AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
 				+ numChannels + " channels on " + server.name + ")" )
 		}
-		ControlBus( server, alloc, numChannels )
+		ControlBus( server, id, numChannels )
 	}
   
 	def audio( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val alloc = server.busses.allocAudio( numChannels )
-		if( alloc == -1 ) {
+		val id = server.busses.allocAudio( numChannels )
+		if( id == -1 ) {
             throw new AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
 				+ numChannels + " channels on " + server.name + ")" )
 		}
-		AudioBus( server, alloc, numChannels )
+		AudioBus( server, id, numChannels )
 	}
 }
 

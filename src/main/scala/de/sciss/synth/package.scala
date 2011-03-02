@@ -33,7 +33,7 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 import osc.{OSCPacket, OSCMessage}
 import synth._
 package synth {
-   abstract sealed class LowPriorityImplicits {
+   abstract private[synth] sealed class LowPriorityImplicits {
       /**
        * This conversion is needed because while generally we
        * can rely on the numeric-widening of Int -> Float, this

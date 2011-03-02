@@ -177,11 +177,11 @@ abstract class Node extends Model {
   		setMsg( "gate" -> value )
 	}
 
-   def map( pairs: SingleControlKBusMap* ) {
+   def map( pairs: ControlKBusMap.Single* ) {
       server ! mapMsg( pairs: _* )
    }
 
-   def mapMsg( pairs: SingleControlKBusMap* ) =
+   def mapMsg( pairs: ControlKBusMap.Single* ) =
       OSCNodeMapMessage( id, pairs: _* )
    
   	def mapn( mappings: ControlKBusMap* ) {
@@ -191,11 +191,11 @@ abstract class Node extends Model {
   	def mapnMsg( mappings: ControlKBusMap* ) =
   		OSCNodeMapnMessage( id, mappings: _* )
 
-   def mapa( pairs: SingleControlABusMap* ) {
+   def mapa( pairs: ControlABusMap.Single* ) {
       server ! mapaMsg( pairs: _* )
    }
 
-   def mapaMsg( pairs: SingleControlABusMap* ) =
+   def mapaMsg( pairs: ControlABusMap.Single* ) =
       OSCNodeMapaMessage( id, pairs: _* )
 
   	def mapan( mappings: ControlABusMap* ) {

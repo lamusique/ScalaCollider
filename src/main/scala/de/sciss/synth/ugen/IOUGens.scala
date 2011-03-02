@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import UGenHelper._
+import util.UGenHelper._
 //object OffsetOut {
 //   def ar(bus: AnyGE, in: Multi[GE[UGenIn]]) = apply(bus, in)
 //}

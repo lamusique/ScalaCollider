@@ -28,7 +28,7 @@
 
 package de.sciss.synth
 
-import collection.immutable.{ IndexedSeq => IIdxSeq }
+import collection.immutable.{NumericRange, IndexedSeq => IIdxSeq}
 
 /**
  *    An element that can be used as an input to a UGen.

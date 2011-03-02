@@ -26,7 +26,7 @@
  *  Changelog:
  */
 
-package de.sciss.synth
+package de.sciss.synth.util
 
 /**
  * 	@version	0.13, 22-Apr-10

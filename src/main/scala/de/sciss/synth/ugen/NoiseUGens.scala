@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import UGenHelper._
+import util.UGenHelper._
 object WhiteNoise {
    def kr: WhiteNoise[control] = kr()
    def kr(mul: AnyGE = 1.0f) = apply[control](control, mul)

@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import UGenHelper._
+import util.UGenHelper._
 //object DegreeToKey {
 //   def kr(buf: AnyGE, in: AnyGE, octave: AnyGE = 12.0f) = apply(control, buf, in, octave)
 //   def ar(buf: AnyGE, in: AnyGE, octave: AnyGE = 12.0f) = apply(audio, buf, in, octave)

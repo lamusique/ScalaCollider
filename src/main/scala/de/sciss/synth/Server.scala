@@ -38,6 +38,7 @@ import collection.immutable.Queue
 import concurrent.SyncVar
 import osc.{ OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
              OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec }
+import util.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 
 /**
  * 	@version    0.16, 03-Aug-10
