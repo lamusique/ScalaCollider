@@ -168,10 +168,10 @@ trait Lazy /* extends Expands[ UGen ] */ {
    protected def expandUGens : IIdxSeq[ U ]
 }
 
-trait ZeroOutUGenSource extends LazyExpander[ ZeroOutUGen ]
+trait ZeroOutUGenSource[ R <: Rate ] extends LazyExpander[ ZeroOutUGen ]
 trait SingleOutUGenSource[ R <: Rate ] extends LazyExpander[ UGenIn ] with GE[ R ]
 trait MultiOutUGenSource[ R <: Rate ] extends LazyExpander[ MultiOutUGen[ R ]] with Multi[ /* R, */ GE[ R ]] {
-   def mexpand = expand
+   final def mexpand = expand
 }
 
 //class HashCache[ T ]( t: T ) {
