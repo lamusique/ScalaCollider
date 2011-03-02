@@ -2,9 +2,35 @@ import sbt._
 import java.io.{ IOException, RandomAccessFile }
 
 class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) {
-   val dep1 = "de.sciss" %% "scalaosc" % "0.21"
+   // ---- dependancies ----
+
+   val dep1 = "de.sciss" %% "scalaosc" % "0.22"
    val dep2 = "de.sciss" %% "scalaaudiofile" % "0.16"
    lazy val demo = demoAction
+
+   // ---- publishing ----
+
+   override def managedStyle  = ManagedStyle.Maven
+   val publishTo              = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
+
+   override def packageDocsJar= defaultJarPath( "-javadoc.jar" )
+   override def packageSrcJar = defaultJarPath( "-sources.jar" )
+   val sourceArtifact         = Artifact.sources( artifactID )
+   val docsArtifact           = Artifact.javadoc( artifactID )
+   override def packageToPublishActions = super.packageToPublishActions ++ Seq( packageDocs, packageSrc )
+
+   override def pomExtra =
+      <licenses>
+        <license>
+          <name>GPL v2+</name>
+          <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+
+   Credentials( Path.userHome / ".ivy2" / ".credentials", log )
+
+   // ---- actions ----
 
    protected def demoAction = {
        val consoleInit = try {

@@ -1,14 +1,14 @@
-h2. ScalaCollider ==<small>-- version 0.14 (built 09-jun-10) --</small>==
+h2. ScalaCollider ==<small>-- version 0.23 (built 02-mar-11) --</small>==
 
 h3. statement
 
-ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2010 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the "GNU General Public License":http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt and comes with absolutely no warranties. To contact the author, send an email to @contact at sciss.de@
+ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2011 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the "GNU General Public License":http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt and comes with absolutely no warranties. To contact the author, send an email to @contact at sciss.de@
 
 h3. requirements / installation
 
-ScalaCollider currently compiles against Scala 2.8.0. It requires Java 1.6 and SuperCollider 3.3.1+. It depends on ScalaOSC ( "github.com/Sciss/ScalaOSC":http://github.com/Sciss/ScalaOSC ) and ScalaAudioFile ( "github.com/Sciss/ScalaAudioFile":http://github.com/Sciss/ScalaAudioFile )
+ScalaCollider currently compiles against Scala 2.8.1. It requires Java 1.6 and SuperCollider 3.3.1+. It depends on ScalaOSC ( "github.com/Sciss/ScalaOSC":http://github.com/Sciss/ScalaOSC ) and ScalaAudioFile ( "github.com/Sciss/ScalaAudioFile":http://github.com/Sciss/ScalaAudioFile )
 
-The repository contains a project file for Intellij IDEA 9 CE, and project files for sbt. Targets for sbt:
+The repository contains a project file for Intellij IDEA 10 CE, and project files for sbt. Targets for sbt:
 
 * @clean@
 * @compile@
@@ -16,7 +16,7 @@ The repository contains a project file for Intellij IDEA 9 CE, and project files
 * @package@
 * @demo@
 
-The easiest way to install ScalaOSC and ScalaAudioFile is to go into their respective git repository clones, and then for each execute
+You should now be able to simply do an @sbt update@ to pull the depenancies from scala-tools.org. If you wish to install ScalaOSC and ScalaAudioFile locally, clone their respective git repositories, and then for each execute
 
 @$ sbt publish-local@
 
