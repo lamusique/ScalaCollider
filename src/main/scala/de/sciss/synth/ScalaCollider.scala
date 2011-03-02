@@ -37,7 +37,7 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo
-      test2
+//      test2
 //      System.exit( 1 )
    }
 
@@ -46,15 +46,15 @@ object ScalaCollider {
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
    }
 
-   def test2 {
-      import de.sciss.osc._
-      val so = new ServerOptionsBuilder
-      so.transport = TCP
-      so.port = 44444
-      Server.test( so.build ) { s =>
-         println( "Booted." )
-      }
-   }
+//   def test2 {
+//      import de.sciss.osc._
+//      val so = new ServerOptionsBuilder
+//      so.transport = TCP
+//      so.port = 44444
+//      Server.test( so.build ) { s =>
+//         println( "Booted." )
+//      }
+//   }
 
 //   def test {
 //      import ugen._
