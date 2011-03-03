@@ -78,9 +78,9 @@ object Out {
 //   def ir[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[scalar, S](scalar, bus, in)( RateCons.ir[ S ])
 
    object RateCons {
-      implicit val ar               = new RateCons[ audio, audio ]
-      implicit def kr[ S <: Rate ]  = new RateCons[ control, S ]
-      implicit def ir[ S <: Rate ]  = new RateCons[ scalar, S ]
+      implicit val ar: RateCons[ audio, audio ]             = new RateCons[ audio, audio ]
+      implicit def kr[ S <: Rate ]: RateCons[ control, S ]  = new RateCons[ control, S ]
+      implicit def ir[ S <: Rate ]: RateCons[ scalar, S ]   = new RateCons[ scalar, S ]
    }
    sealed class RateCons[ R <: Rate, S <: Rate ]
 

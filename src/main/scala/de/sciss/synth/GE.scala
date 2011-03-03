@@ -28,6 +28,7 @@
 
 package de.sciss.synth
 
+import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import ugen.{LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
@@ -56,25 +57,28 @@ object GE {
 //      }
 //   }
 
-   implicit def fromSeq[ R <: Rate ]( xs: Seq[ GE[ R ]]) : GE[ R ] = xs match {
-      case Seq( x ) => x
-      case _ => GESeq[ R ]( xs.toIndexedSeq )
+   // XXX don't we expect Multi[ GE[ R ]] ?
+   implicit def fromSeq[ R <: Rate ]( xs: SSeq[ GE[ R ]]) : GE[ R ] = xs match {
+      case SSeq( x ) => x
+      case _ => new SeqImpl[ R ]( xs.toIndexedSeq )
    }
 
-   implicit def fromIntSeq( xs: Seq[ Int ]) : GE[ scalar ] = xs match {
-      case Seq( single ) => single: Constant
-      case _ => GESeq( xs.map( i => Constant( i.toFloat ))( breakOut ))
+   implicit def fromIntSeq( xs: SSeq[ Int ]) : GE[ scalar ] = xs match {
+      case SSeq( single ) => single: Constant
+      case _ => new SeqImpl[ scalar ]( xs.map( i => Constant( i.toFloat ))( breakOut ))
    }
 
-   implicit def fromFloatSeq( xs: Seq[ Float ]) : GE[ scalar ] = xs match {
-      case Seq( x ) => x: Constant
-      case _ => GESeq( xs.map( f => Constant( f ))( breakOut ))
+   implicit def fromFloatSeq( xs: SSeq[ Float ]) : GE[ scalar ] = xs match {
+      case SSeq( x ) => x: Constant
+      case _ => new SeqImpl[ scalar ]( xs.map( f => Constant( f ))( breakOut ))
    }
 
-   implicit def fromDoubleSeq( xs: Seq[ Double ]) : GE[ scalar ] = xs match {
-      case Seq( x ) => x: Constant
-      case _ => GESeq( xs.map( d => Constant( d.toFloat ))( breakOut ))
+   implicit def fromDoubleSeq( xs: SSeq[ Double ]) : GE[ scalar ] = xs match {
+      case SSeq( x ) => x: Constant
+      case _ => new SeqImpl[ scalar ]( xs.map( d => Constant( d.toFloat ))( breakOut ))
    }
+
+   def fromUGenIns( xs: SSeq[ UGenIn ]) : GE[ Rate ] = new SeqImpl2( xs.toIndexedSeq )
 
 //   implicit def fromSeq[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R ]) : GE[ R ] = {
 //      x match {
@@ -82,6 +86,21 @@ object GE {
 //         case _ => GESeq[ R ]( x.map( view )( breakOut ))
 //      }
 //   }
+
+   private class SeqImpl[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]]) extends GE[ R ] {
+      def expand : IIdxSeq[ UGenIn ] = elems.flatMap( _.expand )
+   }
+   private class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE[ Rate ] {
+      def expand : IIdxSeq[ UGenIn ] = elems
+   }
+
+//   object Seq {
+////      implicit def toIndexedSeq[ R <: Rate ]( g: Seq[ R ]) : IIdxSeq[ GE[ R ]] = g.elems
+////      def apply[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]]) : Seq[ R ] = new SeqImpl( elems )
+//      def apply[ R <: Rate ]( xs: GE[ R ]* ) : Seq[ R ] = new SeqImpl( xs.toIndexedSeq )
+//      def apply( xs: UGenIn* ) : Seq[ Rate ] = new SeqImpl2( xs.toIndexedSeq )
+//   }
+//   sealed trait Seq[ R <: Rate ] extends GE[ R ]
 }
 trait GE[ +R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* with Multi[ GE[ R, U ]] */ {
    ge =>
