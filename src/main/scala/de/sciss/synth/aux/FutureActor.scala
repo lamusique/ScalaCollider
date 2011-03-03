@@ -1,4 +1,4 @@
-package de.sciss.synth.util
+package de.sciss.synth.aux
 
 import concurrent.SyncVar
 import actors.{ Channel, DaemonActor, Future, InputChannel }

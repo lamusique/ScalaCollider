@@ -31,7 +31,7 @@ package ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import de.sciss.synth.{Constant => c}
-import util.UGenHelper._
+import aux.UGenHelper._
 
 /**
  *    @version 0.13, 03-Jan-11

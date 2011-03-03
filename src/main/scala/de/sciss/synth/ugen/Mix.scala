@@ -30,7 +30,7 @@ package de.sciss.synth
 package ugen
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import util.UGenHelper
+import aux.UGenHelper
 
 /**
 *	@version	0.10, 09-Dec-09

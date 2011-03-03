@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 /**
  * '''Warning''': The argument order is different from its sclang counterpart.
  */

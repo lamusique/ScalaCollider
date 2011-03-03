@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 /**
  * A UGen which outputs a value of 1 for a given duration when triggered.
  * 

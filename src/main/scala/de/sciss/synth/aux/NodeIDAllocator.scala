@@ -1,4 +1,4 @@
-package de.sciss.synth.util
+package de.sciss.synth.aux
 
 /*
  *  NodeIDAllocator.scala

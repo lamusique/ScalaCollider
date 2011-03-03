@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 /**
  * A dynamic step noise UGen. Like `LFNoise0`, it generates abruptly changing random values
  * between `-1` and `+1` at a rate given by the `freq` argument, with two differences:

@@ -10,14 +10,14 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 object WhiteNoise {
    def kr: WhiteNoise[control, scalar, control] = kr()
-   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
+   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
    def ar: WhiteNoise[audio, scalar, audio] = ar()
-   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
+   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
 }
-final case class WhiteNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Order[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
+final case class WhiteNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Ord[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
    protected def expandUGens = {
       val _mul = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(new SingleOutUGen("WhiteNoise", rate, IIdxSeq.empty), _mul(i)))
@@ -25,11 +25,11 @@ final case class WhiteNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S]
 }
 object GrayNoise {
    def kr: GrayNoise[control, scalar, control] = kr()
-   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
+   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
    def ar: GrayNoise[audio, scalar, audio] = ar()
-   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
+   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
 }
-final case class GrayNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Order[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
+final case class GrayNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Ord[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
    protected def expandUGens = {
       val _mul = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(new SingleOutUGen("GrayNoise", rate, IIdxSeq.empty), _mul(i)))
@@ -37,11 +37,11 @@ final case class GrayNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])
 }
 object ClipNoise {
    def kr: ClipNoise[control, scalar, control] = kr()
-   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
+   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
    def ar: ClipNoise[audio, scalar, audio] = ar()
-   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
+   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
 }
-final case class ClipNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Order[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
+final case class ClipNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Ord[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
    protected def expandUGens = {
       val _mul = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(new SingleOutUGen("ClipNoise", rate, IIdxSeq.empty), _mul(i)))
@@ -49,11 +49,11 @@ final case class ClipNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])
 }
 object PinkNoise {
    def kr: PinkNoise[control, scalar, control] = kr()
-   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
+   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
    def ar: PinkNoise[audio, scalar, audio] = ar()
-   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
+   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
 }
-final case class PinkNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Order[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
+final case class PinkNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Ord[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
    protected def expandUGens = {
       val _mul = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(new SingleOutUGen("PinkNoise", rate, IIdxSeq.empty), _mul(i)))
@@ -61,11 +61,11 @@ final case class PinkNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])
 }
 object BrownNoise {
    def kr: BrownNoise[control, scalar, control] = kr()
-   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
+   def kr[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[control, S, T]) = apply[control, S, T](control, mul)(rateOrder)
    def ar: BrownNoise[audio, scalar, audio] = ar()
-   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Order[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
+   def ar[S <: Rate, T <: Rate](mul: GE[S] = 1.0f)(implicit rateOrder: Rate.Ord[audio, S, T]) = apply[audio, S, T](audio, mul)(rateOrder)
 }
-final case class BrownNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Order[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
+final case class BrownNoise[R <: Rate, S <: Rate, T <: Rate](rate: R, mul: GE[S])( implicit rateOrder: Rate.Ord[R, S, T]) extends SingleOutUGenSource[T] with UsesRandSeed {
    protected def expandUGens = {
       val _mul = mul.expand
       IIdxSeq.tabulate(_mul.size)(i => BinaryOp.Times.make1(new SingleOutUGen("BrownNoise", rate, IIdxSeq.empty), _mul(i)))

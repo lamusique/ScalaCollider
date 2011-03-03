@@ -86,24 +86,25 @@ case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float
 }
 
 object SynthGraph {
-   def wrapOut[ R <: Rate ]( thunk: => Multi[ GE[ R ]], fadeTime: Option[Float] = Some(0.02f) )
-                                      /*( implicit r: RateOrder[ control, R, S ])*/ =
-      SynthGraph {
-         val res1 = thunk
-//         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
-//         val res2 = if( (rate == audio) || (rate == control) ) {
-//            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
-//            val res2: Multi[ AnyGE ] = o getOrElse res1
-////            val res2 = res1
-//            val out = "out".kr
-////            if( rate == audio ) {
-//               Out( rate, out, res2 )
-////            } else {
-////               Out.kr( out, res2 )
-////            }
-//         } else
-            res1
-      }
+//   def wrapOut[ R <: Rate, S <: Rate ]( thunk: => Multi[ GE[ R ]], fadeTime: Option[Float] = Some(0.02f) )
+//                                     ( implicit r: Rate.Order[ R, control, S ], cons: Out.RateCons[ R, S ]) =
+//      SynthGraph {
+//         val res1 = thunk
+////         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
+////         val res2 = if( (rate == audio) || (rate == control) ) {
+////            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
+////            val res2: Multi[ AnyGE ] = o getOrElse res1
+//////            val res2 = res1
+////            val out = "out".kr
+//////            if( rate == audio ) {
+////               Out( rate, out, res2 )
+//////            } else {
+//////               Out.kr( out, res2 )
+//////            }
+////         } else
+////         Out[ R ]( "out".kr, fadeTime.map( t => res1 * makeFadeEnv( t )))
+//         res1
+//      }
 
 	def makeFadeEnv( fadeTime: Float ) : GE[control] = {
 		val dt			= "fadeTime".kr( fadeTime )
@@ -244,7 +245,9 @@ object UGenGraph {
          var numIneff      = ugens.size
          val indexedUGens  = ugens.zipWithIndex.map( tup => {
             val (ugen, idx) = tup
-            val eff        = ugen.isInstanceOf[ HasSideEffect ]
+//            val eff        = ugen.isInstanceOf[ HasSideEffect ]
+// BBB
+val eff=true
             if( eff ) numIneff -= 1
             new IndexedUGen( ugen, idx, eff )
          })

@@ -29,7 +29,7 @@
 package de.sciss.synth
 
 import osc.{ OSCControlBusGetMessage, OSCControlBusSetMessage, OSCControlBusSetnMessage }
-import util.AllocatorExhaustedException
+import aux.AllocatorExhaustedException
 
 /**
  *    @version	0.12, 10-May-10

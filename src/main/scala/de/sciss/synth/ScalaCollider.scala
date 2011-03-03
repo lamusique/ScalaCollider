@@ -31,15 +31,19 @@ import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 object ScalaCollider {
    val name          = "ScalaCollider"
-   val version       = 0.24
+   val version       = 0.30
    val copyright     = "(C)opyright 2008-2011 Hanns Holger Rutz"
+   var isSnapshot    = true
 
-   def versionString = (version + 0.001).toString.substring( 0, 4 )
+   def versionString = {
+      val s = (version + 0.001).toString.substring( 0, 4 )
+      if( isSnapshot ) s + "-SNAPSHOT" else s
+   }
 
    def main( args: Array[ String ]) {
       printInfo
-      test2
-//      System.exit( 1 )
+//      test2
+      System.exit( 1 )
    }
 
    def printInfo {

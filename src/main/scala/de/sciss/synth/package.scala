@@ -32,6 +32,7 @@ import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import osc.{OSCPacket, OSCMessage}
 import synth._
+import ugen.{CanWrapOut, Out}
 package synth {
    abstract private[synth] sealed class LowPriorityImplicits {
       /**
@@ -140,8 +141,8 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
    // pimping
    implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
-   implicit def thunkToGraphFunction[ R <: Rate, /* S <: Rate,*/ T ]( thunk: => T )
-      ( implicit view: T => Multi[ GE[ R ]] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction( thunk )
+//   implicit def thunkToGraphFunction[ R <: Rate, /* S <: Rate,*/ T ]( thunk: => T )
+//      ( implicit view: T => Multi[ GE[ R ]] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction[ R ]( thunk )
 
    // Buffer convenience
    def message[T]( msg: => OSCPacket ) = Completion[T]( Some( _ => msg ), None )
@@ -156,12 +157,11 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
    // explicit methods
 
-// we remove the overloading as it causes problems with the GE -> Multi conversion
-//   def play /*[ R <: Rate, S <: Rate ] */( thunk: => AnyMulti )/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = play()( thunk )
-   def play[ R <: Rate /*, S <: Rate */ ]( target: Node = Server.default, outBus: Int = 0,
-             fadeTime: Option[Float] = Some( 0.02f ),
-             addAction: AddAction = addToHead )( thunk: => Multi[ GE[ R ]])/*( implicit r: RateOrder[ control, R, S ])*/ : Synth = {
-      val fun = new GraphFunction( thunk )
+   def play[ T <% CanWrapOut ]( thunk: => T ) : Synth = play()( thunk )
+   def play[ T <% CanWrapOut ]( target: Node = Server.default, outBus: Int = 0,
+             fadeTime: Option[ Float ] = Some( 0.02f ),
+             addAction: AddAction = addToHead )( thunk: => T ) : Synth = {
+      val fun = new GraphFunction[ T ]( thunk )
       fun.play( target, outBus, fadeTime, addAction )
    }
 }

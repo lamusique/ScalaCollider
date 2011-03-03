@@ -29,6 +29,7 @@
 package de.sciss.synth
 
 import de.sciss.osc.OSCMessage
+import ugen.{CanWrapOut, Out}
 
 object GraphFunction {
    private var uniqueIDCnt = 0
@@ -42,20 +43,17 @@ object GraphFunction {
    }
 }
 
-class GraphFunction[ R <: Rate ]( thunk: => Multi[ GE[ R ]]) /*( implicit r: RateOrder[ control, R, S ])*/ {
+class GraphFunction[ T <% CanWrapOut ]( thunk: => T ) /*( implicit r: RateOrder[ control, R, S ])*/ {
    import GraphFunction._
    
-   def play : Synth = {
-      play( Server.default.defaultGroup, 0, Some(0.02f), addToHead )
-   }
-
+   def play : Synth = play()
    def play( target: Node = Server.default.defaultGroup, outBus: Int = 0,
-             fadeTime: Option[Float] = Some( 0.02f ),
+             fadeTime: Option[ Float ] = Some( 0.02f ),
              addAction: AddAction = addToHead ) : Synth = {
 
 		val server = target.server
 		val defName    = "temp_" + uniqueID // more clear than using hashCode
-		val synthDef   = SynthDef( defName, SynthGraph.wrapOut[ R ]( thunk, fadeTime ).expand )
+		val synthDef   = SynthDef( defName, thunk.wrapOut( fadeTime ).expand )
 		val synth      = new Synth( server )
 		val bytes      = synthDef.toBytes
 		val synthMsg   = synth.newMsg( synthDef.name, target, List( "i_out" -> outBus, "out" -> outBus ), addAction )

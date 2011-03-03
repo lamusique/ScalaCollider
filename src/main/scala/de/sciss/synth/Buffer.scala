@@ -37,7 +37,7 @@ import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferA
              OSCBufferZeroMessage }
 import Model._
 import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
-import util.AllocatorExhaustedException
+import aux.AllocatorExhaustedException
 
 /**
  * 	@version	0.18, 17-May-10
@@ -328,14 +328,15 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    // ---- utility methods ----
+   def play : Synth = play()
+   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
+      scplay( server, out ) { // working around nasty compiler bug
+         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
 // BBB
-//   def play : Synth = play()
-//   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
-//      scplay( server, out ) { // working around nasty compiler bug
-//         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
 //         if( !loop ) FreeSelfWhenDone.kr( ply )
-//         ply * "amp".kr( amp )
-//      }
+         val res = Multi.flatten( ply ) * "amp".kr( amp )
+         res: Multi[ GE[ audio ]] // BBB tell me why...
+      }
 
    private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ OSCPacket ] = {
       val a = completion.action

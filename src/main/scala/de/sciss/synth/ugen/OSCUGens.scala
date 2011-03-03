@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Mar 02 20:38:22 GMT 2011
+ * Created: Thu Mar 03 04:31:06 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 object DegreeToKey {
    def kr(buf: AnyGE, in: AnyGE, octave: AnyGE = 12.0f) = apply[control](control, buf, in, octave)
    def ar(buf: AnyGE, in: AnyGE, octave: AnyGE = 12.0f) = apply[audio](audio, buf, in, octave)
@@ -427,5 +427,39 @@ final case class Pulse[R <: Rate](rate: R, freq: AnyGE, width: AnyGE) extends Si
       val _sz_width = _width.size
       val _exp_ = maxInt(_sz_freq, _sz_width)
       IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Pulse", rate, IIdxSeq(_freq(i.%(_sz_freq)), _width(i.%(_sz_width)))))
+   }
+}
+object Klang {
+   def ar(specs: Multi[AnyGE], freqScale: AnyGE = 1.0f, freqOffset: AnyGE = 0.0f) = apply(specs, freqScale, freqOffset)
+}
+final case class Klang(specs: Multi[AnyGE], freqScale: AnyGE, freqOffset: AnyGE) extends SingleOutUGenSource[audio] {
+   protected def expandUGens = {
+      val _freqScale = freqScale.expand
+      val _freqOffset = freqOffset.expand
+      val _specs = specs.mexpand
+      val _sz_freqScale = _freqScale.size
+      val _sz_freqOffset = _freqOffset.size
+      val _sz_specs = _specs.size
+      val _exp_ = maxInt(_sz_freqScale, _sz_freqOffset, _sz_specs)
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Klang", audio, IIdxSeq(_freqScale(i.%(_sz_freqScale)), _freqOffset(i.%(_sz_freqOffset))).++(_specs(i.%(_sz_specs)).expand)))
+   }
+}
+object Klank {
+   def ar(specs: Multi[AnyGE], in: AnyGE, freqScale: AnyGE = 1.0f, freqOffset: AnyGE = 0.0f, decayScale: AnyGE = 1.0f) = apply(specs, in, freqScale, freqOffset, decayScale)
+}
+final case class Klank(specs: Multi[AnyGE], in: AnyGE, freqScale: AnyGE, freqOffset: AnyGE, decayScale: AnyGE) extends SingleOutUGenSource[audio] {
+   protected def expandUGens = {
+      val _in = in.expand
+      val _freqScale = freqScale.expand
+      val _freqOffset = freqOffset.expand
+      val _decayScale = decayScale.expand
+      val _specs = specs.mexpand
+      val _sz_in = _in.size
+      val _sz_freqScale = _freqScale.size
+      val _sz_freqOffset = _freqOffset.size
+      val _sz_decayScale = _decayScale.size
+      val _sz_specs = _specs.size
+      val _exp_ = maxInt(_sz_in, _sz_freqScale, _sz_freqOffset, _sz_decayScale, _sz_specs)
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Klank", audio, IIdxSeq(_in(i.%(_sz_in)), _freqScale(i.%(_sz_freqScale)), _freqOffset(i.%(_sz_freqOffset)), _decayScale(i.%(_sz_decayScale))).++(_specs(i.%(_sz_specs)).expand)))
    }
 }

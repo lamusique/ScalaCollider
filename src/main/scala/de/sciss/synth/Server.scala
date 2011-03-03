@@ -38,7 +38,7 @@ import collection.immutable.Queue
 import concurrent.SyncVar
 import osc.{ OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
              OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec }
-import util.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
+import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 
 /**
  * 	@version    0.16, 03-Aug-10
@@ -831,7 +831,7 @@ extends ServerLike {
       // ------------ OSCListener interface ------------
 
       def messageReceived( msg: OSCMessage, sender: SocketAddress, time: Long ) {
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : ! : " + msg )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : ! : " + msg )
          this ! ReceivedMessage( msg, sender, time )
       }
 
@@ -841,14 +841,14 @@ extends ServerLike {
 //         while( running )( receive { })
          loopWhile( running )( react {
             case ReceivedMessage( msg, sender, time ) => debug( msg ) {
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : received : " + msg )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
                msg match {
                   case nodeMsg:        OSCNodeChange           => nodeMgr.nodeChange( nodeMsg )
                   case bufInfoMsg:     OSCBufferInfoMessage    => bufMgr.bufferInfo( bufInfoMsg )
                   case statusReplyMsg: OSCStatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
                   case _ =>
                }
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : handlers" )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : handlers" )
                handlers.foreach( h => if( h.handle( msg )) handlers -= h )
             }
             case AddHandler( h )    => handlers += h
@@ -878,7 +878,7 @@ extends ServerLike {
    extends OSCHandler {
       def handle( msg: OSCMessage ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : inf handled : " + msg + " ? " + handled )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
          if( handled ) try {
             ch ! fun.apply( msg )
          } catch { case e => e.printStackTrace() }
@@ -891,7 +891,7 @@ extends ServerLike {
    extends OSCHandler {
       def handle( msg: OSCMessage ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : to handled : " + msg + " ? " + handled )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )
          if( handled ) try {
             ch ! fun.apply( msg )
          } catch { case e => e.printStackTrace() }

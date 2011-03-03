@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 /**
  * A UGen to stream in a signal from an audio file. Continuously plays a longer audio file
  * from disk. This requires a buffer to be preloaded with one buffer size of sound. If loop is

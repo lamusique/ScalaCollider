@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 import Float.{PositiveInfinity => inf}
 /**
  * A UGen which polls results from demand-rate ugens when receiving a trigger.

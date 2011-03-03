@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 /**
  * A UGen which produces a linear lag (time smear) regarding
  * and input signal. Other than `Lag` which is a feedback

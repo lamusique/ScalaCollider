@@ -10,7 +10,7 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import util.UGenHelper._
+import aux.UGenHelper._
 object OffsetOut {
    def ar(bus: AnyGE, in: Multi[GE[audio]]) = apply(bus, in)
 }
@@ -69,11 +69,27 @@ final case class ReplaceOut(bus: AnyGE, in: Multi[AnyGE]) extends ZeroOutUGenSou
    }
 }
 object Out {
-   def ar(bus: AnyGE, in: Multi[GE[audio]]) = apply[audio](audio, bus, in)
-   def kr(bus: AnyGE, in: Multi[AnyGE]) = apply[control](control, bus, in)
-   def ir(bus: AnyGE, in: Multi[AnyGE]) = apply[scalar](scalar, bus, in)
+//   def ar(bus: AnyGE, in: Multi[GE[audio]])( implicit rateCons: RateCons[ audio, audio ]) = apply[audio, audio](audio, bus, in)
+//   def kr[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]])( implicit rateCons: RateCons[ control, S ]) = apply[control, S](control, bus, in)
+//   def ir[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]])( implicit rateCons: RateCons[ scalar, S ]) = apply[scalar, S](scalar, bus, in)
+
+//   def ar(bus: AnyGE, in: Multi[GE[audio]]) = apply[audio, audio](audio, bus, in)( RateCons.ar )
+//   def kr[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[control, S](control, bus, in)( RateCons.kr[ S ])
+//   def ir[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[scalar, S](scalar, bus, in)( RateCons.ir[ S ])
+
+   object RateCons {
+      implicit val ar               = new RateCons[ audio, audio ]
+      implicit def kr[ S <: Rate ]  = new RateCons[ control, S ]
+      implicit def ir[ S <: Rate ]  = new RateCons[ scalar, S ]
+   }
+   sealed class RateCons[ R <: Rate, S <: Rate ]
+
+   def ar(bus: AnyGE, in: Multi[GE[audio]]) = apply[audio, audio](audio, bus, in)
+   def kr[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[control, S](control, bus, in)
+   def ir[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[scalar, S](scalar, bus, in)
 }
-final case class Out[R <: Rate](rate: R, bus: AnyGE, in: Multi[AnyGE]) extends ZeroOutUGenSource[R] with WritesBus {
+final case class Out[R <: Rate, S <: Rate](rate: R, bus: AnyGE, in: Multi[GE[S]])( implicit rateCons: Out.RateCons[ R, S ])
+extends ZeroOutUGenSource[R] with WritesBus {
    protected def expandUGens = {
       val _bus = bus.expand
       val _in = in.mexpand

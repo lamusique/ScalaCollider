@@ -62,24 +62,24 @@ object Rate {
    }
    sealed trait >=[ -R <: Rate, S <: Rate ]
 
-   sealed trait OrderLowImplicits {
-//   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrderUnknown[ R, S ]()
-      implicit def unknown[ R <: Rate, S <: Rate ] : Order[ R, S, Rate ] = new Impl[ R, S, Rate ] // RateOrderUnknown[ R, S ]()
-      protected class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends Order[ R, S, T ]
+   sealed trait OrdLowImplicits {
+//   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrdUnknown[ R, S ]()
+      implicit def unknown[ R <: Rate, S <: Rate ] : Ord[ R, S, Rate ] = new Impl[ R, S, Rate ] // RateOrdUnknown[ R, S ]()
+      protected class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends Ord[ R, S, T ]
    }
-   object Order extends OrderLowImplicits {
-      implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : Order[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
+   object Ord extends OrdLowImplicits {
+      implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : Ord[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
 //   implicit val bothScalar = new Impl[ scalar, scalar, scalar ]
 //   implicit val bothControl= new Impl[ control, control, control ]
 //   implicit val bothAudio  = new Impl[ audio, audio, audio ]
 //   implicit val bothDemand = new Impl[ demand, demand, demand ]
-      implicit def gt[ R <: Rate, S <: Rate ]( implicit rel: >[ R, S ]) : Order[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
-      implicit def lt[ R <: Rate, S <: Rate ]( implicit rel: >[ S, R ]) : Order[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
+      implicit def gt[ R <: Rate, S <: Rate ]( implicit rel: >[ R, S ]) : Ord[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
+      implicit def lt[ R <: Rate, S <: Rate ]( implicit rel: >[ S, R ]) : Ord[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
 
-      private class Impl[ R <: Rate, S <: Rate, T <: Rate ] extends Order[ R, S, T ]
+      private class Impl[ R <: Rate, S <: Rate, T <: Rate ] extends Ord[ R, S, T ]
    }
-//sealed trait MaybeRateOrder[ -R <: Rate, -S <: Rate, -T <: Rate ]
-   sealed trait Order[ -R <: Rate, S <: Rate, T <: Rate ]
+//sealed trait MaybeRateOrd[ -R <: Rate, -S <: Rate, -T <: Rate ]
+   sealed trait Ord[ -R <: Rate, S <: Rate, T <: Rate ]
 }
 
 /**
@@ -95,16 +95,16 @@ sealed trait control extends Rate { final val id = 1; final val methodName = "kr
 sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
 sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
 case object scalar  extends scalar {
-//   implicit val rate = scalar
+   implicit val rate = scalar
 }
 case object control extends control {
-//   implicit val rate = control
+   implicit val rate = control
 }
 case object audio extends audio {
-//   implicit val rate = audio
+   implicit val rate = audio
 }
 case object demand extends demand {
-//   implicit val rate = demand
+   implicit val rate = demand
 }
 
 //trait ScalarRated  { def rate: scalar = scalar }

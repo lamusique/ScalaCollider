@@ -29,7 +29,7 @@
 package de.sciss.synth
 
 import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
-import util.Expands
+import aux.Expands
 
 //trait UGenProxy[ S <: UGen ] extends UGenIn {
 //   def source : S
