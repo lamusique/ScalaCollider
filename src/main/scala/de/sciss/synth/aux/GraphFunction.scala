@@ -27,6 +27,7 @@
  */
 
 package de.sciss.synth
+package aux
 
 import de.sciss.osc.OSCMessage
 import ugen.{CanWrapOut, Out}

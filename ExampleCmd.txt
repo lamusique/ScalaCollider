@@ -130,11 +130,11 @@ val x = play {
 val x = play {
     val p = 8    // number of partials
     val exciter = Decay.ar(Dust.ar(0.6)*0.001, 3.1)*WhiteNoise.ar
-    for( i <- (1 to 2) ) yield {
+    (for( i <- (1 to 2) ) yield {
         val spec = KlangSpec.fill(p) {
             (Rand( 80, 10080 ), 1, Rand( 0.2, 8.2 ))}
         Klank.ar(spec, exciter)
-    }
+    }): GE[audio] // XXX ouch
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ val x = play {
     val p = 15   // number of partials per channel per 'cymbal'.
     val f1 = Rand(500, 2500)
     val f2 = Rand(0, 8000)
-    for( i <- (1 to 2) ) yield {
+    (for( i <- (1 to 2) ) yield {
         val z = KlangSpec.fill(p) {
             // sine oscil bank specification :
             (f1 + Rand(0, f2),  // frequencies
@@ -192,7 +192,7 @@ val x = play {
              Rand(1, 5))        // ring times
         }
         Klank.ar(z, Decay.ar(Impulse.ar(Rand(0.5, 3.5)), 0.004) * WhiteNoise.ar(0.03))
-    }
+    }): GE[audio] // XXX ouch
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -241,7 +241,7 @@ val x = play {
     val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(List((for(i <- 0 until c) yield Rand(0,0.1)):_*)).madd(0.04, 0.05), 15))
 
     // chain of 'a' allpass delays on each of two channels (2 times 'a' total) :
-    val x = (0 until a).foldLeft[AnyGE](y)( (y,i) => AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1))
+    val x = (0 until a).foldLeft[GE[audio]](y)( (y,i) => AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1))
 
     // add original sound to reverb and play it :
     s+(0.2*x)
@@ -261,7 +261,7 @@ val x = play {
     val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(List(Seq.fill(6)(Rand(0,0.1)):_*)).madd(0.04, 0.05), 15))
 
     // chain of 4 allpass delays on each of two channels (8 total) :
-    val x = (0 until 4).foldLeft[AnyGE](y)( (y, i) => AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1))
+    val x = (0 until 4).foldLeft[GE[audio]](y)( (y, i) => AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1))
 
     // add original sound to reverb and play it :
     s+x
@@ -336,7 +336,7 @@ val x = play {
     }
 
     // add some reverb via allpass delays
-    val x = (1 to 5).foldLeft[AnyGE](signal)( (sig, _) => AllpassN.ar(sig, 0.05, List(Rand(0,0.05),Rand(0,0.05)), 1))
+    val x = (1 to 5).foldLeft[GE[audio]](signal)( (sig, _) => AllpassN.ar(sig, 0.05, List(Rand(0,0.05),Rand(0,0.05)), 1))
     LeakDC.ar( x, 0.995)    // delays build up a lot of DC, so leak it out here.
 }
 
@@ -372,8 +372,8 @@ val x = play {
     val speed0 = MouseX.kr(-10, 10)
     val speed1 = speed0 - DelayN.kr(speed0, 0.1, 0.1)
     val speed = MouseButton.kr(1, 0, 0.3) + speed1
-    val sig: AnyGE= PlayBuf.ar(1, buf.id, speed * BufRateScale.kr(buf.id), loop = 1)
-    List( sig, sig ) : AnyGE // hmmm... todo XXX
+    val sig: GE[audio] = PlayBuf.ar(1, buf.id, speed * BufRateScale.kr(buf.id), loop = 1)
+    List( sig, sig ): GE[audio] // hmmm... todo XXX
 }
 
 // move mouse to scrub the record.
@@ -388,6 +388,7 @@ buf.free
 
 // trigger and lagged controls
 
+// XXX this is currently broken
 val x = play {
    val trig = "trig".tr             // trigger control
 //   val freq = "freq".kr(440 -> 4.0) // lag control (lag time 4 seconds)
@@ -432,6 +433,7 @@ x.free
 // exporting a synth graph diagram as PDF.
 // requires that the iTextPDF v5 jar is in the system classpath
 
+// XXX currently broken
 val df = SynthDef("AnalogBubbles", SynthGraph.wrapOut({
     val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(List(8, 7.23)).madd(3, 80)).midicps // glissando function
     CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
@@ -480,8 +482,8 @@ import Float.{ PositiveInfinity => inf }
 
 val x = play {
    val freq = DemandEnvGen.ar(
-      Dseq( List( 204, 400, 201, 502, 300, 200 ), inf ),
-      Drand( List( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
+      Dseq( List( 204, 400, 201, 502, 300, 200 ): GE[scalar], inf ), // XXX ouch
+      Drand( List( 1.01, 0.2, 0.1, 2 ): GE[scalar], inf ) * MouseY.kr( 0.01, 3, 1 ),
       cubShape.id )
    SinOsc.ar( freq * List( 1, 1.01 )) * 0.1
 }

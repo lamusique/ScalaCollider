@@ -69,14 +69,6 @@ final case class ReplaceOut(bus: AnyGE, in: Multi[AnyGE]) extends ZeroOutUGenSou
    }
 }
 object Out {
-//   def ar(bus: AnyGE, in: Multi[GE[audio]])( implicit rateCons: RateCons[ audio, audio ]) = apply[audio, audio](audio, bus, in)
-//   def kr[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]])( implicit rateCons: RateCons[ control, S ]) = apply[control, S](control, bus, in)
-//   def ir[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]])( implicit rateCons: RateCons[ scalar, S ]) = apply[scalar, S](scalar, bus, in)
-
-//   def ar(bus: AnyGE, in: Multi[GE[audio]]) = apply[audio, audio](audio, bus, in)( RateCons.ar )
-//   def kr[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[control, S](control, bus, in)( RateCons.kr[ S ])
-//   def ir[ S <: Rate ](bus: AnyGE, in: Multi[GE[S]]) = apply[scalar, S](scalar, bus, in)( RateCons.ir[ S ])
-
    object RateCons {
       implicit val ar: RateCons[ audio, audio ]             = new RateCons[ audio, audio ]
       implicit def kr[ S <: Rate ]: RateCons[ control, S ]  = new RateCons[ control, S ]

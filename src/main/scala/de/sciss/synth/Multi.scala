@@ -32,6 +32,7 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object Multi {
    implicit def flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) : GE[ R ] = Flatten( m )
+   implicit def joint[ G <: AnyGE ]( g: G ) : Multi[ /* R, */ G ] = Joint( g )
 
 //   implicit def bubbleGen[ R <: Rate, G <% GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
 //   implicit def bubble[ R <: Rate ]( g: GE[ R ]) : Multi[ /* R, */ GE[ R ]] = Multi.Joint( g )
@@ -40,7 +41,7 @@ object Multi {
 //   def disjoint /*[ R <: Rate ]*/( g: GE[ /* R,*/ UGenIn /*[ R ]*/]) = Multi.Disjoint( g )
 //   def group( elems: IIdxSeq[ AnyGE ]) = Multi.Group( elems )
 
-   case class Flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) extends GE[ R ] {
+   final case class Flatten[ R <: Rate ]( m: Multi[ /* R, */ GE[ R ]]) extends GE[ R ] {
 //      def rate = m.rate
       override def toString = "Multi.flatten(" + m + ")"
       def expand : IIdxSeq[ UGenIn ] = {
@@ -48,12 +49,12 @@ object Multi {
       }
    }
 
-   case class Joint[ /* R <: Rate, */ G <: AnyGE ]( g: G ) extends Multi[ /* R, */ G ] {
+   final case class Joint[ /* R <: Rate, */ G <: AnyGE ]( g: G ) extends Multi[ /* R, */ G ] {
 //      def rate = g.rate
       def mexpand : IIdxSeq[ G ] = IIdxSeq( g )
    }
 
-   case class Disjoint[ R <: Rate ]( g: GE[ R ]) extends Multi[ /* R, */ GE[ R ]] {
+   final case class Disjoint[ R <: Rate ]( g: GE[ R ]) extends Multi[ /* R, */ GE[ R ]] {
 //      def rate = g.rate
       def mexpand : IIdxSeq[ GE[ R ]] = {
 //         implicit val r = g.rate

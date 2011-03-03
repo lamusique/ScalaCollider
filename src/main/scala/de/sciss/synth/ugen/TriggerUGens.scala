@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Mar 02 20:38:22 GMT 2011
+ * Created: Thu Mar 03 17:06:12 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -94,31 +94,30 @@ final case class Trig[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleO
  * 
  * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
  * 
- * '''Warning''': We have changed the argument order. While in sclang, `id` precedes `value`,
- * we are using them in reverse order here!
- * 
  * @see [[de.sciss.synth.ugen.SendReply]]
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
  */
 object SendTrig {
    
    /**
     * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
     *                        when passing from non-positive to positive.
-    * @param value           a changing signal or constant that will be polled at the time of trigger,
-    *                        and its value passed with the trigger message
     * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
     *                        This is useful to distinguish between several SendTrig instances per SynthDef.
+    * @param value           a changing signal or constant that will be polled at the time of trigger,
+    *                        and its value passed with the trigger message
     */
-   def ar(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[audio](audio, trig, value, id)
+   def ar(trig: AnyGE, id: AnyGE = 0.0f, value: AnyGE = 0.0f) = apply[audio](audio, trig, id, value)
    /**
     * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
     *                        when passing from non-positive to positive.
-    * @param value           a changing signal or constant that will be polled at the time of trigger,
-    *                        and its value passed with the trigger message
     * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
     *                        This is useful to distinguish between several SendTrig instances per SynthDef.
+    * @param value           a changing signal or constant that will be polled at the time of trigger,
+    *                        and its value passed with the trigger message
     */
-   def kr(trig: AnyGE, value: AnyGE = 0.0f, id: AnyGE = 0.0f) = apply[control](control, trig, value, id)
+   def kr(trig: AnyGE, id: AnyGE = 0.0f, value: AnyGE = 0.0f) = apply[control](control, trig, id, value)
 }
 /**
  * A UGen that sends a value from the server to all notified clients upon receiving triggers.
@@ -126,19 +125,18 @@ object SendTrig {
  * 
  * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
  * 
- * '''Warning''': We have changed the argument order. While in sclang, `id` precedes `value`,
- * we are using them in reverse order here!
- * 
  * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
  *                        when passing from non-positive to positive.
- * @param value           a changing signal or constant that will be polled at the time of trigger,
- *                        and its value passed with the trigger message
  * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
  *                        This is useful to distinguish between several SendTrig instances per SynthDef.
+ * @param value           a changing signal or constant that will be polled at the time of trigger,
+ *                        and its value passed with the trigger message
  * 
  * @see [[de.sciss.synth.ugen.SendReply]]
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
  */
-final case class SendTrig[R <: Rate](rate: R, trig: AnyGE, value: AnyGE, id: AnyGE) extends SingleOutUGenSource[R] with HasSideEffect {
+final case class SendTrig[R <: Rate](rate: R, trig: AnyGE, id: AnyGE, value: AnyGE) extends SingleOutUGenSource[R] with HasSideEffect {
    protected def expandUGens = {
       val _trig = trig.expand
       val _value = value.expand

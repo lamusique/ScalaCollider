@@ -46,7 +46,10 @@ import aux.Expands
 object GE {
    // XXX is the ever in effect?
 //   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
-   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
+//   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
+
+//   implicit def bubble[ G <: AnyGE, T <% G ]( g: T ) : Multi[ /* R, */ G ] = Multi.Joint( g )
+
 //   implicit def bubbleGE[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
 
 //   implicit def fromAnySeq( x: Seq[ AnyGE ]) : GE[ Rate ] = {

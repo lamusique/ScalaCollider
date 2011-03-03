@@ -32,6 +32,7 @@ import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 import osc.{OSCPacket, OSCMessage}
 import synth._
+import aux.GraphFunction
 import ugen.{CanWrapOut, Out}
 package synth {
    abstract private[synth] sealed class LowPriorityImplicits {
