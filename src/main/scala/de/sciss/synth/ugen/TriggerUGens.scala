@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Mar 03 17:06:12 GMT 2011
+ * Created: Fri Mar 04 00:00:34 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -94,9 +94,9 @@ final case class Trig[R <: Rate](rate: R, in: AnyGE, dur: AnyGE) extends SingleO
  * 
  * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
  * 
- * @see [[de.sciss.synth.ugen.SendReply]]
- * 
  * '''Warning''': The argument order is different from its sclang counterpart.
+ * 
+ * @see [[de.sciss.synth.ugen.SendReply]]
  */
 object SendTrig {
    
@@ -108,7 +108,7 @@ object SendTrig {
     * @param value           a changing signal or constant that will be polled at the time of trigger,
     *                        and its value passed with the trigger message
     */
-   def ar(trig: AnyGE, id: AnyGE = 0.0f, value: AnyGE = 0.0f) = apply[audio](audio, trig, id, value)
+   def ar(trig: GE[audio], id: AnyGE = 0.0f, value: AnyGE = 0.0f) = apply[audio](audio, trig, id, value)
    /**
     * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
     *                        when passing from non-positive to positive.
@@ -117,13 +117,15 @@ object SendTrig {
     * @param value           a changing signal or constant that will be polled at the time of trigger,
     *                        and its value passed with the trigger message
     */
-   def kr(trig: AnyGE, id: AnyGE = 0.0f, value: AnyGE = 0.0f) = apply[control](control, trig, id, value)
+   def kr(trig: GE[control], id: AnyGE = 0.0f, value: AnyGE = 0.0f) = apply[control](control, trig, id, value)
 }
 /**
  * A UGen that sends a value from the server to all notified clients upon receiving triggers.
  * The message sent is `OSCMessage( "/tr", <(Int) nodeID>, <(Int) trigID>, <(Float) value> )`.
  * 
  * For sending an array of values, or using an arbitrary reply command, see `SendReply`.
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
  * 
  * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
  *                        when passing from non-positive to positive.
@@ -133,8 +135,6 @@ object SendTrig {
  *                        and its value passed with the trigger message
  * 
  * @see [[de.sciss.synth.ugen.SendReply]]
- * 
- * '''Warning''': The argument order is different from its sclang counterpart.
  */
 final case class SendTrig[R <: Rate](rate: R, trig: AnyGE, id: AnyGE, value: AnyGE) extends SingleOutUGenSource[R] with HasSideEffect {
    protected def expandUGens = {
@@ -146,6 +146,121 @@ final case class SendTrig[R <: Rate](rate: R, trig: AnyGE, id: AnyGE, value: Any
       val _sz_id = _id.size
       val _exp_ = maxInt(_sz_trig, _sz_value, _sz_id)
       IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("SendTrig", rate, IIdxSeq(_trig(i.%(_sz_trig)), _value(i.%(_sz_value)), _id(i.%(_sz_id)))))
+   }
+}
+/**
+ * A UGen which sends an sequence of values from the server to all notified clients upon receiving triggers.
+ * The message sent is `OSCMessage( <(String) msgName>, <(Int) nodeID>, <(Int) replyID>, <(Float) values>* )`.
+ * 
+ * For sending a single value, `SendTrig` provides an alternative.
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ * 
+ * @see [[de.sciss.synth.ugen.SendTrig]]
+ */
+object SendReply {
+   
+   /**
+    * @param trig            a non-positive to positive transition triggers a message
+    * @param values          a graph element comprising the signal channels to be polled
+    * @param msgName         a string specifying the OSCMessage's name. by convention, this should
+    *                        start with a forward slash and contain only 7-bit ascii characters.
+    * @param id              an integer identifier which is contained in the reply message. While you can
+    *                        distinguish different `SendReply` instances from the same Synth by choosing different
+    *                        OSCMessage names, depending on the application you may use the same message name but
+    *                        different ids (similar to `SendTrig`).
+    */
+   def kr(trig: GE[control], values: Multi[AnyGE], msgName: String = "/reply", id: AnyGE = 0.0f) = apply[control](control, trig, values, msgName, id)
+   /**
+    * @param trig            a non-positive to positive transition triggers a message
+    * @param values          a graph element comprising the signal channels to be polled
+    * @param msgName         a string specifying the OSCMessage's name. by convention, this should
+    *                        start with a forward slash and contain only 7-bit ascii characters.
+    * @param id              an integer identifier which is contained in the reply message. While you can
+    *                        distinguish different `SendReply` instances from the same Synth by choosing different
+    *                        OSCMessage names, depending on the application you may use the same message name but
+    *                        different ids (similar to `SendTrig`).
+    */
+   def ar(trig: GE[audio], values: Multi[AnyGE], msgName: String = "/reply", id: AnyGE = 0.0f) = apply[audio](audio, trig, values, msgName, id)
+}
+/**
+ * A UGen which sends an sequence of values from the server to all notified clients upon receiving triggers.
+ * The message sent is `OSCMessage( <(String) msgName>, <(Int) nodeID>, <(Int) replyID>, <(Float) values>* )`.
+ * 
+ * For sending a single value, `SendTrig` provides an alternative.
+ * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ * 
+ * @param trig            a non-positive to positive transition triggers a message
+ * @param values          a graph element comprising the signal channels to be polled
+ * @param msgName         a string specifying the OSCMessage's name. by convention, this should
+ *                        start with a forward slash and contain only 7-bit ascii characters.
+ * @param id              an integer identifier which is contained in the reply message. While you can
+ *                        distinguish different `SendReply` instances from the same Synth by choosing different
+ *                        OSCMessage names, depending on the application you may use the same message name but
+ *                        different ids (similar to `SendTrig`).
+ * 
+ * @see [[de.sciss.synth.ugen.SendTrig]]
+ */
+final case class SendReply[R <: Rate](rate: R, trig: AnyGE, values: Multi[AnyGE], msgName: String, id: AnyGE) extends SingleOutUGenSource[R] with HasSideEffect {
+   protected def expandUGens = {
+      val _trig = trig.expand
+      val _id = id.expand
+      val _msgName = stringArg(msgName)
+      val _values = values.mexpand
+      val _sz_trig = _trig.size
+      val _sz_id = _id.size
+      val _sz_values = _values.size
+      val _exp_ = maxInt(_sz_trig, _sz_id, _sz_values)
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("SendReply", rate, IIdxSeq(_trig(i.%(_sz_trig)), _id(i.%(_sz_id))).++(_msgName.++(_values(i.%(_sz_values)).expand))))
+   }
+}
+/**
+ * A UGen for printing the current output value of its input to the console.
+ * 
+ * @see [[de.sciss.synth.ugen.SendTrig]]
+ */
+object Poll {
+   
+   /**
+    * @param trig            a non-positive to positive transition telling Poll to return a value
+    * @param in              the signal you want to poll
+    * @param label           a string or symbol to be printed with the polled value
+    * @param trigID          if greater then 0, a `"/tr"` OSC message is sent back to the client
+    *                        (similar to `SendTrig`)
+    */
+   def ar(trig: GE[audio], in: AnyGE, label: String = "poll", trigID: AnyGE = -1.0f) = apply[audio](audio, trig, in, label, trigID)
+   /**
+    * @param trig            a non-positive to positive transition telling Poll to return a value
+    * @param in              the signal you want to poll
+    * @param label           a string or symbol to be printed with the polled value
+    * @param trigID          if greater then 0, a `"/tr"` OSC message is sent back to the client
+    *                        (similar to `SendTrig`)
+    */
+   def kr(trig: GE[control], in: AnyGE, label: String = "poll", trigID: AnyGE = -1.0f) = apply[control](control, trig, in, label, trigID)
+}
+/**
+ * A UGen for printing the current output value of its input to the console.
+ * 
+ * @param trig            a non-positive to positive transition telling Poll to return a value
+ * @param in              the signal you want to poll
+ * @param label           a string or symbol to be printed with the polled value
+ * @param trigID          if greater then 0, a `"/tr"` OSC message is sent back to the client
+ *                        (similar to `SendTrig`)
+ * 
+ * @see [[de.sciss.synth.ugen.SendTrig]]
+ */
+final case class Poll[R <: Rate](rate: R, trig: AnyGE, in: AnyGE, label: String, trigID: AnyGE) extends SingleOutUGenSource[R] with HasSideEffect {
+   protected def expandUGens = {
+      val _trig = trig.expand
+      val _in = in.expand
+      val _trigID = trigID.expand
+      val _label = stringArg(label)
+      val _sz_trig = _trig.size
+      val _sz_in = _in.size
+      val _sz_trigID = _trigID.size
+      val _exp_ = maxInt(_sz_trig, _sz_in, _sz_trigID)
+      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Poll", rate, IIdxSeq(_trig(i.%(_sz_trig)), _in(i.%(_sz_in)), _trigID(i.%(_sz_trigID))).++(_label)))
    }
 }
 /**

@@ -31,8 +31,8 @@ package de.sciss.synth
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 import aux.Expands
+import ugen.{Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -142,36 +142,29 @@ trait GE[ +R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* w
 // BBB
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def poll: AnyGE = poll()
+
+   /**
+    * Polls the output values of this graph element, and prints the result to the console.
+    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
+    *
+    * @param   trig     a signal to trigger the printing. If this is a constant, it is
+    *    interpreted as a frequency value and an `Impulse` generator of that frequency
+    *    is used instead.
+    * @param   label    a string to print along with the values, in order to identify
+    *    different polls. Using the special label `"#auto"` (default) will generated
+    *    automatic useful labels using information from the polled graph element
+    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
+    *    (similar to `SendTrig`)
+    *
+    * @see  [[de.sciss.synth.ugen.Poll]]
+    */
+// BBB
+//   def poll( trig: Constant = 10, label: String = "#auto", trigID: AnyGE = -1 ) : Poll[ R ] =
+//      poll( Impulse[ R ]( freq ), label, trigID )
 //
-//   /**
-//    * Polls the output values of this graph element, and prints the result to the console.
-//    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
-//    *
-//    * @param   trig     a signal to trigger the printing. If this is a constant, it is
-//    *    interpreted as a frequency value and an `Impulse` generator of that frequency
-//    *    is used instead.
-//    * @param   label    a string to print along with the values, in order to identify
-//    *    different polls. Using the special label `"#auto"` (default) will generated
-//    *    automatic useful labels using information from the polled graph element
-//    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
-//    *    (similar to `SendTrig`)
-//    *
-//    * @see  [[de.sciss.synth.ugen.Poll]]
-//    */
-//   def poll( trig: AnyGE = 10, label: String = "#auto", trigID: AnyGE = -1 ) : AnyGE = {
+//   def poll[ S <: Rate ]( trig: GE[ S ] = 10, label: String = "#auto", trigID: AnyGE = -1 ) : Poll[ R ] = {
 //      import SynthGraph._
 //
-//      val trig0 = trig match {
-//         case Constant( freq ) => {
-////            val res: GE = outputs.map( in => Impulse( in.rate match {
-////               case `scalar`  => control
-////               case _         => in.rate
-////            }, freq, 0 ))
-////            res
-//            Impulse( rate, freq, 0 )
-//         }
-//         case _ => trig
-//      }
 ////      val labels: IIdxSeq[ String ] =
 //////         if( label == "#auto" ) {
 //////         ge match {
