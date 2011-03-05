@@ -45,8 +45,8 @@ object UGenSource {
    trait SingleOut[ +R <: Rate ] extends SomeOut[ R ] //, UGen.SingleOut ]
    trait MultiOut[  +R <: Rate ] extends SomeOut[ R ] // , UGen.MultiOut ]
 
-   protected sealed trait SomeOut[ +R <: Rate ] extends UGenSource[ UGenInLike ] with GE[ R ] {
-      protected def makeUGens : UGenInLike
+   protected sealed trait SomeOut[ +R <: Rate ] extends UGenSource[ UGenInLike ] with GE.Lazy[ R ] {
+//      protected def makeUGens : UGenInLike
 
       final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) : UGenInLike =
          UGenInGroup( IIdxSeq.tabulate( exp )( i => unwrap( args.map( a => a.unwrap( i )))))

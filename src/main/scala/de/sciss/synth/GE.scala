@@ -103,6 +103,8 @@ object GE {
 //      def apply( xs: UGenIn* ) : Seq[ Rate ] = new SeqImpl2( xs.toIndexedSeq )
 //   }
 //   sealed trait Seq[ R <: Rate ] extends GE[ R ]
+
+   trait Lazy[ +R <: Rate ] extends Lazy.Expander[ UGenInLike ] with GE[ R ]
 }
 trait GE[ +R <: Rate /*, +U <: UGenIn */ ] /* extends Expands[ UGenIn /* U */]  *//* with Multi[ GE[ R, U ]] */ {
    ge =>
