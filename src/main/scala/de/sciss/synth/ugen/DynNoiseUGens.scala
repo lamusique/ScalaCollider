@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Mar 02 20:38:22 GMT 2011
+ * Created: Fri Mar 04 23:36:58 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -59,11 +59,9 @@ object LFDNoise0 {
  * @see [[de.sciss.synth.ugen.LFDNoise2]]
  * @see [[de.sciss.synth.ugen.TRand]]
  */
-final case class LFDNoise0[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
-   protected def expandUGens = {
-      val _freq = freq.expand
-      IIdxSeq.tabulate(_freq.size)(i => new SingleOutUGen("LFDNoise0", rate, IIdxSeq(_freq(i))))
-   }
+final case class LFDNoise0[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDNoise0", rate, _args)
 }
 /**
  * A dynamic ramp noise UGen. Like `LFNoise1`, it generates linearly interpolated random values
@@ -113,11 +111,9 @@ object LFDNoise1 {
  * @see [[de.sciss.synth.ugen.LFDNoise2]]
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
-final case class LFDNoise1[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
-   protected def expandUGens = {
-      val _freq = freq.expand
-      IIdxSeq.tabulate(_freq.size)(i => new SingleOutUGen("LFDNoise1", rate, IIdxSeq(_freq(i))))
-   }
+final case class LFDNoise1[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDNoise1", rate, _args)
 }
 object LFDNoise3 {
    def kr: LFDNoise3[control] = kr()
@@ -134,11 +130,9 @@ object LFDNoise3 {
 /**
  * @param freq            rate at which to generate random values.
  */
-final case class LFDNoise3[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
-   protected def expandUGens = {
-      val _freq = freq.expand
-      IIdxSeq.tabulate(_freq.size)(i => new SingleOutUGen("LFDNoise3", rate, IIdxSeq(_freq(i))))
-   }
+final case class LFDNoise3[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDNoise3", rate, _args)
 }
 object LFDClipNoise {
    def kr: LFDClipNoise[control] = kr()
@@ -155,9 +149,7 @@ object LFDClipNoise {
 /**
  * @param freq            rate at which to generate random values.
  */
-final case class LFDClipNoise[R <: Rate](rate: R, freq: AnyGE) extends SingleOutUGenSource[R] with UsesRandSeed {
-   protected def expandUGens = {
-      val _freq = freq.expand
-      IIdxSeq.tabulate(_freq.size)(i => new SingleOutUGen("LFDClipNoise", rate, IIdxSeq(_freq(i))))
-   }
+final case class LFDClipNoise[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDClipNoise", rate, _args)
 }

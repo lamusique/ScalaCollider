@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Mar 02 20:38:22 GMT 2011
+ * Created: Fri Mar 04 23:36:58 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -52,15 +52,7 @@ object CheckBadValues {
  * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
  *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
  */
-final case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE) extends SingleOutUGenSource[R] with HasSideEffect {
-   protected def expandUGens = {
-      val _in = in.expand
-      val _id = id.expand
-      val _post = post.expand
-      val _sz_in = _in.size
-      val _sz_id = _id.size
-      val _sz_post = _post.size
-      val _exp_ = maxInt(_sz_in, _sz_id, _sz_post)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("CheckBadValues", rate, IIdxSeq(_in(i.%(_sz_in)), _id(i.%(_sz_id)), _post(i.%(_sz_post)))))
-   }
+final case class CheckBadValues[R <: Rate](rate: R, in: AnyGE, id: AnyGE, post: AnyGE) extends UGenSource.SingleOut[R] with HasSideEffect {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, id.expand, post.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("CheckBadValues", rate, _args)
 }

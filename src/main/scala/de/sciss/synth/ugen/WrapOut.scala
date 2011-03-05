@@ -34,28 +34,30 @@ package ugen
 //
 //}
 
-object CanWrapOut {
-//   implicit def ge( g: AnyGE ) : CanWrapOut = new GEImpl( g )
-   implicit def lazyElem( lz: => Lazy ) : CanWrapOut = new LazyImpl( lz )
-   implicit def unit( lz: => Unit ) : CanWrapOut = new LazyImpl( lz )
+// BBB
+//object CanWrapOut {
+////   implicit def ge( g: AnyGE ) : CanWrapOut = new GEImpl( g )
+//   implicit def lazyElem( lz: => Lazy ) : CanWrapOut = new LazyImpl( lz )
+//   implicit def unit( lz: => Unit ) : CanWrapOut = new LazyImpl( lz )
+//
+//   implicit def ar[ G <% Multi[ GE[ audio ]]]( g: G ) : CanWrapOut = new GEImpl[ audio ]( fdo =>
+//      Out.ar( "out".kr, fdo.map[ Multi[ GE[ audio ]]]( t => Multi.Joint( Multi.flatten( g ) * SynthGraph.makeFadeEnv( t ))).getOrElse( g: Multi[ GE[ audio ]]))
+//   )
+//
+//   implicit def kr[ G <% Multi[ GE[ control ]]]( g: G ) : CanWrapOut = new GEImpl[ control ]( fdo =>
+//      Out.kr( "out".kr, fdo.map[ Multi[ GE[ control ]]]( t => Multi.Joint( Multi.flatten( g ) * SynthGraph.makeFadeEnv( t ))).getOrElse( g: Multi[ GE[ control ]]))
+//   )
+//
+////   implicit def kr( g: Multi[ GE[ control ]]) : CanWrapOut = new GEImpl( g )
+////   implicit def ir( g: Multi[ GE[ scalar  ]]) : CanWrapOut = new GEImpl( g )
+//
+//   private class GEImpl[ R <: Rate ]( g: Option[ Float ] => Unit ) extends CanWrapOut {
+//      def wrapOut( fadeTime: Option[ Float ]) = SynthGraph { g( fadeTime )}
+//   }
+//
+//   private class LazyImpl( lz: => Unit ) extends CanWrapOut {
+//      def wrapOut( fadeTime: Option[ Float ]) = SynthGraph { lz }
+//   }
+//}
 
-   implicit def ar[ G <% Multi[ GE[ audio ]]]( g: G ) : CanWrapOut = new GEImpl[ audio ]( fdo =>
-      Out.ar( "out".kr, fdo.map[ Multi[ GE[ audio ]]]( t => Multi.Joint( Multi.flatten( g ) * SynthGraph.makeFadeEnv( t ))).getOrElse( g: Multi[ GE[ audio ]]))
-   )
-
-   implicit def kr[ G <% Multi[ GE[ control ]]]( g: G ) : CanWrapOut = new GEImpl[ control ]( fdo =>
-      Out.kr( "out".kr, fdo.map[ Multi[ GE[ control ]]]( t => Multi.Joint( Multi.flatten( g ) * SynthGraph.makeFadeEnv( t ))).getOrElse( g: Multi[ GE[ control ]]))
-   )
-
-//   implicit def kr( g: Multi[ GE[ control ]]) : CanWrapOut = new GEImpl( g )
-//   implicit def ir( g: Multi[ GE[ scalar  ]]) : CanWrapOut = new GEImpl( g )
-
-   private class GEImpl[ R <: Rate ]( g: Option[ Float ] => Unit ) extends CanWrapOut {
-      def wrapOut( fadeTime: Option[ Float ]) = SynthGraph { g( fadeTime )}
-   }
-
-   private class LazyImpl( lz: => Unit ) extends CanWrapOut {
-      def wrapOut( fadeTime: Option[ Float ]) = SynthGraph { lz }
-   }
-}
 sealed trait CanWrapOut { def wrapOut( fadeTime: Option[ Float ] = Some( 0.02f )) : SynthGraph }

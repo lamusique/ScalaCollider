@@ -33,9 +33,9 @@ package de.sciss.synth
  */
 object Rate {
    def highest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
-   def highest( ge: AnyGE ) : Rate = highest( ge.expand.map( _.rate ): _* )
+//   def highest( ge: AnyGE ) : Rate = highest( ge.expand.map( _.rate ): _* )
    def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
-   def lowest( ge: AnyGE ) : Rate = lowest( ge.expand.map( _.rate ): _* )
+//   def lowest( ge: AnyGE ) : Rate = lowest( ge.expand.map( _.rate ): _* )
 
    object > {
 //   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new Impl[ demand, audio ] // (   demand,  audio   )

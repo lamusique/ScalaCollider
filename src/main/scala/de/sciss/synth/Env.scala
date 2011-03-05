@@ -213,7 +213,7 @@ object Env extends EnvFactory[ Env ] {
 }
 
 object EnvLike {
-   implicit def toGE( env: EnvLike ) : AnyMulti = env.toGE
+   implicit def toGE( env: EnvLike ) : GE[Rate] = env.toGE
 }
 
 trait EnvLike {
@@ -223,14 +223,14 @@ trait EnvLike {
 // note: we do not define toSeq because the format is
 // significantly different so there is little sense in doing so
 //	def toSeq : Seq[ GE ] ...
-   def toGE : AnyMulti
+   def toGE : GE[Rate]
 }
 
 case class Env( startLevel: AnyGE, segments: Seq[ Env.Seg ],
                 releaseNode: AnyGE = -99, loopNode: AnyGE = -99 )
 extends EnvLike {
 
-	def toGE : AnyMulti = {
+	def toGE : GE[Rate] = {
       val segmIdx    = segments.toIndexedSeq
       val sizeGE: AnyGE = segmIdx.size
       val res: IIdxSeq[ AnyGE ] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap( seg =>
@@ -253,7 +253,7 @@ object IEnv extends EnvFactory[ IEnv ] {
 
 case class IEnv( startLevel: AnyGE, segments: Seq[ Env.Seg ], offset: AnyGE = 0 )
 extends EnvLike {
-	def toGE : AnyMulti = {
+	def toGE : GE[Rate] = {
       val segmIdx    = segments.toIndexedSeq
       val sizeGE: AnyGE = segmIdx.size
       val totalDur   = segmIdx.foldLeft[ AnyGE ]( 0 )( (sum, next) => sum + next.dur )

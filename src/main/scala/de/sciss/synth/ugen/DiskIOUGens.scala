@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Mar 02 20:38:22 GMT 2011
+ * Created: Fri Mar 04 23:36:58 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -50,15 +50,9 @@ object DiskIn {
  * @see [[de.sciss.synth.ugen.VDiskIn]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-final case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends MultiOutUGenSource[audio] with HasSideEffect {
-   protected def expandUGens = {
-      val _buf = buf.expand
-      val _loop = loop.expand
-      val _sz_buf = _buf.size
-      val _sz_loop = _loop.size
-      val _exp_ = maxInt(_sz_buf, _sz_loop)
-      IIdxSeq.tabulate(_exp_)(i => new MultiOutUGen("DiskIn", audio, IIdxSeq.fill(numChannels)(audio), IIdxSeq(_buf(i.%(_sz_buf)), _loop(i.%(_sz_loop)))))
-   }
+final case class DiskIn(numChannels: Int, buf: AnyGE, loop: AnyGE) extends UGenSource.MultiOut[audio] with HasSideEffect {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, loop.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("DiskIn", audio, IIdxSeq.fill(numChannels)(audio), _args)
 }
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
@@ -83,7 +77,7 @@ object DiskOut {
     *                        (and not write anything to the file).
     * @param in              the signal to be recorded
     */
-   def ar(buf: AnyGE, in: Multi[GE[audio]]) = apply(buf, in)
+   def ar(buf: AnyGE, in: GE[audio]) = apply(buf, in)
 }
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
@@ -105,15 +99,9 @@ object DiskOut {
  * @see [[de.sciss.synth.ugen.DiskIn]]
  * @see [[de.sciss.synth.ugen.RecordBuf]]
  */
-final case class DiskOut(buf: AnyGE, in: Multi[AnyGE]) extends SingleOutUGenSource[audio] with WritesBuffer {
-   protected def expandUGens = {
-      val _buf = buf.expand
-      val _in = in.mexpand
-      val _sz_buf = _buf.size
-      val _sz_in = _in.size
-      val _exp_ = maxInt(_sz_buf, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("DiskOut", audio, IIdxSeq(_buf(i.%(_sz_buf))).++(_in(i.%(_sz_in)).expand)))
-   }
+final case class DiskOut(buf: AnyGE, in: AnyGE) extends UGenSource.SingleOut[audio] with WritesBuffer {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand).++(in.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("DiskOut", audio, _args)
 }
 /**
  * A UGen to stream in a signal from an audio file with variable playback speed.
@@ -174,17 +162,7 @@ object VDiskIn {
  * @see [[de.sciss.synth.ugen.DiskOut]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-final case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends MultiOutUGenSource[audio] with HasSideEffect {
-   protected def expandUGens = {
-      val _buf = buf.expand
-      val _speed = speed.expand
-      val _loop = loop.expand
-      val _sendID = sendID.expand
-      val _sz_buf = _buf.size
-      val _sz_speed = _speed.size
-      val _sz_loop = _loop.size
-      val _sz_sendID = _sendID.size
-      val _exp_ = maxInt(_sz_buf, _sz_speed, _sz_loop, _sz_sendID)
-      IIdxSeq.tabulate(_exp_)(i => new MultiOutUGen("VDiskIn", audio, IIdxSeq.fill(numChannels)(audio), IIdxSeq(_buf(i.%(_sz_buf)), _speed(i.%(_sz_speed)), _loop(i.%(_sz_loop)), _sendID(i.%(_sz_sendID)))))
-   }
+final case class VDiskIn(numChannels: Int, buf: AnyGE, speed: AnyGE, loop: AnyGE, sendID: AnyGE) extends UGenSource.MultiOut[audio] with HasSideEffect {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, loop.expand, sendID.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("VDiskIn", audio, IIdxSeq.fill(numChannels)(audio), _args)
 }

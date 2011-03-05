@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Mar 02 20:38:22 GMT 2011
+ * Created: Fri Mar 04 23:36:58 GMT 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -38,13 +38,13 @@ object Demand {
     * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
     * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
     */
-   def kr(trig: AnyGE, in: Multi[AnyGE], reset: AnyGE = 0.0f) = apply[control](control, trig, in, reset)
+   def kr(trig: AnyGE, in: AnyGE, reset: AnyGE = 0.0f) = apply[control](control, trig, in, reset)
    /**
     * @param trig            trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
     * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
     * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
     */
-   def ar(trig: AnyGE, in: Multi[AnyGE], reset: AnyGE = 0.0f) = apply[audio](audio, trig, in, reset)
+   def ar(trig: AnyGE, in: AnyGE, reset: AnyGE = 0.0f) = apply[audio](audio, trig, in, reset)
 }
 /**
  * A UGen which polls results from demand-rate ugens when receiving a trigger.
@@ -63,26 +63,15 @@ object Demand {
  * '''Warning''': Demand currently seems to have problems with infinite sequences. As a workaround
  * use a very large length instead. E.g. instead of `Dbrown( 0, 1, inf )` use `Dbrown( 0, 1, 0xFFFFFFFF )`!
  * 
+ * '''Warning''': The argument order is different from its sclang counterpart.
+ * 
  * @param trig            trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
  * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
  * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
- * 
- * '''Warning''': The argument order is different from its sclang counterpart.
  */
-final case class Demand[R <: Rate](rate: R, trig: AnyGE, in: Multi[AnyGE], reset: AnyGE) extends MultiOutUGenSource[R] {
-   protected def expandUGens = {
-      val _trig = trig.expand
-      val _reset = reset.expand
-      val _in = in.mexpand
-      val _sz_trig = _trig.size
-      val _sz_reset = _reset.size
-      val _sz_in = _in.size
-      val _exp_ = maxInt(_sz_trig, _sz_reset, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => {
-         val _ch_in = _in(i.%(_sz_in)).expand
-         new MultiOutUGen("Demand", rate, IIdxSeq.fill(_ch_in.size)(rate), IIdxSeq(_trig(i.%(_sz_trig)), _reset(i.%(_sz_reset))).++(_ch_in))
-      })
-   }
+final case class Demand[R <: Rate](rate: R, trig: AnyGE, in: AnyGE, reset: AnyGE) extends UGenSource.MultiOut[R] {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand).++(in.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("Demand", rate, IIdxSeq.fill(_args.size.-(2))(rate), _args)
 }
 /**
  * A UGen which polls results from demand-rate ugens in intervals specified by a durational input.
@@ -135,19 +124,9 @@ object Duty {
  * @see [[de.sciss.synth.ugen.Demand]]
  * @see [[de.sciss.synth.DoneAction]]
  */
-final case class Duty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R] {
-   protected def expandUGens = {
-      val _dur = dur.expand
-      val _reset = reset.expand
-      val _level = level.expand
-      val _doneAction = doneAction.expand
-      val _sz_dur = _dur.size
-      val _sz_reset = _reset.size
-      val _sz_level = _level.size
-      val _sz_doneAction = _doneAction.size
-      val _exp_ = maxInt(_sz_dur, _sz_reset, _sz_level, _sz_doneAction)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Duty", rate, IIdxSeq(_dur(i.%(_sz_dur)), _reset(i.%(_sz_reset)), _level(i.%(_sz_level)), _doneAction(i.%(_sz_doneAction)))))
-   }
+final case class Duty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE) extends UGenSource.SingleOut[R] {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(dur.expand, reset.expand, level.expand, doneAction.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Duty", rate, _args)
 }
 /**
  * A UGen which polls results from demand-rate ugens in intervals specified by a durational input,
@@ -217,21 +196,9 @@ object TDuty {
  * @see [[de.sciss.synth.ugen.Demand]]
  * @see [[de.sciss.synth.DoneAction]]
  */
-final case class TDuty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE, gapFirst: AnyGE) extends SingleOutUGenSource[R] {
-   protected def expandUGens = {
-      val _dur = dur.expand
-      val _reset = reset.expand
-      val _level = level.expand
-      val _doneAction = doneAction.expand
-      val _gapFirst = gapFirst.expand
-      val _sz_dur = _dur.size
-      val _sz_reset = _reset.size
-      val _sz_level = _level.size
-      val _sz_doneAction = _doneAction.size
-      val _sz_gapFirst = _gapFirst.size
-      val _exp_ = maxInt(_sz_dur, _sz_reset, _sz_level, _sz_doneAction, _sz_gapFirst)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("TDuty", rate, IIdxSeq(_dur(i.%(_sz_dur)), _reset(i.%(_sz_reset)), _level(i.%(_sz_level)), _doneAction(i.%(_sz_doneAction)), _gapFirst(i.%(_sz_gapFirst)))))
-   }
+final case class TDuty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE, gapFirst: AnyGE) extends UGenSource.SingleOut[R] {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(dur.expand, reset.expand, level.expand, doneAction.expand, gapFirst.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("TDuty", rate, _args)
 }
 /**
  * An envelope generator UGen using demand-rate inputs for the envelope segments.
@@ -290,31 +257,9 @@ object DemandEnvGen {
  * @see [[de.sciss.synth.EnvShape]]
  * @see [[de.sciss.synth.DoneAction]]
  */
-final case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, shapes: AnyGE, curvatures: AnyGE, gate: AnyGE, reset: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends SingleOutUGenSource[R] {
-   protected def expandUGens = {
-      val _levels = levels.expand
-      val _durs = durs.expand
-      val _shapes = shapes.expand
-      val _curvatures = curvatures.expand
-      val _gate = gate.expand
-      val _reset = reset.expand
-      val _levelScale = levelScale.expand
-      val _levelBias = levelBias.expand
-      val _timeScale = timeScale.expand
-      val _doneAction = doneAction.expand
-      val _sz_levels = _levels.size
-      val _sz_durs = _durs.size
-      val _sz_shapes = _shapes.size
-      val _sz_curvatures = _curvatures.size
-      val _sz_gate = _gate.size
-      val _sz_reset = _reset.size
-      val _sz_levelScale = _levelScale.size
-      val _sz_levelBias = _levelBias.size
-      val _sz_timeScale = _timeScale.size
-      val _sz_doneAction = _doneAction.size
-      val _exp_ = maxInt(_sz_levels, _sz_durs, _sz_shapes, _sz_curvatures, _sz_gate, _sz_reset, _sz_levelScale, _sz_levelBias, _sz_timeScale, _sz_doneAction)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("DemandEnvGen", rate, IIdxSeq(_levels(i.%(_sz_levels)), _durs(i.%(_sz_durs)), _shapes(i.%(_sz_shapes)), _curvatures(i.%(_sz_curvatures)), _gate(i.%(_sz_gate)), _reset(i.%(_sz_reset)), _levelScale(i.%(_sz_levelScale)), _levelBias(i.%(_sz_levelBias)), _timeScale(i.%(_sz_timeScale)), _doneAction(i.%(_sz_doneAction)))))
-   }
+final case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, shapes: AnyGE, curvatures: AnyGE, gate: AnyGE, reset: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends UGenSource.SingleOut[R] {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(levels.expand, durs.expand, shapes.expand, curvatures.expand, gate.expand, reset.expand, levelScale.expand, levelBias.expand, timeScale.expand, doneAction.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("DemandEnvGen", rate, _args)
 }
 /**
  * A demand-rate UGen which produces an arithmetic (linear) series.
@@ -329,87 +274,33 @@ final case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, sh
  * @see [[de.sciss.synth.ugen.Dgeom]]
  * @see [[de.sciss.synth.ugen.Dseq]]
  */
-final case class Dseries(start: AnyGE = 0.0f, step: AnyGE = 1.0f, length: AnyGE = inf) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _start = start.expand
-      val _step = step.expand
-      val _length = length.expand
-      val _sz_start = _start.size
-      val _sz_step = _step.size
-      val _sz_length = _length.size
-      val _exp_ = maxInt(_sz_start, _sz_step, _sz_length)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dseries", demand, IIdxSeq(_start(i.%(_sz_start)), _step(i.%(_sz_step)), _length(i.%(_sz_length)))))
-   }
+final case class Dseries(start: AnyGE = 0.0f, step: AnyGE = 1.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, step.expand, length.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dseries", demand, _args)
 }
-final case class Dgeom(start: AnyGE = 1.0f, grow: AnyGE = 2.0f, length: AnyGE = inf) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _start = start.expand
-      val _grow = grow.expand
-      val _length = length.expand
-      val _sz_start = _start.size
-      val _sz_grow = _grow.size
-      val _sz_length = _length.size
-      val _exp_ = maxInt(_sz_start, _sz_grow, _sz_length)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dgeom", demand, IIdxSeq(_start(i.%(_sz_start)), _grow(i.%(_sz_grow)), _length(i.%(_sz_length)))))
-   }
+final case class Dgeom(start: AnyGE = 1.0f, grow: AnyGE = 2.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, grow.expand, length.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dgeom", demand, _args)
 }
-final case class Dwhite(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, length: AnyGE = inf) extends SingleOutUGenSource[demand] with UsesRandSeed {
-   protected def expandUGens = {
-      val _lo = lo.expand
-      val _hi = hi.expand
-      val _length = length.expand
-      val _sz_lo = _lo.size
-      val _sz_hi = _hi.size
-      val _sz_length = _length.size
-      val _exp_ = maxInt(_sz_lo, _sz_hi, _sz_length)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dwhite", demand, IIdxSeq(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _length(i.%(_sz_length)))))
-   }
+final case class Dwhite(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, length.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dwhite", demand, _args)
 }
-final case class Dbrown(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, step: AnyGE = 0.01f, length: AnyGE = inf) extends SingleOutUGenSource[demand] with UsesRandSeed {
-   protected def expandUGens = {
-      val _lo = lo.expand
-      val _hi = hi.expand
-      val _step = step.expand
-      val _length = length.expand
-      val _sz_lo = _lo.size
-      val _sz_hi = _hi.size
-      val _sz_step = _step.size
-      val _sz_length = _length.size
-      val _exp_ = maxInt(_sz_lo, _sz_hi, _sz_step, _sz_length)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dbrown", demand, IIdxSeq(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _step(i.%(_sz_step)), _length(i.%(_sz_length)))))
-   }
+final case class Dbrown(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, step: AnyGE = 0.01f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, step.expand, length.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dbrown", demand, _args)
 }
-final case class Diwhite(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, length: AnyGE = inf) extends SingleOutUGenSource[demand] with UsesRandSeed {
-   protected def expandUGens = {
-      val _lo = lo.expand
-      val _hi = hi.expand
-      val _length = length.expand
-      val _sz_lo = _lo.size
-      val _sz_hi = _hi.size
-      val _sz_length = _length.size
-      val _exp_ = maxInt(_sz_lo, _sz_hi, _sz_length)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Diwhite", demand, IIdxSeq(_lo(i.%(_sz_lo)), _hi(i.%(_sz_hi)), _length(i.%(_sz_length)))))
-   }
+final case class Diwhite(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, length.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Diwhite", demand, _args)
 }
-final case class Dseq(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _repeats = repeats.expand
-      val _seq = seq.mexpand
-      val _sz_repeats = _repeats.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_repeats, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dseq", demand, IIdxSeq(_repeats(i.%(_sz_repeats))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Dseq(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dseq", demand, _args)
 }
-final case class Dser(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _repeats = repeats.expand
-      val _seq = seq.mexpand
-      val _sz_repeats = _repeats.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_repeats, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dser", demand, IIdxSeq(_repeats(i.%(_sz_repeats))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Dser(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dser", demand, _args)
 }
 /**
  * A demand-rate UGen that reads out a buffer. All inputs can be either demand ugen or any other ugen.
@@ -421,105 +312,43 @@ final case class Dser(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOu
  * @see [[de.sciss.synth.ugen.BufRd]]
  * @see [[de.sciss.synth.ugen.Dbufwr]]
  */
-final case class Dbufrd(buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _buf = buf.expand
-      val _index = index.expand
-      val _loop = loop.expand
-      val _sz_buf = _buf.size
-      val _sz_index = _index.size
-      val _sz_loop = _loop.size
-      val _exp_ = maxInt(_sz_buf, _sz_index, _sz_loop)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dbufrd", demand, IIdxSeq(_buf(i.%(_sz_buf)), _index(i.%(_sz_index)), _loop(i.%(_sz_loop)))))
-   }
+final case class Dbufrd(buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dbufrd", demand, _args)
 }
-final case class Dbufwr(in: AnyGE, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with WritesBuffer {
-   protected def expandUGens = {
-      val _in = in.expand
-      val _buf = buf.expand
-      val _index = index.expand
-      val _loop = loop.expand
-      val _sz_in = _in.size
-      val _sz_buf = _buf.size
-      val _sz_index = _index.size
-      val _sz_loop = _loop.size
-      val _exp_ = maxInt(_sz_in, _sz_buf, _sz_index, _sz_loop)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dbufwr", demand, IIdxSeq(_in(i.%(_sz_in)), _buf(i.%(_sz_buf)), _index(i.%(_sz_index)), _loop(i.%(_sz_loop)))))
-   }
+final case class Dbufwr(in: AnyGE, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with WritesBuffer {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, buf.expand, index.expand, loop.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dbufwr", demand, _args)
 }
-final case class Drand(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with UsesRandSeed {
-   protected def expandUGens = {
-      val _repeats = repeats.expand
-      val _seq = seq.mexpand
-      val _sz_repeats = _repeats.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_repeats, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Drand", demand, IIdxSeq(_repeats(i.%(_sz_repeats))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Drand(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Drand", demand, _args)
 }
-final case class Dxrand(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with UsesRandSeed {
-   protected def expandUGens = {
-      val _repeats = repeats.expand
-      val _seq = seq.mexpand
-      val _sz_repeats = _repeats.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_repeats, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dxrand", demand, IIdxSeq(_repeats(i.%(_sz_repeats))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Dxrand(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dxrand", demand, _args)
 }
-final case class Dshuf(seq: Multi[AnyGE], repeats: AnyGE = 1.0f) extends SingleOutUGenSource[demand] with UsesRandSeed {
-   protected def expandUGens = {
-      val _repeats = repeats.expand
-      val _seq = seq.mexpand
-      val _sz_repeats = _repeats.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_repeats, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dshuf", demand, IIdxSeq(_repeats(i.%(_sz_repeats))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Dshuf(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dshuf", demand, _args)
 }
-final case class Dswitch1(seq: Multi[AnyGE], index: AnyGE) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _index = index.expand
-      val _seq = seq.mexpand
-      val _sz_index = _index.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_index, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dswitch1", demand, IIdxSeq(_index(i.%(_sz_index))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Dswitch1(seq: AnyGE, index: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(index.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dswitch1", demand, _args)
 }
-final case class Dswitch(seq: Multi[AnyGE], index: AnyGE) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _index = index.expand
-      val _seq = seq.mexpand
-      val _sz_index = _index.size
-      val _sz_seq = _seq.size
-      val _exp_ = maxInt(_sz_index, _sz_seq)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dswitch", demand, IIdxSeq(_index(i.%(_sz_index))).++(_seq(i.%(_sz_seq)).expand)))
-   }
+final case class Dswitch(seq: AnyGE, index: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(index.expand).++(seq.expand.outputs))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dswitch", demand, _args)
 }
-final case class Dstutter(n: AnyGE, in: AnyGE) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _n = n.expand
-      val _in = in.expand
-      val _sz_n = _n.size
-      val _sz_in = _in.size
-      val _exp_ = maxInt(_sz_n, _sz_in)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dstutter", demand, IIdxSeq(_n(i.%(_sz_n)), _in(i.%(_sz_in)))))
-   }
+final case class Dstutter(n: AnyGE, in: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(n.expand, in.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dstutter", demand, _args)
 }
-final case class Donce(in: AnyGE) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _in = in.expand
-      IIdxSeq.tabulate(_in.size)(i => new SingleOutUGen("Donce", demand, IIdxSeq(_in(i))))
-   }
+final case class Donce(in: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Donce", demand, _args)
 }
-final case class Dreset(in: AnyGE, reset: AnyGE) extends SingleOutUGenSource[demand] with IsIndividual {
-   protected def expandUGens = {
-      val _in = in.expand
-      val _reset = reset.expand
-      val _sz_in = _in.size
-      val _sz_reset = _reset.size
-      val _exp_ = maxInt(_sz_in, _sz_reset)
-      IIdxSeq.tabulate(_exp_)(i => new SingleOutUGen("Dreset", demand, IIdxSeq(_in(i.%(_sz_in)), _reset(i.%(_sz_reset)))))
-   }
+final case class Dreset(in: AnyGE, reset: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, reset.expand))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dreset", demand, _args)
 }

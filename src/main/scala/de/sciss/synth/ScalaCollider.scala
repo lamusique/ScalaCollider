@@ -94,30 +94,30 @@ object ScalaCollider {
    }
 
    def test3( s: Server ) {
-      import ugen._
-
-// harmonic swimming
-//      implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
-
-//      val syn = play() { }
-
-      val syn = (SynthDef( "test" ) {
-         val f = 50       // fundamental frequency
-         val p = 20       // number of partials per channel
-//         val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
-         val offset = Line.kr(0, -0.02, 60 ) // causes sound to separate and fade
-         FreeSelf.kr( Done.kr( offset ))
-         var sig = Mix.tabulate(p) { i =>
-              val sig = SinOsc.ar( f * (i+1) ) * // freq of partial
-                  LFNoise1.kr(
-                      List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate
-                      0.02,    // amplitude scale
-                     offset    // amplitude offset
-                  ).max( 0 )   // clip negative amplitudes to zero
-              sig // GE.bubble( sig )
-          }
-         Out.ar( 0, sig )
-      }).play
+//      import ugen._
+//
+//// harmonic swimming
+////      implicit def bubble[ R <: Rate ]( g: GE[ R, UGenIn ]) : Multi[ R, GE[ R, UGenIn ]] = Multi.Joint( g )
+//
+////      val syn = play() { }
+//
+//      val syn = (SynthDef( "test" ) {
+//         val f = 50       // fundamental frequency
+//         val p = 20       // number of partials per channel
+////         val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
+//         val offset = Line.kr(0, -0.02, 60 ) // causes sound to separate and fade
+//         FreeSelf.kr( Done.kr( offset ))
+//         var sig = Mix.tabulate(p) { i =>
+//              val sig = SinOsc.ar( f * (i+1) ) * // freq of partial
+//                  LFNoise1.kr(
+//                      List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate
+//                      0.02,    // amplitude scale
+//                     offset    // amplitude offset
+//                  ).max( 0 )   // clip negative amplitudes to zero
+//              sig // GE.bubble( sig )
+//          }
+//         Out.ar( 0, sig )
+//      }).play
    }
 
 //   def test4( g: GE[audio]) = g + 33

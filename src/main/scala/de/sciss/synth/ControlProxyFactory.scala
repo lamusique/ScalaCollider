@@ -134,8 +134,11 @@ extends ControlProxyLike[ R, Impl ] {
 //	final def outputs: IIdxSeq[ UGenIn[ R ]] = outputRates.zipWithIndex.map(
 //      tup => ControlOutProxy[ R ]( this, tup._2, tup._1 ))
 
-   final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = outputRates.zipWithIndex.map(
-      tup => ControlUGenOutProxy /* [ R ] */ ( this, tup._2, tup._1 ))
+//   final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = outputRates.zipWithIndex.map(
+//      tup => ControlUGenOutProxy /* [ R ] */ ( this, tup._2, tup._1 ))
+
+   final def expand: UGenInLike = UGenInGroup( outputRates.zipWithIndex.map(
+      tup => ControlUGenOutProxy( this, tup._2, tup._1 )))
 
 //   final override def toString: String = {
 //      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )

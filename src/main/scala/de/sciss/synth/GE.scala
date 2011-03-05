@@ -31,7 +31,6 @@ package de.sciss.synth
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import aux.Expands
 import ugen.{Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 
 /**
@@ -91,10 +90,10 @@ object GE {
 //   }
 
    private class SeqImpl[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]]) extends GE[ R ] {
-      def expand : IIdxSeq[ UGenIn ] = elems.flatMap( _.expand )
+      def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
    }
    private class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE[ Rate ] {
-      def expand : IIdxSeq[ UGenIn ] = elems
+      def expand : UGenInLike = UGenInGroup( elems )
    }
 
 //   object Seq {
@@ -105,15 +104,18 @@ object GE {
 //   }
 //   sealed trait Seq[ R <: Rate ] extends GE[ R ]
 }
-trait GE[ +R <: Rate /*, +U <: UGenIn */ ] extends Expands[ UGenIn /* U */] /* with Multi[ GE[ R, U ]] */ {
+trait GE[ +R <: Rate /*, +U <: UGenIn */ ] /* extends Expands[ UGenIn /* U */]  *//* with Multi[ GE[ R, U ]] */ {
    ge =>
 
 //   type Rate = R
 
 //   def rate: R
 
-//   def expand: IIdxSeq[ U ]
-//   def expand: IIdxSeq[ U ]
+//   def expand: IIdxSeq[ UGenIn ]
+//   def mexpand: IIdxSeq[ GE[ R ]]
+
+   def expand: UGenInLike
+
 //   final def mexpand = IIdxSeq( ge )
 
    /**

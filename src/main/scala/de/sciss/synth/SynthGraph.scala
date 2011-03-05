@@ -210,7 +210,7 @@ object UGenGraph {
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
 //      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
       def addUGen( ugen: UGen ) {}
-      def visit[ U <: AnyRef ]( src: Lazy, init: => U ) : U = outOfContext
+      def visit[ U ]( src: Lazy, init: => U ) : U = outOfContext
 
       private def outOfContext : Nothing = error( "Out of context" )
    }
@@ -225,7 +225,7 @@ object UGenGraph {
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
 //      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
-      private val sourceMap      = MMap.empty[ Lazy, AnyRef ]
+      private val sourceMap      = MMap.empty[ Lazy, Any ]
 
       def build = {
          graph.sources.foreach( _.force( builder ))
@@ -317,9 +317,9 @@ val eff=true
          sorted
       }
 
-      def visit[ U <: AnyRef ]( src: Lazy, init: => U ) : U = {
+      def visit[ U ]( src: Lazy, init: => U ) : U = {
          sourceMap.getOrElse( src, {
-            val exp = init
+            val exp = init // .asInstanceOf[ U ]
             sourceMap += src -> exp
 //            exp.foreach( addUGen( _ ))
             exp

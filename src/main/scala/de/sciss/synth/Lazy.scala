@@ -1,5 +1,5 @@
 /*
- *  SynthGraphBuilder.scala
+ *  Lazy.scala
  *  (ScalaCollider)
  *
  *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
@@ -28,27 +28,27 @@
 
 package de.sciss.synth
 
-import collection.immutable.{ IndexedSeq => IIdxSeq }
+import collection.immutable.{IndexedSeq => IIdxSeq}
 
-trait SynthGraphBuilder {
-   def addLazy( g: Lazy ) : Unit
-   def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
-   def build : SynthGraph
+object Lazy {
+   trait Expander[ +U ] extends Lazy /* with Expands[ U ] */ {
+      private lazy val cache = new Cache( this )
+
+      final def force( b: UGenGraphBuilder ) { visit( b )}
+      final def expand: U = visit( UGenGraph.builder )
+      private def visit( b: UGenGraphBuilder ): U = b.visit( cache, makeUGens )
+      protected def makeUGens : U
+   }
+
+   final class Cache[ +T <: Lazy ]( val self: T ) extends Proxy with Lazy {
+      override val hashCode: Int = self.hashCode
+      def force( b: UGenGraphBuilder ) = self.force( b )
+   }
 }
 
-trait UGenGraphBuilder {
-   def addUGen( ugen: UGen ) : Unit
-//   def addUGenElem( u: Expands[ UGen ]) : Unit
-//   def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
-   def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
-   def build : UGenGraph
+trait Lazy {
+   // ---- constructor ----
+   SynthGraph.builder.addLazy( this )
 
-   def visit[ U ]( src: Lazy, init: => U ) : U
-
-//   private var indivCnt = 0
-//   def individuate : Int = {
-//      val res = indivCnt
-//      indivCnt += 1
-//      res
-//   }
+   def force( b: UGenGraphBuilder ) : Unit
 }
