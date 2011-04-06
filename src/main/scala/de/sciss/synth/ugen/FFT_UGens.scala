@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Mar 04 23:36:58 GMT 2011
+ * Created: Wed Apr 06 02:27:48 BST 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -11,16 +11,16 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
-final case class FFT(buf: AnyGE, in: AnyGE, hop: AnyGE = 0.5f, winType: AnyGE = 0.0f, active: AnyGE = 1.0f, winSize: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class FFT(buf: GE, in: GE, hop: GE = 0.5f, winType: GE = 0.0f, active: GE = 1.0f, winSize: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, hop.expand, winType.expand, active.expand, winSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("FFT", control, _args)
 }
 object IFFT {
-   def kr(chain: AnyGE, winType: AnyGE = 0.0f, winSize: AnyGE = 0.0f) = apply[control](control, chain, winType, winSize)
-   def apply(chain: AnyGE, winType: AnyGE = 0.0f, winSize: AnyGE = 0.0f) = apply[audio](audio, chain, winType, winSize)
-   def ar(chain: AnyGE, winType: AnyGE = 0.0f, winSize: AnyGE = 0.0f) = apply[audio](audio, chain, winType, winSize)
+   def kr(chain: GE, winType: GE = 0.0f, winSize: GE = 0.0f) = apply(control, chain, winType, winSize)
+   def apply(chain: GE, winType: GE = 0.0f, winSize: GE = 0.0f) : IFFT = apply(audio, chain, winType, winSize)
+   def ar(chain: GE, winType: GE = 0.0f, winSize: GE = 0.0f) = apply(audio, chain, winType, winSize)
 }
-final case class IFFT[R <: Rate](rate: R, chain: AnyGE, winType: AnyGE, winSize: AnyGE) extends UGenSource.SingleOut[R] {
+final case class IFFT(rate: Rate, chain: GE, winType: GE, winSize: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, winType.expand, winSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("IFFT", rate, _args)
 }
@@ -34,7 +34,7 @@ final case class IFFT[R <: Rate](rate: R, chain: AnyGE, winType: AnyGE, winSize:
  * @param polar           whether the complex buffer content is given in cartesian coordinates (0) or
  *                        in polar coordinates (1)
  */
-final case class FFTTrigger(buf: AnyGE, hop: AnyGE = 0.5f, polar: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class FFTTrigger(buf: GE, hop: GE = 0.5f, polar: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, hop.expand, polar.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("FFTTrigger", control, _args)
 }
@@ -44,7 +44,7 @@ final case class FFTTrigger(buf: AnyGE, hop: AnyGE = 0.5f, polar: AnyGE = 0.0f) 
  * @param chain           the FFT'ed buffer
  * @param thresh          magnitude threshold.
  */
-final case class PV_MagAbove(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagAbove(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagAbove", control, _args)
 }
@@ -54,7 +54,7 @@ final case class PV_MagAbove(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSou
  * @param chain           the FFT'ed buffer
  * @param thresh          magnitude threshold.
  */
-final case class PV_MagBelow(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagBelow(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagBelow", control, _args)
 }
@@ -65,7 +65,7 @@ final case class PV_MagBelow(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSou
  * @param thresh          magnitude threshold. Each bin's magnitude is limited to
  *                        be not greater than this threshold.
  */
-final case class PV_MagClip(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagClip(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagClip", control, _args)
 }
@@ -77,7 +77,7 @@ final case class PV_MagClip(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSour
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_MagMul(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagMul(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagMul", control, _args)
 }
@@ -93,7 +93,7 @@ final case class PV_MagMul(chainA: AnyGE, chainB: AnyGE) extends UGenSource.Sing
  *                        will use divide by this magnitude instead when zeroes are detected,
  *                        resulting in a maximum boost of `zeroes.reciprocal`.
  */
-final case class PV_MagDiv(chainA: AnyGE, chainB: AnyGE, zeroes: AnyGE = 1.0E-4f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagDiv(chainA: GE, chainB: GE, zeroes: GE = 1.0E-4f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, zeroes.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagDiv", control, _args)
 }
@@ -103,7 +103,7 @@ final case class PV_MagDiv(chainA: AnyGE, chainB: AnyGE, zeroes: AnyGE = 1.0E-4f
  * 
  * @param chain           the FFT'ed buffer
  */
-final case class PV_MagSquared(chain: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagSquared(chain: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagSquared", control, _args)
 }
@@ -112,7 +112,7 @@ final case class PV_MagSquared(chain: AnyGE) extends UGenSource.SingleOut[contro
  * 
  * @param chain           the FFT'ed buffer
  */
-final case class PV_MagNoise(chain: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT with UsesRandSeed {
+final case class PV_MagNoise(chain: GE) extends UGenSource.SingleOut with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagNoise", control, _args)
 }
@@ -128,7 +128,7 @@ final case class PV_MagNoise(chain: AnyGE) extends UGenSource.SingleOut[control]
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_Copy(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Copy(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Copy", control, _args)
 }
@@ -140,7 +140,7 @@ final case class PV_Copy(chainA: AnyGE, chainB: AnyGE) extends UGenSource.Single
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_CopyPhase(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_CopyPhase(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_CopyPhase", control, _args)
 }
@@ -150,7 +150,7 @@ final case class PV_CopyPhase(chainA: AnyGE, chainB: AnyGE) extends UGenSource.S
  * @param chain           the FFT'ed buffer
  * @param shift           phase shift in radians
  */
-final case class PV_PhaseShift(chain: AnyGE, shift: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_PhaseShift(chain: GE, shift: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, shift.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_PhaseShift", control, _args)
 }
@@ -159,7 +159,7 @@ final case class PV_PhaseShift(chain: AnyGE, shift: AnyGE) extends UGenSource.Si
  * 
  * @param chain           the FFT'ed buffer
  */
-final case class PV_PhaseShift90(chain: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_PhaseShift90(chain: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_PhaseShift90", control, _args)
 }
@@ -168,7 +168,7 @@ final case class PV_PhaseShift90(chain: AnyGE) extends UGenSource.SingleOut[cont
  * 
  * @param chain           the FFT'ed buffer
  */
-final case class PV_PhaseShift270(chain: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_PhaseShift270(chain: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_PhaseShift270", control, _args)
 }
@@ -180,7 +180,7 @@ final case class PV_PhaseShift270(chain: AnyGE) extends UGenSource.SingleOut[con
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_Min(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Min(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Min", control, _args)
 }
@@ -192,7 +192,7 @@ final case class PV_Min(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleO
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_Max(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Max(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Max", control, _args)
 }
@@ -205,7 +205,7 @@ final case class PV_Max(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleO
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_Mul(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Mul(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Mul", control, _args)
 }
@@ -218,7 +218,7 @@ final case class PV_Mul(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleO
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_Div(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Div(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Div", control, _args)
 }
@@ -231,7 +231,7 @@ final case class PV_Div(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleO
  *                        the output signal)
  * @param chainB          the second FFT'ed buffer
  */
-final case class PV_Add(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Add(chainA: GE, chainB: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Add", control, _args)
 }
@@ -259,7 +259,7 @@ final case class PV_Add(chainA: AnyGE, chainB: AnyGE) extends UGenSource.SingleO
  * 
  * @see [[de.sciss.synth.ugen.PV_RectComb2]]
  */
-final case class PV_RectComb(chain: AnyGE, numTeeth: AnyGE = 1.0f, phase: AnyGE = 0.0f, width: AnyGE = 0.5f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_RectComb(chain: GE, numTeeth: GE = 1.0f, phase: GE = 0.0f, width: GE = 0.5f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, numTeeth.expand, phase.expand, width.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_RectComb", control, _args)
 }
@@ -290,7 +290,7 @@ final case class PV_RectComb(chain: AnyGE, numTeeth: AnyGE = 1.0f, phase: AnyGE 
  * 
  * @see [[de.sciss.synth.ugen.PV_RectComb]]
  */
-final case class PV_RectComb2(chainA: AnyGE, chainB: AnyGE, numTeeth: AnyGE = 1.0f, phase: AnyGE = 0.0f, width: AnyGE = 0.5f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_RectComb2(chainA: GE, chainB: GE, numTeeth: GE = 1.0f, phase: GE = 0.0f, width: GE = 0.5f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, numTeeth.expand, phase.expand, width.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_RectComb2", control, _args)
 }
@@ -303,7 +303,7 @@ final case class PV_RectComb2(chainA: AnyGE, chainB: AnyGE, numTeeth: AnyGE = 1.
  *                        if  wipe > 0 then it acts like a high pass filter, clearing bins from the bottom up.
  *                        if  wipe < 0 then it acts like a low pass filter, clearing bins from the top down.
  */
-final case class PV_BrickWall(chain: AnyGE, wipe: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_BrickWall(chain: GE, wipe: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, wipe.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_BrickWall", control, _args)
 }
@@ -321,7 +321,7 @@ final case class PV_BrickWall(chain: AnyGE, wipe: AnyGE) extends UGenSource.Sing
  * 
  * @see [[de.sciss.synth.ugen.PV_RandWipe]]
  */
-final case class PV_BinWipe(chainA: AnyGE, chainB: AnyGE, wipe: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_BinWipe(chainA: GE, chainB: GE, wipe: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, wipe.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_BinWipe", control, _args)
 }
@@ -334,7 +334,7 @@ final case class PV_BinWipe(chainA: AnyGE, chainB: AnyGE, wipe: AnyGE) extends U
  * @param thresh          magnitude threshold used for general filtering, prior to
  *                        the local-maximum-filtering
  */
-final case class PV_LocalMax(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_LocalMax(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_LocalMax", control, _args)
 }
@@ -345,7 +345,7 @@ final case class PV_LocalMax(chain: AnyGE, thresh: AnyGE = 0.0f) extends UGenSou
  * 
  * @param chain           the FFT'ed buffer
  */
-final case class PV_Conj(chain: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_Conj(chain: GE) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Conj", control, _args)
 }
@@ -360,7 +360,7 @@ final case class PV_Conj(chain: AnyGE) extends UGenSource.SingleOut[control] wit
  * @param trig            causes a new random bin re-ordering to be made. a trigger
  *                        occurs when passing from non-positive to positive value.
  */
-final case class PV_BinScramble(chain: AnyGE, wipe: AnyGE = 0.5f, width: AnyGE = 0.2f, trig: AnyGE = 1.0f) extends UGenSource.SingleOut[control] with WritesFFT with UsesRandSeed {
+final case class PV_BinScramble(chain: GE, wipe: GE = 0.5f, width: GE = 0.2f, trig: GE = 1.0f) extends UGenSource.SingleOut with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, wipe.expand, width.expand, trig.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_BinScramble", control, _args)
 }
@@ -370,7 +370,7 @@ final case class PV_BinScramble(chain: AnyGE, wipe: AnyGE = 0.5f, width: AnyGE =
  * @param chain           the FFT'ed buffer
  * @param bins            number of bins to average on each side of bin. As this number rises, so will CPU usage.
  */
-final case class PV_MagSmear(chain: AnyGE, bins: AnyGE = 1.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagSmear(chain: GE, bins: GE = 1.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, bins.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagSmear", control, _args)
 }
@@ -384,7 +384,7 @@ final case class PV_MagSmear(chain: AnyGE, bins: AnyGE = 1.0f) extends UGenSourc
  * @param stretch         the factor to multiply each bin position with
  * @param shift           the translation of the spectrum, in number of bins
  */
-final case class PV_MagShift(chain: AnyGE, stretch: AnyGE = 1.0f, shift: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagShift(chain: GE, stretch: GE = 1.0f, shift: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, stretch.expand, shift.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagShift", control, _args)
 }
@@ -399,7 +399,7 @@ final case class PV_MagShift(chain: AnyGE, stretch: AnyGE = 1.0f, shift: AnyGE =
  * @param shift           the translation of the spectrum, in number of bins. Since the
  *                        FFT produces a linear frequency axis, the will produce harmonic distortion.
  */
-final case class PV_BinShift(chain: AnyGE, stretch: AnyGE = 1.0f, shift: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_BinShift(chain: GE, stretch: GE = 1.0f, shift: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, stretch.expand, shift.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_BinShift", control, _args)
 }
@@ -421,7 +421,7 @@ final case class PV_BinShift(chain: AnyGE, stretch: AnyGE = 1.0f, shift: AnyGE =
  * 
  * @see [[de.sciss.synth.ugen.PV_BinWipe]]
  */
-final case class PV_RandWipe(chainA: AnyGE, chainB: AnyGE, wipe: AnyGE, trig: AnyGE) extends UGenSource.SingleOut[control] with WritesFFT with UsesRandSeed {
+final case class PV_RandWipe(chainA: GE, chainB: GE, wipe: GE, trig: GE) extends UGenSource.SingleOut with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, wipe.expand, trig.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_RandWipe", control, _args)
 }
@@ -433,7 +433,7 @@ final case class PV_RandWipe(chainA: AnyGE, chainB: AnyGE, wipe: AnyGE, trig: An
  * @param trig            to trigger a new selection of random phases. A trigger occurs when
  *                        passing from non-positive to positive value.
  */
-final case class PV_Diffuser(chain: AnyGE, trig: AnyGE = 1.0f) extends UGenSource.SingleOut[control] with WritesFFT with UsesRandSeed {
+final case class PV_Diffuser(chain: GE, trig: GE = 1.0f) extends UGenSource.SingleOut with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, trig.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_Diffuser", control, _args)
 }
@@ -449,7 +449,7 @@ final case class PV_Diffuser(chain: AnyGE, trig: AnyGE = 1.0f) extends UGenSourc
  * @param trig            causes a new random bin selection to be made. a trigger
  *                        occurs when passing from non-positive to positive value.
  */
-final case class PV_RandComb(chain: AnyGE, wipe: AnyGE = 0.5f, trig: AnyGE = 1.0f) extends UGenSource.SingleOut[control] with WritesFFT with UsesRandSeed {
+final case class PV_RandComb(chain: GE, wipe: GE = 0.5f, trig: GE = 1.0f) extends UGenSource.SingleOut with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, wipe.expand, trig.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_RandComb", control, _args)
 }
@@ -460,14 +460,14 @@ final case class PV_RandComb(chain: AnyGE, wipe: AnyGE = 0.5f, trig: AnyGE = 1.0
  * @param chain           the FFT'ed buffer
  * @param freeze          whether the current levels are frozen (> 0) or not (0).
  */
-final case class PV_MagFreeze(chain: AnyGE, freeze: AnyGE = 1.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_MagFreeze(chain: GE, freeze: GE = 1.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, freeze.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_MagFreeze", control, _args)
 }
 object PartConv {
-   def ar(in: AnyGE, fftSize: AnyGE, buf: AnyGE) = apply[audio](audio, in, fftSize, buf)
+   def ar(in: GE, fftSize: GE, buf: GE) = apply(audio, in, fftSize, buf)
 }
-final case class PartConv[R <: Rate](rate: R, in: AnyGE, fftSize: AnyGE, buf: AnyGE) extends UGenSource.SingleOut[R] {
+final case class PartConv(rate: Rate, in: GE, fftSize: GE, buf: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, fftSize.expand, buf.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PartConv", rate, _args)
 }

@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Mar 04 23:36:58 GMT 2011
+ * Created: Wed Apr 06 02:27:48 BST 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -38,13 +38,13 @@ object Demand {
     * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
     * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
     */
-   def kr(trig: AnyGE, in: AnyGE, reset: AnyGE = 0.0f) = apply[control](control, trig, in, reset)
+   def kr(trig: GE, in: GE, reset: GE = 0.0f) = apply(control, trig, in, reset)
    /**
     * @param trig            trigger. Can be any signal. A trigger happens when the signal changes from non-positive to positive.
     * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
     * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
     */
-   def ar(trig: AnyGE, in: AnyGE, reset: AnyGE = 0.0f) = apply[audio](audio, trig, in, reset)
+   def ar(trig: GE, in: GE, reset: GE = 0.0f) = apply(audio, trig, in, reset)
 }
 /**
  * A UGen which polls results from demand-rate ugens when receiving a trigger.
@@ -69,7 +69,7 @@ object Demand {
  * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
  * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
  */
-final case class Demand[R <: Rate](rate: R, trig: AnyGE, in: AnyGE, reset: AnyGE) extends UGenSource.MultiOut[R] {
+final case class Demand(rate: Rate, trig: GE, in: GE, reset: GE) extends UGenSource.MultiOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand).++(in.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("Demand", rate, IIdxSeq.fill(_args.size.-(2))(rate), _args)
 }
@@ -94,7 +94,7 @@ object Duty {
     * @param level           a demand-rate ugen providing the output values.
     * @param doneAction      a doneAction that is evaluated when the duration stream ends.
     */
-   def kr(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE, doneAction: AnyGE = doNothing) = apply[control](control, dur, reset, level, doneAction)
+   def kr(dur: GE = 1.0f, reset: GE = 0.0f, level: GE, doneAction: GE = doNothing) = apply(control, dur, reset, level, doneAction)
    /**
     * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
     *                        The next poll is acquired after the previous duration.
@@ -104,7 +104,7 @@ object Duty {
     * @param level           a demand-rate ugen providing the output values.
     * @param doneAction      a doneAction that is evaluated when the duration stream ends.
     */
-   def ar(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE, doneAction: AnyGE = doNothing) = apply[audio](audio, dur, reset, level, doneAction)
+   def ar(dur: GE = 1.0f, reset: GE = 0.0f, level: GE, doneAction: GE = doNothing) = apply(audio, dur, reset, level, doneAction)
 }
 /**
  * A UGen which polls results from demand-rate ugens in intervals specified by a durational input.
@@ -124,7 +124,7 @@ object Duty {
  * @see [[de.sciss.synth.ugen.Demand]]
  * @see [[de.sciss.synth.DoneAction]]
  */
-final case class Duty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE) extends UGenSource.SingleOut[R] {
+final case class Duty(rate: Rate, dur: GE, reset: GE, level: GE, doneAction: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(dur.expand, reset.expand, level.expand, doneAction.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Duty", rate, _args)
 }
@@ -141,7 +141,7 @@ final case class Duty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE
  * @see [[de.sciss.synth.DoneAction]]
  */
 object TDuty {
-   def kr: TDuty[control] = kr()
+   def kr: TDuty = kr()
    /**
     * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
     *                        The next poll is acquired after the previous duration.
@@ -155,8 +155,8 @@ object TDuty {
     *                        durational value, waits for that duration, and then polls the first level
     *                        (along with polling the next durational value).
     */
-   def kr(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE = 1.0f, doneAction: AnyGE = doNothing, gapFirst: AnyGE = 0.0f) = apply[control](control, dur, reset, level, doneAction, gapFirst)
-   def ar: TDuty[audio] = ar()
+   def kr(dur: GE = 1.0f, reset: GE = 0.0f, level: GE = 1.0f, doneAction: GE = doNothing, gapFirst: GE = 0.0f) = apply(control, dur, reset, level, doneAction, gapFirst)
+   def ar: TDuty = ar()
    /**
     * @param dur             the provider of time values. Can be a demand-rate ugen or any signal.
     *                        The next poll is acquired after the previous duration.
@@ -170,7 +170,7 @@ object TDuty {
     *                        durational value, waits for that duration, and then polls the first level
     *                        (along with polling the next durational value).
     */
-   def ar(dur: AnyGE = 1.0f, reset: AnyGE = 0.0f, level: AnyGE = 1.0f, doneAction: AnyGE = doNothing, gapFirst: AnyGE = 0.0f) = apply[audio](audio, dur, reset, level, doneAction, gapFirst)
+   def ar(dur: GE = 1.0f, reset: GE = 0.0f, level: GE = 1.0f, doneAction: GE = doNothing, gapFirst: GE = 0.0f) = apply(audio, dur, reset, level, doneAction, gapFirst)
 }
 /**
  * A UGen which polls results from demand-rate ugens in intervals specified by a durational input,
@@ -196,7 +196,7 @@ object TDuty {
  * @see [[de.sciss.synth.ugen.Demand]]
  * @see [[de.sciss.synth.DoneAction]]
  */
-final case class TDuty[R <: Rate](rate: R, dur: AnyGE, reset: AnyGE, level: AnyGE, doneAction: AnyGE, gapFirst: AnyGE) extends UGenSource.SingleOut[R] {
+final case class TDuty(rate: Rate, dur: GE, reset: GE, level: GE, doneAction: GE, gapFirst: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(dur.expand, reset.expand, level.expand, doneAction.expand, gapFirst.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("TDuty", rate, _args)
 }
@@ -229,7 +229,7 @@ object DemandEnvGen {
     * @param timeScale       demand-rate ugen returning time scaling values
     * @param doneAction      a done action performed when one of the demand-rated series ends
     */
-   def ar(levels: AnyGE, durs: AnyGE, shapes: AnyGE = 1.0f, curvatures: AnyGE = 0.0f, gate: AnyGE = 1.0f, reset: AnyGE = 1.0f, levelScale: AnyGE = 1.0f, levelBias: AnyGE = 0.0f, timeScale: AnyGE = 1.0f, doneAction: AnyGE = doNothing) = apply[audio](audio, levels, durs, shapes, curvatures, gate, reset, levelScale, levelBias, timeScale, doneAction)
+   def ar(levels: GE, durs: GE, shapes: GE = 1.0f, curvatures: GE = 0.0f, gate: GE = 1.0f, reset: GE = 1.0f, levelScale: GE = 1.0f, levelBias: GE = 0.0f, timeScale: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, levels, durs, shapes, curvatures, gate, reset, levelScale, levelBias, timeScale, doneAction)
 }
 /**
  * An envelope generator UGen using demand-rate inputs for the envelope segments.
@@ -257,7 +257,7 @@ object DemandEnvGen {
  * @see [[de.sciss.synth.EnvShape]]
  * @see [[de.sciss.synth.DoneAction]]
  */
-final case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, shapes: AnyGE, curvatures: AnyGE, gate: AnyGE, reset: AnyGE, levelScale: AnyGE, levelBias: AnyGE, timeScale: AnyGE, doneAction: AnyGE) extends UGenSource.SingleOut[R] {
+final case class DemandEnvGen(rate: Rate, levels: GE, durs: GE, shapes: GE, curvatures: GE, gate: GE, reset: GE, levelScale: GE, levelBias: GE, timeScale: GE, doneAction: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(levels.expand, durs.expand, shapes.expand, curvatures.expand, gate.expand, reset.expand, levelScale.expand, levelBias.expand, timeScale.expand, doneAction.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("DemandEnvGen", rate, _args)
 }
@@ -274,31 +274,31 @@ final case class DemandEnvGen[R <: Rate](rate: R, levels: AnyGE, durs: AnyGE, sh
  * @see [[de.sciss.synth.ugen.Dgeom]]
  * @see [[de.sciss.synth.ugen.Dseq]]
  */
-final case class Dseries(start: AnyGE = 0.0f, step: AnyGE = 1.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dseries(start: GE = 0.0f, step: GE = 1.0f, length: GE = inf) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, step.expand, length.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dseries", demand, _args)
 }
-final case class Dgeom(start: AnyGE = 1.0f, grow: AnyGE = 2.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dgeom(start: GE = 1.0f, grow: GE = 2.0f, length: GE = inf) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, grow.expand, length.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dgeom", demand, _args)
 }
-final case class Dwhite(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+final case class Dwhite(lo: GE = 0.0f, hi: GE = 1.0f, length: GE = inf) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, length.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dwhite", demand, _args)
 }
-final case class Dbrown(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, step: AnyGE = 0.01f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+final case class Dbrown(lo: GE = 0.0f, hi: GE = 1.0f, step: GE = 0.01f, length: GE = inf) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, step.expand, length.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dbrown", demand, _args)
 }
-final case class Diwhite(lo: AnyGE = 0.0f, hi: AnyGE = 1.0f, length: AnyGE = inf) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+final case class Diwhite(lo: GE = 0.0f, hi: GE = 1.0f, length: GE = inf) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, length.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Diwhite", demand, _args)
 }
-final case class Dseq(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dseq(seq: GE, repeats: GE = 1.0f) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dseq", demand, _args)
 }
-final case class Dser(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dser(seq: GE, repeats: GE = 1.0f) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dser", demand, _args)
 }
@@ -312,43 +312,43 @@ final case class Dser(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.Sing
  * @see [[de.sciss.synth.ugen.BufRd]]
  * @see [[de.sciss.synth.ugen.Dbufwr]]
  */
-final case class Dbufrd(buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dbufrd(buf: GE, index: GE = 0.0f, loop: GE = 1.0f) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dbufrd", demand, _args)
 }
-final case class Dbufwr(in: AnyGE, buf: AnyGE, index: AnyGE = 0.0f, loop: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with WritesBuffer {
+final case class Dbufwr(in: GE, buf: GE, index: GE = 0.0f, loop: GE = 1.0f) extends UGenSource.SingleOut with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, buf.expand, index.expand, loop.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dbufwr", demand, _args)
 }
-final case class Drand(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+final case class Drand(seq: GE, repeats: GE = 1.0f) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Drand", demand, _args)
 }
-final case class Dxrand(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+final case class Dxrand(seq: GE, repeats: GE = 1.0f) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dxrand", demand, _args)
 }
-final case class Dshuf(seq: AnyGE, repeats: AnyGE = 1.0f) extends UGenSource.SingleOut[demand] with UsesRandSeed {
+final case class Dshuf(seq: GE, repeats: GE = 1.0f) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(repeats.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dshuf", demand, _args)
 }
-final case class Dswitch1(seq: AnyGE, index: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dswitch1(seq: GE, index: GE) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(index.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dswitch1", demand, _args)
 }
-final case class Dswitch(seq: AnyGE, index: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dswitch(seq: GE, index: GE) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(index.expand).++(seq.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dswitch", demand, _args)
 }
-final case class Dstutter(n: AnyGE, in: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dstutter(n: GE, in: GE) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(n.expand, in.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dstutter", demand, _args)
 }
-final case class Donce(in: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Donce(in: GE) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Donce", demand, _args)
 }
-final case class Dreset(in: AnyGE, reset: AnyGE) extends UGenSource.SingleOut[demand] with IsIndividual {
+final case class Dreset(in: GE, reset: GE) extends UGenSource.SingleOut with IsIndividual {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, reset.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Dreset", demand, _args)
 }

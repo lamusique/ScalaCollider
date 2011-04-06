@@ -145,7 +145,7 @@ object Constant {
  *    These constants are stored in a separate table of
  *    the synth graph.
  */
-final case class Constant( value: Float ) extends GE[ scalar ] with UGenIn {
+final case class Constant( value: Float ) extends GE with UGenIn {
    import Constant._
 
    override def toString = value.toString
@@ -220,7 +220,7 @@ final case class Constant( value: Float ) extends GE[ scalar ] with UGenIn {
 //   def expand: IIdxSeq[ UGenIn ] = IIdxSeq( this )
 //}
 
-case class ControlUGenOutProxy[ R <: Rate ]( source: ControlProxyLike[ R, _ ], outputIndex: Int, rate: Rate )
+case class ControlUGenOutProxy( source: ControlProxyLike[ _ ], outputIndex: Int, rate: Rate )
 extends UGenIn { // UGenIn[ R ] {
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex

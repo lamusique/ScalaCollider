@@ -33,53 +33,7 @@ package de.sciss.synth
  */
 object Rate {
    def highest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
-//   def highest( ge: AnyGE ) : Rate = highest( ge.expand.map( _.rate ): _* )
    def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
-//   def lowest( ge: AnyGE ) : Rate = lowest( ge.expand.map( _.rate ): _* )
-
-   object > {
-//   implicit val demandGtAudio:    HigherRate[ demand,  audio   ] = new Impl[ demand, audio ] // (   demand,  audio   )
-//   implicit val demandGtControl:  HigherRate[ demand,  control ] = new Impl[ demand, control ] // ( demand,  control )
-//   implicit val demandGtScalar:   HigherRate[ demand,  scalar  ] = new Impl[ demand, scalar ] // (  demand,  scalar  )
-
-      implicit def allGtScalar[ R <: Rate ] : >[ R, scalar ]   = new Impl[ R, scalar ]
-      implicit def demandGtAll[ R <: Rate ] : >[ demand, R ]   = new Impl[ demand, R ]
-      implicit val audioGtControl: >[ audio, control ]         = new Impl[ audio, control ] // (  audio,   control )
-//   implicit def same[ R <: Rate ] : HigherRate[ R, R ]               = new Impl[ R, R ]
-//   implicit val audioGtScalar:    HigherRate[ audio,   scalar  ] = new Impl[ audio, scalar ] // (   audio,   scalar  )
-//   implicit val controlGtScalar:  HigherRate[ control, scalar  ] = new Impl[ control, scalar ] // ( control, scalar  )
-
-      private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends >[ R, S ]
-   }
-   sealed trait >[ -R <: Rate, S <: Rate ]
-
-   object >= {
-      implicit def allGtScalar[ R <: Rate ] : >=[ R, scalar ]  = new Impl[ R, scalar ]
-      implicit def demandGtAll[ R <: Rate ] : >=[ demand, R ]  = new Impl[ demand, R ]
-      implicit val audioGtControl: >=[ audio, control ]        = new Impl[ audio, control ] // (  audio,   control )
-      implicit def same[ R <: Rate ] : >=[ R, R ]              = new Impl[ R, R ]
-      private class Impl[ R <: Rate, S <: Rate ] /* ( val rate1: R, val rate2: S ) */ extends >=[ R, S ]
-   }
-   sealed trait >=[ -R <: Rate, S <: Rate ]
-
-   sealed trait OrdLowImplicits {
-//   implicit def unknown[ R <: Rate, S <: Rate ] = RateOrdUnknown[ R, S ]()
-      implicit def unknown[ R <: Rate, S <: Rate ] : Ord[ R, S, Rate ] = new Impl[ R, S, Rate ] // RateOrdUnknown[ R, S ]()
-      protected class Impl[ R <: Rate, S <: Rate, T <: Rate ]/*( /* val in1: R, val in2: S, */ val out: T )*/ extends Ord[ R, S, T ]
-   }
-   object Ord extends OrdLowImplicits {
-      implicit def same[ R <: Rate ] /* ( implicit rate: R ) */ : Ord[ R, R, R ] = new Impl[ R, R, R ] // ( /* rate, rate, */ rate )
-//   implicit val bothScalar = new Impl[ scalar, scalar, scalar ]
-//   implicit val bothControl= new Impl[ control, control, control ]
-//   implicit val bothAudio  = new Impl[ audio, audio, audio ]
-//   implicit val bothDemand = new Impl[ demand, demand, demand ]
-      implicit def gt[ R <: Rate, S <: Rate ]( implicit rel: >[ R, S ]) : Ord[ R, S, R ] = new Impl[ R, S, R ] // ( /* rel.rate1, rel.rate2, */ rel.rate1 )
-      implicit def lt[ R <: Rate, S <: Rate ]( implicit rel: >[ S, R ]) : Ord[ R, S, S ] = new Impl[ R, S, S ] // ( /* rel.rate2, rel.rate1, */ rel.rate1 )
-
-      private class Impl[ R <: Rate, S <: Rate, T <: Rate ] extends Ord[ R, S, T ]
-   }
-//sealed trait MaybeRateOrd[ -R <: Rate, -S <: Rate, -T <: Rate ]
-   sealed trait Ord[ -R <: Rate, S <: Rate, T <: Rate ]
 }
 
 /**

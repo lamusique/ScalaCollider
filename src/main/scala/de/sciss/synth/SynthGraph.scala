@@ -86,27 +86,25 @@ case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float
 }
 
 object SynthGraph {
-//   def wrapOut[ R <: Rate, S <: Rate ]( thunk: => Multi[ GE[ R ]], fadeTime: Option[Float] = Some(0.02f) )
-//                                     ( implicit r: Rate.Order[ R, control, S ], cons: Out.RateCons[ R, S ]) =
-//      SynthGraph {
+//   def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) = SynthGraph {
 //         val res1 = thunk
-////         val rate = res1.rate // r.in2 // .highest( res1.outputs.map( _.rate ): _* )
-////         val res2 = if( (rate == audio) || (rate == control) ) {
-////            val o: Option[ Multi[ AnyGE ]] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
-////            val res2: Multi[ AnyGE ] = o getOrElse res1
-//////            val res2 = res1
-////            val out = "out".kr
-//////            if( rate == audio ) {
-////               Out( rate, out, res2 )
-//////            } else {
-//////               Out.kr( out, res2 )
-//////            }
-////         } else
-////         Out[ R ]( "out".kr, fadeTime.map( t => res1 * makeFadeEnv( t )))
-//         res1
+//         val rate = Rate.highest( res1.outputs.map( _.rate ): _* )
+//         val res2 = if( (rate == audio) || (rate == control) ) {
+//            val o: Option[ GE ] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
+//            val res2: GE = o getOrElse res1
+////            val res2 = res1
+//            val out = "out".kr
+//            if( rate == audio ) {
+//               Out( rate, out, res2 )
+//            } else {
+//               Out.kr( out, res2 )
+//            }
+//         } else
+//            res1
+////         Out( rate, "out".kr, fadeTime.map( t => res1 * makeFadeEnv( t )))
 //      }
 
-	def makeFadeEnv( fadeTime: Float ) : GE[control] = {
+	def makeFadeEnv( fadeTime: Float ) : GE = {
 		val dt			= "fadeTime".kr( fadeTime )
 		val gate       = "gate".kr( 1 )
 		val startVal	= (dt <= 0)
@@ -158,25 +156,25 @@ object SynthGraph {
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
       def addLazy( g: Lazy ) {}
-      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
+      def addControlProxy( proxy: ControlProxyLike[ _ ]) {}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
       private val lazies         = MBuffer.empty[ Lazy ]
-      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
+      private var controlProxies = MSet.empty[ ControlProxyLike[ _ ]]
 
       def build = SynthGraph( lazies.toIndexedSeq, controlProxies.toSet )
       def addLazy( g: Lazy ) {
          lazies += g
       }
 
-      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
+      def addControlProxy( proxy: ControlProxyLike[ _ ]) {
          controlProxies += proxy
       }
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _, _ ]]) {
+case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _ ]]) {
    def expand = UGenGraph.expand( this )
 }
 
@@ -237,7 +235,7 @@ object UGenGraph {
          UGenGraph( constants, controlValues, controlNames, richUGens )
       }
 
-      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _, _ ], (UGen, Int)]) :
+      private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _ ], (UGen, Int)]) :
          (MBuffer[ IndexedUGen ], IIdxSeq[ Float ]) = {
 
          val constantMap   = MMap.empty[ Float, RichConstant ]
@@ -345,7 +343,7 @@ val eff=true
        *    Manita, how simple things can get as soon as you
        *    clean up the sclang mess...
        */
-      private def buildControls( p: Traversable[ ControlProxyLike[ _, _ ]]): Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+      private def buildControls( p: Traversable[ ControlProxyLike[ _ ]]): Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
          p.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
             factory.build( builder, proxies.toSeq: _* )

@@ -36,20 +36,20 @@ import ugen.{ControlFactory, AudioControlProxy, ControlProxy, TrigControlProxy}
  *    @version	0.14, 07-Jan-10
  */
 object ControlProxyFactory {
-   private val controlIrFactory = new ControlFactory[ scalar ]( scalar )
-   private val controlKrFactory = new ControlFactory[ control ]( control )
+   private val controlIrFactory = new ControlFactory( scalar )
+   private val controlKrFactory = new ControlFactory( control )
 
 //   implicit def fromString( name: String ) = new ControlProxyFactory( name )
 }
 class ControlProxyFactory( name: String ) {
    import ControlProxyFactory._
 
-   def ir : ControlProxy[ scalar ] = ir( IIdxSeq( 0f ))
-   def ir( value: Double, values: Double* ) : ControlProxy[ scalar ] = ir( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
-   def ir( value: Float, values: Float* ) : ControlProxy[ scalar ] = ir( IIdxSeq( (value +: values): _* ))
-   def kr : ControlProxy[ control ] = kr( IIdxSeq( 0f ))
-   def kr( value: Double, values: Double* ) : ControlProxy[ control ] = kr( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
-   def kr( value: Float, values: Float* ) : ControlProxy[ control ] = kr( IIdxSeq( (value +: values): _* ))
+   def ir : ControlProxy = ir( IIdxSeq( 0f ))
+   def ir( value: Double, values: Double* ) : ControlProxy = ir( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
+   def ir( value: Float, values: Float* ) : ControlProxy = ir( IIdxSeq( (value +: values): _* ))
+   def kr : ControlProxy = kr( IIdxSeq( 0f ))
+   def kr( value: Double, values: Double* ) : ControlProxy = kr( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
+   def kr( value: Float, values: Float* ) : ControlProxy = kr( IIdxSeq( (value +: values): _* ))
    def tr : TrigControlProxy = tr( IIdxSeq( 0f ))
    def tr( value: Double, values: Double* ) : TrigControlProxy = tr( IIdxSeq( (value.toFloat +: values.map( _.toFloat )): _* ))
    def tr( value: Float, values: Float* ) : TrigControlProxy = tr( IIdxSeq( (value +: values): _* ))
@@ -59,8 +59,8 @@ class ControlProxyFactory( name: String ) {
 //   def kr[ T <% GE ]( spec: (T, Double), specs: (T, Double)* ) : GE = kr( Vector( (spec._1, spec._2.toFloat) ))
 //   def kr[ T <% GE ]( spec: (T, Float), specs: (T, Float)* ) : GE = kr( Vector( spec ))
 
-   @inline private def ir( values: IIdxSeq[ Float ]) = ControlProxy[ scalar ]( scalar, values, Some( name ))( controlIrFactory )
-   @inline private def kr( values: IIdxSeq[ Float ]) = ControlProxy[ control ]( control, values, Some( name ))( controlKrFactory )
+   @inline private def ir( values: IIdxSeq[ Float ]) = ControlProxy( scalar, values, Some( name ))( controlIrFactory )
+   @inline private def kr( values: IIdxSeq[ Float ]) = ControlProxy( control, values, Some( name ))( controlKrFactory )
    @inline private def tr( values: IIdxSeq[ Float ]) = TrigControlProxy( values, Some( name ))
    @inline private def ar( values: IIdxSeq[ Float ]) = AudioControlProxy( values, Some( name ))
 //   @inline private def kr( specs: IIdxSeq[ (GE, Float) ]) : GE = {
@@ -91,11 +91,11 @@ class ControlProxyFactory( name: String ) {
 
 trait ControlFactoryLike[ T ] {
    type Proxy = T // don't ask me what this is doing. some vital variance correction...
-   def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ]
+   def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ]
 }
 
-abstract class AbstractControlFactory[ T <: AbstractControlProxy[ _ <: Rate, T ]] extends ControlFactoryLike[ T ] {
-   def build( b: UGenGraphBuilder, proxies: T* ) : Map[ ControlProxyLike[ _, _ ], (UGen, Int) ] = {
+abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends ControlFactoryLike[ T ] {
+   def build( b: UGenGraphBuilder, proxies: T* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {
          numChannels += p.values.size
@@ -113,14 +113,14 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ _ <: Rate, T ]
    protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen
 }
 
-trait ControlProxyLike[ R <: Rate, Impl ] extends GE[ R ] /* extends RatedGE[ U ] */ {
+trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
    def displayName: String // YYY
 }
 
-abstract class AbstractControlProxy[ R <: Rate, Impl ]( outputRates: IIdxSeq[ R ])
-extends ControlProxyLike[ R, Impl ] {
+abstract class AbstractControlProxy[ Impl ]( outputRates: IIdxSeq[ Rate ])
+extends ControlProxyLike[ Impl ] {
    // ---- constructor ----
    SynthGraph.builder.addControlProxy( this )
 

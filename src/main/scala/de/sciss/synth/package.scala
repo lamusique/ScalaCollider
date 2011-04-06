@@ -30,10 +30,9 @@ package de.sciss
 
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import osc.{OSCPacket, OSCMessage}
+import osc.OSCPacket
 import synth._
 import aux.GraphFunction
-import ugen.{CanWrapOut, Out}
 package synth {
    abstract private[synth] sealed class LowPriorityImplicits {
       /**
@@ -66,7 +65,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
 //   type AnyUGenIn = UGenIn // [ _ <: Rate ]
 //   type AnyMulti  = Multi[ R, GE[ R /*, UGenIn */]] forSome { type R <: Rate }
-   type AnyGE     = GE[ _ <: Rate ] // _ <: Rate /*, UGenIn */ ] // forSome { type R <: Rate }
+//   type AnyGE     = GE[ _ <: Rate ] // _ <: Rate /*, UGenIn */ ] // forSome { type R <: Rate }
 //   type AnyMulti  = Multi[ AnyGE ]
 //   type AnyGE   = Expands[ AnyUGenIn ]
 
@@ -158,8 +157,8 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
    // explicit methods
 
-   def play[ T <% CanWrapOut ]( thunk: => T ) : Synth = play()( thunk )
-   def play[ T <% CanWrapOut ]( target: Node = Server.default, outBus: Int = 0,
+   def play[ T <% GE ]( thunk: => T ) : Synth = play()( thunk )
+   def play[ T <% GE ]( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[ Float ] = Some( 0.02f ),
              addAction: AddAction = addToHead )( thunk: => T ) : Synth = {
       val fun = new GraphFunction[ T ]( thunk )

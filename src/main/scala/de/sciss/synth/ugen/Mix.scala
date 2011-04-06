@@ -43,7 +43,7 @@ object Mix {
    /**
     * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
     */
-	def tabulate[ R <: Rate ]( n: Int )( fun: (Int) => GE[ R ])/* ( implicit rate: R ) */ : Mix.Seq[ R ] =
+	def tabulate( n: Int )( fun: (Int) => GE )/* ( implicit rate: R ) */ : Mix.Seq =
       Mix.Seq( IIdxSeq.tabulate( n )( i => fun( i )))
 
 //   def tabulate[ R <: Rate, G ]( n: Int )( fun: (Int) => G )( implicit rate: R, view: G => Multi[ R, GE[ R, UGenIn ]]) : Mix.Seq[ R ] =
@@ -52,7 +52,7 @@ object Mix {
    /**
     * A mixing idiom that corresponds to @Seq.fill@.
     */
-   def fill[ R <: Rate ]( n: Int )( thunk: => GE[ R ])/* ( implicit rate: R ) */ : Mix.Seq[ R ] =
+   def fill( n: Int )( thunk: => GE )/* ( implicit rate: R ) */ : Mix.Seq =
       Mix.Seq( IIdxSeq.fill( n )( thunk ))
 
 //   /**
@@ -70,10 +70,10 @@ object Mix {
 //    */
 //   def mono[ R <: Rate ]( elem: GE[ R ])/* ( implicit rate: R ) */ : Mix[ R ] = apply( elem )
 
-   def seq[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]])/* ( implicit rate: R ) */ = Seq( elems )
+   def seq( elems: IIdxSeq[ GE ])/* ( implicit rate: R ) */ = Seq( elems )
 
-   case class Seq[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]])/*( implicit val rate: R )*/ /*( implicit r: RateOrder[ R, R, R ])*/
-   extends GE.Lazy[ R ] {
+   case class Seq( elems: IIdxSeq[ GE ])/*( implicit val rate: R )*/ /*( implicit r: RateOrder[ R, R, R ])*/
+   extends GE.Lazy {
       def makeUGens : UGenInLike = elems.headOption match {
          case Some( e ) => elems.tail.foldLeft( e )( _ + _ ).expand
          case _ => UGenInGroup( IIdxSeq.empty )

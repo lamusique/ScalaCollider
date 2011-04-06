@@ -31,7 +31,7 @@ package de.sciss.synth
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object UGenSource {
-   trait ZeroOut[ +R <: Rate ] extends UGenSource[ Unit ] {
+   trait ZeroOut extends UGenSource[ Unit ] {
       protected def makeUGens : Unit
 
       final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) : Unit = {
@@ -42,10 +42,10 @@ object UGenSource {
       }
    }
 
-   trait SingleOut[ +R <: Rate ] extends SomeOut[ R ] //, UGen.SingleOut ]
-   trait MultiOut[  +R <: Rate ] extends SomeOut[ R ] // , UGen.MultiOut ]
+   trait SingleOut extends SomeOut //, UGen.SingleOut ]
+   trait MultiOut extends SomeOut // , UGen.MultiOut ]
 
-   protected sealed trait SomeOut[ +R <: Rate ] extends UGenSource[ UGenInLike ] with GE.Lazy[ R ] {
+   protected sealed trait SomeOut extends UGenSource[ UGenInLike ] with GE.Lazy {
 //      protected def makeUGens : UGenInLike
 
       final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) : UGenInLike =

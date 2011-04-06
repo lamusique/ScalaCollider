@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Mar 04 23:36:58 GMT 2011
+ * Created: Wed Apr 06 02:27:48 BST 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -18,7 +18,7 @@ import aux.UGenHelper._
  * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
  */
 object Convolution {
-   def ar(in: AnyGE, kernel: AnyGE, frameSize: AnyGE) = apply[audio](audio, in, kernel, frameSize)
+   def ar(in: GE, kernel: GE, frameSize: GE) = apply(audio, in, kernel, frameSize)
 }
 /**
  * @see [[de.sciss.synth.ugen.Convolution2L]]
@@ -26,7 +26,7 @@ object Convolution {
  * @see [[de.sciss.synth.ugen.Convolution2]]
  * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
  */
-final case class Convolution[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, frameSize: AnyGE) extends UGenSource.SingleOut[R] {
+final case class Convolution(rate: Rate, in: GE, kernel: GE, frameSize: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, kernel.expand, frameSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Convolution", rate, _args)
 }
@@ -51,7 +51,7 @@ object Convolution2 {
     *                        by the UGen has a size of twice this value. The maximum allowed frameSize
     *                        is 65536(?).
     */
-   def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
+   def ar(in: GE, kernel: GE, trig: GE = 1.0f, frameSize: GE) = apply(audio, in, kernel, trig, frameSize)
 }
 /**
  * A frequency-domain convolution UGen using a fixed kernel which can be updated
@@ -71,7 +71,7 @@ object Convolution2 {
  * @see [[de.sciss.synth.ugen.Convolution]]
  * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
  */
-final case class Convolution2[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends UGenSource.SingleOut[R] {
+final case class Convolution2(rate: Rate, in: GE, kernel: GE, trig: GE, frameSize: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, kernel.expand, trig.expand, frameSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Convolution2", rate, _args)
 }
@@ -82,7 +82,7 @@ final case class Convolution2[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig
  * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
  */
 object Convolution2L {
-   def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernel, trig, frameSize, fadePeriods)
+   def ar(in: GE, kernel: GE, trig: GE = 1.0f, frameSize: GE, fadePeriods: GE = 1.0f) = apply(audio, in, kernel, trig, frameSize, fadePeriods)
 }
 /**
  * @see [[de.sciss.synth.ugen.Convolution2]]
@@ -90,7 +90,7 @@ object Convolution2L {
  * @see [[de.sciss.synth.ugen.Convolution]]
  * @see [[de.sciss.synth.ugen.StereoConvolution2L]]
  */
-final case class Convolution2L[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends UGenSource.SingleOut[R] {
+final case class Convolution2L(rate: Rate, in: GE, kernel: GE, trig: GE, frameSize: GE, fadePeriods: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, kernel.expand, trig.expand, frameSize.expand, fadePeriods.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Convolution2L", rate, _args)
 }
@@ -121,7 +121,7 @@ object StereoConvolution2L {
     *                        is 65536(?).
     * @param fadePeriods     The number of periods over which a crossfade is performed. This must be an integer
     */
-   def ar(in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE, fadePeriods: AnyGE = 1.0f) = apply[audio](audio, in, kernelL, kernelR, trig, frameSize, fadePeriods)
+   def ar(in: GE, kernelL: GE, kernelR: GE, trig: GE = 1.0f, frameSize: GE, fadePeriods: GE = 1.0f) = apply(audio, in, kernelL, kernelR, trig, frameSize, fadePeriods)
 }
 /**
  * A frequency domain stereo convolution UGen, capable of performing linear crossfades between kernel updates.
@@ -147,7 +147,7 @@ object StereoConvolution2L {
  * @see [[de.sciss.synth.ugen.Convolution]]
  * @see [[de.sciss.synth.ugen.Convolution2L]]
  */
-final case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: AnyGE, kernelR: AnyGE, trig: AnyGE, frameSize: AnyGE, fadePeriods: AnyGE) extends UGenSource.MultiOut[R] {
+final case class StereoConvolution2L(rate: Rate, in: GE, kernelL: GE, kernelR: GE, trig: GE, frameSize: GE, fadePeriods: GE) extends UGenSource.MultiOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, kernelL.expand, kernelR.expand, trig.expand, frameSize.expand, fadePeriods.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("StereoConvolution2L", rate, IIdxSeq.fill(2)(rate), _args)
 }
@@ -155,30 +155,30 @@ final case class StereoConvolution2L[R <: Rate](rate: R, in: AnyGE, kernelL: Any
  * A UGen for triggered convolution in the time domain.
  */
 object Convolution3 {
-   def ar(in: AnyGE, kernel: AnyGE, trig: AnyGE = 1.0f, frameSize: AnyGE) = apply[audio](audio, in, kernel, trig, frameSize)
+   def ar(in: GE, kernel: GE, trig: GE = 1.0f, frameSize: GE) = apply(audio, in, kernel, trig, frameSize)
 }
 /**
  * A UGen for triggered convolution in the time domain.
  */
-final case class Convolution3[R <: Rate](rate: R, in: AnyGE, kernel: AnyGE, trig: AnyGE, frameSize: AnyGE) extends UGenSource.SingleOut[R] {
+final case class Convolution3(rate: Rate, in: GE, kernel: GE, trig: GE, frameSize: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, kernel.expand, trig.expand, frameSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Convolution3", rate, _args)
 }
-final case class PV_ConformalMap(chain: AnyGE, real: AnyGE = 0.0f, imag: AnyGE = 0.0f) extends UGenSource.SingleOut[control] with WritesFFT {
+final case class PV_ConformalMap(chain: GE, real: GE = 0.0f, imag: GE = 0.0f) extends UGenSource.SingleOut with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, real.expand, imag.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_ConformalMap", control, _args)
 }
 object PV_JensenAndersen {
-   def ar(chain: AnyGE, propSC: AnyGE = 0.25f, propHFE: AnyGE = 0.25f, propHFC: AnyGE = 0.25f, propSF: AnyGE = 0.25f, thresh: AnyGE = 1.0f, waitTime: AnyGE = 0.04f) = apply[audio](audio, chain, propSC, propHFE, propHFC, propSF, thresh, waitTime)
+   def ar(chain: GE, propSC: GE = 0.25f, propHFE: GE = 0.25f, propHFC: GE = 0.25f, propSF: GE = 0.25f, thresh: GE = 1.0f, waitTime: GE = 0.04f) = apply(audio, chain, propSC, propHFE, propHFC, propSF, thresh, waitTime)
 }
-final case class PV_JensenAndersen[R <: Rate](rate: R, chain: AnyGE, propSC: AnyGE, propHFE: AnyGE, propHFC: AnyGE, propSF: AnyGE, thresh: AnyGE, waitTime: AnyGE) extends UGenSource.SingleOut[R] {
+final case class PV_JensenAndersen(rate: Rate, chain: GE, propSC: GE, propHFE: GE, propHFC: GE, propSF: GE, thresh: GE, waitTime: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, propSC.expand, propHFE.expand, propHFC.expand, propSF.expand, thresh.expand, waitTime.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_JensenAndersen", rate, _args)
 }
 object PV_HainsworthFoote {
-   def ar(chain: AnyGE, propH: AnyGE = 0.0f, propF: AnyGE = 0.0f, thresh: AnyGE = 1.0f, waitTime: AnyGE = 0.04f) = apply[audio](audio, chain, propH, propF, thresh, waitTime)
+   def ar(chain: GE, propH: GE = 0.0f, propF: GE = 0.0f, thresh: GE = 1.0f, waitTime: GE = 0.04f) = apply(audio, chain, propH, propF, thresh, waitTime)
 }
-final case class PV_HainsworthFoote[R <: Rate](rate: R, chain: AnyGE, propH: AnyGE, propF: AnyGE, thresh: AnyGE, waitTime: AnyGE) extends UGenSource.SingleOut[R] {
+final case class PV_HainsworthFoote(rate: Rate, chain: GE, propH: GE, propF: GE, thresh: GE, waitTime: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, propH.expand, propF.expand, thresh.expand, waitTime.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PV_HainsworthFoote", rate, _args)
 }
@@ -193,14 +193,14 @@ object RunningSum {
     *                        these are the number of audio sample-frames for audio-rate calculation,
     *                        or the number of blocks for control-rate calculation summed up.
     */
-   def kr(in: GE[control], winSize: AnyGE = 440.0f) = apply[control](control, in, winSize)
+   def kr(in: GE, winSize: GE = 440.0f) = apply(control, in, winSize)
    /**
     * @param in              the input signal to sum up
     * @param winSize         the length of the sliding window over the input signal.
     *                        these are the number of audio sample-frames for audio-rate calculation,
     *                        or the number of blocks for control-rate calculation summed up.
     */
-   def ar(in: GE[audio], winSize: AnyGE = 440.0f) = apply[audio](audio, in, winSize)
+   def ar(in: GE, winSize: GE = 440.0f) = apply(audio, in, winSize)
 }
 /**
  * A UGen calculating the running sum of an input signal over a given number of samples.
@@ -210,7 +210,7 @@ object RunningSum {
  *                        these are the number of audio sample-frames for audio-rate calculation,
  *                        or the number of blocks for control-rate calculation summed up.
  */
-final case class RunningSum[R <: Rate](rate: R, in: AnyGE, winSize: AnyGE) extends UGenSource.SingleOut[R] {
+final case class RunningSum(rate: Rate, in: GE, winSize: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, winSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("RunningSum", rate, _args)
 }

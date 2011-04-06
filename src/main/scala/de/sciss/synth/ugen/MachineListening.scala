@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Mar 04 23:36:58 GMT 2011
+ * Created: Wed Apr 06 02:27:48 BST 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -40,7 +40,7 @@ object BeatTrack {
     *                        periodicity and continue from the current phase. Whilst it updates the model's phase and period,
     *                        this is not reflected in the output until lock goes back below 0.5. Can be control-rate modulated.
     */
-   def kr(chain: AnyGE, lock: AnyGE = 0.0f) = apply(chain, lock)
+   def kr(chain: GE, lock: GE = 0.0f) = apply(chain, lock)
 }
 /**
  * An autocorrelation based beat tracker UGen.
@@ -68,7 +68,7 @@ object BeatTrack {
  *                        periodicity and continue from the current phase. Whilst it updates the model's phase and period,
  *                        this is not reflected in the output until lock goes back below 0.5. Can be control-rate modulated.
  */
-final case class BeatTrack(chain: AnyGE, lock: AnyGE) extends UGenSource.SingleOut[control] {
+final case class BeatTrack(chain: GE, lock: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, lock.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("BeatTrack", control, _args)
 }
@@ -93,7 +93,7 @@ object Loudness {
     * @param tmask           Temporal masking parameter: the phon level let through in an ERB band is the maximum of
     *                        the new measurement, and the previous minus tmask phons. Can be control-rate modulated.
     */
-   def kr(chain: AnyGE, smask: AnyGE = 0.25f, tmask: AnyGE = 1.0f) = apply(chain, smask, tmask)
+   def kr(chain: GE, smask: GE = 0.25f, tmask: GE = 1.0f) = apply(chain, smask, tmask)
 }
 /**
  * A UGen for the extraction of instantaneous loudness.
@@ -113,7 +113,7 @@ object Loudness {
  * @param tmask           Temporal masking parameter: the phon level let through in an ERB band is the maximum of
  *                        the new measurement, and the previous minus tmask phons. Can be control-rate modulated.
  */
-final case class Loudness(chain: AnyGE, smask: AnyGE, tmask: AnyGE) extends UGenSource.SingleOut[control] {
+final case class Loudness(chain: GE, smask: GE, tmask: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, smask.expand, tmask.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Loudness", control, _args)
 }
@@ -134,7 +134,7 @@ object KeyTrack {
     * @param chromaLeak      Each frame, the chroma values are set to the previous value multiplied by the chromadecay.
     *                        0.0 will start each frame afresh with no memory. Can be control-rate modulated.
     */
-   def kr(chain: AnyGE, keyDecay: AnyGE = 2.0f, chromaLeak: AnyGE = 0.5f) = apply(chain, keyDecay, chromaLeak)
+   def kr(chain: GE, keyDecay: GE = 2.0f, chromaLeak: GE = 0.5f) = apply(chain, keyDecay, chromaLeak)
 }
 /**
  * A (12TET major/minor) key tracker UGen.
@@ -150,7 +150,7 @@ object KeyTrack {
  * @param chromaLeak      Each frame, the chroma values are set to the previous value multiplied by the chromadecay.
  *                        0.0 will start each frame afresh with no memory. Can be control-rate modulated.
  */
-final case class KeyTrack(chain: AnyGE, keyDecay: AnyGE, chromaLeak: AnyGE) extends UGenSource.SingleOut[control] {
+final case class KeyTrack(chain: GE, keyDecay: GE, chromaLeak: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, keyDecay.expand, chromaLeak.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("KeyTrack", control, _args)
 }
@@ -180,7 +180,7 @@ object MFCC {
     * @param numCoeffs       the number of coefficients, defaults to 13, maximum of 42; more efficient to use less of course!
     *                        Since this number determines the number of output channels of the UGen, it has to be an `Int`.
     */
-   def kr(chain: AnyGE, numCoeffs: Int = 13) = apply(chain, numCoeffs)
+   def kr(chain: GE, numCoeffs: Int = 13) = apply(chain, numCoeffs)
 }
 /**
  * A UGen for extracting mel frequency cepstral coefficients.
@@ -205,7 +205,7 @@ object MFCC {
  * @param numCoeffs       the number of coefficients, defaults to 13, maximum of 42; more efficient to use less of course!
  *                        Since this number determines the number of output channels of the UGen, it has to be an `Int`.
  */
-final case class MFCC(chain: AnyGE, numCoeffs: Int) extends UGenSource.MultiOut[control] {
+final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("MFCC", control, IIdxSeq.fill(numCoeffs)(control), _args)
 }
@@ -258,7 +258,7 @@ object Onsets {
     * @param whType          (advanced setting) ?
     * @param raw             (advanced setting) ?
     */
-   def kr(chain: AnyGE, thresh: AnyGE = 0.5f, fun: AnyGE = 3.0f, decay: AnyGE = 1.0f, noiseFloor: AnyGE = 0.1f, minGap: AnyGE = 10.0f, medianSpan: AnyGE = 11.0f, whType: AnyGE = 1.0f, raw: AnyGE = 0.0f) = apply(chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw)
+   def kr(chain: GE, thresh: GE = 0.5f, fun: GE = 3.0f, decay: GE = 1.0f, noiseFloor: GE = 0.1f, minGap: GE = 10.0f, medianSpan: GE = 11.0f, whType: GE = 1.0f, raw: GE = 0.0f) = apply(chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw)
 }
 /**
  * An onset detecting UGen for musical audio signals.
@@ -306,7 +306,7 @@ object Onsets {
  * @param whType          (advanced setting) ?
  * @param raw             (advanced setting) ?
  */
-final case class Onsets(chain: AnyGE, thresh: AnyGE, fun: AnyGE, decay: AnyGE, noiseFloor: AnyGE, minGap: AnyGE, medianSpan: AnyGE, whType: AnyGE, raw: AnyGE) extends UGenSource.SingleOut[control] {
+final case class Onsets(chain: GE, thresh: GE, fun: GE, decay: GE, noiseFloor: GE, minGap: GE, medianSpan: GE, whType: GE, raw: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand, fun.expand, decay.expand, noiseFloor.expand, minGap.expand, medianSpan.expand, whType.expand, raw.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Onsets", control, _args)
 }
@@ -352,7 +352,7 @@ object BeatTrack2 {
     *                        120 frames which represent individual tempo weights; tempi go from 60 to 179 bpm in steps of one bpm, so
     *                        you make sure the buffer has 120 frames.
     */
-   def kr(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE = 2.0f, phaseSpacing: AnyGE = 0.02f, lock: AnyGE = 0.0f, weighting: AnyGE = -2.1f) = apply(bus, numChannels, winSize, phaseSpacing, lock, weighting)
+   def kr(bus: GE, numChannels: GE, winSize: GE = 2.0f, phaseSpacing: GE = 0.02f, lock: GE = 0.0f, weighting: GE = -2.1f) = apply(bus, numChannels, winSize, phaseSpacing, lock, weighting)
 }
 /**
  * A template matching beat tracker UGen.
@@ -393,7 +393,7 @@ object BeatTrack2 {
  *                        120 frames which represent individual tempo weights; tempi go from 60 to 179 bpm in steps of one bpm, so
  *                        you make sure the buffer has 120 frames.
  */
-final case class BeatTrack2(bus: AnyGE, numChannels: AnyGE, winSize: AnyGE, phaseSpacing: AnyGE, lock: AnyGE, weighting: AnyGE) extends UGenSource.MultiOut[control] {
+final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing: GE, lock: GE, weighting: GE) extends UGenSource.MultiOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand, numChannels.expand, winSize.expand, phaseSpacing.expand, lock.expand, weighting.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("BeatTrack2", control, IIdxSeq.fill(6)(control), _args)
 }
@@ -418,7 +418,7 @@ object SpecFlatness {
    /**
     * @param chain           the fft signal (buffer) to analyze
     */
-   def kr(chain: AnyGE) = apply(chain)
+   def kr(chain: GE) = apply(chain)
 }
 /**
  * A UGen to measure spectral flatness.
@@ -438,7 +438,7 @@ object SpecFlatness {
  * 
  * @see [[de.sciss.synth.ugen.CheckBadValues]]
  */
-final case class SpecFlatness(chain: AnyGE) extends UGenSource.SingleOut[control] {
+final case class SpecFlatness(chain: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SpecFlatness", control, _args)
 }
@@ -462,7 +462,7 @@ object SpecPcile {
     * @param interp          specifies whether interpolation should be used to try and make the percentile
     *                        frequency estimate more accurate, at the cost of a little higher CPU usage. Set it to 1 to enable this.
     */
-   def kr(chain: AnyGE, percent: AnyGE = 0.5f, interp: AnyGE = 0.0f) = apply(chain, percent, interp)
+   def kr(chain: GE, percent: GE = 0.5f, interp: GE = 0.0f) = apply(chain, percent, interp)
 }
 /**
  * A UGen to find the percentile of a signal's magnitude spectrum.
@@ -481,7 +481,7 @@ object SpecPcile {
  * @param interp          specifies whether interpolation should be used to try and make the percentile
  *                        frequency estimate more accurate, at the cost of a little higher CPU usage. Set it to 1 to enable this.
  */
-final case class SpecPcile(chain: AnyGE, percent: AnyGE, interp: AnyGE) extends UGenSource.SingleOut[control] {
+final case class SpecPcile(chain: GE, percent: GE, interp: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, percent.expand, interp.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SpecPcile", control, _args)
 }
@@ -506,7 +506,7 @@ object SpecCentroid {
    /**
     * @param chain           the fft signal (buffer) to analyze
     */
-   def kr(chain: AnyGE) = apply(chain)
+   def kr(chain: GE) = apply(chain)
 }
 /**
  * A UGen to measure the spectral centroid.
@@ -526,7 +526,7 @@ object SpecCentroid {
  * 
  * @see [[de.sciss.synth.ugen.SpecPcile]]
  */
-final case class SpecCentroid(chain: AnyGE) extends UGenSource.SingleOut[control] {
+final case class SpecCentroid(chain: GE) extends UGenSource.SingleOut {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SpecCentroid", control, _args)
 }

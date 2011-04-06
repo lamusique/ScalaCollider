@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Mar 04 23:36:58 GMT 2011
+ * Created: Wed Apr 06 02:27:48 BST 2011
  * ScalaCollider-UGen version: 0.11
  */
 
@@ -29,16 +29,16 @@ import aux.UGenHelper._
  * @see [[de.sciss.synth.ugen.TRand]]
  */
 object LFDNoise0 {
-   def kr: LFDNoise0[control] = kr()
+   def kr: LFDNoise0 = kr()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFDNoise0[audio] = ar()
+   def kr(freq: GE = 500.0f) = apply(control, freq)
+   def ar: LFDNoise0 = ar()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
+   def ar(freq: GE = 500.0f) = apply(audio, freq)
 }
 /**
  * A dynamic step noise UGen. Like `LFNoise0`, it generates abruptly changing random values
@@ -59,7 +59,7 @@ object LFDNoise0 {
  * @see [[de.sciss.synth.ugen.LFDNoise2]]
  * @see [[de.sciss.synth.ugen.TRand]]
  */
-final case class LFDNoise0[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+final case class LFDNoise0(rate: Rate, freq: GE) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDNoise0", rate, _args)
 }
@@ -81,16 +81,16 @@ final case class LFDNoise0[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.S
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
 object LFDNoise1 {
-   def kr: LFDNoise1[control] = kr()
+   def kr: LFDNoise1 = kr()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFDNoise1[audio] = ar()
+   def kr(freq: GE = 500.0f) = apply(control, freq)
+   def ar: LFDNoise1 = ar()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
+   def ar(freq: GE = 500.0f) = apply(audio, freq)
 }
 /**
  * A dynamic ramp noise UGen. Like `LFNoise1`, it generates linearly interpolated random values
@@ -111,45 +111,45 @@ object LFDNoise1 {
  * @see [[de.sciss.synth.ugen.LFDNoise2]]
  * @see [[de.sciss.synth.ugen.Ramp]]
  */
-final case class LFDNoise1[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+final case class LFDNoise1(rate: Rate, freq: GE) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDNoise1", rate, _args)
 }
 object LFDNoise3 {
-   def kr: LFDNoise3[control] = kr()
+   def kr: LFDNoise3 = kr()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFDNoise3[audio] = ar()
+   def kr(freq: GE = 500.0f) = apply(control, freq)
+   def ar: LFDNoise3 = ar()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
+   def ar(freq: GE = 500.0f) = apply(audio, freq)
 }
 /**
  * @param freq            rate at which to generate random values.
  */
-final case class LFDNoise3[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+final case class LFDNoise3(rate: Rate, freq: GE) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDNoise3", rate, _args)
 }
 object LFDClipNoise {
-   def kr: LFDClipNoise[control] = kr()
+   def kr: LFDClipNoise = kr()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def kr(freq: AnyGE = 500.0f) = apply[control](control, freq)
-   def ar: LFDClipNoise[audio] = ar()
+   def kr(freq: GE = 500.0f) = apply(control, freq)
+   def ar: LFDClipNoise = ar()
    /**
     * @param freq            rate at which to generate random values.
     */
-   def ar(freq: AnyGE = 500.0f) = apply[audio](audio, freq)
+   def ar(freq: GE = 500.0f) = apply(audio, freq)
 }
 /**
  * @param freq            rate at which to generate random values.
  */
-final case class LFDClipNoise[R <: Rate](rate: R, freq: AnyGE) extends UGenSource.SingleOut[R] with UsesRandSeed {
+final case class LFDClipNoise(rate: Rate, freq: GE) extends UGenSource.SingleOut with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LFDClipNoise", rate, _args)
 }
