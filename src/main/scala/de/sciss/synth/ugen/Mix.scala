@@ -103,29 +103,28 @@ object Mix {
 }
 
 /**
-* Mixes the channels of a signal together. Note that, different from sclang, a multi-output UGen whose
-* inputs are not expanded, will come out with its original number-of-channels, and is not mixed down
-* to a mono signal (indicated below with an ! exclamation mark). If you want to enforce a mono mix of
-* a multi-output UGen, you can use the @Mix.mono@ call instead.
-*
-* Here are some examples:
-*
-* {{{
-* Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> Line.ar( 440 ) + Line.ar( 660 )
-* Mix( SinOsc.ar( 440 )) --> Line.ar( 440 )
-* Mix( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) // !!
-* Mix.mono( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) --> left + right // !!
-* Mix( Pan2.ar( SinOsc.ar :: Saw.ar :: Nil )) --> Pan2.ar( SinOsc.ar ) + Pan2.ar( Saw.ar )
-* }}}
+ * Mixes the channels of a signal together. Note that, different from sclang, a multi-output UGen whose
+ * inputs are not expanded, will come out with its original number-of-channels, and is not mixed down
+ * to a mono signal (indicated below with an ! exclamation mark). If you want to enforce a mono mix of
+ * a multi-output UGen, you can use the @Mix.mono@ call instead.
+ *
+ * Here are some examples:
+ *
+ * {{{
+ * Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> Line.ar( 440 ) + Line.ar( 660 )
+ * Mix( SinOsc.ar( 440 )) --> Line.ar( 440 )
+ * Mix( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) // !!
+ * Mix.mono( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) --> left + right // !!
+ * Mix( Pan2.ar( SinOsc.ar :: Saw.ar :: Nil )) --> Pan2.ar( SinOsc.ar ) + Pan2.ar( Saw.ar )
+ * }}}
 */
-// BBB
-//final case class Mix[ R <: Rate ]( elems: GE[ R ])/*( implicit r: RateOrder[ R, R, R ])*/
-//extends GE.Lazy[ R ] {
+//final case class Mix( elems: GE )/*( implicit r: RateOrder[ R, R, R ])*/
+//extends GE.Lazy {
 //   def makeUGens : UGenInLike = {
 //      val ins = elems.expand.outputs
-//   }
-//      headOption match {
-//      case Some( e ) => elems.tail.foldLeft( e )( _ + _ ).expand
-//      case _ => UGenInGroup( IIdxSeq.empty )
+//      ins.headOption match {
+//         case Some( e ) => elems.tail.foldLeft( e )( _ + _ ).expand
+//         case _ => UGenInGroup( IIdxSeq.empty )
+//      }
 //   }
 //}

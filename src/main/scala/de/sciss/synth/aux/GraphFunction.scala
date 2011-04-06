@@ -54,7 +54,7 @@ class GraphFunction[ T <% GE ]( thunk: => T ) /*( implicit r: RateOrder[ control
 
 		val server = target.server
 		val defName    = "temp_" + uniqueID // more clear than using hashCode
-		val synthDef   = SynthDef( defName )( WrapOut( thunk, fadeTime ).expand )
+		val synthDef   = SynthDef( defName ) { WrapOut( thunk, fadeTime )}
 		val synth      = new Synth( server )
 		val bytes      = synthDef.toBytes
 		val synthMsg   = synth.newMsg( synthDef.name, target, List( "i_out" -> outBus, "out" -> outBus ), addAction )
