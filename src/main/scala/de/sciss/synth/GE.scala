@@ -175,7 +175,7 @@ trait GE {
 
    def poll( trig: GE = 10, label: Optional[ String ] = None, trigID: GE = -1 ) : Poll = {
       val trig1 = trig match {
-         case Constant( freq ) => Impulse( trig.rate ?| audio, freq, 0 )  // XXX good? or throw an error? should have a maxRate?
+         case Constant( freq ) => Impulse( (ge.rate ?| audio) max control, freq, 0 )  // XXX good? or throw an error? should have a maxRate?
          case x => x
       }
       Poll( trig1.rate, trig1, ge, label.getOrElse( ge.displayName ), trigID  )
