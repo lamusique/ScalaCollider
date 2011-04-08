@@ -28,6 +28,7 @@
 
 package de.sciss.synth
 
+import aux.Optional
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
@@ -91,9 +92,15 @@ object GE {
 
    private class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
       def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
+      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+      def displayName = "GE.Seq"
+      override def toString = displayName + elems.mkString( "(", ",", ")" )
    }
    private class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
       def expand : UGenInLike = UGenInGroup( elems )
+      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+      def displayName = "GE.Seq"
+      override def toString = displayName + elems.mkString( "(", ",", ")" )
    }
 
 //   object Seq {
@@ -111,7 +118,7 @@ trait GE {
 
 //   type Rate = R
 
-//   def rate: R
+   def rate: MaybeRate
 
 //   def expand: IIdxSeq[ UGenIn ]
 //   def mexpand: IIdxSeq[ GE[ R ]]
@@ -119,6 +126,7 @@ trait GE {
    def expand: UGenInLike
 
 //   final def mexpand = IIdxSeq( ge )
+   def displayName: String
 
    /**
     * Decomposes the graph element into its distinct outputs. For a single-output UGen
@@ -132,19 +140,20 @@ trait GE {
     *          `val Seq( left, right ) = Pan.ar( ... ).outputs`
     */
 
+// BBB
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def outputs : IIdxSeq[ UGenIn ]
 //   def numOutputs : Int = outputs.size
 
+// BBB
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def `\\`( idx: Int ) : UGenIn = outputs( idx )
 
 //   private[synth] def ops = new GEOps( this )
 
-   def madd( mul: GE, add: GE ) = MulAdd( this, mul, add )
+   def madd( mul: GE, add: GE ) = MulAdd( MaybeRate.max_?( rate, mul.rate, add.rate ), this, mul, add )
 
-// BBB
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def poll: AnyGE = poll()
+   def poll: Poll = poll()
 
    /**
     * Polls the output values of this graph element, and prints the result to the console.
@@ -161,30 +170,16 @@ trait GE {
     *
     * @see  [[de.sciss.synth.ugen.Poll]]
     */
-// BBB
 //   def poll( trig: Constant = 10, label: String = "#auto", trigID: AnyGE = -1 ) : Poll[ R ] =
-//      poll( Impulse[ R ]( freq ), label, trigID )
-//
-//   def poll[ S <: Rate ]( trig: GE[ S ] = 10, label: String = "#auto", trigID: AnyGE = -1 ) : Poll[ R ] = {
-//      import SynthGraph._
-//
-////      val labels: IIdxSeq[ String ] =
-//////         if( label == "#auto" ) {
-//////         ge match {
-//////            case seq: UGenInSeq => outputs.zipWithIndex.map( tup => "#" + tup._2 + " " + tup._1.displayName )
-//////            case _ => outputs.map( _.displayName )
-//////         }
-//////      } else {
-////         if( numOutputs == 1 ) IIdxSeq( label ) else IIdxSeq.tabulate( numOutputs )( "#" + _ + " " + label )
-//////      }
-//
-//      Poll( rate, trig, ge, tridID  )
-////      for( (Seq( t, g, i ), ch) <- expand( trig0, ge, trigID ).zipWithIndex )
-////         yield Poll( g.rate match {
-////               case `audio`   => audio
-////               case _         => g.rate
-////            }, t, g, labels( ch ), i )
-//   }
+//      poll( Impulse( trig.rate max freq ), label, trigID )
+
+   def poll( trig: GE = 10, label: Optional[ String ] = None, trigID: GE = -1 ) : Poll = {
+      val trig1 = trig match {
+         case Constant( freq ) => Impulse( trig.rate ?| audio, freq, 0 )  // XXX good? or throw an error? should have a maxRate?
+         case x => x
+      }
+      Poll( trig1.rate, trig1, ge, label.getOrElse( ge.displayName ), trigID  )
+   }
 
    import UnaryOp._
 
@@ -345,16 +340,9 @@ trait GE {
 // def rrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE    = Rrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 // def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 
-// BBB
-//   def linlin( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) : AnyGE = Rate.highest( this ) match {
-//      case `demand` => (this - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
-////      case r => LinLin.make /*[ R, S, T ]*/( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-//      case r => LinLin( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-//   }
-//
-//   def linexp( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) : AnyGE = Rate.highest( this ) match {
-//      case `demand` => (dstHi / dstLo).pow( (this - srcLo) / (srcHi - srcLo) ) * dstLo
-////      case r => LinExp.make /*[ R, S, T ]*/( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-//      case r => LinExp( r, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
-//   }
+   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
+      LinLin( rate, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+
+   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
+      LinExp( rate, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
 }

@@ -31,37 +31,121 @@ package de.sciss.synth
 /**
  *    @version 0.12, 28-Dec-10
  */
-object Rate {
-   def highest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
-   def lowest( rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
+//object Rate {
+//   def highest( rate: Rate, rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
+//   def max( rates: Rate* ) : Rate = rates.reduceLeft( (a, b) => if( a.id > b.id ) a else b )
+
+//   {
+//      if( rate == demand ) return demand
+//      var res = rate
+//      rates.foreach { r =>
+//         if( r == demand ) return demand
+//         if( r.id > res.id ) res = r
+//      }
+//      res
+//   }
+
+//   def lowest( rate: Rate, rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id < b.id ) a else b )
+//   def min( rates: Rate* ) : Rate = rates.reduceLeft( (a, b) => if( a.id < b.id ) a else b )
+
+//   {
+//      if( rate == scalar ) return scalar
+//      var res = rate
+//      rates.foreach { r =>
+//         if( r == scalar ) return scalar
+//         if( r.id < res.id ) res = r
+//      }
+//      res
+//   }
+//}
+
+object MaybeRate {
+   def max_?( rates: MaybeRate* ) : MaybeRate = {
+      if( rates.isEmpty ) return UnknownRate
+      var res: Rate = scalar
+      rates.foreach {
+         case UnknownRate => return UnknownRate
+         case r: Rate => if( r.id > res.id ) res = r
+      }
+      res
+   }
+   def min_?(  rates: MaybeRate* ) : MaybeRate = {
+      if( rates.isEmpty ) return UnknownRate
+      var res: Rate = demand
+      rates.foreach {
+         case UnknownRate => return UnknownRate
+         case r: Rate => if( r.id < res.id ) res = r
+      }
+      res
+   }
+   def reduce( rates: MaybeRate* ) : MaybeRate = {
+      rates.headOption match {
+         case Some( r ) => if( r == UnknownRate || rates.exists( _ != r )) UnknownRate else r
+         case None => UnknownRate
+      }
+   }
+}
+sealed abstract class MaybeRate {
+   def lift: Option[ Rate ]
+   def ?|( r: => Rate ) : Rate
+}
+case object UnknownRate extends MaybeRate {
+   def lift : Option[ Rate ] = None
+   def ?|( r: => Rate ) : Rate = r
 }
 
 /**
  *    The calculation rate of a UGen or a UGen output.
  */
-sealed abstract class Rate {
+sealed abstract class Rate extends MaybeRate with Ordered[ Rate ] {
    val id: Int
    val methodName: String
+   def lift: Option[ Rate ] = Some( this )
+   def ?|( r: => Rate ) : Rate = this
+   def min( that: Rate ) = if( id < that.id ) this else that
+   def max( that: Rate ) = if( id > that.id ) this else that
+   def compare( that: Rate ) : Int = id - that.id
 }
 
-sealed trait scalar  extends Rate { final val id = 0; final val methodName = "ir" }
-sealed trait control extends Rate { final val id = 1; final val methodName = "kr" }
-sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
-sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
-case object scalar  extends scalar {
-   implicit val rate = scalar
+//sealed trait scalar  extends Rate { final val id = 0; final val methodName = "ir" }
+//sealed trait control extends Rate { final val id = 1; final val methodName = "kr" }
+//sealed trait audio   extends Rate { final val id = 2; final val methodName = "ar" }
+//sealed trait demand  extends Rate { final val id = 3; final val methodName = "dr" }
+//case object scalar  extends scalar {
+//   implicit val rate = scalar
+//}
+//case object control extends control {
+//   implicit val rate = control
+//}
+//case object audio extends audio {
+//   implicit val rate = audio
+//}
+//case object demand extends demand {
+//   implicit val rate = demand
+//}
+
+case object scalar  extends Rate {
+   val id = 0
+   val methodName = "ir"
+//   trait Rated  { def rate: Rate = scalar }
 }
-case object control extends control {
-   implicit val rate = control
+case object control extends Rate {
+   val id = 1
+   val methodName = "kr"
+//   trait Rated { def rate: Rate = control }
 }
-case object audio extends audio {
-   implicit val rate = audio
+case object audio   extends Rate {
+   val id = 2
+   val methodName = "ar"
+//   trait Rated   { def rate: Rate = audio }
 }
-case object demand extends demand {
-   implicit val rate = demand
+case object demand  extends Rate {
+   val id = 3
+   val methodName = "dr"
+//   trait Rated  { def rate: Rate = demand }
 }
 
-//trait ScalarRated  { def rate: scalar = scalar }
-//trait ControlRated { def rate: control = control }
-//trait AudioRated   { def rate: audio = audio }
-//trait DemandRated  { def rate: demand = demand }
+trait ScalarRated  { def rate: Rate = scalar }
+trait ControlRated { def rate: Rate = control }
+trait AudioRated   { def rate: Rate = audio }
+trait DemandRated  { def rate: Rate = demand }

@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Apr 06 02:27:48 BST 2011
- * ScalaCollider-UGen version: 0.11
+ * Created: Fri Apr 08 04:10:01 BST 2011
+ * ScalaCollider-UGen version: 0.12
  */
 
 package de.sciss.synth
@@ -52,7 +52,7 @@ object CheckBadValues {
  * @param post            One of three post modes: 0 = no posting; 1 = post a line for every bad value;
  *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
  */
-final case class CheckBadValues(rate: Rate, in: GE, id: GE, post: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class CheckBadValues(rate: Rate, in: GE, id: GE, post: GE) extends UGenSource.SingleOut("CheckBadValues") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, id.expand, post.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("CheckBadValues", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }

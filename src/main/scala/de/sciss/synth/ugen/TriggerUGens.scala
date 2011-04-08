@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Apr 06 02:27:48 BST 2011
- * ScalaCollider-UGen version: 0.11
+ * Created: Fri Apr 08 04:10:01 BST 2011
+ * ScalaCollider-UGen version: 0.12
  */
 
 package de.sciss.synth
@@ -48,9 +48,9 @@ object Trig1 {
  * 
  * @see [[de.sciss.synth.ugen.Trig]]
  */
-final case class Trig1(rate: Rate, in: GE, dur: GE) extends UGenSource.SingleOut {
+final case class Trig1(rate: Rate, in: GE, dur: GE) extends UGenSource.SingleOut("Trig1") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, dur.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Trig1", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Trig {
    
@@ -72,9 +72,9 @@ object Trig {
  *                        from non-positive to positive.
  * @param dur             the duration for which the ugens holds the value of the input signal when triggered
  */
-final case class Trig(rate: Rate, in: GE, dur: GE) extends UGenSource.SingleOut {
+final case class Trig(rate: Rate, in: GE, dur: GE) extends UGenSource.SingleOut("Trig") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, dur.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Trig", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A UGen that sends a value from the server to all notified clients upon receiving triggers.
@@ -124,9 +124,12 @@ object SendTrig {
  * 
  * @see [[de.sciss.synth.ugen.SendReply]]
  */
-final case class SendTrig(rate: Rate, trig: GE, id: GE, value: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class SendTrig(rate: MaybeRate, trig: GE, id: GE, value: GE) extends UGenSource.SingleOut("SendTrig") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, value.expand, id.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SendTrig", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
+      val _rate = rate.?|(_args(0).rate)
+      new UGen.SingleOut(name, _rate, _args)
+   }
 }
 /**
  * A UGen which sends an sequence of values from the server to all notified clients upon receiving triggers.
@@ -182,9 +185,12 @@ object SendReply {
  * 
  * @see [[de.sciss.synth.ugen.SendTrig]]
  */
-final case class SendReply(rate: Rate, trig: GE, values: GE, msgName: String, id: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class SendReply(rate: MaybeRate, trig: GE, values: GE, msgName: String, id: GE) extends UGenSource.SingleOut("SendReply") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, id.expand).++(stringArg(msgName).++(values.expand.outputs)))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SendReply", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
+      val _rate = rate.?|(_args(0).rate)
+      new UGen.SingleOut(name, _rate, _args)
+   }
 }
 /**
  * A UGen for printing the current output value of its input to the console.
@@ -221,9 +227,12 @@ object Poll {
  * 
  * @see [[de.sciss.synth.ugen.SendTrig]]
  */
-final case class Poll(rate: Rate, trig: GE, in: GE, label: String, trigID: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class Poll(rate: MaybeRate, trig: GE, in: GE, label: String, trigID: GE) extends UGenSource.SingleOut("Poll") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, in.expand, trigID.expand).++(stringArg(label)))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Poll", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
+      val _rate = rate.?|(_args(0).rate)
+      new UGen.SingleOut(name, _rate, _args)
+   }
 }
 /**
  * A UGen that toggles like a flip-flop between zero and one upon receiving a trigger.
@@ -251,17 +260,17 @@ object ToggleFF {
  * @param trig            a signal to trigger the flip-flop. a trigger occurs when the signal
  *                        changes from non-positive to positive.
  */
-final case class ToggleFF(rate: Rate, trig: GE) extends UGenSource.SingleOut {
+final case class ToggleFF(rate: Rate, trig: GE) extends UGenSource.SingleOut("ToggleFF") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("ToggleFF", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object SetResetFF {
    def kr(trig: GE, reset: GE) = apply(control, trig, reset)
    def ar(trig: GE, reset: GE) = apply(audio, trig, reset)
 }
-final case class SetResetFF(rate: Rate, trig: GE, reset: GE) extends UGenSource.SingleOut {
+final case class SetResetFF(rate: Rate, trig: GE, reset: GE) extends UGenSource.SingleOut("SetResetFF") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SetResetFF", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A sample-and-hold UGen. When triggered, a new value is taken from the input and
@@ -296,9 +305,9 @@ object Latch {
  * @see [[de.sciss.synth.ugen.Gate]]
  * @see [[de.sciss.synth.ugen.Demand]]
  */
-final case class Latch(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut {
+final case class Latch(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut("Latch") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Latch", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A gate or hold UGen.
@@ -333,9 +342,9 @@ object Gate {
  * 
  * @see [[de.sciss.synth.ugen.Latch]]
  */
-final case class Gate(rate: Rate, in: GE, gate: GE) extends UGenSource.SingleOut {
+final case class Gate(rate: Rate, in: GE, gate: GE) extends UGenSource.SingleOut("Gate") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, gate.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Gate", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A Schmidt trigger UGen. Initially it outputs zero. When the input signal rises above `hi`,
@@ -365,33 +374,33 @@ object Schmidt {
  * @param lo              The low threshold.
  * @param hi              The high threshold.
  */
-final case class Schmidt(rate: Rate, in: GE, lo: GE, hi: GE) extends UGenSource.SingleOut {
+final case class Schmidt(rate: Rate, in: GE, lo: GE, hi: GE) extends UGenSource.SingleOut("Schmidt") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, lo.expand, hi.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Schmidt", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object PulseDivider {
    def kr(trig: GE, div: GE = 2.0f, start: GE = 0.0f) = apply(control, trig, div, start)
    def ar(trig: GE, div: GE = 2.0f, start: GE = 0.0f) = apply(audio, trig, div, start)
 }
-final case class PulseDivider(rate: Rate, trig: GE, div: GE, start: GE) extends UGenSource.SingleOut {
+final case class PulseDivider(rate: Rate, trig: GE, div: GE, start: GE) extends UGenSource.SingleOut("PulseDivider") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, div.expand, start.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PulseDivider", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object PulseCount {
    def kr(trig: GE, reset: GE = 0.0f) = apply(control, trig, reset)
    def ar(trig: GE, reset: GE = 0.0f) = apply(audio, trig, reset)
 }
-final case class PulseCount(rate: Rate, trig: GE, reset: GE) extends UGenSource.SingleOut {
+final case class PulseCount(rate: Rate, trig: GE, reset: GE) extends UGenSource.SingleOut("PulseCount") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PulseCount", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Stepper {
    def kr(trig: GE, reset: GE = 0.0f, lo: GE = 0.0f, hi: GE = 7.0f, step: GE = 1.0f, resetVal: GE = 0.0f) = apply(control, trig, reset, lo, hi, step, resetVal)
    def ar(trig: GE, reset: GE = 0.0f, lo: GE = 0.0f, hi: GE = 7.0f, step: GE = 1.0f, resetVal: GE = 0.0f) = apply(audio, trig, reset, lo, hi, step, resetVal)
 }
-final case class Stepper(rate: Rate, trig: GE, reset: GE, lo: GE, hi: GE, step: GE, resetVal: GE) extends UGenSource.SingleOut {
+final case class Stepper(rate: Rate, trig: GE, reset: GE, lo: GE, hi: GE, step: GE, resetVal: GE) extends UGenSource.SingleOut("Stepper") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand, lo.expand, hi.expand, step.expand, resetVal.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Stepper", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A delay UGen for trigger signals. Other than a normal buffer delay,
@@ -428,17 +437,17 @@ object TDelay {
  *                        amplitude 1.0.
  * @param dur             The delay time in seconds.
  */
-final case class TDelay(rate: Rate, trig: GE, dur: GE) extends UGenSource.SingleOut {
+final case class TDelay(rate: Rate, trig: GE, dur: GE) extends UGenSource.SingleOut("TDelay") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, dur.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("TDelay", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object ZeroCrossing {
    def kr(in: GE) = apply(control, in)
    def ar(in: GE) = apply(audio, in)
 }
-final case class ZeroCrossing(rate: Rate, in: GE) extends UGenSource.SingleOut {
+final case class ZeroCrossing(rate: Rate, in: GE) extends UGenSource.SingleOut("ZeroCrossing") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("ZeroCrossing", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A UGen that returns time since last triggered.
@@ -470,9 +479,9 @@ object Timer {
  * @param trig            the trigger to update the output signal.
  *                        A trigger occurs when trig signal crosses from non-positive to positive.
  */
-final case class Timer(rate: Rate, trig: GE) extends UGenSource.SingleOut {
+final case class Timer(rate: Rate, trig: GE) extends UGenSource.SingleOut("Timer") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Timer", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A UGen which starts a linear raise from zero each time it is
@@ -515,9 +524,9 @@ object Sweep {
  * @see [[de.sciss.synth.ugen.Phasor]]
  * @see [[de.sciss.synth.ugen.Line]]
  */
-final case class Sweep(rate: Rate, trig: GE, speed: GE) extends UGenSource.SingleOut {
+final case class Sweep(rate: Rate, trig: GE, speed: GE) extends UGenSource.SingleOut("Sweep") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, speed.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Sweep", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Phasor {
    
@@ -536,65 +545,65 @@ object Phasor {
  * @param trig            Warning: SC 3.4 has a bug where an initial trig value of 1 will
  *                        be ignored (you need to feed it zero first)
  */
-final case class Phasor(rate: Rate, trig: GE, speed: GE, lo: GE, hi: GE, resetVal: GE) extends UGenSource.SingleOut {
+final case class Phasor(rate: Rate, trig: GE, speed: GE, lo: GE, hi: GE, resetVal: GE) extends UGenSource.SingleOut("Phasor") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, speed.expand, lo.expand, hi.expand, resetVal.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Phasor", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Peak {
    def kr(in: GE, trig: GE) = apply(control, in, trig)
    def ar(in: GE, trig: GE) = apply(audio, in, trig)
 }
-final case class Peak(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut {
+final case class Peak(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut("Peak") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Peak", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object RunningMin {
    def kr(in: GE, trig: GE) = apply(control, in, trig)
    def ar(in: GE, trig: GE) = apply(audio, in, trig)
 }
-final case class RunningMin(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut {
+final case class RunningMin(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut("RunningMin") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("RunningMin", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object RunningMax {
    def kr(in: GE, trig: GE) = apply(control, in, trig)
    def ar(in: GE, trig: GE) = apply(audio, in, trig)
 }
-final case class RunningMax(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut {
+final case class RunningMax(rate: Rate, in: GE, trig: GE) extends UGenSource.SingleOut("RunningMax") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("RunningMax", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object PeakFollower {
    def kr(in: GE, decay: GE = 0.999f) = apply(control, in, decay)
    def ar(in: GE, decay: GE = 0.999f) = apply(audio, in, decay)
 }
-final case class PeakFollower(rate: Rate, in: GE, decay: GE) extends UGenSource.SingleOut {
+final case class PeakFollower(rate: Rate, in: GE, decay: GE) extends UGenSource.SingleOut("PeakFollower") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, decay.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PeakFollower", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object MostChange {
    def kr(a: GE, b: GE) = apply(control, a, b)
    def ar(a: GE, b: GE) = apply(audio, a, b)
 }
-final case class MostChange(rate: Rate, a: GE, b: GE) extends UGenSource.SingleOut {
+final case class MostChange(rate: Rate, a: GE, b: GE) extends UGenSource.SingleOut("MostChange") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(a.expand, b.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("MostChange", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object LeastChange {
    def kr(a: GE, b: GE) = apply(control, a, b)
    def ar(a: GE, b: GE) = apply(audio, a, b)
 }
-final case class LeastChange(rate: Rate, a: GE, b: GE) extends UGenSource.SingleOut {
+final case class LeastChange(rate: Rate, a: GE, b: GE) extends UGenSource.SingleOut("LeastChange") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(a.expand, b.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LeastChange", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object LastValue {
    def kr(in: GE, thresh: GE = 0.01f) = apply(control, in, thresh)
    def ar(in: GE, thresh: GE = 0.01f) = apply(audio, in, thresh)
 }
-final case class LastValue(rate: Rate, in: GE, thresh: GE) extends UGenSource.SingleOut {
+final case class LastValue(rate: Rate, in: GE, thresh: GE) extends UGenSource.SingleOut("LastValue") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, thresh.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("LastValue", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A UGen which monitors another UGen to see when it is finished.
@@ -627,9 +636,9 @@ object Done {
  * @see [[de.sciss.synth.ugen.Line]]
  * @see [[de.sciss.synth.ugen.EnvGen]]
  */
-final case class Done(src: GE with HasDoneFlag) extends UGenSource.SingleOut with HasSideEffect {
+final case class Done(src: GE with HasDoneFlag) extends UGenSource.SingleOut("Done") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(src.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Done", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen which pauses and resumes another node.
@@ -668,9 +677,9 @@ object Pause {
  * @see [[de.sciss.synth.ugen.Free]]
  * @see [[de.sciss.synth.ugen.PauseSelf]]
  */
-final case class Pause(gate: GE, node: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class Pause(gate: GE, node: GE) extends UGenSource.SingleOut("Pause") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(gate.expand, node.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Pause", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen that, when triggered, frees enclosing synth.
@@ -699,9 +708,9 @@ object FreeSelf {
  * @see [[de.sciss.synth.ugen.Free]]
  * @see [[de.sciss.synth.ugen.PauseSelf]]
  */
-final case class FreeSelf(trig: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class FreeSelf(trig: GE) extends UGenSource.SingleOut("FreeSelf") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("FreeSelf", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen that, when triggered, pauses enclosing synth.
@@ -730,9 +739,9 @@ object PauseSelf {
  * @see [[de.sciss.synth.ugen.Pause]]
  * @see [[de.sciss.synth.ugen.FreeSelf]]
  */
-final case class PauseSelf(trig: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class PauseSelf(trig: GE) extends UGenSource.SingleOut("PauseSelf") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PauseSelf", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen that, when triggered, frees a given node.
@@ -761,9 +770,9 @@ object Free {
  * @see [[de.sciss.synth.ugen.Pause]]
  * @see [[de.sciss.synth.ugen.FreeSelf]]
  */
-final case class Free(trig: GE, node: GE) extends UGenSource.SingleOut with HasSideEffect {
+final case class Free(trig: GE, node: GE) extends UGenSource.SingleOut("Free") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, node.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Free", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen that, when its input UGen is finished, frees enclosing synth.
@@ -800,9 +809,9 @@ object FreeSelfWhenDone {
  * @see [[de.sciss.synth.ugen.PauseSelfWhenDone]]
  * @see [[de.sciss.synth.ugen.Done]]
  */
-final case class FreeSelfWhenDone(src: GE with HasDoneFlag) extends UGenSource.SingleOut with HasSideEffect {
+final case class FreeSelfWhenDone(src: GE with HasDoneFlag) extends UGenSource.SingleOut("FreeSelfWhenDone") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(src.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("FreeSelfWhenDone", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen that, when its input UGen is finished, pauses enclosing synth.
@@ -839,7 +848,7 @@ object PauseSelfWhenDone {
  * @see [[de.sciss.synth.ugen.FreeSelfWhenDone]]
  * @see [[de.sciss.synth.ugen.Done]]
  */
-final case class PauseSelfWhenDone(src: GE with HasDoneFlag) extends UGenSource.SingleOut with HasSideEffect {
+final case class PauseSelfWhenDone(src: GE with HasDoneFlag) extends UGenSource.SingleOut("PauseSelfWhenDone") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(src.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("PauseSelfWhenDone", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }

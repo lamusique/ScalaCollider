@@ -65,7 +65,11 @@ object WrapOut {
       }
    }
 }
-final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends UGenSource.ZeroOut with WritesBus {
+
+/**
+ * XXX TODO: This should not be a UGenSource.ZeroOut but just a LazyExpander !
+ */
+final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends UGenSource.ZeroOut( "WrapOut" ) with WritesBus {
    import WrapOut._
    protected def makeUGens: Unit = unwrap( in.expand.outputs )
 //      val oute = "out".kr.expand
@@ -95,7 +99,8 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
 //   }
 
    protected def makeUGen( ins: IIdxSeq[ UGenIn ]): Unit = {
-      val rate = Rate.highest( ins.map( _.rate ): _* )
+      if( ins.isEmpty ) return
+      val rate = ins.map( _.rate ).max
       if( (rate == audio) || (rate == control) ) {
          val ins3 = fadeTime.option match {
             case Some( fdt ) =>

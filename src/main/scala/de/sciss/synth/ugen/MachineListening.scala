@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Apr 06 02:27:48 BST 2011
- * ScalaCollider-UGen version: 0.11
+ * Created: Fri Apr 08 04:10:01 BST 2011
+ * ScalaCollider-UGen version: 0.12
  */
 
 package de.sciss.synth
@@ -68,9 +68,9 @@ object BeatTrack {
  *                        periodicity and continue from the current phase. Whilst it updates the model's phase and period,
  *                        this is not reflected in the output until lock goes back below 0.5. Can be control-rate modulated.
  */
-final case class BeatTrack(chain: GE, lock: GE) extends UGenSource.SingleOut {
+final case class BeatTrack(chain: GE, lock: GE) extends UGenSource.SingleOut("BeatTrack") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, lock.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("BeatTrack", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen for the extraction of instantaneous loudness.
@@ -113,9 +113,9 @@ object Loudness {
  * @param tmask           Temporal masking parameter: the phon level let through in an ERB band is the maximum of
  *                        the new measurement, and the previous minus tmask phons. Can be control-rate modulated.
  */
-final case class Loudness(chain: GE, smask: GE, tmask: GE) extends UGenSource.SingleOut {
+final case class Loudness(chain: GE, smask: GE, tmask: GE) extends UGenSource.SingleOut("Loudness") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, smask.expand, tmask.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Loudness", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A (12TET major/minor) key tracker UGen.
@@ -150,9 +150,9 @@ object KeyTrack {
  * @param chromaLeak      Each frame, the chroma values are set to the previous value multiplied by the chromadecay.
  *                        0.0 will start each frame afresh with no memory. Can be control-rate modulated.
  */
-final case class KeyTrack(chain: GE, keyDecay: GE, chromaLeak: GE) extends UGenSource.SingleOut {
+final case class KeyTrack(chain: GE, keyDecay: GE, chromaLeak: GE) extends UGenSource.SingleOut("KeyTrack") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, keyDecay.expand, chromaLeak.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("KeyTrack", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen for extracting mel frequency cepstral coefficients.
@@ -205,9 +205,9 @@ object MFCC {
  * @param numCoeffs       the number of coefficients, defaults to 13, maximum of 42; more efficient to use less of course!
  *                        Since this number determines the number of output channels of the UGen, it has to be an `Int`.
  */
-final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut {
+final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut("MFCC") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("MFCC", control, IIdxSeq.fill(numCoeffs)(control), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numCoeffs)(control), _args)
 }
 /**
  * An onset detecting UGen for musical audio signals.
@@ -306,9 +306,9 @@ object Onsets {
  * @param whType          (advanced setting) ?
  * @param raw             (advanced setting) ?
  */
-final case class Onsets(chain: GE, thresh: GE, fun: GE, decay: GE, noiseFloor: GE, minGap: GE, medianSpan: GE, whType: GE, raw: GE) extends UGenSource.SingleOut {
+final case class Onsets(chain: GE, thresh: GE, fun: GE, decay: GE, noiseFloor: GE, minGap: GE, medianSpan: GE, whType: GE, raw: GE) extends UGenSource.SingleOut("Onsets") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand, fun.expand, decay.expand, noiseFloor.expand, minGap.expand, medianSpan.expand, whType.expand, raw.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Onsets", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A template matching beat tracker UGen.
@@ -393,9 +393,9 @@ object BeatTrack2 {
  *                        120 frames which represent individual tempo weights; tempi go from 60 to 179 bpm in steps of one bpm, so
  *                        you make sure the buffer has 120 frames.
  */
-final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing: GE, lock: GE, weighting: GE) extends UGenSource.MultiOut {
+final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing: GE, lock: GE, weighting: GE) extends UGenSource.MultiOut("BeatTrack2") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand, numChannels.expand, winSize.expand, phaseSpacing.expand, lock.expand, weighting.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut("BeatTrack2", control, IIdxSeq.fill(6)(control), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(6)(control), _args)
 }
 /**
  * A UGen to measure spectral flatness.
@@ -438,9 +438,9 @@ object SpecFlatness {
  * 
  * @see [[de.sciss.synth.ugen.CheckBadValues]]
  */
-final case class SpecFlatness(chain: GE) extends UGenSource.SingleOut {
+final case class SpecFlatness(chain: GE) extends UGenSource.SingleOut("SpecFlatness") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SpecFlatness", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen to find the percentile of a signal's magnitude spectrum.
@@ -481,9 +481,9 @@ object SpecPcile {
  * @param interp          specifies whether interpolation should be used to try and make the percentile
  *                        frequency estimate more accurate, at the cost of a little higher CPU usage. Set it to 1 to enable this.
  */
-final case class SpecPcile(chain: GE, percent: GE, interp: GE) extends UGenSource.SingleOut {
+final case class SpecPcile(chain: GE, percent: GE, interp: GE) extends UGenSource.SingleOut("SpecPcile") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, percent.expand, interp.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SpecPcile", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
 /**
  * A UGen to measure the spectral centroid.
@@ -526,7 +526,7 @@ object SpecCentroid {
  * 
  * @see [[de.sciss.synth.ugen.SpecPcile]]
  */
-final case class SpecCentroid(chain: GE) extends UGenSource.SingleOut {
+final case class SpecCentroid(chain: GE) extends UGenSource.SingleOut("SpecCentroid") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SpecCentroid", control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }

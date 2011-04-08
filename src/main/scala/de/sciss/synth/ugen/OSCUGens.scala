@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Apr 06 02:27:48 BST 2011
- * ScalaCollider-UGen version: 0.11
+ * Created: Fri Apr 08 04:10:01 BST 2011
+ * ScalaCollider-UGen version: 0.12
  */
 
 package de.sciss.synth
@@ -15,9 +15,9 @@ object DegreeToKey {
    def kr(buf: GE, in: GE, octave: GE = 12.0f) = apply(control, buf, in, octave)
    def ar(buf: GE, in: GE, octave: GE = 12.0f) = apply(audio, buf, in, octave)
 }
-final case class DegreeToKey(rate: Rate, buf: GE, in: GE, octave: GE) extends UGenSource.SingleOut {
+final case class DegreeToKey(rate: Rate, buf: GE, in: GE, octave: GE) extends UGenSource.SingleOut("DegreeToKey") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, octave.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("DegreeToKey", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A UGen which selects among a sequence of inputs, according to an index signal.
@@ -58,9 +58,9 @@ object Select {
  * 
  * @see [[de.sciss.synth.ugen.TWindex]]
  */
-final case class Select(rate: Rate, index: GE, in: GE) extends UGenSource.SingleOut {
+final case class Select(rate: Rate, index: GE, in: GE) extends UGenSource.SingleOut("Select") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(index.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Select", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A UGen providing a probability-weighted index into a sequence upon receiving a trigger.
@@ -117,49 +117,49 @@ object TWindex {
  * 
  * @see [[de.sciss.synth.ugen.Select]]
  */
-final case class TWindex(rate: Rate, trig: GE, prob: GE, normalize: GE) extends UGenSource.SingleOut {
+final case class TWindex(rate: Rate, trig: GE, prob: GE, normalize: GE) extends UGenSource.SingleOut("TWindex") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, prob.expand, normalize.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("TWindex", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Index {
    def kr(buf: GE, in: GE = 0.0f) = apply(control, buf, in)
    def ar(buf: GE, in: GE = 0.0f) = apply(audio, buf, in)
 }
-final case class Index(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut {
+final case class Index(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("Index") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Index", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object WrapIndex {
    def kr(buf: GE, in: GE = 0.0f) = apply(control, buf, in)
    def ar(buf: GE, in: GE = 0.0f) = apply(audio, buf, in)
 }
-final case class WrapIndex(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut {
+final case class WrapIndex(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("WrapIndex") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("WrapIndex", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object IndexInBetween {
    def kr(buf: GE, in: GE = 0.0f) = apply(control, buf, in)
    def ar(buf: GE, in: GE = 0.0f) = apply(audio, buf, in)
 }
-final case class IndexInBetween(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut {
+final case class IndexInBetween(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("IndexInBetween") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("IndexInBetween", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object DetectIndex {
    def kr(buf: GE, in: GE = 0.0f) = apply(control, buf, in)
    def ar(buf: GE, in: GE = 0.0f) = apply(audio, buf, in)
 }
-final case class DetectIndex(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut {
+final case class DetectIndex(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("DetectIndex") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("DetectIndex", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Shaper {
    def kr(buf: GE, in: GE = 0.0f) = apply(control, buf, in)
    def ar(buf: GE, in: GE = 0.0f) = apply(audio, buf, in)
 }
-final case class Shaper(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut {
+final case class Shaper(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("Shaper") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Shaper", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object FSinOsc {
    def ar: FSinOsc = ar()
@@ -167,9 +167,9 @@ object FSinOsc {
    def kr: FSinOsc = kr()
    def kr(freq: GE = 440.0f, iphase: GE = 0.0f) = apply(control, freq, iphase)
 }
-final case class FSinOsc(rate: Rate, freq: GE, iphase: GE) extends UGenSource.SingleOut {
+final case class FSinOsc(rate: Rate, freq: GE, iphase: GE) extends UGenSource.SingleOut("FSinOsc") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, iphase.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("FSinOsc", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 /**
  * A Sinusoidal (sine tone) oscillator UGen.
@@ -202,9 +202,9 @@ object SinOsc {
  * @see [[de.sciss.synth.ugen.Osc]]
  * @see [[de.sciss.synth.ugen.FSinOsc]]
  */
-final case class SinOsc(rate: Rate, freq: GE, phase: GE) extends UGenSource.SingleOut {
+final case class SinOsc(rate: Rate, freq: GE, phase: GE) extends UGenSource.SingleOut("SinOsc") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, phase.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SinOsc", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object SinOscFB {
    def ar: SinOscFB = ar()
@@ -212,48 +212,48 @@ object SinOscFB {
    def kr: SinOscFB = kr()
    def kr(freq: GE = 440.0f, feedback: GE = 0.0f) = apply(control, freq, feedback)
 }
-final case class SinOscFB(rate: Rate, freq: GE, feedback: GE) extends UGenSource.SingleOut {
+final case class SinOscFB(rate: Rate, freq: GE, feedback: GE) extends UGenSource.SingleOut("SinOscFB") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, feedback.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("SinOscFB", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object VOsc {
    def ar(bufPos: GE, freq: GE = 440.0f, phase: GE = 0.0f) = apply(audio, bufPos, freq, phase)
    def kr(bufPos: GE, freq: GE = 440.0f, phase: GE = 0.0f) = apply(control, bufPos, freq, phase)
 }
-final case class VOsc(rate: Rate, bufPos: GE, freq: GE, phase: GE) extends UGenSource.SingleOut {
+final case class VOsc(rate: Rate, bufPos: GE, freq: GE, phase: GE) extends UGenSource.SingleOut("VOsc") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bufPos.expand, freq.expand, phase.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("VOsc", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object VOsc3 {
    def ar(bufPos: GE, freq1: GE = 110.0f, freq2: GE = 220.0f, freq3: GE = 440.0f) = apply(audio, bufPos, freq1, freq2, freq3)
    def kr(bufPos: GE, freq1: GE = 110.0f, freq2: GE = 220.0f, freq3: GE = 440.0f) = apply(control, bufPos, freq1, freq2, freq3)
 }
-final case class VOsc3(rate: Rate, bufPos: GE, freq1: GE, freq2: GE, freq3: GE) extends UGenSource.SingleOut {
+final case class VOsc3(rate: Rate, bufPos: GE, freq1: GE, freq2: GE, freq3: GE) extends UGenSource.SingleOut("VOsc3") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bufPos.expand, freq1.expand, freq2.expand, freq3.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("VOsc3", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Osc {
    def ar(buf: GE, freq: GE = 440.0f, phase: GE = 0.0f) = apply(audio, buf, freq, phase)
    def kr(buf: GE, freq: GE = 440.0f, phase: GE = 0.0f) = apply(control, buf, freq, phase)
 }
-final case class Osc(rate: Rate, buf: GE, freq: GE, phase: GE) extends UGenSource.SingleOut {
+final case class Osc(rate: Rate, buf: GE, freq: GE, phase: GE) extends UGenSource.SingleOut("Osc") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, freq.expand, phase.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Osc", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object OscN {
    def ar(buf: GE, freq: GE = 440.0f, phase: GE = 0.0f) = apply(audio, buf, freq, phase)
    def kr(buf: GE, freq: GE = 440.0f, phase: GE = 0.0f) = apply(control, buf, freq, phase)
 }
-final case class OscN(rate: Rate, buf: GE, freq: GE, phase: GE) extends UGenSource.SingleOut {
+final case class OscN(rate: Rate, buf: GE, freq: GE, phase: GE) extends UGenSource.SingleOut("OscN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, freq.expand, phase.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("OscN", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object COsc {
    def ar(buf: GE, freq: GE = 440.0f, beats: GE = 0.5f) = apply(audio, buf, freq, beats)
 }
-final case class COsc(rate: Rate, buf: GE, freq: GE, beats: GE) extends UGenSource.SingleOut {
+final case class COsc(rate: Rate, buf: GE, freq: GE, beats: GE) extends UGenSource.SingleOut("COsc") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, freq.expand, beats.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("COsc", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Formant {
    def ar: Formant = ar()
@@ -261,9 +261,9 @@ object Formant {
    def kr: Formant = kr()
    def kr(fundFreq: GE = 440.0f, formFreq: GE = 1760.0f, bw: GE = 880.0f) = apply(control, fundFreq, formFreq, bw)
 }
-final case class Formant(rate: Rate, fundFreq: GE, formFreq: GE, bw: GE) extends UGenSource.SingleOut {
+final case class Formant(rate: Rate, fundFreq: GE, formFreq: GE, bw: GE) extends UGenSource.SingleOut("Formant") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(fundFreq.expand, formFreq.expand, bw.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Formant", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Blip {
    def kr: Blip = kr()
@@ -271,9 +271,9 @@ object Blip {
    def ar: Blip = ar()
    def ar(freq: GE = 440.0f, numHarm: GE = 200.0f) = apply(audio, freq, numHarm)
 }
-final case class Blip(rate: Rate, freq: GE, numHarm: GE) extends UGenSource.SingleOut {
+final case class Blip(rate: Rate, freq: GE, numHarm: GE) extends UGenSource.SingleOut("Blip") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, numHarm.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Blip", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Saw {
    def kr: Saw = kr()
@@ -281,9 +281,9 @@ object Saw {
    def ar: Saw = ar()
    def ar(freq: GE = 440.0f) = apply(audio, freq)
 }
-final case class Saw(rate: Rate, freq: GE) extends UGenSource.SingleOut {
+final case class Saw(rate: Rate, freq: GE) extends UGenSource.SingleOut("Saw") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Saw", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Pulse {
    def kr: Pulse = kr()
@@ -291,21 +291,21 @@ object Pulse {
    def ar: Pulse = ar()
    def ar(freq: GE = 440.0f, width: GE = 0.5f) = apply(audio, freq, width)
 }
-final case class Pulse(rate: Rate, freq: GE, width: GE) extends UGenSource.SingleOut {
+final case class Pulse(rate: Rate, freq: GE, width: GE) extends UGenSource.SingleOut("Pulse") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, width.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Pulse", rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
 object Klang {
    def ar(specs: GE, freqScale: GE = 1.0f, freqOffset: GE = 0.0f) = apply(specs, freqScale, freqOffset)
 }
-final case class Klang(specs: GE, freqScale: GE, freqOffset: GE) extends UGenSource.SingleOut {
+final case class Klang(specs: GE, freqScale: GE, freqOffset: GE) extends UGenSource.SingleOut("Klang") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freqScale.expand, freqOffset.expand).++(specs.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Klang", audio, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args)
 }
 object Klank {
    def ar(specs: GE, in: GE, freqScale: GE = 1.0f, freqOffset: GE = 0.0f, decayScale: GE = 1.0f) = apply(specs, in, freqScale, freqOffset, decayScale)
 }
-final case class Klank(specs: GE, in: GE, freqScale: GE, freqOffset: GE, decayScale: GE) extends UGenSource.SingleOut {
+final case class Klank(specs: GE, in: GE, freqScale: GE, freqOffset: GE, decayScale: GE) extends UGenSource.SingleOut("Klank") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, freqScale.expand, freqOffset.expand, decayScale.expand).++(specs.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut("Klank", audio, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args)
 }

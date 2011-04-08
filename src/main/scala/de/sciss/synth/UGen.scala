@@ -100,6 +100,9 @@ sealed trait UGenInLike {
    def unwrap( i: Int ) : UGenInLike
 }
 
+//object UGenIn {
+//   val rateOrd = Ordering.by[ UGenIn, Rate ]( _.rate )
+//}
 /**
  *    An element that can be used as an input to a UGen.
  *    This is after multi-channel-expansion, hence implementing

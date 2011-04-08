@@ -6,9 +6,8 @@
 [ LagControl,
 // ScopeOut, SharedOut, SharedIn,  // mac internal server only : we won't support these ugens for the time being
 // DynKlank, DynKlang, HilbertFIR, Tap, IndexL, SelectX, SelectXFocus, TChoose, TWChoose, CompanderD, // fake ugens : we won't implement them right now
-Dpoll,
 MaxLocalBufs, ClearBuf, SetBuf, LocalBuf,  // these are urgent, but require a bit of extra work
-PackFFT, UnpackFFT,
+PackFFT,
 // AccelerometerX, AccelerometerY, AccelerometerZ // these seem to have disappeared from the standard distrib
 
 ].size

@@ -74,6 +74,11 @@ object Mix {
 
    case class Seq( elems: IIdxSeq[ GE ])/*( implicit val rate: R )*/ /*( implicit r: RateOrder[ R, R, R ])*/
    extends GE.Lazy {
+      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+
+      def displayName = "Mix.Seq"
+      override def toString = displayName + elems.mkString( "(", ",", ")" )
+
       def makeUGens : UGenInLike = elems.headOption match {
          case Some( e ) => elems.tail.foldLeft( e )( _ + _ ).expand
          case _ => UGenInGroup( IIdxSeq.empty )

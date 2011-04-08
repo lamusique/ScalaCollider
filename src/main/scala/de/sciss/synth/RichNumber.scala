@@ -467,12 +467,11 @@ private[synth] object RichNumber {
    //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
    //   def firstarg( b: GE ) : GE          = cn.firstarg( b )
 
-   // BBB
-   //   def linlin( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) =
-   //      cn.linlin( srcLo, srcHi, dstLo, dstHi )
-   //
-   //   def linexp( srcLo: AnyGE, srcHi: AnyGE, dstLo: AnyGE, dstHi: AnyGE ) =
-   //      cn.linexp( srcLo, srcHi, dstLo, dstHi )
+      def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) =
+         cn.linlin( srcLo, srcHi, dstLo, dstHi )
+
+      def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) =
+         cn.linexp( srcLo, srcHi, dstLo, dstHi )
    }
 
    sealed trait NAryGEOps2 extends NAryGEOps {

@@ -18,6 +18,9 @@ object KlangSpec {
 
    private class SeqImpl( val elems: IIdxSeq[ KlangSpec ]) extends Seq {
       def expand : UGenInLike = UGenInGroup( elems.flatMap( _.expand.outputs ))
+      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+      def displayName = elems.mkString( "KlangSpec.Seq" )
+      override def toString = displayName + elems.mkString( "(", ",", ")" )
 
 //      def mexpand: IIdxSeq[ GE ] = {
 ////       we want something like this:
@@ -41,6 +44,8 @@ object KlangSpec {
 }
 case class KlangSpec( freq: GE, amp: GE = 1, decay: GE = 0 ) extends GE {
    def expand : UGenInLike = UGenInGroup( IIdxSeq( freq.expand, amp.expand, decay.expand ))
+   def rate = MaybeRate.reduce( freq.rate, amp.rate, decay.rate )
+   def displayName = "KlangSpec"
 
 ////   def toSeq: IIdxSeq[ GE ] = Vector( freq, amp, decay )
 //   def mexpand: IIdxSeq[ GE ] = {

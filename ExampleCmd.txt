@@ -314,7 +314,7 @@ val x = play {
     val dmul = density.reciprocal * 0.5 * amp
     val dadd = -dmul + amp
 
-    val signal = Mix.fill(4) {   // mix an array of 4 instruments
+    val signal: GE = Mix.fill(4) {   // mix an array of 4 instruments
         val excitation = PinkNoise.ar(
             // if amplitude is below zero it is clipped
             // density determines the probability of being above zero
@@ -338,7 +338,7 @@ val x = play {
     }
 
     // add some reverb via allpass delays
-    val x = (1 to 5).foldLeft[GE[audio]](signal)( (sig, _) => AllpassN.ar(sig, 0.05, List(Rand(0,0.05),Rand(0,0.05)), 1))
+    val x = (1 to 5).foldLeft(signal)( (sig, _) => AllpassN.ar(sig, 0.05, List(Rand(0,0.05),Rand(0,0.05)), 1))
     LeakDC.ar( x, 0.995)    // delays build up a lot of DC, so leak it out here.
 }
 

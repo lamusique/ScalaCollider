@@ -27,7 +27,6 @@
  */
 
 package de.sciss.synth
-import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 object ScalaCollider {
    val name          = "ScalaCollider"
