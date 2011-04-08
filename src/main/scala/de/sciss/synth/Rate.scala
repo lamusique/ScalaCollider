@@ -61,27 +61,27 @@ package de.sciss.synth
 
 object MaybeRate {
    def max_?( rates: MaybeRate* ) : MaybeRate = {
-      if( rates.isEmpty ) return UnknownRate
+      if( rates.isEmpty ) return UndefinedRate
       var res: Rate = scalar
       rates.foreach {
-         case UnknownRate => return UnknownRate
+         case UndefinedRate => return UndefinedRate
          case r: Rate => if( r.id > res.id ) res = r
       }
       res
    }
    def min_?(  rates: MaybeRate* ) : MaybeRate = {
-      if( rates.isEmpty ) return UnknownRate
+      if( rates.isEmpty ) return UndefinedRate
       var res: Rate = demand
       rates.foreach {
-         case UnknownRate => return UnknownRate
+         case UndefinedRate => return UndefinedRate
          case r: Rate => if( r.id < res.id ) res = r
       }
       res
    }
    def reduce( rates: MaybeRate* ) : MaybeRate = {
       rates.headOption match {
-         case Some( r ) => if( r == UnknownRate || rates.exists( _ != r )) UnknownRate else r
-         case None => UnknownRate
+         case Some( r ) => if( r == UndefinedRate || rates.exists( _ != r )) UndefinedRate else r
+         case None => UndefinedRate
       }
    }
 }
@@ -89,7 +89,7 @@ sealed abstract class MaybeRate {
    def lift: Option[ Rate ]
    def ?|( r: => Rate ) : Rate
 }
-case object UnknownRate extends MaybeRate {
+case object UndefinedRate extends MaybeRate {
    def lift : Option[ Rate ] = None
    def ?|( r: => Rate ) : Rate = r
 }
