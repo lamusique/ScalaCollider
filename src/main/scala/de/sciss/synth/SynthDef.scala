@@ -105,7 +105,7 @@ case class SynthDef( name: String, graph: UGenGraph ) {
    def load : Unit = load()
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
-      writeDefFile( dir, overwrite = true )
+      writeDefFile( dir )
       sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
       this
    }
@@ -124,7 +124,7 @@ case class SynthDef( name: String, graph: UGenGraph ) {
    }
     
    def writeDefFile : Unit = writeDefFile()
-   def writeDefFile( dir: String = defaultDir, overwrite: Boolean = false ) {
+   def writeDefFile( dir: String = defaultDir, overwrite: Boolean = true ) {
       var file = new File( dir, name + ".scsyndef" )
       val exists = file.exists
       if( overwrite ) {
