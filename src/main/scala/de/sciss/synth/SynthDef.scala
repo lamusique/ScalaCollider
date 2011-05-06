@@ -105,7 +105,7 @@ case class SynthDef( name: String, graph: UGenGraph ) {
    def load : Unit = load()
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
-      writeDefFile( dir )
+      writeDefFile( dir, overwrite = true )
       sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
       this
    }
