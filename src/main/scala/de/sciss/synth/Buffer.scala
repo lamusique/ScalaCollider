@@ -291,7 +291,7 @@ case class Buffer( server: Server, id: Int ) extends Model {
 
    def setnMsg( v: IndexedSeq[ Float ]) = {
       val numSmp = numChannels * numFrames
-      require( v.size == numFrames )
+      require( v.size == numSmp )
       OSCBufferSetnMessage( id, (0, v.toIndexedSeq) )
    }
 
