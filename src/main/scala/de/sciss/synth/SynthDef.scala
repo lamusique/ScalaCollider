@@ -65,7 +65,7 @@ case class SynthDef( name: String, graph: UGenGraph ) {
             case None            => syncMsg
          }
          server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
-            case OSCSyncedMessage( syncID ) => action( syndef )
+            case OSCSyncedMessage( `syncID` ) => action( syndef )
             case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
          })
       } getOrElse {
