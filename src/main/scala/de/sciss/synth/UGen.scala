@@ -33,10 +33,6 @@ import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 /**
  *    @version 0.15, 21-May-10
  */
-trait UGenProxy {
-   def source : UGen
-   def outputIndex : Int
-}
 
 //trait ExclusiveUGen     // marker trait: UGen can only occur once in a synthdef
 
@@ -59,7 +55,7 @@ trait SideEffectUGen {
 }
 
 abstract class UGen
-extends RatedGE with UGenProxy {
+extends RatedGE /* with UGenProxy */ {
    // ---- constructor ----
    {
       SynthGraph.builder.addUGen( this )
@@ -72,7 +68,7 @@ extends RatedGE with UGenProxy {
    def numInputs = inputs.size
    def source = this
    def specialIndex = 0
-   def outputIndex = 0
+//   def outputIndex = 0
 
 //   def checkInputs : Option[String] = {
 //      // checkValidInputs

@@ -106,11 +106,18 @@ case class Constant( value: Float ) extends UGenIn with ScalarRated {
    override def scurve : GE      = cn( if( value <= 0 ) 0 else if( value > 1 ) 1 else value * value * (3 - 2 * value))
 }
 
+trait UGenProxy extends UGenIn {
+   def source : UGen
+   def outputIndex : Int
+}
+
 /**
  *    A SingleOutUGen is a UGen which has exactly one output, and
  *    hence can directly function as input to another UGen without expansion.
  */
-abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenIn
+abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenProxy /* UGenIn */ {
+   final def outputIndex = 0
+}
 
 /**
  *    A UGenOutProxy refers to a particular output of a multi-channel UGen.
@@ -118,7 +125,7 @@ abstract class SingleOutUGen( val inputs: UGenIn* ) extends UGen with UGenIn
  *    UGen. 
  */
 case class UGenOutProxy( source: UGen, outputIndex: Int, rate: Rate )
-extends UGenIn with UGenProxy {
+extends /* UGenIn with */ UGenProxy {
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex
 }

@@ -68,7 +68,7 @@ case class SynthDef( name: String, graph: SynthGraph ) {
             case None            => syncMsg
          }
          server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
-            case OSCSyncedMessage( syncID ) => action( syndef )
+            case OSCSyncedMessage( `syncID` ) => action( syndef )
             case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
          })
       } getOrElse {
@@ -108,7 +108,7 @@ case class SynthDef( name: String, graph: SynthGraph ) {
    def load : Unit = load()
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
-      writeDefFile( dir )
+      writeDefFile( dir, overwrite = true )
       sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
       this
    }
