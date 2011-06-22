@@ -128,7 +128,7 @@ object UGenInGroup {
 }
 sealed trait UGenInGroup extends UGenInLike
 
-trait UGenProxy extends UGenIn {
+sealed trait UGenProxy extends UGenIn {
    def source : UGen
    def outputIndex : Int
 }

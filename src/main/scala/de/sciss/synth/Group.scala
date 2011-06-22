@@ -73,7 +73,7 @@ object Group {
    def apply() : Group = apply( Server.default )
 }
 
-case class Group( server: Server, id: Int )
+final case class Group( server: Server, id: Int )
 extends Node {
 	def this( server: Server ) = this( server, server.nodes.nextID )
 	def this() = this( Server.default )

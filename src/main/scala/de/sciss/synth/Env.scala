@@ -69,7 +69,7 @@ case object welchShape extends Env.ConstShape {
       (y2 - (y2 - y1) * sin( Pi * 0.5 * (1 - pos) )).toFloat
    }
 }
-case class curveShape( override val curvature: Float ) extends Env.ConstShape {
+final case class curveShape( override val curvature: Float ) extends Env.ConstShape {
    val id = 5
    def levelAt( pos: Float, y1: Float, y2: Float ) = if( abs( curvature ) < 0.0001f ) {
       pos * (y2 - y1) + y1
@@ -99,14 +99,14 @@ case object cubShape extends Env.ConstShape {
 }
 //case class varShape[ T <: Rate, U <: Rate ]( override val idGE: GE[ T ],
 //                                             override val curvatureGE: GE[ U ] = 0 ) extends EnvShape[ T, U ]
-case class varShape( override val idGE: GE, override val curvatureGE: GE = 0 ) extends Env.Shape
+final case class varShape( override val idGE: GE, override val curvatureGE: GE = 0 ) extends Env.Shape
 
 //object EnvSeg {
 //   type Any = EnvSeg[ _ <: Rate, _ <: Rate, _ <: Rate, _ <: Rate ]
 //}
 //case class EnvSeg[ R <: Rate, S <: Rate, T <: Rate, U <: Rate ]( dur: GE[ R ], targetLevel: GE[ S ], shape: EnvShape[ T, U ] = linShape )
 
-trait EnvFactory[ V <: EnvLike ] {
+sealed trait EnvFactory[ V <: EnvLike ] {
    protected def create( startLevel: GE, segments: Env.Seg* ) : V
 
 	// fixed duration envelopes
@@ -146,7 +146,7 @@ object Env extends EnvFactory[ Env ] {
       def curvatureGE: GE // GE[ U ]
    }
 
-   case class Seg( dur: GE, targetLevel: GE, shape: Shape = linShape )
+   final case class Seg( dur: GE, targetLevel: GE, shape: Shape = linShape )
 
    sealed abstract class ConstShape extends Shape /*[ scalar, scalar ]*/ {
       val id: Int
@@ -216,7 +216,7 @@ object EnvLike {
    implicit def toGE( env: EnvLike ) : GE = env.toGE
 }
 
-trait EnvLike {
+sealed trait EnvLike {
    val startLevel: GE
    val segments: Seq[ Env.Seg ]
    def isSustained : Boolean
@@ -226,7 +226,7 @@ trait EnvLike {
    def toGE : GE
 }
 
-case class Env( startLevel: GE, segments: Seq[ Env.Seg ],
+final case class Env( startLevel: GE, segments: Seq[ Env.Seg ],
                 releaseNode: GE = -99, loopNode: GE = -99 )
 extends EnvLike {
 
@@ -251,7 +251,7 @@ object IEnv extends EnvFactory[ IEnv ] {
       new IEnv( startLevel, segments )
 }
 
-case class IEnv( startLevel: GE, segments: Seq[ Env.Seg ], offset: GE = 0 )
+final case class IEnv( startLevel: GE, segments: Seq[ Env.Seg ], offset: GE = 0 )
 extends EnvLike {
 	def toGE : GE = {
       val segmIdx    = segments.toIndexedSeq

@@ -29,10 +29,8 @@
 package de.sciss.synth
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
+import sys.error
 
-/**
- *    @version 0.11, 01-Jul-10
- */
 object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMapImplicits {
    object Single extends SingleControlSetMapImplicits
    case class Single( key: Any, value: Float )
@@ -69,21 +67,21 @@ private[synth] sealed trait MultiControlSetMapImplicits {
 }
 
 object ControlKBusMap {
-   object Single {
+//   object Single {
       implicit def intIntControlKBus( tup: (Int, Int) )                 = Single( tup._1, tup._2 )
       implicit def stringIntControlKBus( tup: (String, Int) )           = Single( tup._1, tup._2 )
-   }
-   case class Single( key: Any, index: Int )
+//   }
+   final case class Single( key: Any, index: Int )
    extends ControlKBusMap {
       def toMapSeq: IIdxSeq[ Any ]  = IIdxSeq( key, index )
       def toMapnSeq: IIdxSeq[ Any ] = IIdxSeq( key, index, 1 )
    }
 
-   object Multi {
+//   object Multi {
       implicit def intKBusControlKBus( tup: (Int, ControlBus) )         = Multi( tup._1, tup._2.index, tup._2.numChannels )
       implicit def stringKBusControlKBus( tup: (String, ControlBus) )   = Multi( tup._1, tup._2.index, tup._2.numChannels )
-   }
-   case class Multi( key: Any, index: Int, numChannels: Int )
+//   }
+   final case class Multi( key: Any, index: Int, numChannels: Int )
    extends ControlKBusMap {
       def toMapnSeq: IIdxSeq[ Any ] = IIdxSeq( key, index, numChannels )
    }
@@ -95,21 +93,21 @@ sealed trait ControlKBusMap {
 }
 
 object ControlABusMap {
-   object Single {
+//   object Single {
       implicit def intIntControlABus( tup: (Int, Int) )                 = Single( tup._1, tup._2 )
       implicit def stringIntControlABus( tup: (String, Int) )           = Single( tup._1, tup._2 )
-   }
-   case class Single( key: Any, index: Int )
+//   }
+   final case class Single( key: Any, index: Int )
    extends ControlABusMap {
       def toMapaSeq: IIdxSeq[ Any ]  = IIdxSeq( key, index )
       def toMapanSeq: IIdxSeq[ Any ] = IIdxSeq( key, index, 1 )
    }
 
-   object Multi {
+//   object Multi {
       implicit def intABusControlABus( tup: (Int, AudioBus) )           = Multi( tup._1, tup._2.index, tup._2.numChannels )
       implicit def stringABusControlABus( tup: (String, AudioBus) )     = Multi( tup._1, tup._2.index, tup._2.numChannels )
-   }
-   case class Multi( key: Any, index: Int, numChannels: Int )
+//   }
+   final case class Multi( key: Any, index: Int, numChannels: Int )
    extends ControlABusMap {
       def toMapanSeq: IIdxSeq[ Any ] = IIdxSeq( key, index, numChannels )
    }

@@ -5,4 +5,4 @@ object Optional {
   implicit def wrap[ A ]( a: Option[ A ]) = Optional( a )
   implicit def unwrap[ A ]( a: Optional[ A ]) = a.option
 }
-case class Optional[ A ]( option: Option[ A ])
+final case class Optional[ A ]( option: Option[ A ])

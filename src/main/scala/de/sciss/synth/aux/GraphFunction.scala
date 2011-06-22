@@ -44,7 +44,7 @@ object GraphFunction {
    }
 }
 
-class GraphFunction[ T <% GE ]( thunk: => T ) /*( implicit r: RateOrder[ control, R, S ])*/ {
+final class GraphFunction[ T <% GE ]( thunk: => T ) {
    import GraphFunction._
    
    def play : Synth = play()

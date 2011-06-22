@@ -38,6 +38,7 @@ import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferA
 import Model._
 import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
 import aux.AllocatorExhaustedException
+import sys.error
 
 /**
  * 	@version	0.18, 17-May-10
@@ -93,7 +94,7 @@ object Buffer {
    private def isPowerOfTwo( i: Int ) = (i & (i-1)) == 0
 }
 
-case class Buffer( server: Server, id: Int ) extends Model {
+final case class Buffer( server: Server, id: Int ) extends Model {
    b =>
 
    def this( server: Server = Server.default ) = this( server, Buffer.allocID( server ))

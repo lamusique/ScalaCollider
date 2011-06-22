@@ -35,12 +35,13 @@ import osc.{OSCSyncedMessage, OSCSynthDefFreeMessage, OSCSynthDefLoadMessage, OS
 import File.{ separator => sep }
 import actors.TIMEOUT
 import de.sciss.osc.{OSCBundle, OSCMessage, OSCPacket}
+import sys.error
 
 /**
  *    @version 0.19, 24-Aug-10
  *    @todo    should add load and loadDir to companion object
  */
-case class SynthDef( name: String, graph: UGenGraph ) {
+final case class SynthDef( name: String, graph: UGenGraph ) {
    syndef =>
 
    import SynthDef._

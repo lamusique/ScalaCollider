@@ -96,7 +96,7 @@ object ServerOptions {
     */
    implicit def build( sob: ServerOptionsBuilder ) : ServerOptions = sob.build
 }
-abstract class ServerOptions extends ServerOptionsLike
+abstract sealed class ServerOptions extends ServerOptionsLike
 
 object ServerOptionsBuilder {
    private def toNonRealtimeArgs( o: ServerOptionsLike ): List[ String ] = {
@@ -247,7 +247,7 @@ object ServerOptionsBuilder {
    }
 }
 
-class ServerOptionsBuilder extends ServerOptionsLike {
+final class ServerOptionsBuilder extends ServerOptionsLike {
    var programPath:           String = new File( System.getenv( "SC_HOME" ), "scsynth" ).getAbsolutePath
    var controlBusChannels:    Int                        = 4096
    var audioBusChannels:      Int                        = 128

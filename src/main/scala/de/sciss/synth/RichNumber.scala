@@ -527,7 +527,7 @@ extends Proxy with Ordered[ Int ] with RichNumber.UnaryFloatOps with RichNumber.
 
 // ---------------------------- Float ----------------------------
 
-/* final */ case class RichFloat private[synth]( protected val f: Float )
+final case class RichFloat private[synth]( protected val f: Float )
 extends Proxy with Ordered[ Float ] with RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
    import RichNumber._
 

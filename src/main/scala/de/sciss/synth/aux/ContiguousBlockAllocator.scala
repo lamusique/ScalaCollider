@@ -31,7 +31,7 @@ package de.sciss.synth.aux
 /**
  * 	@version	0.13, 22-Apr-10
  */
-class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /* extends BlockAllocator */ {
+final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /* extends BlockAllocator */ {
    private val array = new Array[ Block ]( size )
    private var freed = Map[ Int, Set[ Block ]]()
    private var top   = pos

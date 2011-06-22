@@ -30,6 +30,7 @@ package de.sciss.synth
 
 import osc.{ OSCControlBusGetMessage, OSCControlBusSetMessage, OSCControlBusSetnMessage }
 import aux.AllocatorExhaustedException
+import sys.error
 
 /**
  *    @version	0.12, 10-May-10
@@ -62,7 +63,7 @@ sealed trait Bus {
    def free: Unit
 }
 
-case class ControlBus( server: Server, index: Int, numChannels: Int )
+final case class ControlBus( server: Server, index: Int, numChannels: Int )
 extends Bus {
 	private var released = false
 
@@ -127,7 +128,7 @@ extends Bus {
    }
 }
 
-case class AudioBus( server: Server, index: Int, numChannels: Int )
+final case class AudioBus( server: Server, index: Int, numChannels: Int )
 extends Bus {
    private var released = false
 

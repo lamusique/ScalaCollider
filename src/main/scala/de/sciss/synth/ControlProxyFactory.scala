@@ -41,7 +41,7 @@ object ControlProxyFactory {
 
 //   implicit def fromString( name: String ) = new ControlProxyFactory( name )
 }
-class ControlProxyFactory( name: String ) {
+final class ControlProxyFactory( name: String ) {
    import ControlProxyFactory._
 
    def ir : ControlProxy = ir( IIdxSeq( 0f ))
@@ -89,7 +89,7 @@ class ControlProxyFactory( name: String ) {
 //   }
 }
 
-trait ControlFactoryLike[ T ] {
+sealed trait ControlFactoryLike[ T ] {
    type Proxy = T // don't ask me what this is doing. some vital variance correction...
    def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ]
 }
@@ -113,7 +113,7 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends C
    protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen
 }
 
-trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
+sealed trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
    def displayName: String // YYY

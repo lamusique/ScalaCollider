@@ -38,7 +38,7 @@ object BufferManager {
 /**
  *    @version 0.11, 09-May-10
  */
-class BufferManager( server: Server ) extends Model {
+final class BufferManager( server: Server ) extends Model {
    import BufferManager._
 
    private var buffers: IntMap[ Buffer ] = _

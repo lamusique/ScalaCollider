@@ -33,7 +33,7 @@ import osc.{ OSCSynthNewMessage }
 /**
  *    @version	0.15, 04-Jun-10
  */
-case class Synth( server: Server, id: Int )
+final case class Synth( server: Server, id: Int )
 extends Node {
    private var defNameVar = ""
 

@@ -33,11 +33,12 @@ import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
 import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
 import ugen.{EnvGen, Out}
+import sys.error
 
 /**
  *    @version 0.12, 02-Aug-10
  */
-case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float ],
+final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float ],
                       controlNames: IIdxSeq[ (String, Int) ], ugens: IIdxSeq[ UGenGraph.RichUGen ]) {
 //   override lazy val hashCode = ... TODO: figure out how case class calculates it...
    private[synth] def write( dos: DataOutputStream ) {
@@ -174,7 +175,7 @@ object SynthGraph {
    }
 }
 
-case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _ ]]) {
+final case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _ ]]) {
    def expand = UGenGraph.expand( this )
 }
 

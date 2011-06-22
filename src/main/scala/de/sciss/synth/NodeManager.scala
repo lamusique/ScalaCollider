@@ -37,15 +37,15 @@ import osc.{ OSCGroupInfo, OSCNodeChange, OSCNodeGoMessage, OSCNodeEndMessage, O
  */
 object NodeManager {
    abstract sealed class NodeChange { def node: Node; def info: OSCNodeInfo }
-   case class NodeGo(   node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeEnd(  node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeOn(   node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeOff(  node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeMove( node: Node, info: OSCNodeInfo ) extends NodeChange
+   final case class NodeGo(   node: Node, info: OSCNodeInfo ) extends NodeChange
+   final case class NodeEnd(  node: Node, info: OSCNodeInfo ) extends NodeChange
+   final case class NodeOn(   node: Node, info: OSCNodeInfo ) extends NodeChange
+   final case class NodeOff(  node: Node, info: OSCNodeInfo ) extends NodeChange
+   final case class NodeMove( node: Node, info: OSCNodeInfo ) extends NodeChange
    case object Cleared
 }
 
-class NodeManager( server: Server ) extends Model {
+final class NodeManager( server: Server ) extends Model {
 
    import NodeManager._
     

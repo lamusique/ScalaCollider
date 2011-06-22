@@ -39,6 +39,7 @@ import concurrent.SyncVar
 import osc.{ OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
              OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec }
 import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
+import sys.error
 
 /**
  * 	@version    0.16, 03-Aug-10
@@ -416,7 +417,7 @@ object Server {
    }
 }
 
-trait ServerLike extends Model {
+sealed trait ServerLike extends Model {
    def name: String
    def options: ServerOptions
    def addr: InetSocketAddress
@@ -429,14 +430,14 @@ object ServerConnection {
    case class Running( server: Server ) extends Condition
    case object Aborted extends Condition
 }
-trait ServerConnection extends ServerLike {
+sealed trait ServerConnection extends ServerLike {
 //   def start : Unit
    def server : Future[ Server ]
    def abort : Future[ Unit ]
 }
 
 //abstract class Server extends Model {}
-class Server private( val name: String, c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
+final class Server private( val name: String, c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
                       val clientOptions: ClientOptions )
 extends ServerLike {
    server =>

@@ -31,7 +31,7 @@ package de.sciss.synth.aux
 /**
  *    @version	0.12, 22-Apr-10
  */
-class NodeIDAllocator( user: Int, initTemp: Int ) {
+final class NodeIDAllocator( user: Int, initTemp: Int ) {
    private var temp  = initTemp
    private val mask  = user << 26
 //   private val perm = 2
