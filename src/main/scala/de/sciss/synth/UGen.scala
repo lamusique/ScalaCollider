@@ -118,6 +118,7 @@ sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ 
 }
 
 object UGenInGroup {
+   def empty : UGenInGroup = new Impl( IIdxSeq.empty )
    def apply( xs: IIdxSeq[ UGenInLike ]) : UGenInGroup = new Impl( xs )
 
    private class Impl( xs: IIdxSeq[ UGenInLike ]) extends UGenInGroup {
@@ -223,7 +224,7 @@ final case class Constant( value: Float ) extends GE with UGenIn {
 //   def expand: IIdxSeq[ UGenIn ] = IIdxSeq( this )
 //}
 
-case class ControlUGenOutProxy( source: ControlProxyLike[ _ ], outputIndex: Int, rate: Rate )
+final case class ControlUGenOutProxy( source: ControlProxyLike[ _ ], outputIndex: Int, rate: Rate )
 extends UGenIn { // UGenIn[ R ] {
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex

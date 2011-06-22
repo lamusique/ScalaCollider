@@ -72,17 +72,14 @@ object Mix {
 
    def seq( elems: IIdxSeq[ GE ])/* ( implicit rate: R ) */ = Seq( elems )
 
-   case class Seq( elems: IIdxSeq[ GE ])/*( implicit val rate: R )*/ /*( implicit r: RateOrder[ R, R, R ])*/
+   final case class Seq( elems: IIdxSeq[ GE ])/*( implicit val rate: R )*/ /*( implicit r: RateOrder[ R, R, R ])*/
    extends GE.Lazy {
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
 
       def displayName = "Mix.Seq"
       override def toString = displayName + elems.mkString( "(", ",", ")" )
 
-      def makeUGens : UGenInLike = elems.headOption match {
-         case Some( e ) => elems.tail.foldLeft( e )( _ + _ ).expand
-         case _ => UGenInGroup( IIdxSeq.empty )
-      }
+      def makeUGens : UGenInLike = if( elems.nonEmpty ) elems.reduceLeft( _ + _ ).expand else UGenInGroup.empty
 
 ////      def force( b: UGenGraphBuilder ) { expand( b )}
 ////      def expand: IIdxSeq[ UGenIn /*[ R ]*/] = {
@@ -108,28 +105,26 @@ object Mix {
 }
 
 /**
- * Mixes the channels of a signal together. Note that, different from sclang, a multi-output UGen whose
- * inputs are not expanded, will come out with its original number-of-channels, and is not mixed down
- * to a mono signal (indicated below with an ! exclamation mark). If you want to enforce a mono mix of
- * a multi-output UGen, you can use the @Mix.mono@ call instead.
+ * Mixes the channels of a signal together. Works exactly like the sclang counterpart.
  *
  * Here are some examples:
  *
  * {{{
- * Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> Line.ar( 440 ) + Line.ar( 660 )
- * Mix( SinOsc.ar( 440 )) --> Line.ar( 440 )
- * Mix( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) // !!
- * Mix.mono( Pan2.ar( SinOsc.ar )) --> Pan2.ar( SinOsc.ar ) --> left + right // !!
- * Mix( Pan2.ar( SinOsc.ar :: Saw.ar :: Nil )) --> Pan2.ar( SinOsc.ar ) + Pan2.ar( Saw.ar )
+ * Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> SinOsc.ar( 440 ) + SinOsc.ar( 660 )
+ * Mix( SinOsc.ar( 440 )) --> SinOsc.ar( 440 )
+ * Mix( Pan2.ar( SinOsc.ar )) --> left + right
+ * Mix( Pan2.ar( SinOsc.ar( 440 :: 660 :: Nil ))) --> [ left( 440 ) + left( 660 ), right( 440 ) + right( 660 )]
  * }}}
 */
-//final case class Mix( elems: GE )/*( implicit r: RateOrder[ R, R, R ])*/
-//extends GE.Lazy {
-//   def makeUGens : UGenInLike = {
-//      val ins = elems.expand.outputs
-//      ins.headOption match {
-//         case Some( e ) => elems.tail.foldLeft( e )( _ + _ ).expand
-//         case _ => UGenInGroup( IIdxSeq.empty )
-//      }
-//   }
-//}
+final case class Mix( elems: GE )
+extends UGenSource.SingleOut( "Mix" ) { // GE.Lazy
+   def rate = elems.rate
+
+   protected def makeUGens : UGenInLike = unwrap( elems.expand.outputs )
+
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      if( args.nonEmpty ) {
+         args.reduceLeft( BinaryOp.Plus.make1( _, _ ))
+      } else UGenInGroup.empty
+   }
+}
