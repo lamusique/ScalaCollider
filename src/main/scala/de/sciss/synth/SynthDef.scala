@@ -106,7 +106,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
    def load : Unit = load()
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
-      writeDefFile( dir )
+      write( dir )
       sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
       this
    }
@@ -124,15 +124,15 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 		synth
    }
     
-   def writeDefFile : Unit = writeDefFile()
-   def writeDefFile( dir: String = defaultDir, overwrite: Boolean = true ) {
+   def write : Unit = write()
+   def write( dir: String = defaultDir, overwrite: Boolean = true ) {
       var file = new File( dir, name + ".scsyndef" )
       val exists = file.exists
       if( overwrite ) {
          if( exists ) file.delete
-         SynthDef.writeDefFile( file.getAbsolutePath, List( this ))
+         SynthDef.write( file.getAbsolutePath, List( this ))
       } else if( !exists ) {
-         SynthDef.writeDefFile( file.getAbsolutePath, List( this ))
+         SynthDef.write( file.getAbsolutePath, List( this ))
       }
    }
   
@@ -182,14 +182,14 @@ object SynthDef {
 
    def apply( name: String )( thunk: => Unit ) : SynthDef = SynthDef( name, SynthGraph( thunk ).expand )
 
-   def recv( server: Server = Server.default, name: String, completion: Completion = NoCompletion )
+   def recv( name: String, server: Server = Server.default, completion: Completion = NoCompletion )
            ( thunk: => Unit ) : SynthDef = {
       val d = apply( name )( thunk )
       d.recv( server, completion )
       d
    }
 
-   def writeDefFile( path: String, defs: Seq[ SynthDef ]) {
+   def write( path: String, defs: Seq[ SynthDef ]) {
       val os	= new FileOutputStream( path )
 	   val dos	= new DataOutputStream( new BufferedOutputStream( os ))
 
