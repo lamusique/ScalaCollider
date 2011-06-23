@@ -482,8 +482,6 @@ x.free; b.free
 
 Demand example:
 
-import Float.{ PositiveInfinity => inf }
-
 val x = play {
    val freq = DemandEnvGen.ar(
       Dseq( Seq( 204, 400, 201, 502, 300, 200 ), inf ),
