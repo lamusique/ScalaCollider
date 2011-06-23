@@ -57,10 +57,11 @@ package synth {
  * And then think before changing anything in here. Pray at least once in
  * a while to the god of implicit magic (even if magic doesn't exist, since
  * "it's all the in spec"), it might help!
- *
- * @version	0.14, 28-Aug-10
  */
 package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.sciss.synth.RateRelations */ {
+
+   val inf = Float.PositiveInfinity
+
    // GEs
 
 //   type AnyUGenIn = UGenIn // [ _ <: Rate ]
@@ -157,8 +158,8 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 
    // explicit methods
 
-   def play[ T <% GE ]( thunk: => T ) : Synth = play()( thunk )
-   def play[ T <% GE ]( target: Node = Server.default, outBus: Int = 0,
+   def play[ T : GraphFunction.Result ]( thunk: => T ) : Synth = play()( thunk )
+   def play[ T : GraphFunction.Result ]( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[ Float ] = Some( 0.02f ),
              addAction: AddAction = addToHead )( thunk: => T ) : Synth = {
       val fun = new GraphFunction[ T ]( thunk )

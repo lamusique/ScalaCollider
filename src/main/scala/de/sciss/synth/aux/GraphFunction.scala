@@ -31,6 +31,7 @@ package aux
 
 import ugen.WrapOut
 import de.sciss.osc.{OSCBundle, OSCMessage}
+import de.sciss.synth.UGenSource.ZeroOut
 
 object GraphFunction {
    private var uniqueIDCnt = 0
@@ -42,9 +43,17 @@ object GraphFunction {
          result
       }
    }
+
+   object Result {
+      implicit val out = Out
+      implicit def in[ T ]( implicit view: T => GE ) = In( view )
+      case object Out extends Result[ UGenSource.ZeroOut ]
+      final case class In[ T ]( view: T => GE ) extends Result[ T ]
+   }
+   sealed trait Result[ -T ]
 }
 
-final class GraphFunction[ T <% GE ]( thunk: => T ) {
+final class GraphFunction[ T ]( thunk: => T )( implicit res: GraphFunction.Result[ T ]) {
    import GraphFunction._
    
    def play : Synth = play()
@@ -54,13 +63,19 @@ final class GraphFunction[ T <% GE ]( thunk: => T ) {
 
 		val server = target.server
 		val defName    = "temp_" + uniqueID // more clear than using hashCode
-		val synthDef   = SynthDef( defName ) { WrapOut( thunk, fadeTime )}
+		val synthDef   = SynthDef( defName ) {
+         val r = thunk
+         res match {
+            case Result.In( view ) => WrapOut( view( r ), fadeTime )
+            case _ =>
+         }
+      }
 		val synth      = new Synth( server )
 		val bytes      = synthDef.toBytes
 		val synthMsg   = synth.newMsg( synthDef.name, target, List( "i_out" -> outBus, "out" -> outBus ), addAction )
       val defFreeMsg = synthDef.freeMsg
       val compl      = OSCBundle( synthMsg, defFreeMsg )
-      synth.onEnd { server ! synthDef.freeMsg } // why would we want to accumulate the defs?
+//      synth.onEnd { server ! synthDef.freeMsg } // why would we want to accumulate the defs?
 		if( bytes.remaining > (65535 / 4) ) { // "preliminary fix until full size works" (???)
 			if( server.isLocal ) {
 				synthDef.load( server, completion = compl )
