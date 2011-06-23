@@ -57,10 +57,13 @@ object UGen {
     *    A SingleOutUGen is a UGen which has exactly one output, and
     *    hence can directly function as input to another UGen without expansion.
     */
-   class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ]) extends UGenProxy with UGen
+   class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ]) extends UGenProxy with UGen {
+      final def numOutputs = 1
+      final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
+   }
 
    class ZeroOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ]) extends UGen with HasSideEffect {
-      final override def numOutputs = 0
+      final /* override */ def numOutputs = 0
       final def outputs = IIdxSeq.empty
    }
 
@@ -88,8 +91,8 @@ object UGen {
 
 sealed trait UGenInLike {
 //   def ungroup : IIdxSeq[ UGenInLike ]
-   def numOutputs : Int
-   def outputs : IIdxSeq[ UGenInLike ]
+//   def numOutputs : Int
+   private[synth] def outputs : IIdxSeq[ UGenInLike ]
 
    /**
     * Returns the UGenInLike element of index i
@@ -97,7 +100,8 @@ sealed trait UGenInLike {
     * that for efficiency reasons this method will
     * automatically wrap the index around numElements!
     */
-   def unwrap( i: Int ) : UGenInLike
+   private[synth] def unwrap( i: Int ) : UGenInLike
+   private[synth] def flatten : IIdxSeq[ UGenIn ]
 }
 
 //object UGenIn {
@@ -112,22 +116,27 @@ sealed trait UGenInLike {
  */
 sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ GE[ R, UGenIn[ R ]] {
    def rate : Rate
-   final def numOutputs: Int = 1
-   final def outputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
-   final def unwrap( i: Int ) : UGenInLike = this   // don't bother about the index
+//   final def numOutputs: Int = 1
+   private[synth] def outputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
+   private[synth] final def unwrap( i: Int ) : UGenInLike = this   // don't bother about the index
+   private[synth] final def flatten : IIdxSeq[ UGenIn ] = IIdxSeq( this )
 }
 
 object UGenInGroup {
    def empty : UGenInGroup = new Impl( IIdxSeq.empty )
    def apply( xs: IIdxSeq[ UGenInLike ]) : UGenInGroup = new Impl( xs )
 
-   private class Impl( xs: IIdxSeq[ UGenInLike ]) extends UGenInGroup {
+   private final class Impl( xs: IIdxSeq[ UGenInLike ]) extends UGenInGroup {
       def outputs : IIdxSeq[ UGenInLike ] = xs
       def numOutputs : Int                = xs.size
-      def unwrap( i: Int ) : UGenInLike   = xs( i % xs.size )
+      private[synth] def unwrap( i: Int ) : UGenInLike   = xs( i % xs.size )
    }
 }
-sealed trait UGenInGroup extends UGenInLike
+sealed trait UGenInGroup extends UGenInLike {
+   def numOutputs : Int
+   def outputs : IIdxSeq[ UGenInLike ]
+   final def flatten : IIdxSeq[ UGenIn ] = outputs.flatMap( _.flatten )
+}
 
 sealed trait UGenProxy extends UGenIn {
    def source : UGen
