@@ -90,13 +90,15 @@ object GE {
 //      }
 //   }
 
-   private class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
+   private final class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
+def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
       def displayName = "GE.Seq"
       override def toString = displayName + elems.mkString( "(", ",", ")" )
    }
-   private class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
+   private final class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
+def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems )
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
       def displayName = "GE.Seq"
@@ -143,7 +145,7 @@ trait GE {
 // BBB
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
 //   def outputs : IIdxSeq[ UGenIn ]
-//   def numOutputs : Int = outputs.size
+   def numOutputs : Int // = outputs.size
 
 // BBB
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )

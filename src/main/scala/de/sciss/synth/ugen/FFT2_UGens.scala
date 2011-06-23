@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Apr 08 04:10:01 BST 2011
+ * Created: Fri Jun 24 00:20:25 BST 2011
  * ScalaCollider-UGen version: 0.12
  */
 
@@ -147,9 +147,9 @@ object StereoConvolution2L {
  * @see [[de.sciss.synth.ugen.Convolution]]
  * @see [[de.sciss.synth.ugen.Convolution2L]]
  */
-final case class StereoConvolution2L(rate: Rate, in: GE, kernelL: GE, kernelR: GE, trig: GE, frameSize: GE, fadePeriods: GE) extends UGenSource.MultiOut("StereoConvolution2L") {
+final case class StereoConvolution2L(rate: Rate, in: GE, kernelL: GE, kernelR: GE, trig: GE, frameSize: GE, fadePeriods: GE) extends UGenSource.MultiOut("StereoConvolution2L", 2) {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, kernelL.expand, kernelR.expand, trig.expand, frameSize.expand, fadePeriods.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(2)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
 }
 /**
  * A UGen for triggered convolution in the time domain.

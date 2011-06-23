@@ -124,6 +124,8 @@ extends ControlProxyLike[ Impl ] {
    // ---- constructor ----
    SynthGraph.builder.addControlProxy( this )
 
+def numOutputs = outputRates.size
+
    def name: Option[ String ]
    def values: IIdxSeq[ Float ]
 

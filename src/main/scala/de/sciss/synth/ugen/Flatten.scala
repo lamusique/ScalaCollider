@@ -3,6 +3,7 @@ package ugen
 
 final case class Flatten( elem: GE )
 extends GE.Lazy {
+def numOutputs = sys.error( "TODO" )
    def rate = elem.rate
 
    def displayName = "Flatten"

@@ -52,6 +52,7 @@ object Mix {
 
    final case class Seq( elems: IIdxSeq[ GE ])
    extends GE.Lazy {
+def numOutputs = if( elems.isEmpty ) 0 else 1 // XXX korrekt?
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
 
       def displayName = "Mix.Seq"
@@ -62,6 +63,7 @@ object Mix {
 
    final case class Mono( elem: GE )
    extends GE.Lazy {
+def numOutputs = 1
       def rate = elem.rate
 
       def displayName = "Mix.Mono"

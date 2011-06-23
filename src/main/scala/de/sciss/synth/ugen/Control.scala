@@ -53,7 +53,8 @@ object Control {
    extends UGen.MultiOut( "Control", rate, IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty )
 }
 final case class Control( rate: Rate, values: IIdxSeq[ Float ], ctrlName: Option[ String ])
-extends UGenSource.MultiOut( "Control" ) {
+extends UGenSource.MultiOut( "Control", values.size ) {
+//def numOutputs = values.size
    protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
 
    protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
@@ -78,7 +79,8 @@ object TrigControl {
    final class UGen private[ugen]( numChannels: Int, override val specialIndex: Int )
    extends UGen.MultiOut( "TrigControl", control, IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty )
 }
-final case class TrigControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ]) extends UGenSource.MultiOut( "TrigControl" ) with ControlRated {
+final case class TrigControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ]) extends UGenSource.MultiOut( "TrigControl", values.size ) with ControlRated {
+//def numOutputs = values.size
    protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
 
    protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
@@ -105,7 +107,8 @@ object AudioControl {
    final class UGen private[ugen]( numChannels: Int, override val specialIndex: Int )
    extends UGen.MultiOut( "AudioControl", audio, IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty )
 }
-final case class AudioControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ]) extends UGenSource.MultiOut( "AudioControl" ) with AudioRated {
+final case class AudioControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ]) extends UGenSource.MultiOut( "AudioControl", values.size ) with AudioRated {
+//def numOutputs = values.size
    protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
    protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
       val specialIndex = UGenGraph.builder.addControl( values, ctrlName )

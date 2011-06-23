@@ -17,6 +17,7 @@ object KlangSpec {
 //   implicit def toGE( spec: KlangSpec ) : Multi[ GE ] = new SeqImpl( IIdxSeq( spec ))
 
    private class SeqImpl( val elems: IIdxSeq[ KlangSpec ]) extends Seq {
+def numOutputs = elems.size * 3
       def expand : UGenInLike = UGenInGroup( elems.flatMap( _.expand.outputs ))
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
       def displayName = elems.mkString( "KlangSpec.Seq" )
@@ -43,6 +44,7 @@ object KlangSpec {
    }
 }
 case class KlangSpec( freq: GE, amp: GE = 1, decay: GE = 0 ) extends GE {
+def numOutputs = 3
    def expand : UGenInLike = UGenInGroup( IIdxSeq( freq.expand, amp.expand, decay.expand ))
    def rate = MaybeRate.reduce( freq.rate, amp.rate, decay.rate )
    def displayName = "KlangSpec"

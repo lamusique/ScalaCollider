@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Apr 08 04:10:01 BST 2011
+ * Created: Fri Jun 24 00:32:22 BST 2011
  * ScalaCollider-UGen version: 0.12
  */
 
@@ -236,17 +236,17 @@ object DC {
    def kr(in: GE) = apply(control, in)
    def ar(in: GE) = apply(audio, in)
 }
-final case class DC(rate: Rate, in: GE) extends UGenSource.MultiOut("DC") {
+final case class DC(rate: Rate, in: GE) extends UGenSource.MultiOut("DC", in.numOutputs) {
    protected def makeUGens: UGenInLike = unwrap(in.expand.outputs)
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(_args.size)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
 }
 object Silent {
    def ar: Silent = ar()
    def ar(numChannels: Int = 1) = apply(numChannels)
 }
-final case class Silent(numChannels: Int) extends UGenSource.MultiOut("Silent") with AudioRated {
+final case class Silent(numChannels: Int) extends UGenSource.MultiOut("Silent", numChannels) with AudioRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numOutputs)(audio), _args)
 }
 /**
  * A line generator UGen that moves from a start value to the end value in a given duration.

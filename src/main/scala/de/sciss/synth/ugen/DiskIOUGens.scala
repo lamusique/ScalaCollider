@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Apr 08 04:10:01 BST 2011
+ * Created: Fri Jun 24 00:20:25 BST 2011
  * ScalaCollider-UGen version: 0.12
  */
 
@@ -50,9 +50,9 @@ object DiskIn {
  * @see [[de.sciss.synth.ugen.VDiskIn]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-final case class DiskIn(numChannels: Int, buf: GE, loop: GE) extends UGenSource.MultiOut("DiskIn") with HasSideEffect with AudioRated {
+final case class DiskIn(numChannels: Int, buf: GE, loop: GE) extends UGenSource.MultiOut("DiskIn", numChannels) with HasSideEffect with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, loop.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numOutputs)(audio), _args)
 }
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
@@ -162,7 +162,7 @@ object VDiskIn {
  * @see [[de.sciss.synth.ugen.DiskOut]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-final case class VDiskIn(numChannels: Int, buf: GE, speed: GE, loop: GE, sendID: GE) extends UGenSource.MultiOut("VDiskIn") with HasSideEffect with AudioRated {
+final case class VDiskIn(numChannels: Int, buf: GE, speed: GE, loop: GE, sendID: GE) extends UGenSource.MultiOut("VDiskIn", numChannels) with HasSideEffect with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, loop.expand, sendID.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numOutputs)(audio), _args)
 }

@@ -58,7 +58,7 @@ object UGen {
     *    hence can directly function as input to another UGen without expansion.
     */
    class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ]) extends UGenProxy with UGen {
-      final def numOutputs = 1
+//final def numOutputs = 1
       final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
    }
 
@@ -116,7 +116,7 @@ sealed trait UGenInLike {
  */
 sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ GE[ R, UGenIn[ R ]] {
    def rate : Rate
-//   final def numOutputs: Int = 1
+final def numOutputs: Int = 1
    private[synth] def outputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
    private[synth] final def unwrap( i: Int ) : UGenInLike = this   // don't bother about the index
    private[synth] final def flatOutputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
