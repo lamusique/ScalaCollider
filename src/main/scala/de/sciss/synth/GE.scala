@@ -32,7 +32,7 @@ import aux.Optional
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
+import ugen.{Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -152,6 +152,8 @@ trait GE {
 //   private[synth] def ops = new GEOps( this )
 
    def madd( mul: GE, add: GE ) = MulAdd( MaybeRate.max_?( rate, mul.rate, add.rate ), this, mul, add )
+
+   def flatten = Flatten( this )
 
    def poll: Poll = poll()
 

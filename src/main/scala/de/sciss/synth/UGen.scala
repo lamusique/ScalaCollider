@@ -101,7 +101,7 @@ sealed trait UGenInLike {
     * automatically wrap the index around numElements!
     */
    private[synth] def unwrap( i: Int ) : UGenInLike
-   private[synth] def flatten : IIdxSeq[ UGenIn ]
+   private[synth] def flatOutputs : IIdxSeq[ UGenIn ]
 }
 
 //object UGenIn {
@@ -119,7 +119,7 @@ sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ 
 //   final def numOutputs: Int = 1
    private[synth] def outputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
    private[synth] final def unwrap( i: Int ) : UGenInLike = this   // don't bother about the index
-   private[synth] final def flatten : IIdxSeq[ UGenIn ] = IIdxSeq( this )
+   private[synth] final def flatOutputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
 }
 
 object UGenInGroup {
@@ -135,7 +135,7 @@ object UGenInGroup {
 sealed trait UGenInGroup extends UGenInLike {
    def numOutputs : Int
    def outputs : IIdxSeq[ UGenInLike ]
-   final def flatten : IIdxSeq[ UGenIn ] = outputs.flatMap( _.flatten )
+   final def flatOutputs : IIdxSeq[ UGenIn ] = outputs.flatMap( _.flatOutputs )
 }
 
 sealed trait UGenProxy extends UGenIn {

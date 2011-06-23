@@ -414,13 +414,12 @@ x.free
 
 // using SendReply
 
-// XXX this is currently broken
 val x = play {
     // note that Pitch has two outputs, so feeding it with two input channels
     // produces two instances. In order to prevent the multi-channel-expansion
     // to create two SendReply objects and instead to catenate both pitch
-    // infos, we can use Multi.flatten
-    SendReply.kr( Impulse.kr( 10 ), Multi.flatten( Pitch.kr( In.ar( NumOutputBuses.ir, 2 ))))
+    // infos, we can use Flatten( _ )
+    SendReply.kr( Impulse.kr( 10 ), Pitch.kr( In.ar( NumOutputBuses.ir, 2 )).flatten )
 }
 val resp = OSCResponder.add {
     case OSCMessage( "/reply", x.id, _, freqL: Float, hasFreqL: Float, freqR: Float, hasFreqR: Float ) =>

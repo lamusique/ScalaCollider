@@ -68,7 +68,7 @@ object Mix {
       override def toString = displayName + "(" + elem + ")"
 
       def makeUGens : UGenInLike = {
-         val flat = elem.expand.flatten
+         val flat = elem.expand.flatOutputs
          if( flat.nonEmpty ) {
             flat.reduceLeft( BinaryOp.Plus.make1( _, _ ))
          } else UGenInGroup.empty
