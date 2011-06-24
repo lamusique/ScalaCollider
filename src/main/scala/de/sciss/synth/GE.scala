@@ -141,10 +141,7 @@ trait GE {
     *          be used to extract the different channels, e.g.
     *          `val Seq( left, right ) = Pan.ar( ... ).outputs`
     */
-
-// BBB
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def outputs : IIdxSeq[ UGenIn ]
+//   def outputs : IIdxSeq[ GE ]
    def numOutputs : Int // = outputs.size
 
 // BBB

@@ -267,7 +267,7 @@ object BinaryOp {
 
       protected def make1( a: Float, b: Float ) : Float
 
-      def name = { val cn = getClass.getName
+      def name: String = { val cn = getClass.getName
          val sz   = cn.length
          val i    = cn.indexOf( '$' ) + 1
          cn.charAt( i ).toLower + cn.substring( i + 1, if( cn.charAt( sz - 1 ) == '$' ) sz - 1 else sz )
