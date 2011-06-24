@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jun 24 00:20:25 BST 2011
- * ScalaCollider-UGen version: 0.12
+ * Created: Fri Jun 24 13:05:41 BST 2011
+ * ScalaCollider-UGens version: 0.12
  */
 
 package de.sciss.synth
@@ -425,11 +425,121 @@ final case class BufWr(rate: Rate, in: GE, buf: GE, index: GE, loop: GE) extends
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand).++(in.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+/**
+ * An autocorrelation based pitch following UGen. It is more accurate than `ZeroCrossing`, but
+ * more also more CPU costly. For most purposes the default settings can be used and only `in`
+ * needs to be supplied.
+ * 
+ * The UGen has two outputs: The first output is the frequency estimate in Hertz, the second
+ * output is a toggle `hasFreq`, which tells whether a pitch was found (1) or not (0). If
+ * the `clarify` argument is used, `hasFreq` has more fine grained information.
+ * 
+ * The pitch follower executes periodically at the rate specified by `execFreq` in cps.
+ * First it detects whether the input peak to peak amplitude is above the `ampThresh`.
+ * If it is not then no pitch estimation is performed, the `hasFreq` output is set to zero
+ * and the `freq` output is held at its previous value. Otherwise, the autocorrelation is
+ * calculated, and the first peak after the peak around the lag of zero that is
+ * above `peakThresh` times the amplitude of the peak at lag zero is reported.
+ */
 object Pitch {
-   def kr(in: GE, initFreq: GE = 440.0f, minFreq: GE = 60.0f, maxFreq: GE = 4000.0f, execFreq: GE = 100.0f, binsPerOct: GE = 16.0f, median: GE = 1.0f, ampThresh: GE = 0.01f, peakThresh: GE = 0.5f, downSample: GE = 1.0f) = apply(control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample)
+   
+   /**
+    * @param in              The signal to be analyzed.
+    * @param initFreq        The initial value of the `freq` output, until the first valid pitch is found.
+    * @param minFreq         The minimum frequency in Hertz to be considered for reporting.
+    *                        (This parameter is scalar only?)
+    * @param maxFreq         The maximum frequency in Hertz to be considered for reporting.
+    *                        (This parameter is scalar only?)
+    * @param execFreq        The frequency at which the pitch is estimated. This will be
+    *                        automatically clipped to be between `minFreq` and `maxFreq`.
+    *                        This parameter is scalar only.
+    * @param binsPerOct      A value which guides the search for the peak frequency in the first
+    *                        coarse step. Its setting does *not* affect the final pitch resolution;
+    *                        setting it larger will cause the coarse search to take longer, and setting
+    *                        it smaller will cause the fine search to take longer.
+    *                        This parameter is scalar only.
+    * @param median          This specifies the length of a median filter applied to the frequency output
+    *                        estimation. With the default value of `1` the filter is defeated. Median filtering
+    *                        can help eliminating single spikes and jitter. This will however add latency to
+    *                        the output.
+    *                        This parameter is scalar only.
+    * @param ampThresh       The minimum amplitude threshold above which the pitch follower
+    *                        operates. An input signal below this threshold is not analyzed.
+    *                        (This parameter is scalar only?)
+    * @param peakThresh      This is a threshold used to find the first peak in the autocorrelation signal which
+    *                        gives the reported frequency. It is a factor of the energy of the signal
+    *                        (autocorrelation coefficient at zero). Set this value higher (e.g. to `1`) to
+    *                        eliminate false frequencies corresponding to overtones.
+    *                        (This parameter is scalar only?)
+    * @param downSample      An integer factor by which the input signal is down sampled to reduce CPU overhead.
+    *                        This will also reduce the pitch resolution. The default value of `1` means that
+    *                        the input signal is not down sampled.
+    *                        This parameter is scalar only.
+    * @param clarity         If the `clarity` argument is greater than zero (it is zero by default) then the `hasFreq`
+    *                        output is given additional detail. Rather than simply being 1 when a pitch is detected,
+    *                        it is a "clarity" measure in the range between zero and one. (Technically, it's the height
+    *                        of the autocorrelation peak normalised by the height of the zero-lag peak.) It therefore
+    *                        gives a kind of measure of "purity" of the pitched signal.
+    *                        This parameter is scalar only.
+    */
+   def kr(in: GE, initFreq: GE = 440.0f, minFreq: GE = 60.0f, maxFreq: GE = 4000.0f, execFreq: GE = 100.0f, binsPerOct: GE = 16.0f, median: GE = 1.0f, ampThresh: GE = 0.01f, peakThresh: GE = 0.5f, downSample: GE = 1.0f, clarity: GE = 0.0f) = apply(control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample, clarity)
 }
-final case class Pitch(rate: Rate, in: GE, initFreq: GE, minFreq: GE, maxFreq: GE, execFreq: GE, binsPerOct: GE, median: GE, ampThresh: GE, peakThresh: GE, downSample: GE) extends UGenSource.MultiOut("Pitch", 2) {
-   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, initFreq.expand, minFreq.expand, maxFreq.expand, execFreq.expand, binsPerOct.expand, median.expand, ampThresh.expand, peakThresh.expand, downSample.expand))
+/**
+ * An autocorrelation based pitch following UGen. It is more accurate than `ZeroCrossing`, but
+ * more also more CPU costly. For most purposes the default settings can be used and only `in`
+ * needs to be supplied.
+ * 
+ * The UGen has two outputs: The first output is the frequency estimate in Hertz, the second
+ * output is a toggle `hasFreq`, which tells whether a pitch was found (1) or not (0). If
+ * the `clarify` argument is used, `hasFreq` has more fine grained information.
+ * 
+ * The pitch follower executes periodically at the rate specified by `execFreq` in cps.
+ * First it detects whether the input peak to peak amplitude is above the `ampThresh`.
+ * If it is not then no pitch estimation is performed, the `hasFreq` output is set to zero
+ * and the `freq` output is held at its previous value. Otherwise, the autocorrelation is
+ * calculated, and the first peak after the peak around the lag of zero that is
+ * above `peakThresh` times the amplitude of the peak at lag zero is reported.
+ * 
+ * @param in              The signal to be analyzed.
+ * @param initFreq        The initial value of the `freq` output, until the first valid pitch is found.
+ * @param minFreq         The minimum frequency in Hertz to be considered for reporting.
+ *                        (This parameter is scalar only?)
+ * @param maxFreq         The maximum frequency in Hertz to be considered for reporting.
+ *                        (This parameter is scalar only?)
+ * @param execFreq        The frequency at which the pitch is estimated. This will be
+ *                        automatically clipped to be between `minFreq` and `maxFreq`.
+ *                        This parameter is scalar only.
+ * @param binsPerOct      A value which guides the search for the peak frequency in the first
+ *                        coarse step. Its setting does *not* affect the final pitch resolution;
+ *                        setting it larger will cause the coarse search to take longer, and setting
+ *                        it smaller will cause the fine search to take longer.
+ *                        This parameter is scalar only.
+ * @param median          This specifies the length of a median filter applied to the frequency output
+ *                        estimation. With the default value of `1` the filter is defeated. Median filtering
+ *                        can help eliminating single spikes and jitter. This will however add latency to
+ *                        the output.
+ *                        This parameter is scalar only.
+ * @param ampThresh       The minimum amplitude threshold above which the pitch follower
+ *                        operates. An input signal below this threshold is not analyzed.
+ *                        (This parameter is scalar only?)
+ * @param peakThresh      This is a threshold used to find the first peak in the autocorrelation signal which
+ *                        gives the reported frequency. It is a factor of the energy of the signal
+ *                        (autocorrelation coefficient at zero). Set this value higher (e.g. to `1`) to
+ *                        eliminate false frequencies corresponding to overtones.
+ *                        (This parameter is scalar only?)
+ * @param downSample      An integer factor by which the input signal is down sampled to reduce CPU overhead.
+ *                        This will also reduce the pitch resolution. The default value of `1` means that
+ *                        the input signal is not down sampled.
+ *                        This parameter is scalar only.
+ * @param clarity         If the `clarity` argument is greater than zero (it is zero by default) then the `hasFreq`
+ *                        output is given additional detail. Rather than simply being 1 when a pitch is detected,
+ *                        it is a "clarity" measure in the range between zero and one. (Technically, it's the height
+ *                        of the autocorrelation peak normalised by the height of the zero-lag peak.) It therefore
+ *                        gives a kind of measure of "purity" of the pitched signal.
+ *                        This parameter is scalar only.
+ */
+final case class Pitch(rate: Rate, in: GE, initFreq: GE, minFreq: GE, maxFreq: GE, execFreq: GE, binsPerOct: GE, median: GE, ampThresh: GE, peakThresh: GE, downSample: GE, clarity: GE) extends UGenSource.MultiOut("Pitch", 2) {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, initFreq.expand, minFreq.expand, maxFreq.expand, execFreq.expand, binsPerOct.expand, median.expand, ampThresh.expand, peakThresh.expand, downSample.expand, clarity.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
 }
 object BufDelayN {

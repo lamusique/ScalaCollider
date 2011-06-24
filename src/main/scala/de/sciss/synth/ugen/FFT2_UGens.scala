@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jun 24 00:20:25 BST 2011
- * ScalaCollider-UGen version: 0.12
+ * Created: Fri Jun 24 13:05:41 BST 2011
+ * ScalaCollider-UGens version: 0.12
  */
 
 package de.sciss.synth
@@ -189,29 +189,29 @@ object RunningSum {
    
    /**
     * @param in              the input signal to sum up
-    * @param winSize         the length of the sliding window over the input signal.
+    * @param length          the length of the sliding window over the input signal.
     *                        these are the number of audio sample-frames for audio-rate calculation,
     *                        or the number of blocks for control-rate calculation summed up.
     */
-   def kr(in: GE, winSize: GE = 440.0f) = apply(control, in, winSize)
+   def kr(in: GE, length: GE = 440.0f) = apply(control, in, length)
    /**
     * @param in              the input signal to sum up
-    * @param winSize         the length of the sliding window over the input signal.
+    * @param length          the length of the sliding window over the input signal.
     *                        these are the number of audio sample-frames for audio-rate calculation,
     *                        or the number of blocks for control-rate calculation summed up.
     */
-   def ar(in: GE, winSize: GE = 440.0f) = apply(audio, in, winSize)
+   def ar(in: GE, length: GE = 440.0f) = apply(audio, in, length)
 }
 /**
  * A UGen calculating the running sum of an input signal over a given number of samples.
  * 
  * @param in              the input signal to sum up
- * @param winSize         the length of the sliding window over the input signal.
+ * @param length          the length of the sliding window over the input signal.
  *                        these are the number of audio sample-frames for audio-rate calculation,
  *                        or the number of blocks for control-rate calculation summed up.
  */
-final case class RunningSum(rate: MaybeRate, in: GE, winSize: GE) extends UGenSource.SingleOut("RunningSum") {
-   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, winSize.expand))
+final case class RunningSum(rate: MaybeRate, in: GE, length: GE) extends UGenSource.SingleOut("RunningSum") {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, length.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
       val _rate = rate.?|(_args(0).rate)
       new UGen.SingleOut(name, _rate, _args)

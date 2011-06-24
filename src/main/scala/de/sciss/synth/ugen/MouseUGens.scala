@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jun 24 00:20:25 BST 2011
- * ScalaCollider-UGen version: 0.12
+ * Created: Fri Jun 24 13:05:41 BST 2011
+ * ScalaCollider-UGens version: 0.12
  */
 
 package de.sciss.synth

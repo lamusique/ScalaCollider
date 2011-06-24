@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jun 24 00:20:25 BST 2011
- * ScalaCollider-UGen version: 0.12
+ * Created: Fri Jun 24 13:05:41 BST 2011
+ * ScalaCollider-UGens version: 0.12
  */
 
 package de.sciss.synth
@@ -19,7 +19,7 @@ object WhiteNoise {
 }
 final case class WhiteNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("WhiteNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, _args), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
 }
 object GrayNoise {
    def kr: GrayNoise = kr()
@@ -29,7 +29,7 @@ object GrayNoise {
 }
 final case class GrayNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("GrayNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, _args), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
 }
 object ClipNoise {
    def kr: ClipNoise = kr()
@@ -39,7 +39,7 @@ object ClipNoise {
 }
 final case class ClipNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("ClipNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, _args), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
 }
 object PinkNoise {
    def kr: PinkNoise = kr()
@@ -49,7 +49,7 @@ object PinkNoise {
 }
 final case class PinkNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("PinkNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, _args), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
 }
 object BrownNoise {
    def kr: BrownNoise = kr()
@@ -59,7 +59,7 @@ object BrownNoise {
 }
 final case class BrownNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("BrownNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, _args), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
 }
 /**
  * A UGen generating random impulses with values ranging from
