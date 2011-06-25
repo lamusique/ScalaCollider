@@ -218,11 +218,15 @@ object Server {
             loop {
                if( connectionAlive ) {
                   try {
+//println( "?? Connect")
                      c.start
+//println( "!! Connect")
+//c.dumpOSC()
                      c.action = (msg, addr, when) => this ! msg
                      var tnotify = 0L
                      def snotify {
-                        tnotify = System.currentTimeMillis + 5000
+                        tnotify = System.currentTimeMillis + 500
+//println( ">>> NOT" )
                         c ! OSCServerNotifyMessage( true )
                      }
                      snotify
@@ -232,9 +236,11 @@ object Server {
                         case RemoveListener( l )=> actRemoveList( l )
                         case Abort              => abortHandler( None )
                         case OSCMessage( "/done", "/notify" ) => {
+//println( "<<< NOT" )
                            var tstatus = 0L
                            def sstatus {
                               tstatus = System.currentTimeMillis + 500
+//println( ">>> STAT" )
                               c ! OSCStatusMessage
                            }
                            sstatus
@@ -244,6 +250,7 @@ object Server {
                               case RemoveListener( l )=> actRemoveList( l )
                               case Abort              => abortHandler( None )
                               case counts: OSCStatusReplyMessage => {
+//println( "<<< STAT" )
                                  val s = new Server( name, c, addr, options, clientOptions )
                                  s.counts = counts
                                  dispatch( Preparing( s ))
@@ -272,6 +279,7 @@ object Server {
                      }}
                   }
                   catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
+//println( "!= Connect")
                      val tretry  = System.currentTimeMillis + 500
                      var looping = true
                      loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
