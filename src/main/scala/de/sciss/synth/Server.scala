@@ -28,22 +28,18 @@
 
 package de.sciss.synth
 
-import java.net.{ ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket, SocketAddress }
-import java.io.{ BufferedReader, File, InputStreamReader, IOException }
-import java.util.{ Timer, TimerTask }
-import actors.{ Actor, Channel, DaemonActor, Future, InputChannel, OutputChannel, TIMEOUT }
-import collection.breakOut
-import collection.immutable.Queue
+import java.net.{ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
+import java.io.{BufferedReader, File, InputStreamReader, IOException}
+import java.util.{Timer, TimerTask}
+import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
 import concurrent.SyncVar
-import osc.{ OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
-             OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec }
+import osc.{OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
+            OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec}
 import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 import sys.error
-import de.sciss.osc.{Dump, Channel => OSCChannel, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
+import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
+import java.nio.channels.ClosedChannelException
 
-/**
- * 	@version    0.16, 03-Aug-10
- */
 object Server {
    private val allSync  = new AnyRef
 //   private var allVar   = Set.empty[ Server ]
@@ -62,7 +58,7 @@ object Server {
            ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
       val sc = initBoot( name, options, clientOptions )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
-      sc.start
+      sc.start()
       sc
    }
 
@@ -82,11 +78,11 @@ object Server {
       val (addr, c) = prepareConnection( options, clientOptions )
       val sc = new ConnectionImpl( name, c, addr, options, clientOptions, true )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
-      sc.start
+      sc.start()
       sc
    }
 
-   def test( code: Server => Unit ) : Unit = test()( code )
+   def test( code: Server => Unit ) { test()( code )}
    
    /**
     *    Utility method to test code quickly with a running server. This boots a
@@ -101,12 +97,12 @@ object Server {
       sc.addListener {
          case ServerConnection.Running( srv ) => sync.synchronized { s = srv }; code( srv )
       }
-      Runtime.getRuntime().addShutdownHook( new Thread { override def run = sync.synchronized {
+      Runtime.getRuntime.addShutdownHook( new Thread { override def run() { sync.synchronized {
          if( s != null ) {
             if( s.condition != Server.Offline ) s.quit
          } else sc.abort
-      }})
-      sc.start
+      }}})
+      sc.start()
    }
 
    @throws( classOf[ IOException ])
@@ -140,7 +136,7 @@ object Server {
          case TCP => {
             val ss = new ServerSocket( 0 )
             try {
-               ss.getLocalPort()
+               ss.getLocalPort
             } finally {
                ss.close()
             }
@@ -148,7 +144,7 @@ object Server {
          case UDP => {
             val ds = new DatagramSocket()
             try {
-               ds.getLocalPort()
+               ds.getLocalPort
             } finally {
                ds.close()
             }
@@ -225,40 +221,51 @@ object Server {
 
       val actor = new DaemonActor {
 //         var state: Condition = Connecting
-         def act {
+         def act() {
 //            dispatch( Connecting )
             loop {
                if( connectionAlive ) {
+                  def retryConnect() {
+                     val tretry  = System.currentTimeMillis + 500
+                     var looping = true
+                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
+                        case TIMEOUT            => looping = false
+                        case AddListener( l )   => actAddList( l )
+                        case RemoveListener( l )=> actRemoveList( l )
+                        case Abort              => abortHandler( None )
+                     }}
+                  }
                   try {
 //println( "?? Connect")
 //                     c.start
+println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
                      c.connect()
 //println( "!! Connect")
 //c.dumpOSC()
                      c.action = p => this ! p
                      var tnotify = 0L
-                     def snotify {
+                     def snotify() {
                         tnotify = System.currentTimeMillis + 500
 //println( ">>> NOT" )
                         c ! OSCServerNotifyMessage( true )
                      }
-                     snotify
+                     snotify()
                      loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
-                        case TIMEOUT            => snotify // loop is retried
+                        case TIMEOUT            => snotify() // loop is retried
                         case AddListener( l )   => actAddList( l )
                         case RemoveListener( l )=> actRemoveList( l )
                         case Abort              => abortHandler( None )
                         case Message( "/done", "/notify" ) => {
 //println( "<<< NOT" )
                            var tstatus = 0L
-                           def sstatus {
+                           def sstatus() {
                               tstatus = System.currentTimeMillis + 500
 //println( ">>> STAT" )
                               c ! OSCStatusMessage
                            }
-                           sstatus
+                           sstatus()
                            loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
-                              case TIMEOUT            => sstatus // loop is retried
+                              case TIMEOUT            => sstatus() // loop is retried
                               case AddListener( l )   => actAddList( l )
                               case RemoveListener( l )=> actRemoveList( l )
                               case Abort              => abortHandler( None )
@@ -267,7 +274,7 @@ object Server {
                                  val s = new Server( name, c, addr, options, clientOptions )
                                  s.counts = counts
                                  dispatch( Preparing( s ))
-                                 s.initTree
+                                 s.initTree()
                                  dispatch( SCRunning( s ))
                                  createAliveThread( s )
                                  loop { react {
@@ -276,7 +283,7 @@ object Server {
                                     case RemoveListener( l )=> actRemoveList( l )
                                     case Abort              => abortHandler( Some( s ))
                                     case ServerConnection.Aborted => {
-                                       s.serverOffline
+                                       s.serverOffline()
                                        dispatch( Aborted )
                                        loop { react {
                                           case AddListener( l )   => actAddList( l ); actDispatch( l, Aborted )
@@ -291,16 +298,10 @@ object Server {
                         }
                      }}
                   }
-                  catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
+                  catch {
+                     case _: ConnectException => retryConnect()
+//                     case _: ClosedChannelException => retryConnect() // thrown when in TCP mode and socket not yet available
 //println( "!= Connect")
-                     val tretry  = System.currentTimeMillis + 500
-                     var looping = true
-                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
-                        case TIMEOUT            => looping = false
-                        case AddListener( l )   => actAddList( l )
-                        case RemoveListener( l )=> actRemoveList( l )
-                        case Abort              => abortHandler( None )
-                     }}
                   }
                } else loop { react {
                   case Abort  => reply ()
@@ -310,11 +311,11 @@ object Server {
          }
 
          private def abortHandler( server: Option[ Server ]) {
-            handleAbort
+            handleAbort()
             val from = sender
             loop { react {
                case ServerConnection.Aborted => {
-                  server.foreach( _.serverOffline )
+                  server.foreach( _.serverOffline() )
                   dispatch( ServerConnection.Aborted )
                   from ! ()
                }
@@ -355,7 +356,7 @@ object Server {
       lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
       lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
 
-      def handleAbort : Unit
+      def handleAbort() : Unit
       def connectionAlive : Boolean
       def c : OSCClient
       def clientOptions : ClientOptions
@@ -366,13 +367,13 @@ object Server {
       ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
         val clientOptions: ClientOptions, aliveThread: Boolean )
    extends ConnectionImplLike {
-      import ConnectionImplLike._
+//      import ConnectionImplLike._
 
-      def start { actor.start }
+      def start() { actor.start() }
 
       override def toString = "connect<" + name + ">"
 
-      def handleAbort {}
+      def handleAbort() {}
       def connectionAlive = true // XXX could add a timeout?
       def createAliveThread( s: Server ) {
          if( aliveThread ) s.startAliveThread( 1.0f, 0.25f, 40 ) // allow for a luxury 10 seconds absence
@@ -383,7 +384,7 @@ object Server {
       ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
         val clientOptions: ClientOptions, aliveThread: Boolean )
    extends ConnectionImplLike {
-      import ConnectionImplLike._
+//      import ConnectionImplLike._
 
       lazy val p = {
          val processArgs   = options.toRealtimeArgs
@@ -395,20 +396,20 @@ object Server {
       }
 
       lazy val processThread = new Thread {
-         override def run = try {
+         override def run() { try {
             p.waitFor()
          } catch { case e: InterruptedException =>
             p.destroy()
          } finally {
             println( "scsynth terminated (" + p.exitValue +")" )
             actor ! ServerConnection.Aborted
-         }
+         }}
       }
 
-      def start {
+      def start() {
          val inReader   = new BufferedReader( new InputStreamReader( p.getInputStream ))
          val postActor  = new DaemonActor {
-            def act {
+            def act() {
                var isOpen = true
                loopWhile( isOpen ) {
                   val line = inReader.readLine
@@ -419,14 +420,14 @@ object Server {
          }
 
          // ...and go
-         postActor.start
-         processThread.start
-         actor.start
+         postActor.start()
+         processThread.start()
+         actor.start()
       }
 
       override def toString = "boot<" + name + ">"
 
-      def handleAbort { processThread.interrupt() }
+      def handleAbort() { processThread.interrupt() }
       def connectionAlive = processThread.isAlive
       def createAliveThread( s: Server ) {
          // note that we optimistically assume that if we boot the server, it
@@ -484,7 +485,7 @@ extends ServerLike {
 
    // ---- constructor ----
    {
-      OSCReceiverActor.start
+      OSCReceiverActor.start()
       c.action = OSCReceiverActor.messageReceived
       add( server )
    }
@@ -501,26 +502,26 @@ extends ServerLike {
 //   def bufferAllocator = bufferAllocatorVar
 
    object nodes {
-      private var allocator = new NodeIDAllocator( clientOptions.clientID, clientOptions.nodeIDOffset )
+      private val allocator = new NodeIDAllocator( clientOptions.clientID, clientOptions.nodeIDOffset )
 
       def nextID = allocator.alloc
    }
 
    object busses {
-      private var controlAllocator = new ContiguousBlockAllocator( options.controlBusChannels )
-      private var audioAllocator = new ContiguousBlockAllocator( options.audioBusChannels, options.firstPrivateBus )
+      private val controlAllocator = new ContiguousBlockAllocator( options.controlBusChannels )
+      private val audioAllocator = new ContiguousBlockAllocator( options.audioBusChannels, options.firstPrivateBus )
 
       def allocControl( numChannels: Int ) = controlAllocator.alloc( numChannels )
       def allocAudio( numChannels: Int ) = audioAllocator.alloc( numChannels )
-      def freeControl( index: Int ) = controlAllocator.free( index )
-      def freeAudio( index: Int ) = audioAllocator.free( index )
+      def freeControl( index: Int ) { controlAllocator.free( index )}
+      def freeAudio( index: Int ) { audioAllocator.free( index )}
    }
 
    object buffers {
-      private var allocator = new ContiguousBlockAllocator( options.audioBuffers )
+      private val allocator = new ContiguousBlockAllocator( options.audioBuffers )
 
       def alloc( numChannels: Int ) = allocator.alloc( numChannels )
-      def free( index: Int ) = allocator.free( index )
+      def free( index: Int ) { allocator.free( index )}
    }
 
    private object uniqueID {
@@ -607,7 +608,7 @@ extends ServerLike {
     */
    def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) {
       val a = new DaemonActor {
-         def act {
+         def act() {
             val futCh   = new Channel[ Any ]( Actor.self )
             val oh      = new OSCTimeOutHandler( handler, futCh )
             OSCReceiverActor.addHandler( oh )
@@ -633,7 +634,7 @@ extends ServerLike {
 
    def sampleRate = counts.sampleRate
   
-   def dumpTree : Unit = dumpTree( false )
+   def dumpTree { dumpTree( false )}
 
    def dumpTree( controls: Boolean ) {
       rootNode.dumpTree( controls )
@@ -646,7 +647,7 @@ extends ServerLike {
             conditionVar = newCondition
             if( newCondition == Offline ) {
                pendingCondition = NoPending
-               serverLost
+               serverLost()
             }
 //            else if( newCondition == Running ) {
 //               if( pendingCondition == Booting ) {
@@ -669,14 +670,14 @@ extends ServerLike {
          if( aliveThread.isEmpty ) {
             val statusWatcher = new StatusWatcher( delay, period, deathBounces )
             aliveThread = Some( statusWatcher )
-            statusWatcher.start
+            statusWatcher.start()
          }
       }
    }
 
-   def stopAliveThread {
+   def stopAliveThread() {
       condSync.synchronized {
-         aliveThread.foreach( _.stop )
+         aliveThread.foreach( _.stop() )
          aliveThread = None
       }
   }
@@ -708,14 +709,14 @@ extends ServerLike {
    private def serverOffline() {
       condSync.synchronized {
 //         bootThread = None
-         stopAliveThread
+         stopAliveThread()
          condition = Offline
       }
    }
 
    def quit {
       this ! quitMsg
-      cleanUpAfterQuit
+      cleanUpAfterQuit()
    }
 
    def quitMsg = OSCServerQuitMessage
@@ -723,7 +724,7 @@ extends ServerLike {
    private def cleanUpAfterQuit() {
       try {
          condSync.synchronized {
-            stopAliveThread
+            stopAliveThread()
             pendingCondition = Terminating
          }
       }
@@ -745,11 +746,11 @@ extends ServerLike {
 
    def dispose {
       condSync.synchronized {
-         serverOffline
+         serverOffline()
          remove( this )
 //         c.dispose // = (msg: Message, sender: SocketAddress, time: Long) => ()
          c.close()
-         OSCReceiverActor.dispose
+         OSCReceiverActor.dispose()
 //         c.dispose
       }
    }
@@ -774,7 +775,7 @@ extends ServerLike {
 //      timer.setInitialDelay( delayMillis )
 
       def start() {
-         stop
+         stop()
          timer = {
             val t = new Timer( "StatusWatcher", true )
             t.schedule( new TimerTask {
@@ -922,7 +923,7 @@ extends ServerLike {
          handled
       }
       def removed {}
-      def timedOut {
+      def timedOut() {
          if( fun.isDefinedAt( TIMEOUT )) try {
             fun.apply( TIMEOUT )
          } catch { case e => e.printStackTrace() }
