@@ -30,7 +30,7 @@ package de.sciss
 
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import osc.OSCPacket
+import osc.Packet
 import synth._
 import aux.GraphFunction
 package synth {
@@ -146,15 +146,15 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //      ( implicit view: T => Multi[ GE[ R ]] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction[ R ]( thunk )
 
    // Buffer convenience
-   def message[T]( msg: => OSCPacket ) = Completion[T]( Some( _ => msg ), None )
-   def message[T]( msg: T => OSCPacket ) = Completion[T]( Some( msg ), None )
+   def message[T]( msg: => Packet ) = Completion[T]( Some( _ => msg ), None )
+   def message[T]( msg: T => Packet ) = Completion[T]( Some( msg ), None )
    def action[T]( action: => Unit ) = Completion[T]( None, Some( _ => action ))
    def action[T]( action: T => Unit ) = Completion[T]( None, Some( action ))
-   def complete[T]( msg: => OSCPacket, action: => Unit ) = Completion[T]( Some( _ => msg ), Some( _ => action ))
-   def complete[T]( msg: T => OSCPacket, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
-   def complete[T]( msg: => OSCPacket, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
-   def complete[T]( msg: T => OSCPacket, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
-   implicit def messageToOption( msg: OSCPacket ) = Some( msg )
+   def complete[T]( msg: => Packet, action: => Unit ) = Completion[T]( Some( _ => msg ), Some( _ => action ))
+   def complete[T]( msg: T => Packet, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
+   def complete[T]( msg: => Packet, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
+   def complete[T]( msg: T => Packet, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
+   implicit def messageToOption( msg: Packet ) = Some( msg )
 
    // explicit methods
 

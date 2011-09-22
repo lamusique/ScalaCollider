@@ -34,7 +34,7 @@ import de.sciss.synth.{ Completion => Comp }
 import osc.{OSCSyncedMessage, OSCSynthDefFreeMessage, OSCSynthDefLoadMessage, OSCSynthDefRecvMessage}
 import File.{ separator => sep }
 import actors.TIMEOUT
-import de.sciss.osc.{OSCBundle, OSCMessage, OSCPacket}
+import de.sciss.osc.{Bundle, Message, Packet}
 import sys.error
 
 /**
@@ -56,13 +56,13 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       this
    }
 
-   private def sendWithAction( server: Server, msgFun: Option[ OSCPacket ] => OSCMessage, completion: Completion,
+   private def sendWithAction( server: Server, msgFun: Option[ Packet ] => Message, completion: Completion,
                                name: String ) {
       completion.action map { action =>
          val syncMsg    = server.syncMsg
          val syncID     = syncMsg.id
-         val compPacket: OSCPacket = completion.message match {
-            case Some( msgFun2 ) => OSCBundle( msgFun2( syndef ), syncMsg )
+         val compPacket: Packet = completion.message match {
+            case Some( msgFun2 ) => Bundle( msgFun2( syndef ), syncMsg )
             case None            => syncMsg
          }
          server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
@@ -74,7 +74,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       }
    }
 
-//   private def sendWithAction( msg: OSCMessage, syncID: Int, action: SynthDef => Unit, name: String ) {
+//   private def sendWithAction( msg: Message, syncID: Int, action: SynthDef => Unit, name: String ) {
 //      server !? (6000L, msg, {
 //         case OSCSyncedMessage( syncID ) => action( syndef )
 //         case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
@@ -82,7 +82,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 //   }
   
    def recvMsg: OSCSynthDefRecvMessage = recvMsg( None )
-   def recvMsg( completion: Option[ OSCPacket ]) = OSCSynthDefRecvMessage( toBytes, completion )
+   def recvMsg( completion: Option[ Packet ]) = OSCSynthDefRecvMessage( toBytes, completion )
   
   	def toBytes : ByteBuffer = {
     	val baos	= new ByteArrayOutputStream
@@ -113,7 +113,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
   
    def loadMsg : OSCSynthDefLoadMessage = loadMsg()
   
-   def loadMsg( dir: String = defaultDir, completion: Option[ OSCPacket ] = None ) =
+   def loadMsg( dir: String = defaultDir, completion: Option[ Packet ] = None ) =
 	   OSCSynthDefLoadMessage( dir + sep + name + ".scsyndef", completion )
 
    def play: Synth = play()
@@ -142,7 +142,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
    }
 
    def hexDump {
-      OSCPacket.printHexOn( Console.out, toBytes )
+      Packet.printHexOn( Console.out, toBytes )
    }
 
    def testTopoSort {

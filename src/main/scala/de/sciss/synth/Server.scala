@@ -28,7 +28,7 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{ OSCChannel, OSCClient, OSCMessage, OSCPacket, OSCTransport, TCP, UDP }
+import de.sciss.osc.{ Channel => OSCChannel, Client => OSCClient, Message, Packet, Transport, TCP, UDP }
 import java.net.{ ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket, SocketAddress }
 import java.io.{ BufferedReader, File, InputStreamReader, IOException }
 import java.util.{ Timer, TimerTask }
@@ -135,7 +135,7 @@ object Server {
       (addr, c)
    }
    
-   def allocPort( transport: OSCTransport ) : Int = {
+   def allocPort( transport: Transport ) : Int = {
       transport match {
          case TCP => {
             val ss = new ServerSocket( 0 )
@@ -187,7 +187,7 @@ object Server {
 
    case class Counts( c: OSCStatusReplyMessage )
 
-   private def createClient( transport: OSCTransport, serverAddr: InetSocketAddress,
+   private def createClient( transport: Transport, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
 //      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
       val client        = OSCClient.withAddress( transport, clientAddr, ServerCodec )
@@ -235,7 +235,7 @@ object Server {
                         case AddListener( l )   => actAddList( l )
                         case RemoveListener( l )=> actRemoveList( l )
                         case Abort              => abortHandler( None )
-                        case OSCMessage( "/done", "/notify" ) => {
+                        case Message( "/done", "/notify" ) => {
 //println( "<<< NOT" )
                            var tstatus = 0L
                            def sstatus {
@@ -515,7 +515,7 @@ extends ServerLike {
       def nextID = this.synchronized { val res = id; id += 1; res }
    }
 
-   def !( p: OSCPacket ) { c ! p }
+   def !( p: Packet ) { c ! p }
 
    /**
     * Sends out an OSC packet that generates some kind of reply, and
@@ -545,7 +545,7 @@ extends ServerLike {
     *
     * @see  [[scala.actors.Futures]]
     */
-   def !![ A ]( p: OSCPacket, handler: PartialFunction[ OSCMessage, A ]) : RevocableFuture[ A ] = {
+   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ] = {
       val c    = new Channel[ A ]( Actor.self )
       val a = new FutureActor[ A ]( c ) {
          val sync    = new AnyRef
@@ -592,7 +592,7 @@ extends ServerLike {
     *
     * @see  [[scala.actors.TIMEOUT]]
     */
-   def !?( timeOut: Long, p: OSCPacket, handler: PartialFunction[ Any, Unit ]) {
+   def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) {
       val a = new DaemonActor {
          def act {
             val futCh   = new Channel[ Any ]( Actor.self )
@@ -734,7 +734,7 @@ extends ServerLike {
       condSync.synchronized {
          serverOffline
          remove( this )
-         c.dispose // = (msg: OSCMessage, sender: SocketAddress, time: Long) => ()
+         c.dispose // = (msg: Message, sender: SocketAddress, time: Long) => ()
          OSCReceiverActor.dispose
 //         c.dispose
       }
@@ -811,7 +811,7 @@ extends ServerLike {
    private object OSCReceiverActor extends DaemonActor {
       private case object Clear
       private case object Dispose
-      private case class  ReceivedMessage( msg: OSCMessage, sender: SocketAddress, time: Long )
+      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
       private case class  AddHandler( h: OSCHandler )
       private case class  RemoveHandler( h: OSCHandler )
       private case class  TimeOutHandler( h: OSCTimeOutHandler )
@@ -839,7 +839,7 @@ extends ServerLike {
 
       // ------------ OSCListener interface ------------
 
-      def messageReceived( msg: OSCMessage, sender: SocketAddress, time: Long ) {
+      def messageReceived( msg: Message, sender: SocketAddress, time: Long ) {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : ! : " + msg )
          this ! ReceivedMessage( msg, sender, time )
       }
@@ -883,9 +883,9 @@ extends ServerLike {
 
    // -------- internal OSCHandler implementations --------
 
-   private class OSCInfHandler[ A ]( fun: PartialFunction[ OSCMessage, A ], ch: OutputChannel[ A ])
+   private class OSCInfHandler[ A ]( fun: PartialFunction[ Message, A ], ch: OutputChannel[ A ])
    extends OSCHandler {
-      def handle( msg: OSCMessage ) : Boolean = {
+      def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
          if( handled ) try {
@@ -898,7 +898,7 @@ extends ServerLike {
 
    private class OSCTimeOutHandler( fun: PartialFunction[ Any, Unit ], ch: OutputChannel[ Any ])
    extends OSCHandler {
-      def handle( msg: OSCMessage ) : Boolean = {
+      def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )
          if( handled ) try {

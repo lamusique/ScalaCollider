@@ -4,8 +4,8 @@ import java.io.{ IOException, RandomAccessFile }
 class ScalaColliderProject( info: ProjectInfo ) extends DefaultProject( info ) {
    // ---- dependancies ----
 
-   val dep1 = "de.sciss" %% "scalaosc" % "0.23"
-   val dep2 = "de.sciss" %% "scalaaudiofile" % "0.16"
+   val dep1 = "de.sciss" %% "scalaosc" % "0.30-SNAPSHOT"
+   val dep2 = "de.sciss" %% "scalaaudiofile" % "0.20"
    lazy val demo = demoAction
 
    // ---- publishing ----

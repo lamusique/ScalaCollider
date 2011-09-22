@@ -28,8 +28,8 @@
 
 package de.sciss.synth.osc
 
-import de.sciss.osc.{ OSCException, OSCMessage, OSCPacket, OSCPacketCodec }
-import OSCPacket._
+import de.sciss.osc.{ OSCException, Message, Packet, PacketCodec }
+import Packet._
 import de.sciss.synth.io.{ AudioFileType, SampleFormat }
 import java.nio.ByteBuffer
 import collection.breakOut
@@ -40,12 +40,12 @@ import de.sciss.synth._
 /**
  *    @version	0.13, 05-Aug-10
  */
-//trait OSCMessageCodec {
-//	def decodeMessage( name: String, b: ByteBuffer ) : OSCMessage
+//trait MessageCodec {
+//	def decodeMessage( name: String, b: ByteBuffer ) : Message
 //}
 //
-object ServerCodec extends OSCPacketCodec {
-	private val decodeStatusReply: (String, ByteBuffer) => OSCMessage = (name, b) => {
+object ServerCodec extends PacketCodec {
+	private val decodeStatusReply: (String, ByteBuffer) => Message = (name, b) => {
 		// ",iiiiiffdd"
 		if( (b.getLong != 0x2C69696969696666L) || (b.getShort != 0x6464) ) decodeFail
 		skipToValues( b )
@@ -65,7 +65,7 @@ object ServerCodec extends OSCPacketCodec {
 		                       avgCPU, peakCPU, sampleRate, actualSampleRate )
 	}
 
-   private val decodeSynced: (String, ByteBuffer) => OSCMessage = (name, b) => {
+   private val decodeSynced: (String, ByteBuffer) => Message = (name, b) => {
       // ",i"
       if( b.getShort() != 0x2C69 ) decodeFail
       skipToValues( b )
@@ -76,7 +76,7 @@ object ServerCodec extends OSCPacketCodec {
    }
 
 	private def decodeNodeChange( factory: OSCNodeMessageFactory ) :
-      (String, ByteBuffer) => OSCMessage = (name, b) => {
+      (String, ByteBuffer) => Message = (name, b) => {
       
 		// ",iiiii[ii]"
 		if( (b.getInt() != 0x2C696969) || (b.getShort() != 0x6969) ) decodeFail
@@ -101,7 +101,7 @@ object ServerCodec extends OSCPacketCodec {
 		} else decodeFail
 	}
 
-   private val decodeBufferInfo: (String, ByteBuffer) => OSCMessage = (name, b) => {
+   private val decodeBufferInfo: (String, ByteBuffer) => Message = (name, b) => {
       // ",[iiif]*N"
       if( b.get() != 0x2C ) decodeFail
       var cnt = 0
@@ -120,7 +120,7 @@ object ServerCodec extends OSCPacketCodec {
       OSCBufferInfoMessage( infos: _* )
    }
 
-   private val msgDecoders = Map[ String, (String, ByteBuffer) => OSCMessage ](
+   private val msgDecoders = Map[ String, (String, ByteBuffer) => Message ](
       "/status.reply"   -> decodeStatusReply,
       "/n_go"			   -> decodeNodeChange( OSCNodeGoMessage ),
       "/n_end"		      -> decodeNodeChange( OSCNodeEndMessage ),
@@ -133,10 +133,10 @@ object ServerCodec extends OSCPacketCodec {
       "status.reply"	   -> decodeStatusReply
    )
 
-   private val superDecoder: (String, ByteBuffer ) => OSCMessage =
+   private val superDecoder: (String, ByteBuffer ) => Message =
       (name, b) => super.decodeMessage( name, b )
 
-   override protected def decodeMessage( name: String, b: ByteBuffer ) : OSCMessage = {
+   override protected def decodeMessage( name: String, b: ByteBuffer ) : Message = {
         msgDecoders.getOrElse( name, superDecoder ).apply( name, b )
 /*		val dec = msgDecoders.get( name )
 		if( dec.isDefined ) {
@@ -197,7 +197,7 @@ trait OSCReceive extends OSCServerMessage
  * all asynchronous operations up to the corresponding `/sync` message (i.e. with
  * the same id) have been completed
  */
-final case class OSCSyncedMessage( id: Int ) extends OSCMessage( "/synced", id )
+final case class OSCSyncedMessage( id: Int ) extends Message( "/synced", id )
 with OSCReceive
 
 /**
@@ -209,17 +209,17 @@ with OSCReceive
  *                reply message. typically the id is incremented by 1 for each
  *                `/sync` message sent out. 
  */
-final case class OSCSyncMessage( id: Int ) extends OSCMessage( "/sync", id )
+final case class OSCSyncMessage( id: Int ) extends Message( "/sync", id )
 with OSCAsyncSend
 
 final case class OSCStatusReplyMessage( numUGens: Int, numSynths: Int, numGroups: Int,
                                   numDefs: Int, avgCPU: Float, peakCPU: Float,
                                   sampleRate: Double, actualSampleRate: Double )
-extends OSCMessage( "/status.reply", 1, numUGens, numSynths, numGroups, numDefs, avgCPU, peakCPU,
+extends Message( "/status.reply", 1, numUGens, numSynths, numGroups, numDefs, avgCPU, peakCPU,
                     sampleRate, actualSampleRate )
 with OSCReceive
 
-case object OSCStatusMessage extends OSCMessage( "/status" )
+case object OSCStatusMessage extends Message( "/status" )
 with OSCSyncQuery
 
 //trait OSCNodeChange {
@@ -249,136 +249,136 @@ sealed trait OSCNodeChange extends OSCReceive {
 }
 
 protected[synth] sealed trait OSCNodeMessageFactory {
-   def apply( nodeID: Int, info: OSCNodeInfo ) : OSCMessage
+   def apply( nodeID: Int, info: OSCNodeInfo ) : Message
 }
 
 object OSCNodeGoMessage extends OSCNodeMessageFactory
 final case class OSCNodeGoMessage( nodeID: Int, info: OSCNodeInfo )
-extends OSCMessage( "/n_go", info.toList( nodeID ): _* ) with OSCNodeChange
+extends Message( "/n_go", info.toList( nodeID ): _* ) with OSCNodeChange
 
 object OSCNodeEndMessage extends OSCNodeMessageFactory
 final case class OSCNodeEndMessage( nodeID: Int, info: OSCNodeInfo )
-extends OSCMessage( "/n_end", info.toList( nodeID ): _* ) with OSCNodeChange
+extends Message( "/n_end", info.toList( nodeID ): _* ) with OSCNodeChange
 
 object OSCNodeOnMessage extends OSCNodeMessageFactory
 final case class OSCNodeOnMessage( nodeID: Int, info: OSCNodeInfo )
-extends OSCMessage( "/n_on", info.toList( nodeID ): _* ) with OSCNodeChange
+extends Message( "/n_on", info.toList( nodeID ): _* ) with OSCNodeChange
 
 object OSCNodeOffMessage extends OSCNodeMessageFactory
 final case class OSCNodeOffMessage( nodeID: Int, info: OSCNodeInfo )
-extends OSCMessage( "/n_off", info.toList( nodeID ): _* ) with OSCNodeChange
+extends Message( "/n_off", info.toList( nodeID ): _* ) with OSCNodeChange
 
 object OSCNodeMoveMessage extends OSCNodeMessageFactory
 final case class OSCNodeMoveMessage( nodeID: Int, info: OSCNodeInfo )
-extends OSCMessage( "/n_move", info.toList( nodeID ): _* ) with OSCNodeChange
+extends Message( "/n_move", info.toList( nodeID ): _* ) with OSCNodeChange
 
 object OSCNodeInfoMessage extends OSCNodeMessageFactory
 final case class OSCNodeInfoMessage( nodeID: Int, info: OSCNodeInfo )
-extends OSCMessage( "/n_info", info.toList( nodeID ): _* ) with OSCNodeChange
+extends Message( "/n_info", info.toList( nodeID ): _* ) with OSCNodeChange
 
 final case class OSCBufferInfo( bufID: Int, numFrames: Int, numChannels: Int, sampleRate: Float )
 
 // we need List[ Any ] as scala would otherwise expand to List[ Float ]!
 final case class OSCBufferInfoMessage( infos: OSCBufferInfo* )
-extends OSCMessage( "/b_info", infos.flatMap( info =>
+extends Message( "/b_info", infos.flatMap( info =>
    List[ Any ]( info.bufID, info.numFrames, info.numChannels, info.sampleRate )): _* )
 with OSCReceive
 
 // ---- messages to the server ----
 final case class OSCServerNotifyMessage( onOff: Boolean )
-extends OSCMessage( "/notify", if( onOff ) 1 else 0 )
+extends Message( "/notify", if( onOff ) 1 else 0 )
 with OSCAsyncSend
 
-case object OSCServerQuitMessage extends OSCMessage( "/quit" )
+case object OSCServerQuitMessage extends Message( "/quit" )
 with OSCAsyncSend
 
-final case class OSCBufferQueryMessage( ids: Int* ) extends OSCMessage( "/b_query", ids: _* )
+final case class OSCBufferQueryMessage( ids: Int* ) extends Message( "/b_query", ids: _* )
 with OSCSyncQuery
 
-final case class OSCBufferFreeMessage( id: Int, completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_free", (completion.map( m => List( id, m )) getOrElse List( id )): _* )
+final case class OSCBufferFreeMessage( id: Int, completion: Option[ Packet ])
+extends Message( "/b_free", (completion.map( m => List( id, m )) getOrElse List( id )): _* )
 with OSCAsyncSend
 
-final case class OSCBufferCloseMessage( id: Int, completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_close", (completion.map( m => List( id, m )) getOrElse List( id )): _* )
+final case class OSCBufferCloseMessage( id: Int, completion: Option[ Packet ])
+extends Message( "/b_close", (completion.map( m => List( id, m )) getOrElse List( id )): _* )
 with OSCAsyncSend
 
-final case class OSCBufferAllocMessage( id: Int, numFrames: Int, numChannels: Int, completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_alloc", (completion.map( m => List( id, numFrames, numChannels, m ))
+final case class OSCBufferAllocMessage( id: Int, numFrames: Int, numChannels: Int, completion: Option[ Packet ])
+extends Message( "/b_alloc", (completion.map( m => List( id, numFrames, numChannels, m ))
                                                    getOrElse List( id, numFrames, numChannels )): _* )
 with OSCAsyncSend
 
 final case class OSCBufferAllocReadMessage( id: Int, path: String, startFrame: Int, numFrames: Int,
-                                      completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_allocRead", (completion.map( m => List( id, path, startFrame, numFrames, m ))
+                                      completion: Option[ Packet ])
+extends Message( "/b_allocRead", (completion.map( m => List( id, path, startFrame, numFrames, m ))
                                                        getOrElse List( id, path, startFrame, numFrames )): _* )
 with OSCAsyncSend
 
 final case class OSCBufferAllocReadChannelMessage( id: Int, path: String, startFrame: Int, numFrames: Int,
-                                             channels: List[ Int ], completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_allocReadChannel", (List( id, path, startFrame, numFrames ) ::: channels
+                                             channels: List[ Int ], completion: Option[ Packet ])
+extends Message( "/b_allocReadChannel", (List( id, path, startFrame, numFrames ) ::: channels
    ::: completion.map( msg => List( msg )).getOrElse( Nil )): _* )
 with OSCAsyncSend
 
 final case class OSCBufferReadMessage( id: Int, path: String, fileStartFrame: Int, numFrames: Int, bufStartFrame: Int,
-                                 leaveOpen: Boolean, completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_read", (completion.map(
+                                 leaveOpen: Boolean, completion: Option[ Packet ])
+extends Message( "/b_read", (completion.map(
    m =>      List( id, path, fileStartFrame, numFrames, bufStartFrame, if( leaveOpen ) 1 else 0, m ))
    getOrElse List( id, path, fileStartFrame, numFrames, bufStartFrame, if( leaveOpen ) 1 else 0 )): _* )
 with OSCAsyncSend
 
 final case class OSCBufferReadChannelMessage( id: Int, path: String, fileStartFrame: Int, numFrames: Int,
                                         bufStartFrame: Int, leaveOpen: Boolean, channels: List[ Int ],
-                                        completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_readChannel", (List( id, path, fileStartFrame, numFrames, bufStartFrame,
+                                        completion: Option[ Packet ])
+extends Message( "/b_readChannel", (List( id, path, fileStartFrame, numFrames, bufStartFrame,
    if( leaveOpen ) 1 else 0 ) ::: channels ::: completion.map( msg => List( msg )).getOrElse( Nil )): _* )
 with OSCAsyncSend
 
-final case class OSCBufferZeroMessage( id: Int, completion: Option[ OSCPacket ])
-extends OSCMessage( "/b_zero", (completion.map( m => List( id, m )) getOrElse List( id )): _* )
+final case class OSCBufferZeroMessage( id: Int, completion: Option[ Packet ])
+extends Message( "/b_zero", (completion.map( m => List( id, m )) getOrElse List( id )): _* )
 with OSCAsyncSend
 
 final case class OSCBufferWriteMessage( id: Int, path: String, fileType: AudioFileType, sampleFormat: SampleFormat,
                                   numFrames: Int, startFrame: Int, leaveOpen: Boolean,
-                                  completion: Option[ OSCPacket])
-extends OSCMessage( "/b_write", (List( id, path, fileType.id, sampleFormat.id, numFrames, startFrame,
+                                  completion: Option[ Packet])
+extends Message( "/b_write", (List( id, path, fileType.id, sampleFormat.id, numFrames, startFrame,
    if( leaveOpen ) 1 else 0 ) ::: completion.map( msg => List( msg )).getOrElse( Nil )): _* )
 with OSCAsyncSend
 
 final case class OSCBufferSetMessage( id: Int, indicesAndValues: (Int, Float)* )
-extends OSCMessage( "/b_set", (id +: indicesAndValues.flatMap( iv => List[ Any ]( iv._1, iv._2 ))): _* )
+extends Message( "/b_set", (id +: indicesAndValues.flatMap( iv => List[ Any ]( iv._1, iv._2 ))): _* )
 with OSCSyncCmd
 
 final case class OSCBufferSetnMessage( id: Int, indicesAndValues: (Int, IIdxSeq[ Float ])* )
-extends OSCMessage( "/b_setn", (id +: indicesAndValues.flatMap( iv => Vector( iv._1, iv._2.size ) ++ iv._2 )): _* )
+extends Message( "/b_setn", (id +: indicesAndValues.flatMap( iv => Vector( iv._1, iv._2.size ) ++ iv._2 )): _* )
 with OSCSyncCmd
 
 //case class OSCBusValuePair( index: Int, value: Float )
 final case class OSCControlBusSetMessage( indicesAndValues: (Int, Float)* )
-extends OSCMessage( "/c_set", indicesAndValues.flatMap( iv => List[ Any ]( iv._1, iv._2 )): _* )
+extends Message( "/c_set", indicesAndValues.flatMap( iv => List[ Any ]( iv._1, iv._2 )): _* )
 with OSCSyncCmd
 
 //case class OSCBusValuesPair( index: Int, values: IIdxSeq[ Float ])
 final case class OSCControlBusSetnMessage( indicesAndValues: (Int, IIdxSeq[ Float ])* )
-extends OSCMessage( "/c_setn", indicesAndValues.flatMap( iv => Vector( iv._1, iv._2.size ) ++ iv._2 ): _* )
+extends Message( "/c_setn", indicesAndValues.flatMap( iv => Vector( iv._1, iv._2.size ) ++ iv._2 ): _* )
 with OSCSyncCmd
 
 final case class OSCControlBusGetMessage( index: Int* ) // fucking hell: indices is defined for SeqLike
-extends OSCMessage( "/c_get", index: _* )
+extends Message( "/c_get", index: _* )
 with OSCSyncQuery
 
 final case class OSCGroupNewInfo( groupID: Int, addAction: Int, targetID: Int )
 final case class OSCGroupNewMessage( groups: OSCGroupNewInfo* )
-extends OSCMessage( "/g_new", groups.flatMap( g => List( g.groupID, g.addAction, g.targetID )): _* )
+extends Message( "/g_new", groups.flatMap( g => List( g.groupID, g.addAction, g.targetID )): _* )
 with OSCSyncCmd
 
 //case class OSCNodeFlagPair( id: Int, flag: Boolean )
 final case class OSCGroupDumpTreeMessage( groups: (Int, Boolean)* )
-extends OSCMessage( "/g_dumpTree", groups.flatMap( g => List( g._1, if( g._2 ) 1 else 0 )): _* )
+extends Message( "/g_dumpTree", groups.flatMap( g => List( g._1, if( g._2 ) 1 else 0 )): _* )
 with OSCSyncCmd
 
 final case class OSCGroupQueryTreeMessage( groups: (Int, Boolean)* )
-extends OSCMessage( "/g_queryTree", groups.flatMap( g => List( g._1, if( g._2 ) 1 else 0 )): _* )
+extends Message( "/g_queryTree", groups.flatMap( g => List( g._1, if( g._2 ) 1 else 0 )): _* )
 with OSCSyncQuery
 
 /**
@@ -394,7 +394,7 @@ with OSCSyncQuery
  * So that for each pair, node A is moved to the head of group B.
  */
 final case class OSCGroupHeadMessage( groups: (Int, Int)* )
-extends OSCMessage( "/g_head", groups.flatMap( g => List( g._1, g._2 )): _* )
+extends Message( "/g_head", groups.flatMap( g => List( g._1, g._2 )): _* )
 with OSCSyncCmd
 
 /**
@@ -410,66 +410,66 @@ with OSCSyncCmd
  * So that for each pair, node A is moved to the tail of group B.
  */
 final case class OSCGroupTailMessage( groups: (Int, Int)* )
-extends OSCMessage( "/g_tail", groups.flatMap( g => List( g._1, g._2 )): _* )
+extends Message( "/g_tail", groups.flatMap( g => List( g._1, g._2 )): _* )
 with OSCSyncCmd
 
 final case class OSCGroupFreeAllMessage( ids: Int* )
-extends OSCMessage( "/g_freeAll", ids: _* )
+extends Message( "/g_freeAll", ids: _* )
 with OSCSyncCmd
 
 final case class OSCGroupDeepFreeMessage( ids: Int* )
-extends OSCMessage( "/g_deepFree", ids: _* )
+extends Message( "/g_deepFree", ids: _* )
 with OSCSyncCmd
 
 final case class OSCSynthNewMessage( defName: String, id: Int, addAction: Int, targetID: Int, controls: ControlSetMap* )
-extends OSCMessage( "/s_new",
+extends Message( "/s_new",
    (Vector( defName, id, addAction, targetID ) ++ controls.flatMap( _.toSetSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeRunMessage( nodes: (Int, Boolean)* )
-extends OSCMessage( "/n_run", nodes.flatMap( n => List( n._1, if( n._2 ) 1 else 0 )): _* )
+extends Message( "/n_run", nodes.flatMap( n => List( n._1, if( n._2 ) 1 else 0 )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeSetMessage( id: Int, pairs: ControlSetMap* )
-extends OSCMessage( "/n_set", (id +: pairs.flatMap( _.toSetSeq )): _* )
+extends Message( "/n_set", (id +: pairs.flatMap( _.toSetSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeSetnMessage( id: Int, pairs: ControlSetMap* )
-extends OSCMessage( "/n_setn", (id +: pairs.flatMap( _.toSetnSeq )): _* )
+extends Message( "/n_setn", (id +: pairs.flatMap( _.toSetnSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeTraceMessage( ids: Int* )
-extends OSCMessage( "/n_trace", ids: _* )
+extends Message( "/n_trace", ids: _* )
 with OSCSyncCmd
 
 final case class OSCNodeNoIDMessage( ids: Int* )
-extends OSCMessage( "/n_noid", ids: _* )
+extends Message( "/n_noid", ids: _* )
 with OSCSyncCmd
 
 final case class OSCNodeFreeMessage( ids: Int* )
-extends OSCMessage( "/n_free", ids: _* )
+extends Message( "/n_free", ids: _* )
 with OSCSyncCmd
 
 final case class OSCNodeMapMessage( id: Int, mappings: ControlKBusMap.Single* )
-extends OSCMessage( "/n_map", (id +: mappings.flatMap( _.toMapSeq )): _* )
+extends Message( "/n_map", (id +: mappings.flatMap( _.toMapSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeMapnMessage( id: Int, mappings: ControlKBusMap* )
-extends OSCMessage( "/n_mapn", (id +: mappings.flatMap( _.toMapnSeq )): _* )
+extends Message( "/n_mapn", (id +: mappings.flatMap( _.toMapnSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeMapaMessage( id: Int, mappings: ControlABusMap.Single* )
-extends OSCMessage( "/n_mapa", (id +: mappings.flatMap( _.toMapaSeq )): _* )
+extends Message( "/n_mapa", (id +: mappings.flatMap( _.toMapaSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeMapanMessage( id: Int, mappings: ControlABusMap* )
-extends OSCMessage( "/n_mapan", (id +: mappings.flatMap( _.toMapanSeq )): _* )
+extends Message( "/n_mapan", (id +: mappings.flatMap( _.toMapanSeq )): _* )
 with OSCSyncCmd
 
 final case class OSCNodeFillInfo( control: Any, numChannels: Int, value: Float )
 
 final case class OSCNodeFillMessage( id: Int, fillings: OSCNodeFillInfo* )
-extends OSCMessage( "/n_fill", (id +: fillings.flatMap( f => Vector( f.control, f.numChannels, f.value ))): _* )
+extends Message( "/n_fill", (id +: fillings.flatMap( f => Vector( f.control, f.numChannels, f.value ))): _* )
 with OSCSyncCmd
 
 /**
@@ -485,7 +485,7 @@ with OSCSyncCmd
  * So that for each pair, node A in the same group as node B, to execute immediately before node B.
  */
 final case class OSCNodeBeforeMessage( groups: (Int, Int)* )
-extends OSCMessage( "/n_before", groups.flatMap( g => List( g._1, g._2 )): _* )
+extends Message( "/n_before", groups.flatMap( g => List( g._1, g._2 )): _* )
 with OSCSyncCmd
 
 /**
@@ -501,21 +501,21 @@ with OSCSyncCmd
  * So that for each pair, node A in the same group as node B, to execute immediately after node B.
  */
 final case class OSCNodeAfterMessage( groups: (Int, Int)* )
-extends OSCMessage( "/n_after", groups.flatMap( g => List( g._1, g._2 )): _* )
+extends Message( "/n_after", groups.flatMap( g => List( g._1, g._2 )): _* )
 with OSCSyncCmd
 
-final case class OSCSynthDefRecvMessage( bytes: ByteBuffer, completion: Option[ OSCPacket ])
-extends OSCMessage( "/d_recv", (bytes :: (completion.map( List( _ )) getOrElse Nil)): _* )
+final case class OSCSynthDefRecvMessage( bytes: ByteBuffer, completion: Option[ Packet ])
+extends Message( "/d_recv", (bytes :: (completion.map( List( _ )) getOrElse Nil)): _* )
 with OSCAsyncSend
 
 final case class OSCSynthDefFreeMessage( names: String* )
-extends OSCMessage( "/d_free", names: _* )
+extends Message( "/d_free", names: _* )
 with OSCSyncCmd
 
-final case class OSCSynthDefLoadMessage( path: String, completion: Option[ OSCPacket ])
-extends OSCMessage( "/d_load", (path :: (completion.map( List( _ )) getOrElse Nil)): _* )
+final case class OSCSynthDefLoadMessage( path: String, completion: Option[ Packet ])
+extends Message( "/d_load", (path :: (completion.map( List( _ )) getOrElse Nil)): _* )
 with OSCAsyncSend
 
-final case class OSCSynthDefLoadDirMessage( path: String, completion: Option[ OSCPacket ])
-extends OSCMessage( "/d_loadDir", (path :: (completion.map( List( _ )) getOrElse Nil)): _* )
+final case class OSCSynthDefLoadDirMessage( path: String, completion: Option[ Packet ])
+extends Message( "/d_loadDir", (path :: (completion.map( List( _ )) getOrElse Nil)): _* )
 with OSCAsyncSend
