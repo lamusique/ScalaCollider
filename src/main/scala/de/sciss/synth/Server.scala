@@ -28,7 +28,6 @@
 
 package de.sciss.synth
 
-import java.net.{ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 import java.io.{BufferedReader, File, InputStreamReader, IOException}
 import java.util.{Timer, TimerTask}
 import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
@@ -39,6 +38,7 @@ import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAlloca
 import sys.error
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
 import java.nio.channels.ClosedChannelException
+import java.net.{PortUnreachableException, ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 
 object Server {
    private val allSync  = new AnyRef
@@ -65,6 +65,7 @@ object Server {
    private def initBoot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
              clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) = {
       val (addr, c) = prepareConnection( options, clientOptions )
+//c.dump()
       new BootingImpl( name, c, addr, options, clientOptions, true )
    }
 
@@ -186,6 +187,7 @@ object Server {
    private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
 //      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
+println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
       val client        = transport match {
          case UDP =>
             val cfg                 = UDP.Config()
@@ -238,8 +240,8 @@ object Server {
                   try {
 //println( "?? Connect")
 //                     c.start
-println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
-                     c.connect()
+//println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
+                     if( !c.isConnected ) c.connect()
 //println( "!! Connect")
 //c.dumpOSC()
                      c.action = p => this ! p
@@ -247,7 +249,11 @@ println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
                      def snotify() {
                         tnotify = System.currentTimeMillis + 500
 //println( ">>> NOT" )
+//try {
                         c ! OSCServerNotifyMessage( true )
+//} catch {
+//   case n: PortUnreachableException => println( "caught : " + n )
+//}
                      }
                      snotify()
                      loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
@@ -261,7 +267,11 @@ println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
                            def sstatus() {
                               tstatus = System.currentTimeMillis + 500
 //println( ">>> STAT" )
-                              c ! OSCStatusMessage
+//try {
+   c ! OSCStatusMessage
+//} catch {
+//   case n: PortUnreachableException => println( "caught : " + n )
+//}
                            }
                            sstatus()
                            loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
@@ -299,8 +309,13 @@ println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
                      }}
                   }
                   catch {
-                     case _: ConnectException => retryConnect()
-//                     case _: ClosedChannelException => retryConnect() // thrown when in TCP mode and socket not yet available
+                     case _: ConnectException => retryConnect()   // thrown when TCP server not available
+                     case _: PortUnreachableException => retryConnect() // thrown when server sets up UDP
+                     case e: ClosedChannelException =>
+println( "CAUGHT:" )
+e.printStackTrace( Console.out )
+println( "IS OPEN? " + c.isOpen() )
+                        retryConnect() // thrown when in TCP mode and socket not yet available
 //println( "!= Connect")
                   }
                } else loop { react {
