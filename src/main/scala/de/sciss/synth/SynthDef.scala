@@ -62,7 +62,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
          val syncMsg    = server.syncMsg
          val syncID     = syncMsg.id
          val compPacket: Packet = completion.message match {
-            case Some( msgFun2 ) => Bundle( msgFun2( syndef ), syncMsg )
+            case Some( msgFun2 ) => Bundle.now( msgFun2( syndef ), syncMsg )
             case None            => syncMsg
          }
          server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
@@ -141,11 +141,11 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       dos.write( str.getBytes )
    }
 
-   def hexDump {
-      Packet.printHexOn( Console.out, toBytes )
+   def hexDump() {
+      Packet.printHexOn( toBytes, Console.out )
    }
 
-   def testTopoSort {
+   def testTopoSort() {
       var i = 0
       graph.ugens.foreach( ru => {
          var j = 0

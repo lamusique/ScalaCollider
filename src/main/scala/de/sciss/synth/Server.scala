@@ -28,7 +28,6 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{ Channel => OSCChannel, Client => OSCClient, Message, Packet, Transport, TCP, UDP }
 import java.net.{ ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket, SocketAddress }
 import java.io.{ BufferedReader, File, InputStreamReader, IOException }
 import java.util.{ Timer, TimerTask }
@@ -40,6 +39,7 @@ import osc.{ OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCS
              OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec }
 import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 import sys.error
+import de.sciss.osc.{Dump, Channel => OSCChannel, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
 
 /**
  * 	@version    0.16, 03-Aug-10
@@ -187,12 +187,24 @@ object Server {
 
    case class Counts( c: OSCStatusReplyMessage )
 
-   private def createClient( transport: Transport, serverAddr: InetSocketAddress,
+   private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
 //      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
-      val client        = OSCClient.withAddress( transport, clientAddr, ServerCodec )
-      client.bufferSize = 0x10000
-      client.target     = serverAddr
+      val client        = transport match {
+         case UDP =>
+            val cfg                 = UDP.Config()
+            cfg.localSocketAddress  = clientAddr
+            cfg.codec               = ServerCodec
+            cfg.bufferSize          = 0x10000
+            UDP.Client( serverAddr, cfg )
+         case TCP =>
+            val cfg                 = TCP.Config()
+            cfg.codec               = ServerCodec
+            cfg.localSocketAddress  = clientAddr
+            cfg.bufferSize          = 0x10000
+            TCP.Client( serverAddr, cfg )
+      }
+//      client.connect()
       client
    }
 
@@ -219,10 +231,11 @@ object Server {
                if( connectionAlive ) {
                   try {
 //println( "?? Connect")
-                     c.start
+//                     c.start
+                     c.connect()
 //println( "!! Connect")
 //c.dumpOSC()
-                     c.action = (msg, addr, when) => this ! msg
+                     c.action = p => this ! p
                      var tnotify = 0L
                      def snotify {
                         tnotify = System.currentTimeMillis + 500
@@ -668,31 +681,31 @@ extends ServerLike {
       }
   }
 
-   def queryCounts {
+   def queryCounts() {
       this ! OSCStatusMessage
    }
 
    def syncMsg : OSCSyncMessage = syncMsg()
    def syncMsg( id: Int = uniqueID.nextID ) = OSCSyncMessage( id )
 
-   def dumpOSC( mode: Int = OSCChannel.DUMP_TEXT ) {
-      c.dumpIncomingOSC( mode, filter = {
+   def dumpOSC( mode: Dump = Dump.Text ) {
+      c.dumpIn( mode, filter = {
          case m: OSCStatusReplyMessage => false
          case _ => true
       })
-      c.dumpOutgoingOSC( mode, filter = {
+      c.dumpOut( mode, filter = {
          case OSCStatusMessage => false
          case _ => true
       })
    }
 
-   private def serverLost {
+   private def serverLost() {
       nodeMgr.clear
       bufMgr.clear
-      OSCReceiverActor.clear
+      OSCReceiverActor.clear()
    }
 
-   private def serverOffline {
+   private def serverOffline() {
       condSync.synchronized {
 //         bootThread = None
          stopAliveThread
@@ -707,7 +720,7 @@ extends ServerLike {
 
    def quitMsg = OSCServerQuitMessage
 
-   private def cleanUpAfterQuit {
+   private def cleanUpAfterQuit() {
       try {
          condSync.synchronized {
             stopAliveThread
@@ -725,7 +738,7 @@ extends ServerLike {
       OSCReceiverActor.removeHandler( resp )
    }
 
-   private[synth] def initTree {
+   private[synth] def initTree() {
       nodeMgr.register( defaultGroup )
       server ! defaultGroup.newMsg( rootNode, addToHead )
    }
@@ -734,7 +747,8 @@ extends ServerLike {
       condSync.synchronized {
          serverOffline
          remove( this )
-         c.dispose // = (msg: Message, sender: SocketAddress, time: Long) => ()
+//         c.dispose // = (msg: Message, sender: SocketAddress, time: Long) => ()
+         c.close()
          OSCReceiverActor.dispose
 //         c.dispose
       }
@@ -759,26 +773,26 @@ extends ServerLike {
 //      // ---- constructor ----
 //      timer.setInitialDelay( delayMillis )
 
-      def start {
+      def start() {
          stop
          timer = {
             val t = new Timer( "StatusWatcher", true )
             t.schedule( new TimerTask {
-               def run = watcher.run // invokeOnMainThread( watcher )
+               def run() { watcher.run() } // invokeOnMainThread( watcher )
             }, delayMillis, periodMillis )
             Some( t )
          }
       }
 
-      def stop {
+      def stop() {
 //         timer.stop
          timer.foreach( t => {
-            t.cancel
+            t.cancel()
             timer = None
          })
       }
 
-      def run {
+      def run() {
          sync.synchronized {
             alive -= 1
             if( alive < 0 ) {
@@ -787,7 +801,7 @@ extends ServerLike {
             }
          }
          try {
-            queryCounts
+            queryCounts()
          }
          catch { case e: IOException => printError( "Server.status", e )}
       }
@@ -811,17 +825,17 @@ extends ServerLike {
    private object OSCReceiverActor extends DaemonActor {
       private case object Clear
       private case object Dispose
-      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
+//      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
       private case class  AddHandler( h: OSCHandler )
       private case class  RemoveHandler( h: OSCHandler )
       private case class  TimeOutHandler( h: OSCTimeOutHandler )
 
-      def clear {
+      def clear() {
          this ! Clear
       }
 
-      def dispose {
-         clear
+      def dispose() {
+         clear()
          this ! Dispose
       }
 
@@ -839,17 +853,18 @@ extends ServerLike {
 
       // ------------ OSCListener interface ------------
 
-      def messageReceived( msg: Message, sender: SocketAddress, time: Long ) {
+      def messageReceived( p: Packet ) {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : ! : " + msg )
-         this ! ReceivedMessage( msg, sender, time )
+         this ! p
       }
 
-      def act {
+      def act() {
          var running    = true
          var handlers   = Set.empty[ OSCHandler ]
 //         while( running )( receive { })
          loopWhile( running )( react {
-            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
+            case msg: Message => debug( msg ) {
+//            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
                msg match {
                   case nodeMsg:        OSCNodeChange           => nodeMgr.nodeChange( nodeMsg )

@@ -353,9 +353,9 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       }
       (completion.message, a) match {
          case (None, None)                => if( forceQuery ) Some( queryMsg ) else None
-         case (Some( msg ), None)         => Some( if( forceQuery ) OSCBundle( msg.apply( b ), queryMsg ) else msg.apply( b ))
+         case (Some( msg ), None)         => Some( if( forceQuery ) Bundle.now( msg.apply( b ), queryMsg ) else msg.apply( b ))
          case (None, Some( act ))         => Some( queryMsg )
-         case (Some( msg ), Some( act ))  => Some( OSCBundle( msg.apply( b ), queryMsg ))
+         case (Some( msg ), Some( act ))  => Some( Bundle.now( msg.apply( b ), queryMsg ))
       }
    }
 }

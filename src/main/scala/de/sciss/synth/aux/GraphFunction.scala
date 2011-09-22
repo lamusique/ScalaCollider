@@ -30,7 +30,7 @@ package de.sciss.synth
 package aux
 
 import ugen.WrapOut
-import de.sciss.osc.{OSCBundle, OSCMessage}
+import de.sciss.osc.{Bundle, Message}
 import de.sciss.synth.UGenSource.ZeroOut
 
 object GraphFunction {
@@ -74,17 +74,17 @@ final class GraphFunction[ T ]( thunk: => T )( implicit res: GraphFunction.Resul
 		val bytes      = synthDef.toBytes
 		val synthMsg   = synth.newMsg( synthDef.name, target, List( "i_out" -> outBus, "out" -> outBus ), addAction )
       val defFreeMsg = synthDef.freeMsg
-      val compl      = OSCBundle( synthMsg, defFreeMsg )
+      val compl      = Bundle.now( synthMsg, defFreeMsg )
 //      synth.onEnd { server ! synthDef.freeMsg } // why would we want to accumulate the defs?
 		if( bytes.remaining > (65535 / 4) ) { // "preliminary fix until full size works" (???)
 			if( server.isLocal ) {
 				synthDef.load( server, completion = compl )
 			} else {
 				println( "WARNING: synthdef may have been too large to send to remote server" )
-				server ! OSCMessage( "/d_recv", bytes, compl )
+				server ! Message( "/d_recv", bytes, compl )
 			}
 		} else {
-			server ! OSCMessage( "/d_recv", bytes, compl )
+			server ! Message( "/d_recv", bytes, compl )
 		}
 		synth
 	}

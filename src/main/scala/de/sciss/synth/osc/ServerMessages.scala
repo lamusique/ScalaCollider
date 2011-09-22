@@ -28,14 +28,14 @@
 
 package de.sciss.synth.osc
 
-import de.sciss.osc.{ OSCException, Message, Packet, PacketCodec }
-import Packet._
 import de.sciss.synth.io.{ AudioFileType, SampleFormat }
 import java.nio.ByteBuffer
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 import collection.mutable.ListBuffer
 import de.sciss.synth._
+import java.io.PrintStream
+import de.sciss.osc.{Bundle, Message, Packet, PacketCodec}
 
 /**
  *    @version	0.13, 05-Aug-10
@@ -45,9 +45,13 @@ import de.sciss.synth._
 //}
 //
 object ServerCodec extends PacketCodec {
+   import Packet._
+
+   private val superCodec = PacketCodec.Builder().scsynth().build
+
 	private val decodeStatusReply: (String, ByteBuffer) => Message = (name, b) => {
 		// ",iiiiiffdd"
-		if( (b.getLong != 0x2C69696969696666L) || (b.getShort != 0x6464) ) decodeFail
+		if( (b.getLong != 0x2C69696969696666L) || (b.getShort != 0x6464) ) decodeFail( name )
 		skipToValues( b )
 		
 //		if( b.getInt() != 1) decodeFail  // was probably intended as a version number...
@@ -67,7 +71,7 @@ object ServerCodec extends PacketCodec {
 
    private val decodeSynced: (String, ByteBuffer) => Message = (name, b) => {
       // ",i"
-      if( b.getShort() != 0x2C69 ) decodeFail
+      if( b.getShort() != 0x2C69 ) decodeFail( name )
       skipToValues( b )
 
       val id = b.getInt()
@@ -79,7 +83,7 @@ object ServerCodec extends PacketCodec {
       (String, ByteBuffer) => Message = (name, b) => {
       
 		// ",iiiii[ii]"
-		if( (b.getInt() != 0x2C696969) || (b.getShort() != 0x6969) ) decodeFail
+		if( (b.getInt() != 0x2C696969) || (b.getShort() != 0x6969) ) decodeFail( name )
 		val extTags = b.getShort()
 		if( (extTags & 0xFF) == 0x00 ) {
 			skipToAlign( b )
@@ -98,16 +102,16 @@ object ServerCodec extends PacketCodec {
          val headID	= b.getInt()
          val tailID	= b.getInt()
          factory.apply( nodeID, OSCGroupInfo( parentID, predID, succID, headID, tailID ))
-		} else decodeFail
+		} else decodeFail( name )
 	}
 
    private val decodeBufferInfo: (String, ByteBuffer) => Message = (name, b) => {
       // ",[iiif]*N"
-      if( b.get() != 0x2C ) decodeFail
+      if( b.get() != 0x2C ) decodeFail( name )
       var cnt = 0
       var tag = b.getShort()
       while( tag != 0x0000 ) {
-         if( (tag != 0x6969) || (b.getShort() != 0x6966) ) decodeFail
+         if( (tag != 0x6969) || (b.getShort() != 0x6966) ) decodeFail( name )
          cnt += 1
          tag = b.getShort()
       }
@@ -134,9 +138,9 @@ object ServerCodec extends PacketCodec {
    )
 
    private val superDecoder: (String, ByteBuffer ) => Message =
-      (name, b) => super.decodeMessage( name, b )
+      (name, b) => superCodec.decodeMessage( name, b ) // super.decodeMessage( name, b )
 
-   override protected def decodeMessage( name: String, b: ByteBuffer ) : Message = {
+   override /* protected */ def decodeMessage( name: String, b: ByteBuffer ) : Message = {
         msgDecoders.getOrElse( name, superDecoder ).apply( name, b )
 /*		val dec = msgDecoders.get( name )
 		if( dec.isDefined ) {
@@ -146,7 +150,13 @@ object ServerCodec extends PacketCodec {
 		}
 */	}
 
-   private def decodeFail : Nothing = throw new OSCException( OSCException.DECODE, null )
+   def encodeMessage( msg: Message, b: ByteBuffer ) { superCodec.encodeMessage( msg, b )}
+   def getEncodedMessageSize( msg: Message ) = superCodec.getEncodedMessageSize( msg )
+   def encodeBundle( bndl: Bundle, b: ByteBuffer ) { superCodec.encodeBundle( bndl, b )}
+   def printAtom( value: Any, stream: PrintStream, nestCount: Int ) { superCodec.printAtom( value, stream, nestCount )}
+   val charsetName = superCodec.charsetName
+
+   private def decodeFail( name : String ) : Nothing = throw PacketCodec.MalformedPacket( name )
 }
 // val nodeID: Int, val parentID: Int, val predID: Int, val succID: Int, val headID: Int, val tailID: Int )
 
