@@ -187,7 +187,7 @@ object Server {
    private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
 //      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
-println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
+//println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
       val client        = transport match {
          case UDP =>
             val cfg                 = UDP.Config()
@@ -209,10 +209,11 @@ println( "transport = " + transport + " ; server = " + serverAddr + " ; client =
    // -------- internal class BootThread --------
 
    private object ConnectionImplLike {
+      case object Ready
       case object Abort
       case object QueryServer
-      case class AddListener( l: Model.Listener )
-      case class RemoveListener( l: Model.Listener )
+      final case class AddListener( l: Model.Listener )
+      final case class RemoveListener( l: Model.Listener )
 //      case object Aborted
    }
 
@@ -223,21 +224,22 @@ println( "transport = " + transport + " ; server = " + serverAddr + " ; client =
 
       val actor = new DaemonActor {
 //         var state: Condition = Connecting
-         def act() {
+         def act() { react {
 //            dispatch( Connecting )
-            loop {
+            case Abort => abortHandler( None )
+            case Ready => loop {
                if( connectionAlive ) {
-                  def retryConnect() {
-                     val tretry  = System.currentTimeMillis + 500
-                     var looping = true
-                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
-                        case TIMEOUT            => looping = false
-                        case AddListener( l )   => actAddList( l )
-                        case RemoveListener( l )=> actRemoveList( l )
-                        case Abort              => abortHandler( None )
-                     }}
-                  }
-                  try {
+//                  def retryConnect() {
+//                     val tretry  = System.currentTimeMillis + 500
+//                     var looping = true
+//                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
+//                        case TIMEOUT            => looping = false
+//                        case AddListener( l )   => actAddList( l )
+//                        case RemoveListener( l )=> actRemoveList( l )
+//                        case Abort              => abortHandler( None )
+//                     }}
+//                  }
+//                  try {
 //println( "?? Connect")
 //                     c.start
 //println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
@@ -307,23 +309,23 @@ println( "transport = " + transport + " ; server = " + serverAddr + " ; client =
                            }}
                         }
                      }}
-                  }
-                  catch {
-                     case _: ConnectException => retryConnect()   // thrown when TCP server not available
-                     case _: PortUnreachableException => retryConnect() // thrown when server sets up UDP
-                     case e: ClosedChannelException =>
-println( "CAUGHT:" )
-e.printStackTrace( Console.out )
-println( "IS OPEN? " + c.isOpen() )
-                        retryConnect() // thrown when in TCP mode and socket not yet available
-//println( "!= Connect")
-                  }
+//                  }
+//                  catch {
+//                     case _: ConnectException => retryConnect()   // thrown when TCP server not available
+//                     case _: PortUnreachableException => retryConnect() // thrown when server sets up UDP
+//                     case e: ClosedChannelException =>
+//println( "CAUGHT:" )
+//e.printStackTrace( Console.out )
+//println( "IS OPEN? " + c.isOpen() )
+//                        retryConnect() // thrown when in TCP mode and socket not yet available
+////println( "!= Connect")
+//                  }
                } else loop { react {
                   case Abort  => reply ()
                   case _      =>
                }}
             }
-         }
+         }}
 
          private def abortHandler( server: Option[ Server ]) {
             handleAbort()
@@ -384,7 +386,9 @@ println( "IS OPEN? " + c.isOpen() )
    extends ConnectionImplLike {
 //      import ConnectionImplLike._
 
-      def start() { actor.start() }
+      def start() {
+         actor.start()
+      }
 
       override def toString = "connect<" + name + ">"
 
@@ -395,11 +399,14 @@ println( "IS OPEN? " + c.isOpen() )
       }
    }
 
+//   private object BootingImpl {
+//      final case class Booted( open: Boolean )
+//   }
    private class BootingImpl @throws( classOf[ IOException ])
       ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
         val clientOptions: ClientOptions, aliveThread: Boolean )
    extends ConnectionImplLike {
-//      import ConnectionImplLike._
+      import ConnectionImplLike._
 
       lazy val p = {
          val processArgs   = options.toRealtimeArgs
@@ -421,12 +428,29 @@ println( "IS OPEN? " + c.isOpen() )
          }}
       }
 
+//      @volatile private var isOpen      = false
+//      @volatile private var isBooting   = false
+//
       def start() {
          val inReader   = new BufferedReader( new InputStreamReader( p.getInputStream ))
-         val postActor  = new DaemonActor {
-            def act() {
-               var isOpen = true
-               loopWhile( isOpen ) {
+         val postThread = new Thread {
+            override def run() {
+               var isOpen         = true
+               var isBooting      = true
+               try {
+                  while( isOpen && isBooting ) {
+                     val line = inReader.readLine
+                     isOpen = line != null
+                     if( isOpen ) {
+                        println( line )
+                        if( line == "SuperCollider 3 server ready." ) isBooting = false
+                     }
+                  }
+               } catch {
+                  case e => isOpen = false
+               }
+               actor ! (if( isOpen ) Ready else Abort)
+               while( isOpen ) {
                   val line = inReader.readLine
                   isOpen = line != null
                   if( isOpen ) println( line )
@@ -435,7 +459,7 @@ println( "IS OPEN? " + c.isOpen() )
          }
 
          // ...and go
-         postActor.start()
+         postThread.start()
          processThread.start()
          actor.start()
       }
@@ -731,20 +755,21 @@ extends ServerLike {
 
    def quit {
       this ! quitMsg
-      cleanUpAfterQuit()
+//      cleanUpAfterQuit()
+      dispose
    }
 
    def quitMsg = OSCServerQuitMessage
 
-   private def cleanUpAfterQuit() {
-      try {
-         condSync.synchronized {
-            stopAliveThread()
-            pendingCondition = Terminating
-         }
-      }
-      catch { case e: IOException => printError( "Server.cleanUpAfterQuit", e )}
-   }
+//   private def cleanUpAfterQuit() {
+//      try {
+//         condSync.synchronized {
+//            stopAliveThread()
+//            pendingCondition = Terminating
+//         }
+//      }
+//      catch { case e: IOException => printError( "Server.cleanUpAfterQuit", e )}
+//   }
 
    private[synth] def addResponder( resp: OSCResponder ) {
       OSCReceiverActor.addHandler( resp )
