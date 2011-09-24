@@ -443,7 +443,9 @@ object Server {
                      isOpen = line != null
                      if( isOpen ) {
                         println( line )
-                        if( line == "SuperCollider 3 server ready." ) isBooting = false
+// of course some sucker screwed it up and added another period in SC 3.4.4
+//                        if( line == "SuperCollider 3 server ready." ) isBooting = false
+if( line.startsWith( "SuperCollider 3 server ready." )) isBooting = false
                      }
                   }
                } catch {
