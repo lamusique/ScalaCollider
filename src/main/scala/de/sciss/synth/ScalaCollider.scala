@@ -40,11 +40,11 @@ object ScalaCollider {
    }
 
    def main( args: Array[ String ]) {
-      printInfo
+      printInfo()
       System.exit( 1 )
    }
 
-   def printInfo {
+   def printInfo() {
       println( "\n" + name + " v" + versionString + "\n" + copyright +
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
    }
