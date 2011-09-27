@@ -31,11 +31,7 @@ package ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import de.sciss.synth.{Constant => c}
-import aux.UGenHelper._
 
-/**
- *    @version 0.13, 03-Jan-11
- */
 object MulAdd {
    def ar( in: GE, mul: GE, add: GE ) : MulAdd = apply( audio, in, mul, add )
    def kr( in: GE, mul: GE, add: GE ) : MulAdd = apply( control, in, mul, add )
@@ -261,7 +257,7 @@ object BinaryOp {
       def make( a: GE, b: GE ) : GE = BinaryOp( MaybeRate.max_?( a.rate, b.rate ), this, a, b )
       protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = make1( a.rate max b.rate, a, b )
       protected[synth] def make1( rate: Rate, a: UGenIn, b: UGenIn ) : UGenIn = (rate, a, b) match {
-         case (`scalar`, c(a), c(b)) => c( make1( a, b ))
+         case (`scalar`, c(af), c(bf)) => c( make1( af, bf ))
          case _ => new BinaryOpUGen( rate, op, a, b)
       }
 

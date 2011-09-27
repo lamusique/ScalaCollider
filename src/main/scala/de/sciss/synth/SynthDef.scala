@@ -38,7 +38,6 @@ import de.sciss.osc.{Bundle, Message, Packet}
 import sys.error
 
 /**
- *    @version 0.19, 24-Aug-10
  *    @todo    should add load and loadDir to companion object
  */
 final case class SynthDef( name: String, graph: UGenGraph ) {
@@ -50,7 +49,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 
    def freeMsg = OSCSynthDefFreeMessage( name )
 
-   def recv : Unit = recv()
+   def recv { recv() }
    def recv( server: Server = Server.default, completion: Completion = NoCompletion ) {
       sendWithAction( server, recvMsg( _ ), completion, "recv" )
       this
@@ -92,8 +91,8 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
     	dos.writeInt( 1 )			   // version
     	dos.writeShort( 1 ) 		   // number of defs in file.
     	write( dos )
-    	dos.flush
-    	dos.close
+    	dos.flush()
+    	dos.close()
 
     	ByteBuffer.wrap( baos.toByteArray ).asReadOnlyBuffer()
    }
@@ -103,7 +102,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       graph.write( dos )
    }
 
-   def load : Unit = load()
+   def load { load() }
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
       write( dir )
@@ -124,9 +123,9 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 		synth
    }
     
-   def write : Unit = write()
+   def write { write() }
    def write( dir: String = defaultDir, overwrite: Boolean = true ) {
-      var file = new File( dir, name + ".scsyndef" )
+      val file = new File( dir, name + ".scsyndef" )
       val exists = file.exists
       if( overwrite ) {
          if( exists ) file.delete
@@ -160,7 +159,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       println( "Test succeeded." )
    }
 
-   def debugDump {
+   def debugDump() {
       var i = 0
       graph.ugens.foreach( ru => {
          println( "#" + i + " : " + ru.ugen.name +
@@ -200,7 +199,7 @@ object SynthDef {
          defs.foreach( _.write( dos ))
       }
       finally {
-         dos.close
+         dos.close()
       }
    }
 }

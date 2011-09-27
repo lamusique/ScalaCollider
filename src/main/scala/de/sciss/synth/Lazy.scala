@@ -28,11 +28,12 @@
 
 package de.sciss.synth
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
-
 object Lazy {
    trait Expander[ +U ] extends Lazy /* with Expands[ U ] */ {
       private lazy val cache = new Cache( this )
+
+      // ---- constructor ----
+      SynthGraph.builder.addLazy( this )
 
       final def force( b: UGenGraphBuilder ) { visit( b )}
       final def expand: U = visit( UGenGraph.builder )
@@ -42,13 +43,10 @@ object Lazy {
 
    final class Cache[ +T <: Lazy ]( val self: T ) extends Proxy with Lazy {
       override val hashCode: Int = self.hashCode
-      def force( b: UGenGraphBuilder ) = self.force( b )
+      def force( b: UGenGraphBuilder ) { self.force( b )}
    }
 }
 
 trait Lazy {
-   // ---- constructor ----
-   SynthGraph.builder.addLazy( this )
-
    def force( b: UGenGraphBuilder ) : Unit
 }

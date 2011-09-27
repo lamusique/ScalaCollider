@@ -50,22 +50,20 @@ final class NodeManager( server: Server ) extends Model {
    import NodeManager._
     
 	private var nodes: IntMap[ Node ] = _
-	private var autoAdd  = true
+//	private var autoAdd  = true
    private val sync     = new AnyRef
 	
 	// ---- constructor ----
-	{
-      clear
+   clear()
 //      if( server.isRunning ) {
 //         val defaultGroup = server.defaultGroup
 //         nodes += defaultGroup.id -> defaultGroup
 //      }
-	}
 
-	def nodeChange( e: OSCNodeChange ) : Unit = e match {
+	def nodeChange( e: OSCNodeChange ) { e match {
       case OSCNodeGoMessage( nodeID, info ) => {
          val node = nodes.get( nodeID ) getOrElse {
-            if( autoAdd && nodes.contains( info.parentID )) {
+            if( /* autoAdd && */ nodes.contains( info.parentID )) {
                val created = info match {
                   case ee: OSCSynthInfo => new Synth( server, nodeID )
                   case ee: OSCGroupInfo => new Group( server, nodeID )
@@ -98,7 +96,7 @@ final class NodeManager( server: Server ) extends Model {
          })
       }
       case _ =>
-	}
+	}}
 
    private def dispatchBoth( change: NodeChange ) {
       dispatch( change )
@@ -122,7 +120,7 @@ final class NodeManager( server: Server ) extends Model {
    def getNode( id: Int ) : Option[ Node ] = sync.synchronized { nodes.get( id )}
 //   def getAll : Iterable[ Node ] = sync.synchronized { nodes }
 
-   def clear {
+   def clear() {
       val rootNode = server.rootNode // new Group( server, 0 )
       sync.synchronized {
          nodes = IntMap( rootNode.id -> rootNode )

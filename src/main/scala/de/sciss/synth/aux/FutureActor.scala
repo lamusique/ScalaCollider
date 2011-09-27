@@ -4,7 +4,7 @@ import concurrent.SyncVar
 import actors.{ Channel, DaemonActor, Future, InputChannel }
 
 trait RevocableFuture[ T ] extends Future[ T ] {
-   def revoke : Unit
+   def revoke() : Unit
 }
 
 /*
@@ -20,7 +20,7 @@ extends RevocableFuture[ T ] with DaemonActor {
    def isSet = !v.isEmpty
 
    def apply(): T = {
-      if( v.isEmpty ) error( "Thread-based operations not supported" )
+      if( v.isEmpty ) sys.error( "Thread-based operations not supported" )
       v.get
    }
 

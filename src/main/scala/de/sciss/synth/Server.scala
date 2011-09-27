@@ -37,8 +37,7 @@ import osc.{OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCSe
 import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 import sys.error
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
-import java.nio.channels.ClosedChannelException
-import java.net.{PortUnreachableException, ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
+import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 
 object Server {
    private val allSync  = new AnyRef
@@ -179,7 +178,7 @@ object Server {
    case object Running extends Condition
 //   case object Booting extends Condition
    case object Offline extends Condition
-   private case object Terminating extends Condition
+//   private case object Terminating extends Condition
    private case object NoPending extends Condition
 
    case class Counts( c: OSCStatusReplyMessage )
@@ -525,11 +524,9 @@ extends ServerLike {
 //   var latency                                     = 0.2f
 
    // ---- constructor ----
-   {
-      OSCReceiverActor.start()
-      c.action = OSCReceiverActor.messageReceived
-      add( server )
-   }
+   OSCReceiverActor.start()
+   c.action = OSCReceiverActor.messageReceived
+   add( server )
 
    def isLocal : Boolean = {
       val host = addr.getAddress
@@ -617,7 +614,7 @@ extends ServerLike {
             }}
             futCh.react { case r => res.set( r )}
          }
-         def revoke { sync.synchronized {
+         def revoke() { sync.synchronized {
             revoked = true
             oh.foreach( OSCReceiverActor.removeHandler( _ ))
             oh = None
@@ -742,8 +739,8 @@ extends ServerLike {
    }
 
    private def serverLost() {
-      nodeMgr.clear
-      bufMgr.clear
+      nodeMgr.clear()
+      bufMgr.clear()
       OSCReceiverActor.clear()
    }
 
@@ -919,9 +916,9 @@ extends ServerLike {
                handlers.foreach( h => if( h.handle( msg )) handlers -= h )
             }
             case AddHandler( h )    => handlers += h
-            case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed }
-            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut }
-            case Clear              => handlers.foreach( _.removed ); handlers = Set.empty
+            case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed() }
+            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut() }
+            case Clear              => handlers.foreach( _.removed() ); handlers = Set.empty
             case Dispose            => running = false
             case m                  => println( "Received illegal message " + m )
          })
@@ -951,7 +948,7 @@ extends ServerLike {
          } catch { case e => e.printStackTrace() }
          handled
       }
-      def removed {}
+      def removed() {}
    }
 
    private class OSCTimeOutHandler( fun: PartialFunction[ Any, Unit ], ch: OutputChannel[ Any ])
@@ -964,7 +961,7 @@ extends ServerLike {
          } catch { case e => e.printStackTrace() }
          handled
       }
-      def removed {}
+      def removed() {}
       def timedOut() {
          if( fun.isDefinedAt( TIMEOUT )) try {
             fun.apply( TIMEOUT )

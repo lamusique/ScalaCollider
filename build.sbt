@@ -9,12 +9,16 @@ scalaVersion := "2.9.1"
 // crossScalaVersions := Seq("2.9.1", "2.9.0", "2.8.1")
 
 // fix sbt issue #85 (https://github.com/harrah/xsbt/issues/85)
-unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
+// unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
 
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "0.30-SNAPSHOT",
    "de.sciss" %% "scalaaudiofile" % "0.20"
 )
+
+retrieveManaged := true
+
+scalacOptions += "-deprecation"
 
 // ---- publishing ----
 

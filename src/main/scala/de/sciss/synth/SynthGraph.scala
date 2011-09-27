@@ -32,7 +32,7 @@ import java.io.DataOutputStream
 import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
 import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
-import ugen.{EnvGen, Out}
+import ugen.EnvGen
 import sys.error
 
 /**
@@ -154,10 +154,45 @@ object SynthGraph {
       }
    }
 
+   /**
+    * A boolean setting (defaults to `false`) which can help track down
+    * bugs with graph elements being added outside a `SynthGraph` context.
+    * When this setting is `true`, a warning message is printed to
+    * `Console.err` with the graph element added and the stack trace,
+    * indicating calls such as `SinOsc.ar` outside a
+    * thread local `SynthGraph` builder.
+    */
+   var warnOutsideContext = false
+
    private object BuilderDummy extends SynthGraphBuilder {
       def build : SynthGraph = error( "Out of context" )
-      def addLazy( g: Lazy ) {}
-      def addControlProxy( proxy: ControlProxyLike[ _ ]) {}
+      private def warn( obj: => String ) {
+         if( warnOutsideContext ) {
+            Console.err.println( "Warning - adding SynthGraph element outside context: " + obj )
+            val e = new Throwable()
+            e.fillInStackTrace()
+            val t  = e.getStackTrace
+            val n  = t.length
+            var i  = 0
+            var go = true
+            while( i < n && go ) {
+               val c = t( i ).getClassName
+               if( (c.startsWith( "de.sciss.synth." ) &&
+                   (c.charAt( 15 ).isUpper || c.startsWith( "de.sciss.synth.ugen." ))) ||
+                   c.startsWith( "scala.collection." )) {
+                  i += 1
+               } else {
+                  go = false
+               }
+            }
+            while( i < n ) {
+               Console.err.println( "  at " + t( i ))
+               i += 1
+            }
+         }
+      }
+      def addLazy( g: Lazy ) { warn( g.toString )}
+      def addControlProxy( proxy: ControlProxyLike[ _ ]) { warn( proxy.toString )}
    }
 
    private class BuilderImpl extends SynthGraphBuilder {
@@ -219,7 +254,7 @@ object UGenGraph {
 
       // updated during build
       private val ugens          = MBuffer.empty[ UGen ]
-      private var ugenSet        = MSet.empty[ UGen ]
+      private val ugenSet        = MSet.empty[ UGen ]
       private var controlValues  = IIdxSeq.empty[ Float ]
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
 //      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
@@ -304,7 +339,7 @@ val eff=true
          val avail   = MStack( indexedUGens.filter( _.parents.isEmpty ) : _* )
          var cnt     = 0
          while( avail.nonEmpty ) {
-            val iu   = avail.pop
+            val iu   = avail.pop()
             iu.index = cnt
             sorted( cnt ) = iu
             cnt     += 1

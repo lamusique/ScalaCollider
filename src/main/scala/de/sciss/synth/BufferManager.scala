@@ -45,9 +45,7 @@ final class BufferManager( server: Server ) extends Model {
    private val sync = new AnyRef
 
    // ---- constructor ----
-   {
-      clear
-   }
+   clear()
 
    def bufferInfo( msg: OSCBufferInfoMessage ) {
       sync.synchronized {
@@ -79,7 +77,7 @@ final class BufferManager( server: Server ) extends Model {
       sync.synchronized { buffers -= buf.id }
    }
 
-   def clear {
+   def clear() {
       sync.synchronized {
          buffers = IntMap.empty
       }
