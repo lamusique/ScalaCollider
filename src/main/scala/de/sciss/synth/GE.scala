@@ -63,25 +63,25 @@ object GE {
    // XXX don't we expect Multi[ GE[ R ]] ?
    implicit def fromSeq( xs: SSeq[ GE ]) : GE = xs match {
       case SSeq( x ) => x
-      case _ => new SeqImpl( xs.toIndexedSeq )
+      case _ => SeqImpl( xs.toIndexedSeq )
    }
 
    implicit def fromIntSeq( xs: SSeq[ Int ]) : GE = xs match {
       case SSeq( single ) => single: Constant
-      case _ => new SeqImpl( xs.map( i => Constant( i.toFloat ))( breakOut ))
+      case _ => SeqImpl( xs.map( i => Constant( i.toFloat ))( breakOut ))
    }
 
    implicit def fromFloatSeq( xs: SSeq[ Float ]) : GE = xs match {
       case SSeq( x ) => x: Constant
-      case _ => new SeqImpl( xs.map( f => Constant( f ))( breakOut ))
+      case _ => SeqImpl( xs.map( f => Constant( f ))( breakOut ))
    }
 
    implicit def fromDoubleSeq( xs: SSeq[ Double ]) : GE = xs match {
       case SSeq( x ) => x: Constant
-      case _ => new SeqImpl( xs.map( d => Constant( d.toFloat ))( breakOut ))
+      case _ => SeqImpl( xs.map( d => Constant( d.toFloat ))( breakOut ))
    }
 
-   def fromUGenIns( xs: SSeq[ UGenIn ]) : GE = new SeqImpl2( xs.toIndexedSeq )
+   def fromUGenIns( xs: SSeq[ UGenIn ]) : GE = SeqImpl2( xs.toIndexedSeq )
 
 //   implicit def fromSeq[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R ]) : GE[ R ] = {
 //      x match {
@@ -90,14 +90,14 @@ object GE {
 //      }
 //   }
 
-   private final class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
+   private final case class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
 def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
       def displayName = "GE.Seq"
       override def toString = displayName + elems.mkString( "(", ",", ")" )
    }
-   private final class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
+   private final case class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
 def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems )
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
