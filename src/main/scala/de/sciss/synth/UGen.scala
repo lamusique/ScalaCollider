@@ -29,8 +29,10 @@
 package de.sciss.synth
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import annotation.switch
+import runtime.ScalaRunTime
 
-sealed trait UGen {
+sealed trait UGen extends Product with MaybeIndividual {
    // ---- constructor ----
    UGenGraph.builder.addUGen( this )
 
@@ -52,7 +54,28 @@ sealed trait UGen {
       name + "." + rate.methodName + inputs.mkString( "(", ", ", ")" )
    }
 
-//   private[synth] def ref: AnyRef = "hallo"
+   // the full UGen spec:
+   // name, rate, specialIndex, inputs, outputRates
+   override final def productPrefix: String = "UGen"
+   final def productArity : Int = 5
+   final def productElement( n: Int ) : Any = (n: @switch) match {
+      case 0 => name
+      case 1 => rate
+      case 2 => specialIndex
+      case 3 => inputs
+      case 4 => outputRates
+      case _ => throw new java.lang.IndexOutOfBoundsException( n.toString )
+   }
+   final def canEqual( x: Any ) : Boolean = x.isInstanceOf[ UGen ]
+   override def hashCode(): Int = ScalaRunTime._hashCode( this )
+   override def equals( x: Any ) : Boolean = (this eq x.asInstanceOf[ AnyRef ]) || (x match {
+     case u: UGen =>
+        u.name == name && u.rate == rate && u.specialIndex == specialIndex && u.inputs == inputs &&
+           u.outputRates == outputRates && u.canEqual( this )
+     case _ => false
+   })
+
+   private[synth] def ref: AnyRef = this
 }
 
 object UGen {
@@ -64,7 +87,7 @@ object UGen {
    extends UGenProxy with UGen {
 //final def numOutputs = 1
 //      final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
-      final def outputRates: IIdxSeq[ Rate ] = IIdxSeq( rate )
+      final def outputRates: IIdxSeq[ Rate ] = rate.toIndexedSeq // IIdxSeq( rate )
 
 //      override def equals( x: Any ) : Boolean = {
 //         super.equals( x )
@@ -76,11 +99,14 @@ object UGen {
       final def outputIndex = 0
    }
 
+   object ZeroOut {
+      private val outputRates: IIdxSeq[ Rate ] = IIdxSeq.empty
+   }
    class ZeroOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ])
    extends UGen with HasSideEffect {
       final /* override */ def numOutputs = 0
 //      final def outputs = IIdxSeq.empty
-      final def outputRates: IIdxSeq[ Rate ] = IIdxSeq.empty
+      final def outputRates: IIdxSeq[ Rate ] = ZeroOut.outputRates // IIdxSeq.empty
    }
 
    /**

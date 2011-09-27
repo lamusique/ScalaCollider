@@ -98,7 +98,7 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
 //      }
 //   }
 
-   protected def makeUGen( ins: IIdxSeq[ UGenIn ]): Unit = {
+   protected def makeUGen( ins: IIdxSeq[ UGenIn ]) {
       if( ins.isEmpty ) return
       val rate = ins.map( _.rate ).max
       if( (rate == audio) || (rate == control) ) {
@@ -111,7 +111,7 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
             case None => ins
          }
          val cOut = new Control.UGen( control, 1, UGenGraph.builder.addControl( IIdxSeq( 0 ), Some( "out" ))).outputs( 0 )
-         new UGen.ZeroOut( "Out", rate, cOut +: ins3 )
+         new UGen.ZeroOut( "Out", rate, cOut +: ins3 ) // with WritesBus {}
       }
    }
 }

@@ -261,7 +261,7 @@ object CoinGate {
  */
 final case class CoinGate(rate: Rate, in: GE, prob: GE) extends UGenSource.SingleOut("CoinGate") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(prob.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args) with IsIndividual {}
 }
 object RandSeed {
    def ir: RandSeed = ir()

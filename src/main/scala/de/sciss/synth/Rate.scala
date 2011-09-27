@@ -28,6 +28,8 @@
 
 package de.sciss.synth
 
+import collection.immutable.{ IndexedSeq => IIdxSeq }
+
 /**
  *    @version 0.12, 28-Dec-10
  */
@@ -86,11 +88,11 @@ object MaybeRate {
    }
 }
 sealed abstract class MaybeRate {
-   def lift: Option[ Rate ]
+   def toOption: Option[ Rate ]
    def ?|( r: => Rate ) : Rate
 }
 case object UndefinedRate extends MaybeRate {
-   def lift : Option[ Rate ] = None
+   val toOption : Option[ Rate ] = None
    def ?|( r: => Rate ) : Rate = r
 }
 
@@ -100,7 +102,8 @@ case object UndefinedRate extends MaybeRate {
 sealed abstract class Rate extends MaybeRate with Ordered[ Rate ] {
    val id: Int
    val methodName: String
-   def lift: Option[ Rate ] = Some( this )
+   final val toOption: Option[ Rate ] = Some( this )
+   final val toIndexedSeq: IIdxSeq[ Rate ] = IIdxSeq( this )
    def ?|( r: => Rate ) : Rate = this
    def min( that: Rate ) = if( id < that.id ) this else that
    def max( that: Rate ) = if( id > that.id ) this else that

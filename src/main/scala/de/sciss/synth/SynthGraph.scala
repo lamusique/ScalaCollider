@@ -71,8 +71,7 @@ final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[
             dos.writeShort( spec._1 )
             dos.writeShort( spec._2 )
          })
-sys.error( "TODO")
-//         ugen.outputs.foreach( in => dos.writeByte( in.rate.id ))
+         ugen.outputRates.foreach( r => dos.writeByte( r.id ))
       })
 
       dos.writeShort( 0 ) // variants not supported
@@ -253,7 +252,8 @@ object UGenGraph {
 
       // updated during build
       private val ugens          = MBuffer.empty[ UGen ]
-      private val ugenSet        = MSet.empty[ UGen ]
+//      private val ugenSet        = MSet.empty[ UGen ]
+//      private val ugenSet        = MSet.empty[ AnyRef ]
       private var controlValues  = IIdxSeq.empty[ Float ]
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
 //      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
@@ -285,7 +285,7 @@ val eff=true
             if( eff ) numIneff -= 1
             new IndexedUGen( ugen, idx, eff )
          })
-         val ugenMap: Map[ UGen, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen, iu))( breakOut )
+         val ugenMap: Map[ AnyRef, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen.ref, iu))( breakOut )
          indexedUGens.foreach( iu => {
             // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
             // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
@@ -298,14 +298,14 @@ val eff=true
                   rc
                }
                case up: UGenProxy => {
-                  val iui         = ugenMap( up.source )
+                  val iui         = ugenMap( up.source.ref )
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, up.outputIndex )
                }
                case ControlUGenOutProxy( proxy, outputIndex, _ ) => {
                   val (ugen, off) = ctrlProxyMap( proxy )
-                  val iui         = ugenMap( ugen )
+                  val iui         = ugenMap( ugen.ref )
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, off + outputIndex )
@@ -370,8 +370,9 @@ val eff=true
       }
 
       def addUGen( ugen: UGen ) {
+//         if( ugenSet.add( ugen )) ugens += ugen
          // OOO
-         if( ugenSet.add( ugen )) ugens += ugen
+         /* if( ugenSet.add( ugen.ref )) */ ugens += ugen
       }
 
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = {
