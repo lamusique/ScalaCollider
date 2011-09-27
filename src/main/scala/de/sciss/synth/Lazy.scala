@@ -30,21 +30,24 @@ package de.sciss.synth
 
 object Lazy {
    trait Expander[ +U ] extends Lazy /* with Expands[ U ] */ {
-      private lazy val cache = new Cache( this )
+//      private lazy val cache = new Cache( this )
+
+      // this acts now as a fast unique reference
+      private val ref = new AnyRef
 
       // ---- constructor ----
       SynthGraph.builder.addLazy( this )
 
       final def force( b: UGenGraphBuilder ) { visit( b )}
       final def expand: U = visit( UGenGraph.builder )
-      private def visit( b: UGenGraphBuilder ): U = b.visit( cache, makeUGens )
+      private def visit( b: UGenGraphBuilder ): U = b.visit( ref, makeUGens )
       protected def makeUGens : U
    }
 
-   final class Cache[ +T <: Lazy ]( val self: T ) extends Proxy with Lazy {
-      override val hashCode: Int = self.hashCode
-      def force( b: UGenGraphBuilder ) { self.force( b )}
-   }
+//   final class Cache[ +T <: Lazy ]( val self: T ) extends Proxy with Lazy {
+//      override val hashCode: Int = self.hashCode
+//      def force( b: UGenGraphBuilder ) { self.force( b )}
+//   }
 }
 
 trait Lazy {

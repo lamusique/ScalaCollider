@@ -35,11 +35,8 @@ import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
 import ugen.EnvGen
 import sys.error
 
-/**
- *    @version 0.12, 02-Aug-10
- */
 final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float ],
-                      controlNames: IIdxSeq[ (String, Int) ], ugens: IIdxSeq[ UGenGraph.RichUGen ]) {
+                            controlNames: IIdxSeq[ (String, Int) ], ugens: IIdxSeq[ UGenGraph.RichUGen ]) {
 //   override lazy val hashCode = ... TODO: figure out how case class calculates it...
    private[synth] def write( dos: DataOutputStream ) {
       // ---- constants ----
@@ -74,7 +71,8 @@ final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[
             dos.writeShort( spec._1 )
             dos.writeShort( spec._2 )
          })
-         ugen.outputs.foreach( in => dos.writeByte( in.rate.id ))
+sys.error( "TODO")
+//         ugen.outputs.foreach( in => dos.writeByte( in.rate.id ))
       })
 
       dos.writeShort( 0 ) // variants not supported
@@ -244,7 +242,8 @@ object UGenGraph {
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
 //      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
       def addUGen( ugen: UGen ) {}
-      def visit[ U ]( src: Lazy, init: => U ) : U = outOfContext
+//      def visit[ U ]( src: Lazy, init: => U ) : U = outOfContext
+      def visit[ U ]( ref: AnyRef, init: => U ) : U = outOfContext
 
       private def outOfContext : Nothing = error( "Out of context" )
    }
@@ -259,7 +258,8 @@ object UGenGraph {
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
 //      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
 
-      private val sourceMap      = MMap.empty[ Lazy, Any ]
+//      private val sourceMap      = MMap.empty[ Lazy, Any ]
+      private val sourceMap      = MMap.empty[ AnyRef, Any ]
 
       def build = {
          graph.sources.foreach( _.force( builder ))
@@ -351,16 +351,26 @@ val eff=true
          sorted
       }
 
-      def visit[ U ]( src: Lazy, init: => U ) : U = {
-         sourceMap.getOrElse( src, {
+//      def visit[ U ]( src: Lazy, init: => U ) : U = {
+//         sourceMap.getOrElse( src, {
+//            val exp = init // .asInstanceOf[ U ]
+//            sourceMap += src -> exp
+////            exp.foreach( addUGen( _ ))
+//            exp
+//         }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
+//      }
+
+      def visit[ U ]( ref: AnyRef, init: => U ) : U = {
+         sourceMap.getOrElse( ref, {
             val exp = init // .asInstanceOf[ U ]
-            sourceMap += src -> exp
+            sourceMap += ref -> exp
 //            exp.foreach( addUGen( _ ))
             exp
          }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
       }
 
       def addUGen( ugen: UGen ) {
+         // OOO
          if( ugenSet.add( ugen )) ugens += ugen
       }
 

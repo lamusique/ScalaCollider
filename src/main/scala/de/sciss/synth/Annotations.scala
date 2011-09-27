@@ -64,10 +64,11 @@ trait HasDoneFlag
  *    defensively mark every ugen as individual
  *    which writes to a Buffer or Bus.
  */
-trait IsIndividual {
-   override def equals( x: Any ) : Boolean = super.equals( x )
-   override def hashCode() = super.hashCode()
-}
+trait IsIndividual
+//{
+//   override def equals( x: Any ) : Boolean = super.equals( x )
+//   override def hashCode() = super.hashCode()
+//}
 trait UsesRandSeed extends IsIndividual
 trait WritesBuffer extends HasSideEffect with IsIndividual  // XXX eventually: WritesBuffer[T] { def buf: T }
 trait WritesFFT extends HasSideEffect with IsIndividual

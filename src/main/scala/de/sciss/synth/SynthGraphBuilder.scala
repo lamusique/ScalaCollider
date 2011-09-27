@@ -43,7 +43,8 @@ trait UGenGraphBuilder {
    def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
    def build : UGenGraph
 
-   def visit[ U ]( src: Lazy, init: => U ) : U
+//   def visit[ U ]( src: Lazy, init: => U ) : U
+   def visit[ U ]( ref: AnyRef, init: => U ) : U
 
 //   private var indivCnt = 0
 //   def individuate : Int = {

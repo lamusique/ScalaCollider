@@ -36,7 +36,8 @@ sealed trait UGen {
 
    def rate: Rate // YYY
    def numOutputs: Int // YYY
-   def outputs: IIdxSeq[ UGenIn ] // YYY   XXX could be UGenProxy
+//   def outputs: IIdxSeq[ UGenIn ] // YYY   XXX could be UGenProxy
+   def outputRates: IIdxSeq[ Rate ]
 
    def name : String
    def displayName = name
@@ -45,11 +46,13 @@ sealed trait UGen {
    def numInputs = inputs.size
    def source = this
    def specialIndex = 0
-   def outputIndex = 0
+//   def outputIndex = 0
 
    override def toString: String = {
       name + "." + rate.methodName + inputs.mkString( "(", ", ", ")" )
    }
+
+//   private[synth] def ref: AnyRef = "hallo"
 }
 
 object UGen {
@@ -57,24 +60,42 @@ object UGen {
     *    A SingleOutUGen is a UGen which has exactly one output, and
     *    hence can directly function as input to another UGen without expansion.
     */
-   class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ]) extends UGenProxy with UGen {
+   class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ])
+   extends UGenProxy with UGen {
 //final def numOutputs = 1
-      final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
+//      final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
+      final def outputRates: IIdxSeq[ Rate ] = IIdxSeq( rate )
+
+//      override def equals( x: Any ) : Boolean = {
+//         super.equals( x )
+//      }
+//
+//      override def hashCode() = {
+//         super.hashCode()
+//      }
+      final def outputIndex = 0
    }
 
-   class ZeroOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ]) extends UGen with HasSideEffect {
+   class ZeroOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ])
+   extends UGen with HasSideEffect {
       final /* override */ def numOutputs = 0
-      final def outputs = IIdxSeq.empty
+//      final def outputs = IIdxSeq.empty
+      final def outputRates: IIdxSeq[ Rate ] = IIdxSeq.empty
    }
 
    /**
     * A class for UGens with multiple outputs
     */
-   class MultiOut( val name: String, val rate: Rate, outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
+   class MultiOut( val name: String, val rate: Rate, val outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
    extends UGen with UGenInGroup {
       final def numOutputs                      = outputRates.size
-      final lazy val outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map( tup => OutProxy( this, tup._2, tup._1 ))
-      final def unwrap( i: Int ) : UGenInLike   = outputs( i % outputRates.size )
+//      final lazy val outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map( tup => OutProxy( this, tup._2, tup._1 ))
+      final def unwrap( i: Int ) : UGenInLike   = {
+//         outputs( i % outputRates.size )
+         OutProxy( this, i % numOutputs ) // , outputRates( i )
+      }
+
+      def outputs: IIdxSeq[ UGenIn ] = IIdxSeq.tabulate( numOutputs )( ch => OutProxy( this, ch ))
    }
 
    /**
@@ -82,10 +103,11 @@ object UGen {
     *    A sequence of these form the representation of a multi-channel-expanded
     *    UGen.
     */
-   final case class OutProxy( source: UGen, outputIndex: Int, rate: Rate )
+   final case class OutProxy( source: UGen, outputIndex: Int /*, rate: Rate */)
    extends UGenIn with UGenProxy {
       override def toString = source.toString + ".\\(" + outputIndex + ")"
       def displayName = source.displayName + " \\ " + outputIndex
+      def rate : Rate = source.outputRates( outputIndex )
    }
 }
 
@@ -146,7 +168,7 @@ sealed trait UGenProxy extends UGenIn {
 object Constant {
    @inline private def cn( f: Float )     = Constant( f )
    @inline private def cn( d: Double )    = Constant( d.toFloat )
-   @inline private def cn( b: Boolean )   = Constant( if( b ) 1f else 0f )
+//   @inline private def cn( b: Boolean )   = Constant( if( b ) 1f else 0f )
 }
 
 //case class ConstantUGenIn( value: Float ) extends UGenIn {
