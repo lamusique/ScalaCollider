@@ -43,6 +43,7 @@ sealed trait UGen extends Product with MaybeIndividual {
 
    def name : String
    def displayName = name
+
 //   def outputRates: Seq[ Rate ]
    def inputs: IIdxSeq[ UGenIn ]
    def numInputs = inputs.size

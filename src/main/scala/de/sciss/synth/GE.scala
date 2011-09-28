@@ -94,14 +94,14 @@ object GE {
 def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
-      def displayName = "GE.Seq"
+      override def displayName = "GE.Seq"
       override def toString = displayName + elems.mkString( "(", ",", ")" )
    }
    private final case class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
 def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems )
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
-      def displayName = "GE.Seq"
+      override def displayName = "GE.Seq"
       override def toString = displayName + elems.mkString( "(", ",", ")" )
    }
 
@@ -128,7 +128,13 @@ trait GE {
    def expand: UGenInLike
 
 //   final def mexpand = IIdxSeq( ge )
+
    def displayName: String
+
+//   def displayName = {
+//      val cn = getClass.getName
+//      cn.substring( cn.lastIndexOf( '.' ) + 1 )
+//   }
 
    /**
     * Decomposes the graph element into its distinct outputs. For a single-output UGen

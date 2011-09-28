@@ -116,7 +116,7 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends C
 sealed trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
-   def displayName: String // YYY
+//   def displayName: String // YYY
 }
 
 abstract class AbstractControlProxy[ Impl ]( outputRates: IIdxSeq[ Rate ])
@@ -146,7 +146,7 @@ def numOutputs = outputRates.size
 //      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
 //   }
 
-   def displayName = {
+   override def displayName = {
       val cn = getClass.getName
       cn.substring( cn.lastIndexOf( '.' ) + 1, cn.length - 5 ) // i.e. class name without "Proxy" extension
    }
