@@ -3,14 +3,47 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jun 24 13:05:41 BST 2011
- * ScalaCollider-UGens version: 0.12
+ * Created: Wed Sep 28 23:54:52 CEST 2011
+ * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+/**
+ * A UGen performing short-time forward fourier transformations. In order to properly link
+ * the spectral ugens (`PV_...`), you should begin by using the output of each UGen
+ * (which is just the fft buffer identifier), and use that as buffer input of the next UGen.
+ * That way, the UGen graph is correctly sorted. E.g. `IFFT( PV_...( FFT( buf, in )))`.
+ * 
+ * The UGen will initially output zero until the first FFT can be performed. This is the
+ * case after `hop * fftSize`. Thus for a default fft buffer size of 1024 and a `hop` of
+ * 0.5, and for a default control block size of 64, for the first 1024*0.5/64 = 8
+ * control blocks the UGen will output zero. This also implies that the first FFT in this
+ * case if performed on the first 512 samples of the `in` signal (prepended by 512 zeros).
+ * In other words, the first 'full' FFT of the input happens after fftSize/controlBlockSize
+ * cycles, no matter what hop size was chosen.
+ * 
+ * If you use FFT for performing signal analysis and not phase vocoding effects, make sure
+ * you change the window type accordingly.
+ * 
+ * @param buf             The buffer to use for writing the FFT to. The size must be a power of two.
+ *                        Since `FFT` operates at control rate (also being a power of two),
+ *                        the buffer should probably be at least as long as the control block size.
+ * @param in              The time domain signal to be transformed into the spectral domain.
+ * @param winType         The window function applied before each FFT is taken. The default of 0 is a
+ *                        sine window which is good for phase vocoder applications (using the `PV_...` UGens).
+ *                        For analysis applications, you may want to use -1 which is a rectangle window
+ *                        (effectively no windowing) or 1 which is a Hann window. A Hann window gives
+ *                        perfect overlap-add reconstruction for a hope size of 0.5 (or 0.25 etc.)
+ * @param active          This parameter can be temporarily set to <= 0 to pause the FFT operation.
+ * @param winSize         With the default value of zero, the window size equals the fft size. If you wish to
+ *                        perform zero padding, an explicit window size can be specified.
+ * 
+ * @see [[de.sciss.synth.ugen.IFFT]]
+ * @see [[de.sciss.synth.ugen.FFTTrigger]]
+ */
 final case class FFT(buf: GE, in: GE, hop: GE = 0.5f, winType: GE = 0.0f, active: GE = 1.0f, winSize: GE = 0.0f) extends UGenSource.SingleOut("FFT") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, hop.expand, winType.expand, active.expand, winSize.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)

@@ -3,8 +3,8 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Fri Jun 24 13:05:41 BST 2011
- * ScalaCollider-UGens version: 0.12
+ * Created: Wed Sep 28 23:54:52 CEST 2011
+ * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
 package de.sciss.synth
@@ -394,10 +394,97 @@ final case class PulseCount(rate: Rate, trig: GE, reset: GE) extends UGenSource.
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+/**
+ * A pulse counting UGen. Each trigger increments a counter which is output as a signal.
+ * The counter wraps inside the interval from `lo` to `hi` (inclusive). That if you
+ * use a `lo` other than zero, you might want to adjust `resetVal` as well. `Stepper`
+ * always starts with the value in `resetVal`, no matter what `lo` is or whether
+ * the `reset` trigger is high or not.
+ * 
+ * @see [[de.sciss.synth.ugen.PulseCount]]
+ */
 object Stepper {
+   
+   /**
+    * @param trig            The trigger signal which increments the counter. A trigger happens when the signal
+    *                        changes from non-positive to positive. Note that if the UGen is created with the
+    *                        trigger initially high, the counter will also be incremented immediately. Thus
+    *                        a `Stepper.kr(Impulse.kr(1))` will begin by outputting `1`. If you want to avoid this,
+    *                        you could their subtract `Impulse.kr(0)` from the trigger input, or set `resetVal`
+    *                        to `hi`. E.g. `Stepper.kr(Impulse.kr(1), lo = 0, hi = 4, resetVal = 4)` will produce
+    *                        the sequence 0, 1, 2, 4, 0, ...
+    * @param reset           A trigger which resets the counter to `resetVal` immediately.
+    * @param lo              The minimum value output. For a decremental `step` value, the counter jumps
+    *                        to `hi` if it were to fall below `lo`.
+    * @param hi              The maximum value output. For an incremental `step` value, the counter jumps
+    *                        to `lo` if it were to rise beyond `hi`.
+    * @param step            The amount by which the counter increases or decreases upon receiving triggers.
+    *                        Note that if you use a decremental counter, still `lo` must be the minimum and
+    *                        `hi` must be the maximum value output. If `lo` > `hi`, the UGen behaves wrongly.
+    *                        In the case of decremental counter, set `resetVal` to `hi`. E.g. to count
+    *                        from 4 down to 0, use `Stepper.kr(trig, lo = 0, hi = 4, step = -1, resetVal = 4)`, or,
+    *                        if you want to ignore an initial high trigger, you could do
+    *                        `Stepper.kr(Impulse.kr(1), lo = 0, hi = 4, step = -1, resetVal = 0)` --
+    *                        so `resetVal` is `lo` but due to the initial trigger from `Impulse`
+    *                        the `Stepper` will in fact start outputting from `4`.
+    */
    def kr(trig: GE, reset: GE = 0.0f, lo: GE = 0.0f, hi: GE = 7.0f, step: GE = 1.0f, resetVal: GE = 0.0f) = apply(control, trig, reset, lo, hi, step, resetVal)
+   /**
+    * @param trig            The trigger signal which increments the counter. A trigger happens when the signal
+    *                        changes from non-positive to positive. Note that if the UGen is created with the
+    *                        trigger initially high, the counter will also be incremented immediately. Thus
+    *                        a `Stepper.kr(Impulse.kr(1))` will begin by outputting `1`. If you want to avoid this,
+    *                        you could their subtract `Impulse.kr(0)` from the trigger input, or set `resetVal`
+    *                        to `hi`. E.g. `Stepper.kr(Impulse.kr(1), lo = 0, hi = 4, resetVal = 4)` will produce
+    *                        the sequence 0, 1, 2, 4, 0, ...
+    * @param reset           A trigger which resets the counter to `resetVal` immediately.
+    * @param lo              The minimum value output. For a decremental `step` value, the counter jumps
+    *                        to `hi` if it were to fall below `lo`.
+    * @param hi              The maximum value output. For an incremental `step` value, the counter jumps
+    *                        to `lo` if it were to rise beyond `hi`.
+    * @param step            The amount by which the counter increases or decreases upon receiving triggers.
+    *                        Note that if you use a decremental counter, still `lo` must be the minimum and
+    *                        `hi` must be the maximum value output. If `lo` > `hi`, the UGen behaves wrongly.
+    *                        In the case of decremental counter, set `resetVal` to `hi`. E.g. to count
+    *                        from 4 down to 0, use `Stepper.kr(trig, lo = 0, hi = 4, step = -1, resetVal = 4)`, or,
+    *                        if you want to ignore an initial high trigger, you could do
+    *                        `Stepper.kr(Impulse.kr(1), lo = 0, hi = 4, step = -1, resetVal = 0)` --
+    *                        so `resetVal` is `lo` but due to the initial trigger from `Impulse`
+    *                        the `Stepper` will in fact start outputting from `4`.
+    */
    def ar(trig: GE, reset: GE = 0.0f, lo: GE = 0.0f, hi: GE = 7.0f, step: GE = 1.0f, resetVal: GE = 0.0f) = apply(audio, trig, reset, lo, hi, step, resetVal)
 }
+/**
+ * A pulse counting UGen. Each trigger increments a counter which is output as a signal.
+ * The counter wraps inside the interval from `lo` to `hi` (inclusive). That if you
+ * use a `lo` other than zero, you might want to adjust `resetVal` as well. `Stepper`
+ * always starts with the value in `resetVal`, no matter what `lo` is or whether
+ * the `reset` trigger is high or not.
+ * 
+ * @param trig            The trigger signal which increments the counter. A trigger happens when the signal
+ *                        changes from non-positive to positive. Note that if the UGen is created with the
+ *                        trigger initially high, the counter will also be incremented immediately. Thus
+ *                        a `Stepper.kr(Impulse.kr(1))` will begin by outputting `1`. If you want to avoid this,
+ *                        you could their subtract `Impulse.kr(0)` from the trigger input, or set `resetVal`
+ *                        to `hi`. E.g. `Stepper.kr(Impulse.kr(1), lo = 0, hi = 4, resetVal = 4)` will produce
+ *                        the sequence 0, 1, 2, 4, 0, ...
+ * @param reset           A trigger which resets the counter to `resetVal` immediately.
+ * @param lo              The minimum value output. For a decremental `step` value, the counter jumps
+ *                        to `hi` if it were to fall below `lo`.
+ * @param hi              The maximum value output. For an incremental `step` value, the counter jumps
+ *                        to `lo` if it were to rise beyond `hi`.
+ * @param step            The amount by which the counter increases or decreases upon receiving triggers.
+ *                        Note that if you use a decremental counter, still `lo` must be the minimum and
+ *                        `hi` must be the maximum value output. If `lo` > `hi`, the UGen behaves wrongly.
+ *                        In the case of decremental counter, set `resetVal` to `hi`. E.g. to count
+ *                        from 4 down to 0, use `Stepper.kr(trig, lo = 0, hi = 4, step = -1, resetVal = 4)`, or,
+ *                        if you want to ignore an initial high trigger, you could do
+ *                        `Stepper.kr(Impulse.kr(1), lo = 0, hi = 4, step = -1, resetVal = 0)` --
+ *                        so `resetVal` is `lo` but due to the initial trigger from `Impulse`
+ *                        the `Stepper` will in fact start outputting from `4`.
+ * 
+ * @see [[de.sciss.synth.ugen.PulseCount]]
+ */
 final case class Stepper(rate: Rate, trig: GE, reset: GE, lo: GE, hi: GE, step: GE, resetVal: GE) extends UGenSource.SingleOut("Stepper") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand, lo.expand, hi.expand, step.expand, resetVal.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
