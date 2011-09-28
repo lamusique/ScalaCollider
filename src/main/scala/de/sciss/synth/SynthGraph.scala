@@ -108,7 +108,7 @@ object SynthGraph {
 		val startVal	= (dt <= 0)
       // this is slightly more costly than what sclang does
       // (using non-linear shape plus an extra unary op),
-      // but it fadeout is much smoother this way...
+      // but its fadeout is much smoother this way...
 		EnvGen.kr( Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 ),
          gate, timeScale = dt, doneAction = freeSelf ).squared
 	}
@@ -208,7 +208,9 @@ object SynthGraph {
 }
 
 final case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _ ]]) {
-   def expand = UGenGraph.expand( this )
+   def isEmpty    = sources.isEmpty && controlProxies.isEmpty
+   def nonEmpty   = !isEmpty
+   def expand     = UGenGraph.expand( this )
 }
 
 object UGenGraph {
@@ -247,22 +249,27 @@ object UGenGraph {
       private def outOfContext : Nothing = error( "Out of context" )
    }
 
+//   private object BuilderImpl {
+//      private val _ugens   ...
+//   }
+
    private class BuilderImpl( graph: SynthGraph ) extends UGenGraphBuilder {
       builder =>
 
       // updated during build
       private val ugens          = MBuffer.empty[ UGen ]
-//      private val ugenSet        = MSet.empty[ UGen ]
 //      private val ugenSet        = MSet.empty[ AnyRef ]
       private var controlValues  = IIdxSeq.empty[ Float ]
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
-//      private var controlProxies = MSet.empty[ ControlProxyLike[ _, _ ]]
-
-//      private val sourceMap      = MMap.empty[ Lazy, Any ]
       private val sourceMap      = MMap.empty[ AnyRef, Any ]
 
       def build = {
-         graph.sources.foreach( _.force( builder ))
+//         graph.sources.foreach( _.force( builder ))
+         var g = graph
+         while( g.nonEmpty ) {
+            // XXX this could be more efficient eventually -- using a 'clearable' SynthGraph
+            g = SynthGraph( g.sources.foreach( _.force( builder )))  // allow for further graphs being created
+         }
          val ctrlProxyMap        = buildControls( graph.controlProxies )
          val (igens, constants)  = indexUGens( ctrlProxyMap )
          val indexedUGens        = sortUGens( igens )

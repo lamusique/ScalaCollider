@@ -137,7 +137,7 @@ object UGen {
    }
 }
 
-sealed trait UGenInLike {
+sealed trait UGenInLike extends GE {
 //   def ungroup : IIdxSeq[ UGenInLike ]
 //   def numOutputs : Int
    private[synth] def outputs : IIdxSeq[ UGenInLike ]
@@ -150,6 +150,9 @@ sealed trait UGenInLike {
     */
    private[synth] def unwrap( i: Int ) : UGenInLike
    private[synth] def flatOutputs : IIdxSeq[ UGenIn ]
+
+   // ---- GE ----
+   final def expand: UGenInLike = this
 }
 
 //object UGenIn {
@@ -178,6 +181,10 @@ object UGenInGroup {
       def outputs : IIdxSeq[ UGenInLike ] = xs
       def numOutputs : Int                = xs.size
       private[synth] def unwrap( i: Int ) : UGenInLike   = xs( i % xs.size )
+
+      // ---- GE ----
+      def displayName = "UGenInGroup"
+      def rate : MaybeRate = MaybeRate.reduce( xs.map( _.rate ): _* )
    }
 }
 sealed trait UGenInGroup extends UGenInLike {
@@ -213,8 +220,9 @@ final case class Constant( value: Float ) extends GE with UGenIn {
    def displayName = value.toString
    def rate: Rate = scalar
 
+//   def expand : UGenInLike = this
+
 //   def expand: IIdxSeq[ Constant ] = IIdxSeq( this ) // ConstantUGenIn( value )
-   def expand : UGenInLike = this
 
 //   override private[synth] def ops = new ConstantOps( this )
 

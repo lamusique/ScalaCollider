@@ -12,11 +12,22 @@ extends GE.Lazy { // UGenSource.MultiOut( "SplayAz", numChannels )
    def numOutputs = numChannels
    def displayName = "SplayAz"
 
+//   protected def makeUGens : UGenInLike = {
+//      val n    = in.numOutputs
+//      val pf   = (0.5f * spread) / n
+//      val pos  = Seq.tabulate( n )( _ * pf + center )
+//      val mix  = Mix( PanAz( rate, numChannels, in, pos, level, width, orient ))
+//      mix.expand
+//   }
+
    protected def makeUGens : UGenInLike = {
-      val n    = in.numOutputs
+      val _in  = in.expand
+      val n    = _in.outputs.size
+//println( "n = " + n + "; _in.numOutputs = " + _in.numOutputs )
+//      val n    = in.numOutputs
       val pf   = (0.5f * spread) / n
       val pos  = Seq.tabulate( n )( _ * pf + center )
-      val mix  = Mix( PanAz( rate, numChannels, in, pos, level, width, orient ))
+      val mix  = Mix( PanAz( rate, numChannels, _in, pos, level, width, orient ))
       mix.expand
    }
 }
