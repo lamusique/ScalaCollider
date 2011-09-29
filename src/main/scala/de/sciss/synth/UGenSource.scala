@@ -34,7 +34,7 @@ object UGenSource {
    abstract class ZeroOut( val name: String ) extends UGenSource[ Unit ] {
       protected def makeUGens : Unit
 
-      final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) : Unit = {
+      final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) {
          var i = 0; while( i < exp ) {
             unwrap( args.map( a => a.unwrap( i )))
             i += 1
@@ -43,9 +43,9 @@ object UGenSource {
    }
 
    abstract class SingleOut( val name: String ) extends SomeOut {
-final def numOutputs = 1
+//final def numOutputs = 1
    }
-   abstract class MultiOut( val name: String, val numOutputs: Int ) extends SomeOut // , UGen.MultiOut ]
+   abstract class MultiOut( val name: String /*, val numOutputs: Int */) extends SomeOut // , UGen.MultiOut ]
 
    protected sealed trait SomeOut extends UGenSource[ UGenInLike ] with GE.Lazy {
 //      protected def makeUGens : UGenInLike

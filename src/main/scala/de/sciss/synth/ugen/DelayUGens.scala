@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Sep 28 23:54:52 CEST 2011
+ * Created: Thu Sep 29 16:47:16 CEST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -334,9 +334,9 @@ object PlayBuf {
  * @see [[de.sciss.synth.ugen.BufRateScale]]
  * @see [[de.sciss.synth.ugen.BufFrames]]
  */
-final case class PlayBuf(rate: Rate, numChannels: Int, buf: GE, speed: GE, trig: GE, startPos: GE, loop: GE, doneAction: GE) extends UGenSource.MultiOut("PlayBuf", numChannels) with HasSideEffect with HasDoneFlag {
+final case class PlayBuf(rate: Rate, numChannels: Int, buf: GE, speed: GE, trig: GE, startPos: GE, loop: GE, doneAction: GE) extends UGenSource.MultiOut("PlayBuf") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, trig.expand, startPos.expand, loop.expand, doneAction.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
 object RecordBuf {
    def kr(in: GE, buf: GE, offset: GE = 0.0f, recLevel: GE = 1.0f, preLevel: GE = 0.0f, run: GE = 1.0f, loop: GE = 1.0f, trig: GE = 1.0f, doneAction: GE = doNothing) = apply(control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
@@ -413,9 +413,9 @@ object BufRd {
  * @see [[de.sciss.synth.ugen.BufFrames]]
  * @see [[de.sciss.synth.ugen.BufRateScale]]
  */
-final case class BufRd(rate: Rate, numChannels: Int, buf: GE, index: GE, loop: GE, interp: GE) extends UGenSource.MultiOut("BufRd", numChannels) {
+final case class BufRd(rate: Rate, numChannels: Int, buf: GE, index: GE, loop: GE, interp: GE) extends UGenSource.MultiOut("BufRd") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand, interp.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
 object BufWr {
    def kr(in: GE, buf: GE, index: GE = 0.0f, loop: GE = 1.0f) = apply(control, in, buf, index, loop)
@@ -538,9 +538,9 @@ object Pitch {
  *                        gives a kind of measure of "purity" of the pitched signal.
  *                        This parameter is scalar only.
  */
-final case class Pitch(rate: Rate, in: GE, initFreq: GE, minFreq: GE, maxFreq: GE, execFreq: GE, binsPerOct: GE, median: GE, ampThresh: GE, peakThresh: GE, downSample: GE, clarity: GE) extends UGenSource.MultiOut("Pitch", 2) {
+final case class Pitch(rate: Rate, in: GE, initFreq: GE, minFreq: GE, maxFreq: GE, execFreq: GE, binsPerOct: GE, median: GE, ampThresh: GE, peakThresh: GE, downSample: GE, clarity: GE) extends UGenSource.MultiOut("Pitch") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, initFreq.expand, minFreq.expand, maxFreq.expand, execFreq.expand, binsPerOct.expand, median.expand, ampThresh.expand, peakThresh.expand, downSample.expand, clarity.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(2)(rate), _args)
 }
 object BufDelayN {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f) = apply(audio, buf, in, delayTime)
@@ -687,9 +687,9 @@ final case class PitchShift(in: GE, winSize: GE, pitchRatio: GE, pitchDispersion
 object TGrains {
    def ar(numChannels: Int, trig: GE, buf: GE, speed: GE = 1.0f, centerPos: GE = 0.0f, dur: GE = 0.1f, pan: GE = 0.0f, amp: GE = 0.1f, interp: GE = 4.0f) = apply(numChannels, trig, buf, speed, centerPos, dur, pan, amp, interp)
 }
-final case class TGrains(numChannels: Int, trig: GE, buf: GE, speed: GE, centerPos: GE, dur: GE, pan: GE, amp: GE, interp: GE) extends UGenSource.MultiOut("TGrains", numChannels) with AudioRated {
+final case class TGrains(numChannels: Int, trig: GE, buf: GE, speed: GE, centerPos: GE, dur: GE, pan: GE, amp: GE, interp: GE) extends UGenSource.MultiOut("TGrains") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, buf.expand, speed.expand, centerPos.expand, dur.expand, pan.expand, amp.expand, interp.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numOutputs)(audio), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
 }
 object ScopeOut {
    def ar(buf: GE, in: GE) = apply(audio, buf, in)

@@ -32,7 +32,7 @@ import aux.Optional
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, UnaryOpUGen, MulAdd}
+import ugen.{Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, MulAdd}
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -115,12 +115,16 @@ def numOutputs = elems.size
 
    trait Lazy extends Lazy.Expander[ UGenInLike ] with GE
 }
-trait GE {
+//private[synth] sealed trait GEIn
+//private[synth] final case class GEMultiple( elem: GE ) extends GEIn
+trait GE /* extends GEIn */ {
    ge =>
 
 //   type Rate = R
 
    def rate: MaybeRate
+
+//   private[synth] def multiple: GEIn = GEMultiple( this )
 
 //   def expand: IIdxSeq[ UGenIn ]
 //   def mexpand: IIdxSeq[ GE[ R ]]
@@ -148,7 +152,13 @@ trait GE {
     *          `val Seq( left, right ) = Pan.ar( ... ).outputs`
     */
 //   def outputs : IIdxSeq[ GE ]
-   def numOutputs : Int // = outputs.size
+
+   /**
+    * The number of outputs produced when calling `expand`. Do not
+    * confuse this with the number of `UGenIn` instances produced
+    * which can be higher due to multichannel expansion.
+    */
+//   def numOutputs : Int // = outputs.size
 
 // BBB
 //   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )

@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Sep 28 23:54:52 CEST 2011
+ * Created: Thu Sep 29 16:47:16 CEST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -1110,9 +1110,9 @@ final case class DetectSilence(rate: MaybeRate, in: GE, amp: GE, dur: GE, doneAc
 object Hilbert {
    def ar(in: GE) = apply(audio, in)
 }
-final case class Hilbert(rate: Rate, in: GE) extends UGenSource.MultiOut("Hilbert", 2) {
+final case class Hilbert(rate: Rate, in: GE) extends UGenSource.MultiOut("Hilbert") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(2)(rate), _args)
 }
 object FreqShift {
    def ar(in: GE, freq: GE = 0.0f, phase: GE = 0.0f) = apply(audio, in, freq, phase)

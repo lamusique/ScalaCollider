@@ -5,7 +5,7 @@ import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
 
 final case class Zip( elems: GE* ) extends GE.Lazy {
-def numOutputs = elems.minBy( _.numOutputs ).numOutputs
+//def numOutputs = elems.minBy( _.numOutputs ).numOutputs
    def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
 
    def displayName = "Zip"

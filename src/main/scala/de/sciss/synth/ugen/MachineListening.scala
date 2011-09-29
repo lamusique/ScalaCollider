@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Sep 28 23:54:52 CEST 2011
+ * Created: Thu Sep 29 16:47:16 CEST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -205,9 +205,9 @@ object MFCC {
  * @param numCoeffs       the number of coefficients, defaults to 13, maximum of 42; more efficient to use less of course!
  *                        Since this number determines the number of output channels of the UGen, it has to be an `Int`.
  */
-final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut("MFCC", numCoeffs) with ControlRated {
+final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut("MFCC") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numOutputs)(control), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numCoeffs)(control), _args)
 }
 /**
  * An onset detecting UGen for musical audio signals.
@@ -393,9 +393,9 @@ object BeatTrack2 {
  *                        120 frames which represent individual tempo weights; tempi go from 60 to 179 bpm in steps of one bpm, so
  *                        you make sure the buffer has 120 frames.
  */
-final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing: GE, lock: GE, weighting: GE) extends UGenSource.MultiOut("BeatTrack2", 6) with ControlRated {
+final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing: GE, lock: GE, weighting: GE) extends UGenSource.MultiOut("BeatTrack2") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand, numChannels.expand, winSize.expand, phaseSpacing.expand, lock.expand, weighting.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numOutputs)(control), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(6)(control), _args)
 }
 /**
  * A UGen to measure spectral flatness.

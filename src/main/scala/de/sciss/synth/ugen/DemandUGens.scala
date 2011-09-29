@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Wed Sep 28 23:54:52 CEST 2011
+ * Created: Thu Sep 29 16:47:16 CEST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -69,9 +69,9 @@ object Demand {
  * @param in              a demand-rate signal (possibly multi-channel) which is read at each trigger
  * @param reset           trigger. Resets the list of ugens (`multi`) when triggered.
  */
-final case class Demand(rate: Rate, trig: GE, in: GE, reset: GE) extends UGenSource.MultiOut("Demand", in.numOutputs) {
+final case class Demand(rate: Rate, trig: GE, in: GE, reset: GE) extends UGenSource.MultiOut("Demand") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, reset.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numOutputs)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(_args.size.-(2))(rate), _args)
 }
 /**
  * A UGen which polls results from demand-rate ugens in intervals specified by a durational input.
