@@ -41,6 +41,7 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo()
+//      test2()
       sys.exit( 1 )
 //      test()
    }
@@ -49,6 +50,14 @@ object ScalaCollider {
       println( "\n" + name + " v" + versionString + "\n" + copyright +
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
    }
+
+//   private def test2() {
+//      import de.sciss.synth._
+//      import ugen._
+//      SynthDef( "zip" ) {
+//         Out.ar( 0, Zip( SinOsc.ar( Seq( 1, 2 )), SinOsc.ar( Seq( 3, 4 ))))
+//      }
+//   }
 
 //   private def test() {
 //      import de.sciss.synth._
