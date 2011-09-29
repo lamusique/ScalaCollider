@@ -183,6 +183,8 @@ object UGenInGroup {
       def numOutputs : Int                = xs.size
       private[synth] def unwrap( i: Int ) : UGenInLike   = xs( i % xs.size )
 
+      override def toString = displayName + xs.mkString( "(", ",", ")" )
+
       // ---- GE ----
       def displayName = "UGenInGroup"
       def rate : MaybeRate = MaybeRate.reduce( xs.map( _.rate ): _* )
@@ -290,8 +292,9 @@ final case class Constant( value: Float ) extends GE with UGenIn {
 //   def expand: IIdxSeq[ UGenIn ] = IIdxSeq( this )
 //}
 
-final case class ControlUGenOutProxy( source: ControlProxyLike[ _ ], outputIndex: Int, rate: Rate )
+final case class ControlUGenOutProxy( source: ControlProxyLike[ _ ], outputIndex: Int /*, rate: Rate */)
 extends UGenIn { // UGenIn[ R ] {
+   def rate = source.rate
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex
 }

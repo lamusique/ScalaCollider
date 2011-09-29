@@ -114,20 +114,22 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends C
 }
 
 sealed trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
+   def values: IIdxSeq[ Float ]
+   def rate: Rate
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
 //   def displayName: String // YYY
 }
 
-abstract class AbstractControlProxy[ Impl ]( outputRates: IIdxSeq[ Rate ])
+abstract class AbstractControlProxy[ Impl ] // ( numChannels: Int )
 extends ControlProxyLike[ Impl ] {
    // ---- constructor ----
    SynthGraph.builder.addControlProxy( this )
 
-def numOutputs = outputRates.size
+//def numOutputs = outputRates.size
 
    def name: Option[ String ]
-   def values: IIdxSeq[ Float ]
+//   def values: IIdxSeq[ Float ]
 
 //   def this( rate: Rate, numOutputs: Int ) =  this( IIdxSeq.fill( numOutputs )( rate ))
 
@@ -139,8 +141,23 @@ def numOutputs = outputRates.size
 //   final def expand: IIdxSeq[ UGenIn /* [ R ] */ ] = outputRates.zipWithIndex.map(
 //      tup => ControlUGenOutProxy /* [ R ] */ ( this, tup._2, tup._1 ))
 
-   final def expand: UGenInLike = UGenInGroup( outputRates.zipWithIndex.map(
-      tup => ControlUGenOutProxy( this, tup._2, tup._1 )))
+   /**
+    * Note: this expands to a single ControlUGenOutProxy for numChannels == 1,
+    * otherwise to a sequence of proxies wrapped in UGenInGroup. Therefore,
+    * {{{
+    *    In.ar( "in".kr, 2 )
+    * }}}
+    * results in an `In` UGen, and doesn't rewrap into a UGenInGroup
+    * (e.g. behaves like `In.ar( 0, 2 )` and not `In.ar( Seq( 0 ), 2 )` which
+    * would mess up successive multi channel expansion.
+    */
+   final def expand: UGenInLike = if( values.size == 1 ) {
+      ControlUGenOutProxy( this, 0 )
+   } else {
+//      UGenInGroup( outputRates.zipWithIndex.map(
+//         tup => ControlUGenOutProxy( this, tup._2, tup._1 )))
+      UGenInGroup( IIdxSeq.tabulate( values.size )( i => ControlUGenOutProxy( this, i )))
+   }
 
 //   final override def toString: String = {
 //      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )

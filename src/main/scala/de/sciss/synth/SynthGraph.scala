@@ -265,12 +265,15 @@ object UGenGraph {
 
       def build = {
 //         graph.sources.foreach( _.force( builder ))
-         var g = graph
+         var g                = graph
+         var controlProxies   = MBuffer.empty[ ControlProxyLike[ _ ]]
          while( g.nonEmpty ) {
-            // XXX this could be more efficient eventually -- using a 'clearable' SynthGraph
+            // XXX these two lines could be more efficient eventually -- using a 'clearable' SynthGraph
+            controlProxies ++= g.controlProxies
             g = SynthGraph( g.sources.foreach( _.force( builder )))  // allow for further graphs being created
          }
-         val ctrlProxyMap        = buildControls( graph.controlProxies )
+//         val ctrlProxyMap        = buildControls( graph.controlProxies )
+         val ctrlProxyMap        = buildControls( controlProxies )
          val (igens, constants)  = indexUGens( ctrlProxyMap )
          val indexedUGens        = sortUGens( igens )
          val richUGens : IIdxSeq[ RichUGen ] =
@@ -310,7 +313,7 @@ val eff=true
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, up.outputIndex )
                }
-               case ControlUGenOutProxy( proxy, outputIndex, _ ) => {
+               case ControlUGenOutProxy( proxy, outputIndex /* , _ */) => {
                   val (ugen, off) = ctrlProxyMap( proxy )
                   val iui         = ugenMap( ugen.ref )
                   iu.parents     += iui

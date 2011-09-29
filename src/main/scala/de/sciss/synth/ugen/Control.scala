@@ -64,7 +64,7 @@ extends UGenSource.MultiOut( "Control" /*, values.size */) {
 }
 
 final case class ControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])( val factory: ControlFactory )
-extends AbstractControlProxy[ ControlProxy ]( IIdxSeq.fill( values.size )( rate ))
+extends AbstractControlProxy[ ControlProxy ] // IIdxSeq.fill( values.size )( rate )
 
 final class ControlFactory( rate: Rate ) extends AbstractControlFactory[ ControlProxy ] {
    protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new Control.UGen( rate, numChannels, specialIndex )
@@ -91,7 +91,7 @@ extends UGenSource.MultiOut( "TrigControl" /*, values.size */) with ControlRated
 }
 
 final case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ TrigControlProxy ]( IIdxSeq.fill( values.size )( control )) with ControlRated {
+extends AbstractControlProxy[ TrigControlProxy ] /* ( IIdxSeq.fill( values.size )( control )) */ with ControlRated {
    def factory = TrigControlFactory
 }
 
@@ -120,7 +120,7 @@ extends UGenSource.MultiOut( "AudioControl" /*, values.size */) with AudioRated 
 
 
 final case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ AudioControlProxy ]( IIdxSeq.fill( values.size )( audio )) with AudioRated {
+extends AbstractControlProxy[ AudioControlProxy ] /* ( IIdxSeq.fill( values.size )( audio )) */ with AudioRated {
    def factory = AudioControlFactory
 }
 

@@ -41,8 +41,8 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo()
-//      System.exit( 1 )
-      test()
+      sys.exit( 1 )
+//      test()
    }
 
    def printInfo() {
@@ -50,16 +50,16 @@ object ScalaCollider {
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
    }
 
-   private def test() {
-      import de.sciss.synth._
-      import ugen._
-
-      val g = SynthGraph {
-         val sin1 = SinOsc.ar( Seq( 111, 222 ))
-         val sin2 = SinOsc.ar( Seq( 333, 444, 555 ))
-         val dem  = Demand.ar( Impulse.ar( 1 ), Seq( sin1, sin2 ))
-         val out  = Out.ar( 0, dem )
-      }
-      val u = g.expand
-   }
+//   private def test() {
+//      import de.sciss.synth._
+//      import ugen._
+//
+//      val g = SynthGraph {
+//         val sin1 = SinOsc.ar( Seq( 111, 222 ))
+//         val sin2 = SinOsc.ar( Seq( 333, 444, 555 ))
+//         val dem  = Demand.ar( Impulse.ar( 1 ), Seq( sin1, sin2 ))
+//         val out  = Out.ar( 0, dem )
+//      }
+//      val u = g.expand
+//   }
 }
