@@ -114,7 +114,7 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends C
 }
 
 sealed trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
-   def values: IIdxSeq[ Float ]
+//   def values: IIdxSeq[ Float ]
    def rate: Rate
    def factory: ControlFactoryLike[ Impl ]
    def name: Option[ String ]
@@ -127,6 +127,8 @@ extends ControlProxyLike[ Impl ] {
    SynthGraph.builder.addControlProxy( this )
 
 //def numOutputs = outputRates.size
+
+   def values: IIdxSeq[ Float ]
 
    def name: Option[ String ]
 //   def values: IIdxSeq[ Float ]
