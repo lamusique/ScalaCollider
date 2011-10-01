@@ -152,6 +152,8 @@ extends ControlProxyLike[ Impl ] {
     * results in an `In` UGen, and doesn't rewrap into a UGenInGroup
     * (e.g. behaves like `In.ar( 0, 2 )` and not `In.ar( Seq( 0 ), 2 )` which
     * would mess up successive multi channel expansion.
+    *
+    * This is kind of a particular way of producing the proper `isWrapped` results.
     */
    final def expand: UGenInLike = if( values.size == 1 ) {
       ControlUGenOutProxy( this, 0 )

@@ -86,7 +86,7 @@ object UGen {
     */
    class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ])
    extends UGenProxy with UGen {
-//final def numOutputs = 1
+final def numOutputs = 1
 //      final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
       final def outputRates: IIdxSeq[ Rate ] = rate.toIndexedSeq // IIdxSeq( rate )
 
@@ -123,6 +123,17 @@ object UGen {
       }
 
       def outputs: IIdxSeq[ UGenIn ] = IIdxSeq.tabulate( numOutputs )( ch => OutProxy( this, ch ))
+
+      /*
+         This is important: Imagine for example `Out.ar( PanAz.ar( 4, In.ar( 0, 1 ), pos ))`.
+         If `isWrapped` would report `true` here, the result would be a rewrapping into four
+         `Out` UGens. Obviously we do not want this.
+
+         This corresponds with the following check in method `MultiOutUGen: initOutputs` in sclang:
+         `^if( numChannels == 1, { channels.at( 0 )}, channels )`!
+       */
+//      private[synth] final def isWrapped = numOutputs != 1
+      private[synth] final def unbubble : UGenInLike = if( numOutputs == 1 ) outputs( 0 ) else this
    }
 
    /**
@@ -130,10 +141,14 @@ object UGen {
     *    A sequence of these form the representation of a multi-channel-expanded
     *    UGen.
     */
-   final case class OutProxy( source: UGen, outputIndex: Int /*, rate: Rate */)
+   final case class OutProxy( source: UGen.MultiOut, outputIndex: Int /*, rate: Rate */)
    extends UGenIn with UGenProxy {
-      override def toString = source.toString + ".\\(" + outputIndex + ")"
-      def displayName = source.displayName + " \\ " + outputIndex
+      override def toString = {
+         if( source.numOutputs == 1 ) source.toString else source.toString + ".\\(" + outputIndex + ")"
+      }
+      def displayName = {
+         if( source.numOutputs == 1 ) source.displayName else source.displayName + " \\ " + outputIndex
+      }
       def rate : Rate = source.outputRates( outputIndex )
    }
 }
@@ -142,6 +157,9 @@ sealed trait UGenInLike extends GE {
 //   def ungroup : IIdxSeq[ UGenInLike ]
 //   def numOutputs : Int
    private[synth] def outputs : IIdxSeq[ UGenInLike ]
+//   private[synth] def isWrapped : Boolean
+//   private[synth] def numOutputs : Int
+   private[synth] def unbubble: UGenInLike
 
    /**
     * Returns the UGenInLike element of index i
@@ -168,10 +186,12 @@ sealed trait UGenInLike extends GE {
  */
 sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ GE[ R, UGenIn[ R ]] {
    def rate : Rate
-final def numOutputs: Int = 1
+//   private[synth] final def numOutputs: Int = 1
    private[synth] def outputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
    private[synth] final def unwrap( i: Int ) : UGenInLike = this   // don't bother about the index
    private[synth] final def flatOutputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
+//   private[synth] final def isWrapped : Boolean = false
+   private[synth] final def unbubble: UGenInLike = this
 }
 
 object UGenInGroup {
@@ -179,9 +199,11 @@ object UGenInGroup {
    def apply( xs: IIdxSeq[ UGenInLike ]) : UGenInGroup = new Impl( xs )
 
    private final class Impl( xs: IIdxSeq[ UGenInLike ]) extends UGenInGroup {
-      def outputs : IIdxSeq[ UGenInLike ] = xs
-      def numOutputs : Int                = xs.size
+      private[synth] def outputs : IIdxSeq[ UGenInLike ] = xs
+      private[synth] def numOutputs : Int                = xs.size
       private[synth] def unwrap( i: Int ) : UGenInLike   = xs( i % xs.size )
+//      private[synth] def isWrapped : Boolean             = true
+      private[synth] def unbubble: UGenInLike            = this
 
       override def toString = displayName + xs.mkString( "(", ",", ")" )
 
@@ -191,9 +213,10 @@ object UGenInGroup {
    }
 }
 sealed trait UGenInGroup extends UGenInLike {
-   def numOutputs : Int
-   def outputs : IIdxSeq[ UGenInLike ]
-   final def flatOutputs : IIdxSeq[ UGenIn ] = outputs.flatMap( _.flatOutputs )
+//   def numOutputs : Int
+   private[synth] def outputs : IIdxSeq[ UGenInLike ]
+   private[synth] def numOutputs : Int
+   private[synth] final def flatOutputs : IIdxSeq[ UGenIn ] = outputs.flatMap( _.flatOutputs )
 }
 
 sealed trait UGenProxy extends UGenIn {

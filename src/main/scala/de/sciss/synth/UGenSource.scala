@@ -64,12 +64,12 @@ sealed trait UGenSource[ U ] extends Lazy.Expander[ U ] {
       var uins    = IIdxSeq.empty[ UGenIn ]
       var uinsOk  = true
       var exp     = 0
-      args.foreach {
+      args.foreach( _.unbubble match {
          case u: UGenIn => if( uinsOk ) uins :+= u
          case g: UGenInGroup =>
             exp      = math.max( exp, g.numOutputs )
             uinsOk   = false // don't bother adding further UGenIns to uins
-      }
+      })
       if( uins.size == args.size ) {
          makeUGen( uins )
       } else {
