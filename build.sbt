@@ -12,7 +12,7 @@ scalaVersion := "2.9.1"
 // unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
 
 libraryDependencies ++= Seq(
-   "de.sciss" %% "scalaosc" % "0.30-SNAPSHOT",
+   "de.sciss" %% "scalaosc" % "0.30",
    "de.sciss" %% "scalaaudiofile" % "0.20"
 )
 
