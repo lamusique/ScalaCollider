@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Sep 29 16:47:16 CEST 2011
+ * Created: Fri Oct 07 00:56:45 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -206,7 +206,7 @@ object MFCC {
  *                        Since this number determines the number of output channels of the UGen, it has to be an `Int`.
  */
 final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut("MFCC") with ControlRated {
-   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, Constant(numCoeffs)))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numCoeffs)(control), _args)
 }
 /**
