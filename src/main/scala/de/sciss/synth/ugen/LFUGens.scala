@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Sep 29 16:47:16 CEST 2011
+ * Created: Sat Oct 08 23:33:09 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -463,7 +463,7 @@ object EnvGen {
    def kr(envelope: GE, gate: GE = 1.0f, levelScale: GE = 1.0f, levelBias: GE = 0.0f, timeScale: GE = 1.0f, doneAction: GE = doNothing) = apply(control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
    def ar(envelope: GE, gate: GE = 1.0f, levelScale: GE = 1.0f, levelBias: GE = 0.0f, timeScale: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)
 }
-final case class EnvGen(rate: Rate, envelope: GE, gate: GE, levelScale: GE, levelBias: GE, timeScale: GE, doneAction: GE) extends UGenSource.SingleOut("EnvGen") {
+final case class EnvGen(rate: Rate, envelope: GE, gate: GE, levelScale: GE, levelBias: GE, timeScale: GE, doneAction: GE) extends UGenSource.SingleOut("EnvGen") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(gate.expand, levelScale.expand, levelBias.expand, timeScale.expand, doneAction.expand).++(envelope.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
@@ -473,7 +473,7 @@ object Linen {
    def ar: Linen = ar()
    def ar(gate: GE = 1.0f, attack: GE = 0.01f, sustain: GE = 1.0f, release: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, gate, attack, sustain, release, doneAction)
 }
-final case class Linen(rate: Rate, gate: GE, attack: GE, sustain: GE, release: GE, doneAction: GE) extends UGenSource.SingleOut("Linen") {
+final case class Linen(rate: Rate, gate: GE, attack: GE, sustain: GE, release: GE, doneAction: GE) extends UGenSource.SingleOut("Linen") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(gate.expand, attack.expand, sustain.expand, release.expand, doneAction.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }

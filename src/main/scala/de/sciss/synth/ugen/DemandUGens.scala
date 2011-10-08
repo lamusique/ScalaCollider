@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Sep 29 16:47:16 CEST 2011
+ * Created: Sat Oct 08 23:33:09 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -312,7 +312,7 @@ final case class Dser(seq: GE, repeats: GE = 1.0f) extends UGenSource.SingleOut(
  * @see [[de.sciss.synth.ugen.BufRd]]
  * @see [[de.sciss.synth.ugen.Dbufwr]]
  */
-final case class Dbufrd(buf: GE, index: GE = 0.0f, loop: GE = 1.0f) extends UGenSource.SingleOut("Dbufrd") with DemandRated with IsIndividual {
+final case class Dbufrd(buf: GE, index: GE = 0.0f, loop: GE = 1.0f) extends UGenSource.SingleOut("Dbufrd") with DemandRated with IsIndividual with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, demand, _args)
 }

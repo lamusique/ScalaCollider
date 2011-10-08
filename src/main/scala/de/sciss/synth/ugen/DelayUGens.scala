@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Thu Sep 29 16:47:16 CEST 2011
+ * Created: Sat Oct 08 23:33:09 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -413,7 +413,7 @@ object BufRd {
  * @see [[de.sciss.synth.ugen.BufFrames]]
  * @see [[de.sciss.synth.ugen.BufRateScale]]
  */
-final case class BufRd(rate: Rate, numChannels: Int, buf: GE, index: GE, loop: GE, interp: GE) extends UGenSource.MultiOut("BufRd") {
+final case class BufRd(rate: Rate, numChannels: Int, buf: GE, index: GE, loop: GE, interp: GE) extends UGenSource.MultiOut("BufRd") with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand, interp.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
@@ -421,7 +421,7 @@ object BufWr {
    def kr(in: GE, buf: GE, index: GE = 0.0f, loop: GE = 1.0f) = apply(control, in, buf, index, loop)
    def ar(in: GE, buf: GE, index: GE = 0.0f, loop: GE = 1.0f) = apply(audio, in, buf, index, loop)
 }
-final case class BufWr(rate: Rate, in: GE, buf: GE, index: GE, loop: GE) extends UGenSource.SingleOut("BufWr") with WritesBuffer {
+final case class BufWr(rate: Rate, in: GE, buf: GE, index: GE, loop: GE) extends UGenSource.SingleOut("BufWr") with WritesBuffer with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand).++(in.expand.outputs))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
