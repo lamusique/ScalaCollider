@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Mon Oct 17 17:32:47 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -44,13 +44,13 @@ final case class GrainFM(numChannels: Int, trig: GE, dur: GE, carFreq: GE, modFr
  * '''Warning''': The argument order is different from its sclang counterpart.
  */
 object GrainBuf {
-   def ar(buf: GE, numChannels: Int = 1, trig: GE = 0.0f, dur: GE = 1.0f, speed: GE = 1.0f, pos: GE = 0.0f, pan: GE = 0.0f, envBuf: GE = -1.0f, maxGrains: GE = 512.0f) = apply(buf, numChannels, trig, dur, speed, pos, pan, envBuf, maxGrains)
+   def ar(buf: GE, numChannels: Int = 1, trig: GE = 0.0f, dur: GE = 1.0f, speed: GE = 1.0f, pos: GE = 0.0f, interp: GE = 2.0f, pan: GE = 0.0f, envBuf: GE = -1.0f, maxGrains: GE = 512.0f) = apply(buf, numChannels, trig, dur, speed, pos, interp, pan, envBuf, maxGrains)
 }
 /**
  * '''Warning''': The argument order is different from its sclang counterpart.
  */
-final case class GrainBuf(buf: GE, numChannels: Int, trig: GE, dur: GE, speed: GE, pos: GE, pan: GE, envBuf: GE, maxGrains: GE) extends UGenSource.MultiOut("GrainBuf") with AudioRated {
-   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, dur.expand, buf.expand, speed.expand, pos.expand, pan.expand, envBuf.expand, maxGrains.expand))
+final case class GrainBuf(buf: GE, numChannels: Int, trig: GE, dur: GE, speed: GE, pos: GE, interp: GE, pan: GE, envBuf: GE, maxGrains: GE) extends UGenSource.MultiOut("GrainBuf") with AudioRated {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, dur.expand, buf.expand, speed.expand, pos.expand, interp.expand, pan.expand, envBuf.expand, maxGrains.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
 }
 object Warp1 {
