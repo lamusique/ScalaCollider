@@ -29,19 +29,14 @@
 package de.sciss.synth
 
 import collection.immutable.IntMap
-import osc.{ OSCGroupInfo, OSCNodeChange, OSCNodeGoMessage, OSCNodeEndMessage, OSCNodeMoveMessage,
-             OSCNodeOffMessage, OSCNodeOnMessage, OSCNodeInfo, OSCSynthInfo }
 
-/**
- *    @version 0.12, 10-May-10
- */
 object NodeManager {
-   abstract sealed class NodeChange { def node: Node; def info: OSCNodeInfo }
-   final case class NodeGo(   node: Node, info: OSCNodeInfo ) extends NodeChange
-   final case class NodeEnd(  node: Node, info: OSCNodeInfo ) extends NodeChange
-   final case class NodeOn(   node: Node, info: OSCNodeInfo ) extends NodeChange
-   final case class NodeOff(  node: Node, info: OSCNodeInfo ) extends NodeChange
-   final case class NodeMove( node: Node, info: OSCNodeInfo ) extends NodeChange
+   abstract sealed class NodeChange { def node: Node; def info: osc.NodeInfo }
+   final case class NodeGo(   node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeEnd(  node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeOn(   node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeOff(  node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeMove( node: Node, info: osc.NodeInfo ) extends NodeChange
    case object Cleared
 }
 
@@ -60,13 +55,13 @@ final class NodeManager( server: Server ) extends Model {
 //         nodes += defaultGroup.id -> defaultGroup
 //      }
 
-	def nodeChange( e: OSCNodeChange ) { e match {
-      case OSCNodeGoMessage( nodeID, info ) => {
+	def nodeChange( e: osc.NodeChange ) { e match {
+      case osc.NodeGoMessage( nodeID, info ) => {
          val node = nodes.get( nodeID ) getOrElse {
             if( /* autoAdd && */ nodes.contains( info.parentID )) {
                val created = info match {
-                  case ee: OSCSynthInfo => new Synth( server, nodeID )
-                  case ee: OSCGroupInfo => new Group( server, nodeID )
+                  case ee: osc.SynthInfo => new Synth( server, nodeID )
+                  case ee: osc.GroupInfo => new Group( server, nodeID )
                }
                register( created )
                created
@@ -74,23 +69,23 @@ final class NodeManager( server: Server ) extends Model {
          }
          dispatchBoth( NodeGo( node, info ))
       }
-      case OSCNodeEndMessage( nodeID, info ) => {
+      case osc.NodeEndMessage( nodeID, info ) => {
          nodes.get( nodeID ).foreach( node => {
             unregister( node )
             dispatchBoth( NodeEnd( node, info ))
          })
       }
-      case OSCNodeOffMessage( nodeID, info ) => {
+      case osc.NodeOffMessage( nodeID, info ) => {
          nodes.get( e.nodeID ).foreach( node => {
             dispatchBoth( NodeOff( node, info ))
          })
       }
-      case OSCNodeOnMessage( nodeID, info ) => {
+      case osc.NodeOnMessage( nodeID, info ) => {
          nodes.get( e.nodeID ).foreach( node => {
             dispatchBoth( NodeOn( node, info ))
          })
       }
-      case OSCNodeMoveMessage( nodeID, info ) => {
+      case osc.NodeMoveMessage( nodeID, info ) => {
          nodes.get( e.nodeID ).foreach( node => {
             dispatchBoth( NodeMove( node, info ))
          })

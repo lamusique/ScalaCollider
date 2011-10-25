@@ -28,13 +28,9 @@
 
 package de.sciss.synth
 
-import osc.{ OSCControlBusGetMessage, OSCControlBusSetMessage, OSCControlBusSetnMessage }
 import aux.AllocatorExhaustedException
 import sys.error
 
-/**
- *    @version	0.12, 10-May-10
- */
 object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
 		val id = server.busses.allocControl( numChannels )
@@ -93,38 +89,38 @@ extends Bus {
 
    def setMsg( v: Float ) = {
       require( numChannels == 1 )
-      OSCControlBusSetMessage( (index, v) )
+      osc.ControlBusSetMessage( (index, v) )
    }
 
    def setMsg( pairs: (Int, Float)* ) = {
       require( pairs.forall( tup => (tup._1 >= 0 && tup._1 < numChannels) ))
-      OSCControlBusSetMessage( pairs.map( tup => (tup._1 + index, tup._2) ): _* )
+      osc.ControlBusSetMessage( pairs.map( tup => (tup._1 + index, tup._2) ): _* )
    }
 
    def setnMsg( v: IndexedSeq[ Float ]) = {
       require( v.size == numChannels )
-      OSCControlBusSetnMessage( (index, v.toIndexedSeq) )
+      osc.ControlBusSetnMessage( (index, v.toIndexedSeq) )
    }
 
    def setnMsg( pairs: (Int, IndexedSeq[ Float ])* ) = {
       require( pairs.forall( tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numChannels) ))
       val ipairs = pairs.map( tup => (tup._1 + index, tup._2.toIndexedSeq ))
-      OSCControlBusSetnMessage( ipairs: _* )
+      osc.ControlBusSetnMessage( ipairs: _* )
    }
 
    def getMsg = {
       require( numChannels == 1 )
-      OSCControlBusGetMessage( index )
+      osc.ControlBusGetMessage( index )
    }
 
    def getMsg( offset: Int = 0 ) = {
       require( offset >= 0 && offset < numChannels )
-      OSCControlBusGetMessage( offset + index )
+      osc.ControlBusGetMessage( offset + index )
    }
 
    def getMsg( offsets: Int* ) = {
       require( offsets.forall( o => (o >= 0 && o < numChannels) ))
-      OSCControlBusGetMessage( offsets.map( _ + index ): _* )
+      osc.ControlBusGetMessage( offsets.map( _ + index ): _* )
    }
 }
 

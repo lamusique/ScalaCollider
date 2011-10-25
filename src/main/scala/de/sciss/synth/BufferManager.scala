@@ -28,11 +28,10 @@
 
 package de.sciss.synth
 
-import scala.collection.immutable.{ IntMap }
-import osc.{ OSCBufferInfo, OSCBufferInfoMessage }
+import scala.collection.immutable.IntMap
 
 object BufferManager {
-   case class BufferInfo( buffer: Buffer, info: OSCBufferInfo )
+   case class BufferInfo( buffer: Buffer, info: osc.BufferInfo )
 }
 
 /**
@@ -47,7 +46,7 @@ final class BufferManager( server: Server ) extends Model {
    // ---- constructor ----
    clear()
 
-   def bufferInfo( msg: OSCBufferInfoMessage ) {
+   def bufferInfo( msg: osc.BufferInfoMessage ) {
       sync.synchronized {
          msg.infos.foreach( info => {
             buffers.get( info.bufID ).foreach( buf => {

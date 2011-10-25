@@ -28,11 +28,6 @@
 
 package de.sciss.synth
 
-import osc.{ OSCSynthNewMessage }
-
-/**
- *    @version	0.15, 04-Jun-10
- */
 final case class Synth( server: Server, id: Int )
 extends Node {
    private var defNameVar = ""
@@ -43,7 +38,7 @@ extends Node {
 	def newMsg( defName: String, target: Node = server.defaultGroup, args: Seq[ ControlSetMap ] = Nil,
                addAction: AddAction = addToHead ) = {
       defNameVar = defName
-      OSCSynthNewMessage( defName, id, addAction.id, target.id, args: _* )
+      osc.SynthNewMessage( defName, id, addAction.id, target.id, args: _* )
    }
 
    def defName = defNameVar

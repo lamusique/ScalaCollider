@@ -28,21 +28,13 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{ Bundle, Packet }
 import de.sciss.synth.{ Completion => Comp, play => scplay }
-import de.sciss.synth.io.{ AudioFileType, SampleFormat }
-import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferAllocReadMessage,
-             OSCBufferCloseMessage, OSCBufferFreeMessage, OSCBufferReadChannelMessage, OSCBufferReadMessage,
-             OSCBufferQueryMessage, OSCBufferSetMessage, OSCBufferSetnMessage, OSCBufferWriteMessage,
-             OSCBufferZeroMessage }
+import de.sciss.osc.{Bundle, Packet}
 import Model._
 import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
 import aux.AllocatorExhaustedException
 import sys.error
 
-/**
- * 	@version	0.18, 17-May-10
- */
 object Buffer {
 //   sealed abstract class Completion {
 //      private[Buffer] val message: Option[ Buffer => OSCMessage ]
@@ -125,7 +117,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       dispatch( change )
    }
 
-   def queryMsg = OSCBufferQueryMessage( id )
+   def queryMsg = osc.BufferQueryMessage( id )
 
    def free { server ! freeMsg }
 
@@ -133,7 +125,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
 		server ! freeMsg( completion, true )
 	}
 
-   def freeMsg: OSCBufferFreeMessage = freeMsg( None, true )
+   def freeMsg: osc.BufferFreeMessage = freeMsg( None, true )
 
    /**
     *    @param   release  whether the buffer id should be immediately returned to the id-allocator or not.
@@ -144,7 +136,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     */
 	def freeMsg( completion: Option[ Packet ] = None, release: Boolean = true ) = {
       if( release ) this.release
-      OSCBufferFreeMessage( id, completion )
+      osc.BufferFreeMessage( id, completion )
 	}
 
    /**
@@ -163,10 +155,10 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       server ! closeMsg( completion )
    }
 
-	def closeMsg: OSCBufferCloseMessage = closeMsg( None )
+	def closeMsg: osc.BufferCloseMessage = closeMsg( None )
 
 	def closeMsg( completion: Option[ Packet ] = None ) =
-      OSCBufferCloseMessage( id, completion )
+      osc.BufferCloseMessage( id, completion )
 
 //	def alloc { server ! allocMsg }
 
@@ -174,13 +166,13 @@ final case class Buffer( server: Server, id: Int ) extends Model {
 		server ! allocMsg( numFrames, numChannels, makePacket( completion ))
 	}
 
-//	def allocMsg: OSCBufferAllocMessage = allocMsg( None )
+//	def allocMsg: osc.BufferAllocMessage = allocMsg( None )
 
 	def allocMsg( numFrames: Int, numChannels: Int = 1, completion: Option[ Packet ] = None ) = {
       numFramesVar   = numFrames
       numChannelsVar = numChannels
       sampleRateVar  = server.sampleRate.toFloat
-      OSCBufferAllocMessage( id, numFrames, numChannels, completion )
+      osc.BufferAllocMessage( id, numFrames, numChannels, completion )
    }
 
    def allocRead( path: String, startFrame: Int = 0, numFrames: Int = -1,
@@ -193,7 +185,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
                      completion: Option[ Packet ] = None ) = {
 //      this.cache;
 //      path = argpath;
-      OSCBufferAllocReadMessage( id, path, startFrame, numFrames, completion )
+      osc.BufferAllocReadMessage( id, path, startFrame, numFrames, completion )
    }
 
    def allocReadChannel( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
@@ -206,11 +198,11 @@ final case class Buffer( server: Server, id: Int ) extends Model {
                             completion: Option[ Packet ] = None ) = {
 //      this.cache;
 //      path = argpath;
-      OSCBufferAllocReadChannelMessage( id, path, startFrame, numFrames, channels.toList, completion )
+      osc.BufferAllocReadChannelMessage( id, path, startFrame, numFrames, channels.toList, completion )
    }
 
    def cueMsg( path: String, startFrame: Int = 0, completion: Completion = NoCompletion ) =
-      OSCBufferReadMessage( id, path, startFrame, numFrames, 0, true, makePacket( completion ))
+      osc.BufferReadMessage( id, path, startFrame, numFrames, 0, true, makePacket( completion ))
 
    def read( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
              leaveOpen: Boolean = false, completion: Completion = NoCompletion ) {
@@ -219,7 +211,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
 
    def readMsg( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                 leaveOpen: Boolean = false, completion: Option[ Packet ] = None ) =
-      OSCBufferReadMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, completion )
+      osc.BufferReadMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, completion )
 
    def readChannel( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
              leaveOpen: Boolean = false, channels: Seq[ Int ],
@@ -231,7 +223,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    def readChannelMsg( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                 leaveOpen: Boolean = false, channels: Seq[ Int ],
                 completion: Option[ Packet ] = None ) =
-      OSCBufferReadChannelMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
+      osc.BufferReadChannelMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
          completion )
 
    /**
@@ -287,20 +279,20 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    def setMsg( pairs: (Int, Float)* ) = {
       val numSmp = numChannels * numFrames
       require( pairs.forall( tup => (tup._1 >= 0 && tup._1 < numSmp) ))
-      OSCBufferSetMessage( id, pairs: _* )
+      osc.BufferSetMessage( id, pairs: _* )
    }
 
    def setnMsg( v: IndexedSeq[ Float ]) = {
       val numSmp = numChannels * numFrames
       require( v.size == numSmp )
-      OSCBufferSetnMessage( id, (0, v.toIndexedSeq) )
+      osc.BufferSetnMessage( id, (0, v.toIndexedSeq) )
    }
 
    def setnMsg( pairs: (Int, IndexedSeq[ Float ])* ) = {
       val numSmp = numChannels * numFrames
       require( pairs.forall( tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp) ))
       val ipairs = pairs.map( tup => (tup._1, tup._2.toIndexedSeq ))
-      OSCBufferSetnMessage( id, ipairs: _* )
+      osc.BufferSetnMessage( id, ipairs: _* )
    }
    
    def zero { server ! zeroMsg }
@@ -309,23 +301,23 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       server ! zeroMsg( completion )
    }
 
-	def zeroMsg: OSCBufferZeroMessage = zeroMsg( None )
+	def zeroMsg: osc.BufferZeroMessage = zeroMsg( None )
 
 	def zeroMsg( completion: Option[ Packet ]) =
-      OSCBufferZeroMessage( id, completion )
+      osc.BufferZeroMessage( id, completion )
 
-   def write( path: String, fileType: AudioFileType = AudioFileType.AIFF,
-              sampleFormat: SampleFormat = SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
+   def write( path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
+              sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
               leaveOpen: Boolean = false, completion: Completion = NoCompletion) {
 //         path = path ?? { thisProcess.platform.recordingsDir +/+ "SC_" ++ Date.localtime.stamp ++ "." ++ headerFormat };
          server ! writeMsg( path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, makePacket( completion ))
       }
 
-   def writeMsg( path: String, fileType: AudioFileType = AudioFileType.AIFF,
-                 sampleFormat: SampleFormat = SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
+   def writeMsg( path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
+                 sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
                  leaveOpen: Boolean = false, completion: Option[ Packet] = None ) = {
 //      require( isPowerOfTwo( this.numFrames ))
-      OSCBufferWriteMessage( id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion )
+      osc.BufferWriteMessage( id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion )
    }
 
    // ---- utility methods ----

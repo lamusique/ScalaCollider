@@ -32,8 +32,6 @@ import java.io.{BufferedReader, File, InputStreamReader, IOException}
 import java.util.{Timer, TimerTask}
 import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
 import concurrent.SyncVar
-import osc.{OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
-            OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec}
 import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 import sys.error
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
@@ -181,22 +179,22 @@ object Server {
 //   private case object Terminating extends Condition
    private case object NoPending extends Condition
 
-   case class Counts( c: OSCStatusReplyMessage )
+   case class Counts( c: osc.StatusReplyMessage )
 
    private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
-//      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
+//      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, osc.ServerCodec )
 //println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
       val client        = transport match {
          case UDP =>
             val cfg                 = UDP.Config()
             cfg.localSocketAddress  = clientAddr
-            cfg.codec               = ServerCodec
+            cfg.codec               = osc.ServerCodec
             cfg.bufferSize          = 0x10000
             UDP.Client( serverAddr, cfg )
          case TCP =>
             val cfg                 = TCP.Config()
-            cfg.codec               = ServerCodec
+            cfg.codec               = osc.ServerCodec
             cfg.localSocketAddress  = clientAddr
             cfg.bufferSize          = 0x10000
             TCP.Client( serverAddr, cfg )
@@ -251,7 +249,7 @@ object Server {
                         tnotify = System.currentTimeMillis + 500
 //println( ">>> NOT" )
 //try {
-                        c ! OSCServerNotifyMessage( true )
+                        c ! osc.ServerNotifyMessage( true )
 //} catch {
 //   case n: PortUnreachableException => println( "caught : " + n )
 //}
@@ -269,7 +267,7 @@ object Server {
                               tstatus = System.currentTimeMillis + 500
 //println( ">>> STAT" )
 //try {
-   c ! OSCStatusMessage
+   c ! osc.StatusMessage
 //} catch {
 //   case n: PortUnreachableException => println( "caught : " + n )
 //}
@@ -280,7 +278,7 @@ object Server {
                               case AddListener( l )   => actAddList( l )
                               case RemoveListener( l )=> actRemoveList( l )
                               case Abort              => abortHandler( None )
-                              case counts: OSCStatusReplyMessage => {
+                              case counts: osc.StatusReplyMessage => {
 //println( "<<< STAT" )
                                  val s = new Server( name, c, addr, options, clientOptions )
                                  s.counts = counts
@@ -508,7 +506,7 @@ extends ServerLike {
 
    private var aliveThread: Option[StatusWatcher]	= None
 //   private var bootThread: Option[BootThread]		= None
-   private var countsVar							      = new OSCStatusReplyMessage( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
+   private var countsVar							      = new osc.StatusReplyMessage( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
 //   private var collBootCompletion					   = Queue.empty[ (Server) => Unit ]
    private val condSync                            = new AnyRef
    private var conditionVar: Condition 			   = Running // Offline
@@ -602,7 +600,7 @@ extends ServerLike {
       val a = new FutureActor[ A ]( c ) {
          val sync    = new AnyRef
          var revoked = false
-         var oh: Option[ OSCHandler ] = None
+         var oh: Option[ osc.Handler ] = None
 
          def body( res: SyncVar[ A ]) {
             val futCh   = new Channel[ A ]( Actor.self )
@@ -665,7 +663,7 @@ extends ServerLike {
    }
 
    def counts = countsVar
-   private[synth] def counts_=( newCounts: OSCStatusReplyMessage ) {
+   private[synth] def counts_=( newCounts: osc.StatusReplyMessage ) {
       countsVar = newCounts
       dispatch( Counts( newCounts ))
    }
@@ -721,19 +719,19 @@ extends ServerLike {
   }
 
    def queryCounts() {
-      this ! OSCStatusMessage
+      this ! osc.StatusMessage
    }
 
-   def syncMsg : OSCSyncMessage = syncMsg()
-   def syncMsg( id: Int = uniqueID.nextID ) = OSCSyncMessage( id )
+   def syncMsg : osc.SyncMessage = syncMsg()
+   def syncMsg( id: Int = uniqueID.nextID ) = osc.SyncMessage( id )
 
    def dumpOSC( mode: Dump = Dump.Text ) {
       c.dumpIn( mode, filter = {
-         case m: OSCStatusReplyMessage => false
+         case m: osc.StatusReplyMessage => false
          case _ => true
       })
       c.dumpOut( mode, filter = {
-         case OSCStatusMessage => false
+         case osc.StatusMessage => false
          case _ => true
       })
    }
@@ -758,7 +756,7 @@ extends ServerLike {
       dispose
    }
 
-   def quitMsg = OSCServerQuitMessage
+   def quitMsg = osc.ServerQuitMessage
 
 //   private def cleanUpAfterQuit() {
 //      try {
@@ -770,11 +768,11 @@ extends ServerLike {
 //      catch { case e: IOException => printError( "Server.cleanUpAfterQuit", e )}
 //   }
 
-   private[synth] def addResponder( resp: OSCResponder ) {
+   private[synth] def addResponder( resp: osc.Responder ) {
       OSCReceiverActor.addHandler( resp )
    }
 
-   private[synth] def removeResponder( resp: OSCResponder ) {
+   private[synth] def removeResponder( resp: osc.Responder ) {
       OSCReceiverActor.removeHandler( resp )
    }
 
@@ -846,7 +844,7 @@ extends ServerLike {
          catch { case e: IOException => printError( "Server.status", e )}
       }
 
-      def statusReply( msg: OSCStatusReplyMessage ) {
+      def statusReply( msg: osc.StatusReplyMessage ) {
          sync.synchronized {
             alive = deathBounces
             // note: put the counts before running
@@ -866,8 +864,8 @@ extends ServerLike {
       private case object Clear
       private case object Dispose
 //      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
-      private case class  AddHandler( h: OSCHandler )
-      private case class  RemoveHandler( h: OSCHandler )
+      private case class  AddHandler( h: osc.Handler )
+      private case class  RemoveHandler( h: osc.Handler )
       private case class  TimeOutHandler( h: OSCTimeOutHandler )
 
       def clear() {
@@ -879,11 +877,11 @@ extends ServerLike {
          this ! Dispose
       }
 
-      def addHandler( handler: OSCHandler ) {
+      def addHandler( handler: osc.Handler ) {
          this ! AddHandler( handler )
       }
 
-      def removeHandler( handler: OSCHandler ) {
+      def removeHandler( handler: osc.Handler ) {
          this ! RemoveHandler( handler )
       }
 
@@ -900,16 +898,16 @@ extends ServerLike {
 
       def act() {
          var running    = true
-         var handlers   = Set.empty[ OSCHandler ]
+         var handlers   = Set.empty[ osc.Handler ]
 //         while( running )( receive { })
          loopWhile( running )( react {
             case msg: Message => debug( msg ) {
 //            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
                msg match {
-                  case nodeMsg:        OSCNodeChange           => nodeMgr.nodeChange( nodeMsg )
-                  case bufInfoMsg:     OSCBufferInfoMessage    => bufMgr.bufferInfo( bufInfoMsg )
-                  case statusReplyMsg: OSCStatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
+                  case nodeMsg:        osc.NodeChange           => nodeMgr.nodeChange( nodeMsg )
+                  case bufInfoMsg:     osc.BufferInfoMessage    => bufMgr.bufferInfo( bufInfoMsg )
+                  case statusReplyMsg: osc.StatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
                   case _ =>
                }
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : handlers" )
@@ -936,10 +934,10 @@ extends ServerLike {
       if( (t2 - t1) > 2000 ) println( "" + new java.util.Date() + " WOW this took long (" + (t2-t1) + "): " + msg )
    }
 
-   // -------- internal OSCHandler implementations --------
+   // -------- internal osc.Handler implementations --------
 
    private class OSCInfHandler[ A ]( fun: PartialFunction[ Message, A ], ch: OutputChannel[ A ])
-   extends OSCHandler {
+   extends osc.Handler {
       def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
@@ -952,7 +950,7 @@ extends ServerLike {
    }
 
    private class OSCTimeOutHandler( fun: PartialFunction[ Any, Unit ], ch: OutputChannel[ Any ])
-   extends OSCHandler {
+   extends osc.Handler {
       def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )

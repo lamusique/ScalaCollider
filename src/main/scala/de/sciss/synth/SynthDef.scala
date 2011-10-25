@@ -31,7 +31,6 @@ package de.sciss.synth
 import java.io.{ ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, File, FileOutputStream }
 import java.nio.ByteBuffer
 import de.sciss.synth.{ Completion => Comp }
-import osc.{OSCSyncedMessage, OSCSynthDefFreeMessage, OSCSynthDefLoadMessage, OSCSynthDefRecvMessage}
 import File.{ separator => sep }
 import actors.TIMEOUT
 import de.sciss.osc.{Bundle, Message, Packet}
@@ -47,7 +46,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 
    override def toString = "SynthDef(" + name + ")"
 
-   def freeMsg = OSCSynthDefFreeMessage( name )
+   def freeMsg = osc.SynthDefFreeMessage( name )
 
    def recv { recv() }
    def recv( server: Server = Server.default, completion: Completion = NoCompletion ) {
@@ -65,7 +64,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
             case None            => syncMsg
          }
          server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
-            case OSCSyncedMessage( `syncID` ) => action( syndef )
+            case osc.SyncedMessage( `syncID` ) => action( syndef )
             case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
          })
       } getOrElse {
@@ -75,13 +74,13 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 
 //   private def sendWithAction( msg: Message, syncID: Int, action: SynthDef => Unit, name: String ) {
 //      server !? (6000L, msg, {
-//         case OSCSyncedMessage( syncID ) => action( syndef )
+//         case osc.SyncedMessage( syncID ) => action( syndef )
 //         case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
 //      })
 //   }
   
-   def recvMsg: OSCSynthDefRecvMessage = recvMsg( None )
-   def recvMsg( completion: Option[ Packet ]) = OSCSynthDefRecvMessage( toBytes, completion )
+   def recvMsg: osc.SynthDefRecvMessage = recvMsg( None )
+   def recvMsg( completion: Option[ Packet ]) = osc.SynthDefRecvMessage( toBytes, completion )
   
   	def toBytes : ByteBuffer = {
     	val baos	= new ByteArrayOutputStream
@@ -110,10 +109,10 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       this
    }
   
-   def loadMsg : OSCSynthDefLoadMessage = loadMsg()
+   def loadMsg : osc.SynthDefLoadMessage = loadMsg()
   
    def loadMsg( dir: String = defaultDir, completion: Option[ Packet ] = None ) =
-	   OSCSynthDefLoadMessage( dir + sep + name + ".scsyndef", completion )
+	   osc.SynthDefLoadMessage( dir + sep + name + ".scsyndef", completion )
 
    def play: Synth = play()
    def play( target: Node = Server.default, args: Seq[ ControlSetMap ] = Nil, addAction: AddAction = addToHead ) : Synth = {
