@@ -41,7 +41,7 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo()
-      test3()
+//      test4()
       sys.exit( 1 )
 //      test()
    }
@@ -51,13 +51,21 @@ object ScalaCollider {
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
    }
 
-   private def test3() {
-      import ugen._
-      SynthDef( "simpler" ) {
-          val basic = WhiteNoise.ar(Seq(0.03,0.03))
-          Out.ar( 0, basic )
-      }
-   }
+//   private def test4() {
+//      import ugen._
+//      SynthDef( "test" ) {
+//         val b = BrownNoise.ar( Seq( 0.5, 0.5 ))
+//         Out.ar( 0, HPF.ar(b) )
+//      }
+//   }
+
+//   private def test3() {
+//      import ugen._
+//      SynthDef( "simpler" ) {
+//          val basic = WhiteNoise.ar(Seq(0.03,0.03))
+//          Out.ar( 0, basic )
+//      }
+//   }
 
 //   private def test2() {
 //      import de.sciss.synth._
