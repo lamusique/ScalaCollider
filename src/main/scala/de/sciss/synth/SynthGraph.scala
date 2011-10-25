@@ -297,7 +297,12 @@ val eff=true
             if( eff ) numIneff -= 1
             new IndexedUGen( ugen, idx, eff )
          })
-         val ugenMap: Map[ AnyRef, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen.ref, iu))( breakOut )
+//indexedUGens.foreach( iu => println( iu.ugen.ref ))
+//val a0 = indexedUGens(1).ugen
+//val a1 = indexedUGens(3).ugen
+//val ee = a0.equals(a1)
+
+         val ugenMap: Map[ AnyRef, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen /* .ref */, iu))( breakOut )
          indexedUGens.foreach( iu => {
             // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
             // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
@@ -310,14 +315,14 @@ val eff=true
                   rc
                }
                case up: UGenProxy => {
-                  val iui         = ugenMap( up.source.ref )
+                  val iui         = ugenMap( up.source /* .ref */)
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, up.outputIndex )
                }
                case ControlUGenOutProxy( proxy, outputIndex /* , _ */) => {
                   val (ugen, off) = ctrlProxyMap( proxy )
-                  val iui         = ugenMap( ugen.ref )
+                  val iui         = ugenMap( ugen /* .ref */)
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, off + outputIndex )

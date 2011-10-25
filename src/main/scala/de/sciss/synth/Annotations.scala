@@ -28,10 +28,10 @@
 
 package de.sciss.synth
 
-private[synth] trait MaybeIndividual {
-//   protected def ref: AnyRef
-   private[synth] def ref: AnyRef
-}
+//private[synth] trait MaybeIndividual {
+////   protected def ref: AnyRef
+//   private[synth] def ref: AnyRef
+//}
 
 /**
  *    Marks a ugen which has side effects
@@ -70,8 +70,8 @@ trait HasDoneFlag
  *    which writes to a Buffer or Bus.
  */
 trait IsIndividual {
-   me: MaybeIndividual =>
-   final override private[synth] lazy val ref = new AnyRef
+//   me: MaybeIndividual =>
+//   final override private[synth] lazy val ref = new AnyRef
 }
 //{
 //   override def equals( x: Any ) : Boolean = super.equals( x )
@@ -79,19 +79,19 @@ trait IsIndividual {
 //}
 
 trait UsesRandSeed extends IsIndividual {
-   me: MaybeIndividual =>
+//   me: MaybeIndividual =>
 }
 
 // XXX eventually: WritesBuffer[T] { def buf: T }
 trait WritesBuffer extends HasSideEffect with IsIndividual {
-   me: MaybeIndividual =>
+//   me: MaybeIndividual =>
 }
 
 trait WritesFFT extends HasSideEffect with IsIndividual {
-   me: MaybeIndividual =>
+//   me: MaybeIndividual =>
 }
 
 // XXX eventually: WritesBus[T] { def bus: T }
 trait WritesBus extends HasSideEffect with IsIndividual {
-   me: MaybeIndividual =>
+//   me: MaybeIndividual =>
 }

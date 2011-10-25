@@ -488,3 +488,33 @@ val x = play {
       cubShape.id )
    SinOsc.ar( freq * Seq( 1, 1.01 )) * 0.1
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+Output channel separation example:
+
+In the current version `numOutputs` and `outputs` are disabled. You still have the 
+backslash operator, hence instead of
+
+val Seq( freq, hasFreq ) = Pitch.kr( ... )
+
+you must do
+
+val pch     = Pitch.kr( ... )
+val freq    = pch \ 0
+val hasFreq = pch \ 1
+
+for example:
+
+val x = play {
+   val in      = Mix(In.ar(NumOutputBuses.ir + Seq(0, 1)))
+   val amp     = Amplitude.kr(in, 0.05, 0.05)
+   val pch     = Pitch.kr(in, ampThresh = 0.02, median = 7)
+   val freq    = pch \ 0
+   val hasFreq = pch \ 1
+   hasFreq.poll(1)
+   val syn: GE = Mix(VarSaw.ar(freq * Seq(0.5, 1, 2), 0, LFNoise1.kr(0.3).madd(0.1, 0.1)) * amp)
+   (1 to 6).foldLeft(syn) { (sig, _) =>
+      AllpassN.ar(sig, 0.040, Seq(Rand(0, 0.040), Rand(0, 0.040)), 2)
+   }
+}

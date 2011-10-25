@@ -63,25 +63,26 @@ sealed trait UGen extends Product /* with MaybeIndividual */ {
       case 0 => name
       case 1 => rate
       case 2 => specialIndex
-//      case 3 => inputs
-      case 3 => inputs.map( _.ref )
+      case 3 => inputs
+//      case 3 => inputs.map( _.ref )
       case 4 => outputRates
       case _ => throw new java.lang.IndexOutOfBoundsException( n.toString )
    }
    final def canEqual( x: Any ) : Boolean = x.isInstanceOf[ UGen ]
-   override def hashCode(): Int = ScalaRunTime._hashCode( this )
-   override def equals( x: Any ) : Boolean = (this eq x.asInstanceOf[ AnyRef ]) || (x match {
+//   override def hashCode(): Int = ScalaRunTime._hashCode( this )
+   override val hashCode: Int = if( isIndividual ) super.hashCode() else ScalaRunTime._hashCode( this )
+   override def equals( x: Any ) : Boolean = (this eq x.asInstanceOf[ AnyRef ]) || (!isIndividual && (x match {
      case u: UGen =>
         u.name == name && u.rate == rate && u.specialIndex == specialIndex && u.inputs == inputs &&
            u.outputRates == outputRates && u.canEqual( this )
      case _ => false
-   })
+   }))
 
    def isIndividual: Boolean
    def hasSideEffect: Boolean
 
 //   private[synth] def ref: AnyRef = this
-   final private[synth] lazy val ref = if( isIndividual ) new AnyRef else this
+//   final private[synth] lazy val ref = if( isIndividual ) new AnyRef else this
 }
 
 object UGen {
@@ -159,7 +160,7 @@ final def numOutputs = 1
       }
       def rate : Rate = source.outputRates( outputIndex )
 
-      private[synth] def ref: AnyRef = this
+//      private[synth] def ref: AnyRef = this
    }
 }
 
@@ -202,7 +203,7 @@ sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ 
    private[synth] final def flatOutputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
 //   private[synth] final def isWrapped : Boolean = false
    private[synth] final def unbubble: UGenInLike = this
-   private[synth] def ref: AnyRef
+//   private[synth] def ref: AnyRef
 }
 
 object UGenInGroup {
@@ -257,7 +258,7 @@ final case class Constant( value: Float ) extends GE with UGenIn {
    def displayName = value.toString
    def rate: Rate = scalar
 
-   private[synth] final def ref: AnyRef = this
+//   private[synth] final def ref: AnyRef = this
 
 //   def expand : UGenInLike = this
 
@@ -333,5 +334,5 @@ extends UGenIn { // UGenIn[ R ] {
    def rate = source.rate
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex
-   private[synth] def ref: AnyRef = this
+//   private[synth] def ref: AnyRef = this
 }

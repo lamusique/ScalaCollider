@@ -29,7 +29,7 @@
 package de.sciss.synth
 
 object Lazy {
-   trait Expander[ +U ] extends Lazy with MaybeIndividual /* with Expands[ U ] */ {
+   trait Expander[ +U ] extends Lazy /* with MaybeIndividual /* */ with Expands[ U ] */ {
 //      private lazy val cache = new Cache( this )
 
       // this acts now as a fast unique reference
