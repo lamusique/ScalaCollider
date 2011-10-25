@@ -1,30 +1,37 @@
-h2. ScalaCollider ==<small>-- version 0.24 --</small>==
+h2. ScalaCollider <small>v0.30</small>
 
 h3. statement
 
 ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2011 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the "GNU General Public License":http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt and comes with absolutely no warranties. To contact the author, send an email to @contact at sciss.de@
 
+h3. new in v0.30
+
+NOTE: There have been made several changes from 0.25 to 0.30...
+
+* To facilitate future graph re-writing, elements are now _lazy_ which means they do not instantly (multi-channel) expand into UGens. The idea is to be able to capture the whole expression tree, which then could be used to transform it, to visualize it (before multi-channel expansion!), etc.
+* In the meantime, the UGens themselves are not represented any more by individual classes but only generic classes such as @UGen.SingleOut@. As we expect manipulations to happen at the @GE@ level, this keeps the number of classes smaller.
+* The SynthDef creation process is now two staged. The @GE@ tree is captured as a @SynthGraph@ which in turn expands into a @UGenGraph@.
+* Automatic subtree omission for side-effect-free roots is currently disabled.
+* We started to implement type constraints for the rates, but this is all a difficult business and  will take more time to find its final shape. Branch Synthetic3 represents the latest effort. The project was killed in branch Synthetic4, though.
+* the implicit conversion to GraphFunction has been disabled. so instead of @{ }.play@, use @play { }@
+* @Multi@ was introduced which wrapped graph elements representing true multi-channel signals, that is not synthetically expanded signals but for instance UGens which have several outputs (e.g. In, PlayBuf). In the meantime @Multi@ has been eliminated again, and the wrapping behaviour of sclang has been adopted successfully.
+* recursive graph generation may require type annotations. specifically all UGen classes now return the UGen type itself instead of GE, which comes with the need to annotate vars in certain cases.
+* Methods @outputs@ and @numOutputs@ are not available for the lazy graph elements. You can mostly work around this by using special graph elements for channel handling, like @Zip@, @Reduce@, @Fold@, @Splay@, @Mix@, @Flatten@. Method \ (backslash) is still preserved, but it may change in a future version if it causes problems with graph re-writing.
+
 h3. requirements / installation
 
-ScalaCollider currently compiles against Scala 2.9.0 and 2.8.1. It requires Java 1.6 and SuperCollider 3.3.1+. It depends on ScalaOSC ( "github.com/Sciss/ScalaOSC":http://github.com/Sciss/ScalaOSC ) and ScalaAudioFile ( "github.com/Sciss/ScalaAudioFile":http://github.com/Sciss/ScalaAudioFile )
+ScalaCollider currently builds with xsbt (sbt 0.11) against Scala 2.9.1. It requires Java 1.6 and SuperCollider 3 (it has been tested with SuperCollider 3.4). It depends on ScalaOSC ( "github.com/Sciss/ScalaOSC":http://github.com/Sciss/ScalaOSC ) and ScalaAudioFile ( "github.com/Sciss/ScalaAudioFile":http://github.com/Sciss/ScalaAudioFile )
 
-The repository contains a project file for Intellij IDEA 10 CE, and project files for sbt. Targets for sbt:
+The repository contains a project file for Intellij IDEA 10.5 CE, and project files for sbt. Targets for xsbt:
 
+* @update@
 * @clean@
 * @compile@
 * @doc@
 * @package@
 * @demo@
 
-You should now be able to simply do an @sbt update@ to pull the depenancies from scala-tools.org. If you wish to install ScalaOSC and ScalaAudioFile locally, clone their respective git repositories, and then for each execute
-
-@$ sbt publish-local@
-
-Afterwards, go back into the clone of the ScalaCollider git repository, and simply run
-
-@$ sbt update@
-
-which should find ScalaOSC and ScalaAudioFile in your local Ivy repository.
+Running @xsbt update@ should download all the dependencies from scala-tools.org.
 
 h3. running the demo
 

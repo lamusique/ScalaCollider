@@ -2,7 +2,7 @@
  *  SynthGraph.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -29,16 +29,14 @@
 package de.sciss.synth
 
 import java.io.DataOutputStream
-import ugen.{ EnvGen, Out, Silent }
 import collection.breakOut
 import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
-import collection.immutable.{ IndexedSeq => IIdxSeq }
+import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
+import ugen.EnvGen
+import sys.error
 
-/**
- *    @version 0.12, 02-Aug-10
- */
-case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float ],
-                       controlNames: IIdxSeq[ (String, Int) ], ugens: IIdxSeq[ SynthGraph.RichUGen ]) {
+final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Float ],
+                            controlNames: IIdxSeq[ (String, Int) ], ugens: IIdxSeq[ UGenGraph.RichUGen ]) {
 //   override lazy val hashCode = ... TODO: figure out how case class calculates it...
    private[synth] def write( dos: DataOutputStream ) {
       // ---- constants ----
@@ -73,7 +71,7 @@ case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Floa
             dos.writeShort( spec._1 )
             dos.writeShort( spec._2 )
          })
-         ugen.outputs.foreach( in => dos.writeByte( in.rate.id ))
+         ugen.outputRates.foreach( r => dos.writeByte( r.id ))
       })
 
       dos.writeShort( 0 ) // variants not supported
@@ -86,24 +84,23 @@ case class SynthGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[ Floa
 }
 
 object SynthGraph {
-//   def seq( elements: IIdxSeq[ UGenIn ]) : GE = {
-//      if( elements.size == 1 ) elements.head else new UGenInSeq( elements )
-//   }
-
-   def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) =
-      SynthGraph {
-         val res1 = thunk
-         val rate = Rate.highest( res1.outputs.map( _.rate ): _* )
-         if( (rate == audio) || (rate == control) ) {
-            val res2 = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 ) getOrElse res1
-            val out = "out".kr
-            if( rate == audio ) {
-               Out.ar( out, res2 )
-            } else {
-               Out.kr( out, res2 )
-            }
-         } else res1
-      }
+//   def wrapOut( thunk: => GE, fadeTime: Option[Float] = Some(0.02f) ) = SynthGraph {
+//         val res1 = thunk
+//         val rate = Rate.highest( res1.outputs.map( _.rate ): _* )
+//         val res2 = if( (rate == audio) || (rate == control) ) {
+//            val o: Option[ GE ] = fadeTime.map( fdt => makeFadeEnv( fdt ) * res1 )
+//            val res2: GE = o getOrElse res1
+////            val res2 = res1
+//            val out = "out".kr
+//            if( rate == audio ) {
+//               Out( rate, out, res2 )
+//            } else {
+//               Out.kr( out, res2 )
+//            }
+//         } else
+//            res1
+////         Out( rate, "out".kr, fadeTime.map( t => res1 * makeFadeEnv( t )))
+//      }
 
 	def makeFadeEnv( fadeTime: Float ) : GE = {
 		val dt			= "fadeTime".kr( fadeTime )
@@ -111,53 +108,29 @@ object SynthGraph {
 		val startVal	= (dt <= 0)
       // this is slightly more costly than what sclang does
       // (using non-linear shape plus an extra unary op),
-      // but it fadeout is much smoother this way...
-		EnvGen.kr( Env( startVal, EnvSeg( 1, 1, curveShape( -4 )) :: EnvSeg( 1, 0, sinShape ) :: Nil, 1 ),
+      // but its fadeout is much smoother this way...
+		EnvGen.kr( Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 ),
          gate, timeScale = dt, doneAction = freeSelf ).squared
 	}
 
-   def expand( args: GE* ): Seq[ Seq[ UGenIn ]] = {
-      val (min, max) = args.foldLeft( (Int.MaxValue, 0) ) { (tup, arg) =>
-         val (min, max) = tup
-         val numOuts    = arg.numOutputs
-         (if( numOuts < min ) numOuts else min, if( numOuts > max) numOuts else max)
-      }
-      if( (min == 1) && (max == 1) ) {
-         args.flatMap( _.outputs.toList ) :: Nil
-      } else if( min == 0 ) {
-         Nil	// cannot wrap zero size seq
-      } else {
-         for( ch <- 0 until max ) yield args.map( arg => arg \ (ch % arg.numOutputs) )
-      }
-   }
-
-//   def simplify( res: Seq[ GE ]) : GE = { // UGenIn
-////    println( "simplify : " + res )
-//      if( res.size == 1 ) {
-//         res.head
+//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
+//   def replaceZeroesWithSilence( ge: GE ) : GE = {
+//      val ins        = ge.outputs
+//      val numZeroes  = ins.foldLeft( 0 )( (sum, in) => in match {
+//         case Constant( 0 )   => sum + 1
+//         case _               => sum
+//      })
+//      if( numZeroes == 0 ) {
+//         ge
 //      } else {
-//         seqOfGEToGE( res )
+//         val silent = Silent.ar( numZeroes ).outputs.iterator
+//         ins map (in => in match {
+//            case Constant( 0 )   => silent.next
+//            case _               => in
+//         })
 //      }
 //   }
 
-   def replaceZeroesWithSilence( ge: GE ) : GE = {
-      val ins        = ge.outputs
-      val numZeroes  = ins.foldLeft( 0 )( (sum, in) => in match {
-         case Constant( 0 )   => sum + 1
-         case _               => sum
-      })
-      if( numZeroes == 0 ) {
-         ge
-      } else {
-         val silent = Silent.ar( numZeroes ).outputs.iterator
-         ins map (in => in match {
-            case Constant( 0 )   => silent.next
-            case _               => in
-         })
-      }
-   }
-
-//   private val sync        = new AnyRef
    // java.lang.ThreadLocal is around 30% faster than
    // using a synchronized map, plus we don't need
    // to look after its cleaning
@@ -166,7 +139,7 @@ object SynthGraph {
    }
    def builder: SynthGraphBuilder = builders.get
 
-   def apply( thunk: => Unit ) : SynthGraph = {
+   def apply( thunk: => Any ) : SynthGraph = {
       val b    = new BuilderImpl
       val old  = builders.get()
       builders.set( b )
@@ -178,7 +151,81 @@ object SynthGraph {
       }
    }
 
-   def individuate: Int = builder.individuate
+   /**
+    * A boolean setting (defaults to `false`) which can help track down
+    * bugs with graph elements being added outside a `SynthGraph` context.
+    * When this setting is `true`, a warning message is printed to
+    * `Console.err` with the graph element added and the stack trace,
+    * indicating calls such as `SinOsc.ar` outside a
+    * thread local `SynthGraph` builder.
+    */
+   var warnOutsideContext = false
+
+   private object BuilderDummy extends SynthGraphBuilder {
+      def build : SynthGraph = error( "Out of context" )
+      private def warn( obj: => String ) {
+         if( warnOutsideContext ) {
+            Console.err.println( "Warning - adding SynthGraph element outside context: " + obj )
+            val e = new Throwable()
+            e.fillInStackTrace()
+            val t  = e.getStackTrace
+            val n  = t.length
+            var i  = 0
+            var go = true
+            while( i < n && go ) {
+               val c = t( i ).getClassName
+               if( (c.startsWith( "de.sciss.synth." ) &&
+                   (c.charAt( 15 ).isUpper || c.startsWith( "de.sciss.synth.ugen." ))) ||
+                   c.startsWith( "scala.collection." )) {
+                  i += 1
+               } else {
+                  go = false
+               }
+            }
+            while( i < n ) {
+               Console.err.println( "  at " + t( i ))
+               i += 1
+            }
+         }
+      }
+      def addLazy( g: Lazy ) { warn( g.toString )}
+      def addControlProxy( proxy: ControlProxyLike[ _ ]) { warn( proxy.toString )}
+   }
+
+   private class BuilderImpl extends SynthGraphBuilder {
+      private val lazies         = MBuffer.empty[ Lazy ]
+      private var controlProxies = MSet.empty[ ControlProxyLike[ _ ]]
+
+      def build = SynthGraph( lazies.toIndexedSeq, controlProxies.toSet )
+      def addLazy( g: Lazy ) {
+         lazies += g
+      }
+
+      def addControlProxy( proxy: ControlProxyLike[ _ ]) {
+         controlProxies += proxy
+      }
+   }
+}
+
+final case class SynthGraph( sources: IIdxSeq[ Lazy ], controlProxies: ISet[ ControlProxyLike[ _ ]]) {
+   def isEmpty    = sources.isEmpty && controlProxies.isEmpty
+   def nonEmpty   = !isEmpty
+   def expand     = UGenGraph.expand( this )
+}
+
+object UGenGraph {
+//   def individuate: Int = builder.individuate
+
+   def expand( graph: SynthGraph ) : UGenGraph = {
+      val b    = new BuilderImpl( graph )
+      val old  = builders.get()
+      builders.set( b )
+      try {
+         b.build
+      } finally {
+         builders.set( old ) // BuilderDummy
+      }
+   }
 
   // ---- rich ugen ----
 
@@ -186,29 +233,54 @@ object SynthGraph {
 
    // ---- graph builder ----
 
-   private object BuilderDummy extends SynthGraphBuilder {
-      def build : SynthGraph = error( "Out of context" )
+   private val builders    = new ThreadLocal[ UGenGraphBuilder ] {
+      override protected def initialValue = BuilderDummy
+   }
+   def builder: UGenGraphBuilder = builders.get
+
+   private object BuilderDummy extends UGenGraphBuilder {
+      def build : UGenGraph = outOfContext
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = 0
-      def addControlProxy( proxy: ControlProxyLike[ _ ]) {}
+//      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {}
       def addUGen( ugen: UGen ) {}
+//      def visit[ U ]( src: Lazy, init: => U ) : U = outOfContext
+      def visit[ U ]( ref: AnyRef, init: => U ) : U = outOfContext
+
+      private def outOfContext : Nothing = error( "Out of context" )
    }
 
-   private class BuilderImpl extends SynthGraphBuilder {
+//   private object BuilderImpl {
+//      private val _ugens   ...
+//   }
+
+   private class BuilderImpl( graph: SynthGraph ) extends UGenGraphBuilder {
+      builder =>
+
       // updated during build
       private val ugens          = MBuffer.empty[ UGen ]
-      private var ugenSet        = MSet.empty[ UGen ]
+//      private val ugenSet        = MSet.empty[ AnyRef ]
       private var controlValues  = IIdxSeq.empty[ Float ]
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
-      private var controlProxies = MSet.empty[ ControlProxyLike[ _ ]]
+      private val sourceMap      = MMap.empty[ AnyRef, Any ]
 
       def build = {
-         val ctrlProxyMap        = buildControls
-         // check inputs
+//         graph.sources.foreach( _.force( builder ))
+         var g                = graph
+         var controlProxies   = MBuffer.empty[ ControlProxyLike[ _ ]]
+         while( g.nonEmpty ) {
+            // XXX these two lines could be more efficient eventually -- using a 'clearable' SynthGraph
+            controlProxies ++= g.controlProxies
+            g = SynthGraph( g.sources.foreach { src =>
+               src.force( builder )
+            })  // allow for further graphs being created
+         }
+//         val ctrlProxyMap        = buildControls( graph.controlProxies )
+         val ctrlProxyMap        = buildControls( controlProxies )
          val (igens, constants)  = indexUGens( ctrlProxyMap )
          val indexedUGens        = sortUGens( igens )
          val richUGens : IIdxSeq[ RichUGen ] =
             indexedUGens.map( iu => RichUGen( iu.ugen, iu.richInputs.map( _.create )))( breakOut )
-         SynthGraph( constants, controlValues, controlNames, richUGens )
+         UGenGraph( constants, controlValues, controlNames, richUGens )
       }
 
       private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _ ], (UGen, Int)]) :
@@ -219,13 +291,23 @@ object SynthGraph {
          var numIneff      = ugens.size
          val indexedUGens  = ugens.zipWithIndex.map( tup => {
             val (ugen, idx) = tup
-            val eff        = ugen.isInstanceOf[ SideEffectUGen ]
+//            val eff        = ugen.isInstanceOf[ HasSideEffect ]
+// BBB
+val eff=true
             if( eff ) numIneff -= 1
             new IndexedUGen( ugen, idx, eff )
          })
-         val ugenMap: Map[ UGen, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen, iu))( breakOut )
+//indexedUGens.foreach( iu => println( iu.ugen.ref ))
+//val a0 = indexedUGens(1).ugen
+//val a1 = indexedUGens(3).ugen
+//val ee = a0.equals(a1)
+
+         val ugenMap: Map[ AnyRef, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen /* .ref */, iu))( breakOut )
          indexedUGens.foreach( iu => {
-            iu.richInputs = iu.ugen.inputs.map({
+            // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
+            // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
+            // might be http://lampsvn.epfl.ch/trac/scala/ticket/4020
+            iu.richInputs = iu.ugen.inputs.map({ // don't worry -- the match _is_ exhaustive
                case Constant( value ) => constantMap.get( value ) getOrElse {
                   val rc         = new RichConstant( constants.size )
                   constantMap   += value -> rc
@@ -233,14 +315,14 @@ object SynthGraph {
                   rc
                }
                case up: UGenProxy => {
-                  val iui         = ugenMap( up.source )
+                  val iui         = ugenMap( up.source /* .ref */)
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, up.outputIndex )
                }
-               case ControlOutProxy( proxy, outputIndex, _ ) => {
+               case ControlUGenOutProxy( proxy, outputIndex /* , _ */) => {
                   val (ugen, off) = ctrlProxyMap( proxy )
-                  val iui         = ugenMap( ugen )
+                  val iui         = ugenMap( ugen /* .ref */)
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, off + outputIndex )
@@ -274,7 +356,7 @@ object SynthGraph {
          val avail   = MStack( indexedUGens.filter( _.parents.isEmpty ) : _* )
          var cnt     = 0
          while( avail.nonEmpty ) {
-            val iu   = avail.pop
+            val iu   = avail.pop()
             iu.index = cnt
             sorted( cnt ) = iu
             cnt     += 1
@@ -286,8 +368,28 @@ object SynthGraph {
          sorted
       }
 
+//      def visit[ U ]( src: Lazy, init: => U ) : U = {
+//         sourceMap.getOrElse( src, {
+//            val exp = init // .asInstanceOf[ U ]
+//            sourceMap += src -> exp
+////            exp.foreach( addUGen( _ ))
+//            exp
+//         }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
+//      }
+
+      def visit[ U ]( ref: AnyRef, init: => U ) : U = {
+         sourceMap.getOrElse( ref, {
+            val exp = init // .asInstanceOf[ U ]
+            sourceMap += ref -> exp
+//            exp.foreach( addUGen( _ ))
+            exp
+         }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
+      }
+
       def addUGen( ugen: UGen ) {
-         if( ugenSet.add( ugen )) ugens += ugen
+//         if( ugenSet.add( ugen )) ugens += ugen
+         // OOO
+         /* if( ugenSet.add( ugen.ref )) */ ugens += ugen
       }
 
       def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = {
@@ -297,18 +399,20 @@ object SynthGraph {
          specialIndex
       }
 
-      def addControlProxy( proxy: ControlProxyLike[ _ ]) {
-         controlProxies += proxy
-      }
+//      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
+//         controlProxies += proxy
+//      }
 
       /*
        *    Manita, how simple things can get as soon as you
        *    clean up the sclang mess...
        */
-      private def buildControls: Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
-         controlProxies.groupBy( _.factory ).flatMap( tuple => {
+      private def buildControls( p: Traversable[ ControlProxyLike[ _ ]]): Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
+         p.groupBy( _.factory ).flatMap( tuple => {
             val (factory, proxies) = tuple
-            factory.build( proxies.toSeq: _* )
+            factory.build( builder, proxies.toSeq: _* )
+//            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
+//            res
          })( breakOut )
       }
 

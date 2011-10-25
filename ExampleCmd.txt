@@ -13,10 +13,10 @@
 //   0.333... in sclang, and 0 in scala. Use 2.0/6 instead
 
 // analog bubbles
-val x = {
-    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(List(8, 7.23)).madd(3, 80)).midicps // glissando function
+val x = play {
+    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(Seq(8, 7.23)).madd(3, 80)).midicps // glissando function
     CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
-}.play
+}
 
 x.free
 
@@ -24,7 +24,7 @@ val df = SynthDef("AnalogBubbles") {
     val f1 = "freq1".kr(0.4)
     val f2 = "freq2".kr(8)
     val d  = "detune".kr(0.90375)
-    val f = LFSaw.ar(f1).madd(24, LFSaw.ar(List(f2, f2*d)).madd(3, 80)).midicps // glissando function
+    val f = LFSaw.ar(f1).madd(24, LFSaw.ar(Seq(f2, f2*d)).madd(3, 80)).midicps // glissando function
     val x = CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
     Out.ar( 0, x )
 }
@@ -38,86 +38,79 @@ s.freeAll
 //////////////////////////////////////////////////////////////////////////
 
 // LFO modulation of Pulse waves and resonant filters
-val x = {
+val x = play {
     CombL.ar(
         RLPF.ar(LFPulse.ar(FSinOsc.kr(0.05).madd(80,160),0,0.4)*0.05, 
-            FSinOsc.kr(List(0.6, 0.7)).madd(3600, 4000), 0.2),
-        0.3, List(0.2, 0.25), 2)
-}.play
+            FSinOsc.kr(Seq(0.6, 0.7)).madd(3600, 4000), 0.2),
+        0.3, Seq(0.2, 0.25), 2)
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // moto rev
-val x = {
+val x = play {
     RLPF.ar(LFPulse.ar(SinOsc.kr(0.2).madd(10, 21), 0.1), 100, 0.1).clip2(0.4) 
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // scratchy
-val x = { RHPF.ar((BrownNoise.ar(List(0.5,0.5))-0.49).max(0) * 20, 5000, 1) }.play
+val x = play { RHPF.ar((BrownNoise.ar(Seq(0.5,0.5))-0.49).max(0) * 20, 5000, 1) }
 
 //////////////////////////////////////////////////////////////////////////
 
 // sprinkler
-val x = {
+val x = play {
     BPZ2.ar(WhiteNoise.ar(LFPulse.kr(LFPulse.kr(0.09, 0, 0.16).madd(10, 7), 0, 0.25)*0.1))
-}.play
+}
 
-val x = {
+val x = play {
     BPZ2.ar(WhiteNoise.ar(LFPulse.kr(MouseX.kr(0.2,50), 0, 0.25)*0.1))
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // harmonic swimming
-val x = {
+val x = play {
     val f = 50       // fundamental frequency
     val p = 20       // number of partials per channel
-    var z: GE = 0.0  // start of oscil daisy chain
     val offset = Line.kr(0, -0.02, 60, doneAction=freeSelf) // causes sound to separate and fade
-    for( i <- 0 until p ) {
-        z = FSinOsc.ar( f * (i+1) ).madd( // freq of partial
+    Mix.tabulate(p) { i =>
+        val sig = FSinOsc.ar( f * (i+1) ) * // freq of partial
             LFNoise1.kr(
-                List( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate 
+                Seq( Rand( 2, 10 ), Rand( 2, 10 ))).madd(  // amplitude rate 
                 0.02,    // amplitude scale
                offset    // amplitude offset
-            ).max( 0 ),  // clip negative amplitudes to zero
-            z
-        )
+            ).max( 0 )   // clip negative amplitudes to zero
+        sig
     }
-    z
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // harmonic tumbling
-val x = {
+val x = play {
     val f = 80       // fundamental frequency
     val p = 10       // number of partials per channel
-    var z: GE = 0.0  // start of oscil daisy chain
-    val trig = XLine.kr(List(10,10), 0.1, 60, doneAction=freeSelf) // trigger probability decreases over time
-    for( i <- 0 until p ) {
-        z = FSinOsc.ar(
+    val trig = XLine.kr(Seq(10,10), 0.1, 60, doneAction=freeSelf) // trigger probability decreases over time
+    Mix.tabulate(p){ i =>
+        val sig = FSinOsc.ar(
                 f * (i+1)     // freq of partial
-        ).madd(
-            Decay2.kr(
+        ) * Decay2.kr(
                 Dust.kr(
                     trig      // trigger rate
                 ) * 0.02,     // trigger amplitude
                 0.005,        // grain attack time
                 Rand(0,0.5)   // grain decay time
-            ),
-            z
-        )
+            )
+        sig
     }
-    z
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // Klank - bank of resonators excited by impulses
-val x = {
+val x = play {
     val p = 15    // number of partials
     val z =       // filter bank specification :
         KlangSpec.fill(p) {
@@ -129,25 +122,25 @@ val x = {
         Klank.ar(z, Dust.ar(0.7)*0.04),
         Rand(-1,1)
     )
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // Klank - bank of resonators excited by impulses
-val x = {
+val x = play {
     val p = 8    // number of partials
     val exciter = Decay.ar(Dust.ar(0.6)*0.001, 3.1)*WhiteNoise.ar
-    for( i <- (1 to 2) ) yield {
+    (for( i <- (1 to 2) ) yield {
         val spec = KlangSpec.fill(p) {
             (Rand( 80, 10080 ), 1, Rand( 0.2, 8.2 ))}
         Klank.ar(spec, exciter)
-    }
-}.play
+    })
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // what was I thinking?
-val x = {
+val x = play {
     val z = RLPF.ar(
         Pulse.ar(
             SinOsc.kr(4).madd(1, 80).max(
@@ -158,18 +151,18 @@ val x = {
         LFNoise1.kr(0.2).madd(2000, 2400),
         0.2)
     val y = z * 0.6
-    z + List(
+    z + Seq(
           CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1) 
         + CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1),
           CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1)
         + CombL.ar(y, 0.06, LFNoise1.kr(Rand(0, 0.3)).madd(0.025, 0.035), 1)
     )
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // police state
-val x = {
+val x = play {
     val n = 4   // number of sirens
     CombL.ar(
         Mix.fill(n) {
@@ -180,18 +173,18 @@ val x = {
                 Rand(-1, 1)
             )
         }
-        + LFNoise2.ar(LFNoise2.kr(List(0.4,0.4)).madd(90, 620)) * LFNoise2.kr(List(0.3,0.3)).madd(0.15, 0.18),
+        + LFNoise2.ar(LFNoise2.kr(Seq(0.4,0.4)).madd(90, 620)) * LFNoise2.kr(Seq(0.3,0.3)).madd(0.15, 0.18),
         0.3, 0.3, 3)
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // cymbalism
-val x = {
+val x = play {
     val p = 15   // number of partials per channel per 'cymbal'.
     val f1 = Rand(500, 2500)
     val f2 = Rand(0, 8000)
-    for( i <- (1 to 2) ) yield {
+    (for( i <- (1 to 2) ) yield {
         val z = KlangSpec.fill(p) {
             // sine oscil bank specification :
             (f1 + Rand(0, f2),  // frequencies
@@ -199,13 +192,13 @@ val x = {
              Rand(1, 5))        // ring times
         }
         Klank.ar(z, Decay.ar(Impulse.ar(Rand(0.5, 3.5)), 0.004) * WhiteNoise.ar(0.03))
-    }
-}.play
+    })
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // synthetic piano
-val x = {
+val x = play {
     var n = 6        // number of keys playing
     Mix.fill(n) {    // mix an array of notes
         // calculate delay based on a random note
@@ -228,12 +221,12 @@ val x = {
             (pitch - 36)/27 - 1    // pan position: lo notes left, hi notes right
         )
     }
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // reverberated sine percussion
-val x = {
+val x = play {
     val d = 6    // number of percolators
     val c = 5    // number of comb delays
     val a = 4    // number of allpass delays
@@ -245,19 +238,19 @@ val x = {
     val z = DelayN.ar(s, 0.048)
 
     // 'c' length modulated comb delays in parallel :
-    var y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(for(i <- 0 until c) yield Rand(0,0.1)).madd(0.04, 0.05), 15))
+    val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(Seq.fill(c)(Rand(0,0.1))).madd(0.04, 0.05), 15))
 
     // chain of 'a' allpass delays on each of two channels (2 times 'a' total) :
-    for(i <- 0 until a) { y = AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1)}
+    val x = (0 until a).foldLeft[GE](y)( (y,i) => AllpassN.ar(y, 0.050, Seq(Rand(0,0.050),Rand(0,0.050)), 1))
 
     // add original sound to reverb and play it :
-    s+(0.2*y)
-}.play
+    s+(0.2*x)
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // reverberated noise bursts
-val x = {
+val x = play {
     // pink noise percussion sound :
     val s = Decay.ar(Dust.ar(0.6)*0.2, 0.15) * PinkNoise.ar
 
@@ -265,20 +258,20 @@ val x = {
     val z = DelayN.ar(s, 0.048, 0.048)
 
     // 6 modulated comb delays in parallel :
-    var y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(for(i <- 0 until 6) yield Rand(0,0.1)).madd(0.04, 0.05), 15))
+    val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(Seq.fill(6)(Rand(0,0.1))).madd(0.04, 0.05), 15))
 
     // chain of 4 allpass delays on each of two channels (8 total) :
-    for(i <- 0 until 4) { y = AllpassN.ar(y, 0.050, List(Rand(0,0.050),Rand(0,0.050)), 1)}
+    val x = (0 until 4).foldLeft[GE](y)( (y, i) => AllpassN.ar(y, 0.050, Seq(Rand(0,0.050),Rand(0,0.050)), 1))
 
     // add original sound to reverb and play it :
-    s+y
-}.play
+    s+x
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // sample and hold liquidities
 // mouse x controls clock rate, mouse y controls center frequency
-val x = {
+val x = play {
     val clockRate = MouseX.kr(1, 200, 1)
     val clockTime = clockRate.reciprocal
     val clock = Impulse.kr(clockRate, 0.4)
@@ -294,24 +287,24 @@ val x = {
         ),
         0.3, 0.3, 2
     )
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // sweepy noise - mouse controls LFO
-val x = {
+val x = play {
     val lfoDepth = MouseY.kr(200, 8000, 1)
     val lfoRate = MouseX.kr(4, 60, 1)
     val freq = LFSaw.kr(lfoRate).madd(lfoDepth, lfoDepth * 1.2)
-    val filtered = RLPF.ar(WhiteNoise.ar(List(0.03,0.03)), freq, 0.1)
+    val filtered = RLPF.ar(WhiteNoise.ar(Seq(0.03,0.03)), freq, 0.1)
     CombN.ar(filtered, 0.3, 0.3, 2) + filtered
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // aleatoric quartet
 // mouse x controls density
-val x = {
+val x = play {
     val amp = 0.07
     val density = MouseX.kr(0.01,1)   // mouse determines density of excitation
 
@@ -319,7 +312,7 @@ val x = {
     val dmul = density.reciprocal * 0.5 * amp
     val dadd = -dmul + amp
 
-    var signal = Mix.fill(4) {   // mix an array of 4 instruments
+    val signal: GE = Mix.fill(4) {   // mix an array of 4 instruments
         val excitation = PinkNoise.ar(
             // if amplitude is below zero it is clipped
             // density determines the probability of being above zero
@@ -343,17 +336,17 @@ val x = {
     }
 
     // add some reverb via allpass delays
-    for(i <- 1 to 5) { signal = AllpassN.ar(signal, 0.05, List(Rand(0,0.05),Rand(0,0.05)), 1) }
-    LeakDC.ar( signal, 0.995)    // delays build up a lot of DC, so leak it out here.
-}.play
+    val x = (1 to 5).foldLeft(signal)( (sig, _) => AllpassN.ar(sig, 0.05, Seq(Rand(0,0.05),Rand(0,0.05)), 1))
+    LeakDC.ar( x, 0.995)    // delays build up a lot of DC, so leak it out here.
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 // harmonic zither
 // use mouse to strum strings
-val x = {
+val x = play {
    // harmonic series
-   val pitch = List( 50, 53.86, 57.02, 59.69, 62, 64.04, 65.86, 67.51, 69.02, 71.69, 72.88, 74 )
+   val pitch = Seq( 50, 53.86, 57.02, 59.69, 62, 64.04, 65.86, 67.51, 69.02, 71.69, 72.88, 74 )
    val mousex = MouseX.kr
    val mousey = MouseY.kr
    val triggerSpacing = 0.5 / (pitch.size - 1)
@@ -367,7 +360,7 @@ val x = {
       Pan2.ar(string, i * panSpacing - 0.75)
    })
    LeakDC.ar(out)
-}.play
+}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -375,13 +368,13 @@ val x = {
 
 // path to a mono soundfile here
 val buf = Buffer.read(s, "sounds/a11wlk01.wav")
-val x = {
-    var speed = MouseX.kr(-10, 10)
-    speed = speed - DelayN.kr(speed, 0.1, 0.1)
-    speed = MouseButton.kr(1, 0, 0.3) + speed
+val x = play {
+    val speed0 = MouseX.kr(-10, 10)
+    val speed1 = speed0 - DelayN.kr(speed0, 0.1, 0.1)
+    val speed = MouseButton.kr(1, 0, 0.3) + speed1
     val sig = PlayBuf.ar(1, buf.id, speed * BufRateScale.kr(buf.id), loop = 1)
-    List( sig, sig )
-}.play
+    Seq( sig, sig )
+}
 
 // move mouse to scrub the record.
 // press mouse button to 'stop the record', you can scrub while it is stopped.
@@ -395,12 +388,12 @@ buf.free
 
 // trigger and lagged controls
 
-val x = {
+val x = play {
    val trig = "trig".tr             // trigger control
 //   val freq = "freq".kr(440 -> 4.0) // lag control (lag time 4 seconds)
    val freq = "freq".kr(440) // lag control not yet implemented :-(
-   SinOsc.ar(freq + List(0, 1)) * Decay2.kr(trig, 0.005, 1.0)
-}.play
+   SinOsc.ar(freq + Seq(0, 1)) * Decay2.kr(trig, 0.005, 1.0)
+}
 
 x.set("trig" -> 1)
 x.set("trig" -> 1, "freq" -> 220)
@@ -410,23 +403,26 @@ x.set("trig" -> 1, "freq" -> 880)
 
 // waiting for SendTrig replies
 
-val x = {
+val x = play {
     SendTrig.kr( MouseButton.kr( lag = 0 ), MouseX.kr( lag = 0 )) // warning: different arg order!
-}.play
-val r = OSCResponder.add {
-    case OSCMessage( "/tr", x.id, _, mouseX ) => println( "Dang! " + mouseX )
 }
-
+val r = sosc.Responder.add {
+    case osc.Message( "/tr", x.id, _, mouseX ) => println( "Dang! " + mouseX )
+}
 r.remove
 x.free
 
 // using SendReply
 
 val x = play {
-    SendReply.kr( Impulse.kr( 10 ), Pitch.kr( In.ar( NumOutputBuses.ir, 2 )))
+    // note that Pitch has two outputs, so feeding it with two input channels
+    // produces two instances. In order to prevent the multi-channel-expansion
+    // to create two SendReply objects and instead to catenate both pitch
+    // infos, we can use Flatten( _ )
+    SendReply.kr( Impulse.kr( 10 ), Pitch.kr( In.ar( NumOutputBuses.ir, 2 )).flatten )
 }
-val resp = OSCResponder.add {
-    case OSCMessage( "/reply", x.id, _, freqL: Float, hasFreqL: Float, freqR: Float, hasFreqR: Float ) =>
+val resp = sosc.Responder.add {
+    case osc.Message( "/reply", x.id, _, freqL: Float, hasFreqL: Float, freqR: Float, hasFreqR: Float ) =>
         if( hasFreqL > 0 || hasFreqR > 0 )
         println( "GOT : " + (if( hasFreqL > 0 ) freqL.cpsmidi else "?") + " / " +
             (if( hasFreqR > 0 ) freqR.cpsmidi else "?") )
@@ -440,10 +436,11 @@ x.free
 // exporting a synth graph diagram as PDF.
 // requires that the iTextPDF v5 jar is in the system classpath
 
-val df = SynthDef("AnalogBubbles", SynthGraph.wrapOut({
-    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(List(8, 7.23)).madd(3, 80)).midicps // glissando function
+val df = SynthDef("AnalogBubbles" ) {
+    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(Seq(8, 7.23)).madd(3, 80)).midicps // glissando function
     CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
-}, None ))
+    WrapOut( f, None )
+}
 val f = viewDef( df )
 f.display.setBackground( java.awt.Color.white )
 
@@ -470,25 +467,54 @@ FFT example:
 
 val b = Buffer.alloc( s, 2048 )  // LocalBuf not yet implemented
 val df = SynthDef( "mag-above" ) {
-   val in  = WhiteNoise.ar( 0.2 )
-   val fft = FFT( "buf".kr, in )
-   val flt = PV_MagAbove( fft, MouseX.kr( 0, 10 ))
-   Out.ar( "out".kr( 0 ), IFFT( flt ) * List( 0.5, 0.5 ))
+   val in   = WhiteNoise.ar( 0.2 )
+   val fft  = FFT( "buf".kr, in )
+   val flt  = PV_MagAbove( fft, MouseX.kr( 0, 10 ))
+   val ifft = IFFT( flt ) * Seq( 0.5, 0.5 )
+   Out.ar( "out".kr( 0 ), ifft )
 }
 df.recv( s )
-val x = Synth.play( "mag-above", List( "buf" -> b.id ))
-x.free
+val x = Synth.play( "mag-above", Seq( "buf" -> b.id ))
+x.free; b.free
 
 //////////////////////////////////////////////////////////////////////////
 
 Demand example:
 
-import Float.{ PositiveInfinity => inf }
-
-val x = {
+val x = play {
    val freq = DemandEnvGen.ar(
-      Dseq( List( 204, 400, 201, 502, 300, 200 ), inf ),
-      Drand( List( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
+      Dseq( Seq( 204, 400, 201, 502, 300, 200 ), inf ),
+      Drand( Seq( 1.01, 0.2, 0.1, 2 ), inf ) * MouseY.kr( 0.01, 3, 1 ),
       cubShape.id )
-   SinOsc.ar( freq * List( 1, 1.01 )) * 0.1
-}.play
+   SinOsc.ar( freq * Seq( 1, 1.01 )) * 0.1
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+Output channel separation example:
+
+In the current version `numOutputs` and `outputs` are disabled. You still have the 
+backslash operator, hence instead of
+
+val Seq( freq, hasFreq ) = Pitch.kr( ... )
+
+you must do
+
+val pch     = Pitch.kr( ... )
+val freq    = pch \ 0
+val hasFreq = pch \ 1
+
+for example:
+
+val x = play {
+   val in      = Mix(In.ar(NumOutputBuses.ir + Seq(0, 1)))
+   val amp     = Amplitude.kr(in, 0.05, 0.05)
+   val pch     = Pitch.kr(in, ampThresh = 0.02, median = 7)
+   val freq    = pch \ 0
+   val hasFreq = pch \ 1
+   hasFreq.poll(1)
+   val syn: GE = Mix(VarSaw.ar(freq * Seq(0.5, 1, 2), 0, LFNoise1.kr(0.3).madd(0.1, 0.1)) * amp)
+   (1 to 6).foldLeft(syn) { (sig, _) =>
+      AllpassN.ar(sig, 0.040, Seq(Rand(0, 0.040), Rand(0, 0.040)), 2)
+   }
+}

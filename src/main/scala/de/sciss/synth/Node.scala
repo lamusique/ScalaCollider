@@ -2,7 +2,7 @@
  *  Node.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -27,10 +27,6 @@
  */
 
 package de.sciss.synth
-
-import osc.{ OSCGroupHeadMessage, OSCGroupTailMessage, OSCNodeAfterMessage, OSCNodeBeforeMessage, OSCNodeFillInfo,
-             OSCNodeFillMessage, OSCNodeFreeMessage, OSCNodeMapMessage, OSCNodeMapaMessage, OSCNodeMapanMessage,
-             OSCNodeMapnMessage, OSCNodeRunMessage, OSCNodeSetMessage, OSCNodeSetnMessage, OSCNodeTraceMessage }
 
 /**
  * Add-actions are used by the server to determine where to place a node with
@@ -128,7 +124,7 @@ abstract class Node extends Model {
 //  private def asArray( o: Object ) : Array[Object] = Seq( o ).toArray
 //  private def asArray( o: Int ) : Array[Object] = Seq( o.asInstanceOf[AnyRef] ).toArray
   
-  	def freeMsg = OSCNodeFreeMessage( id )
+  	def freeMsg = osc.NodeFreeMessage( id )
 
   	def run : Unit = run( true )
   
@@ -137,28 +133,28 @@ abstract class Node extends Model {
   		this
   	}
 	
-  	def runMsg : OSCNodeRunMessage = runMsg( true )
-  	def runMsg( flag: Boolean ) = OSCNodeRunMessage( id -> flag )
+  	def runMsg : osc.NodeRunMessage = runMsg( true )
+  	def runMsg( flag: Boolean ) = osc.NodeRunMessage( id -> flag )
   
   	def set( pairs: ControlSetMap* ) {
   		server ! setMsg( pairs: _* )
   	}
 	
   	def setMsg( pairs: ControlSetMap* ) =
-  		OSCNodeSetMessage( id, pairs: _* )
+  		osc.NodeSetMessage( id, pairs: _* )
 
   	def setn( pairs: ControlSetMap* ) {
   		server ! setnMsg( pairs: _* )
   	}
 	
   	def setnMsg( pairs: ControlSetMap* ) =
-  		OSCNodeSetnMessage( id, pairs: _* )
+  		osc.NodeSetnMessage( id, pairs: _* )
 
   	def trace {
   		server ! traceMsg
   	}
 
-   def traceMsg = OSCNodeTraceMessage( id )
+   def traceMsg = osc.NodeTraceMessage( id )
 
   	def release : Unit = release( None )
    def release( releaseTime: Float ) {  release( Some( releaseTime ))}
@@ -168,8 +164,8 @@ abstract class Node extends Model {
   		server ! releaseMsg( releaseTime )
   	}
 
-  	def releaseMsg : OSCNodeSetMessage = releaseMsg( None )
-   def releaseMsg( releaseTime: Float ) : OSCNodeSetMessage = releaseMsg( Some( releaseTime ))
+  	def releaseMsg : osc.NodeSetMessage = releaseMsg( None )
+   def releaseMsg( releaseTime: Float ) : osc.NodeSetMessage = releaseMsg( Some( releaseTime ))
 
   	// assumes a control called 'gate' in the synth
   	def releaseMsg( releaseTime: Option[ Float ]) = {
@@ -177,86 +173,86 @@ abstract class Node extends Model {
   		setMsg( "gate" -> value )
 	}
 
-   def map( pairs: SingleControlKBusMap* ) {
+   def map( pairs: ControlKBusMap.Single* ) {
       server ! mapMsg( pairs: _* )
    }
 
-   def mapMsg( pairs: SingleControlKBusMap* ) =
-      OSCNodeMapMessage( id, pairs: _* )
+   def mapMsg( pairs: ControlKBusMap.Single* ) =
+      osc.NodeMapMessage( id, pairs: _* )
    
   	def mapn( mappings: ControlKBusMap* ) {
   		server ! mapnMsg( mappings: _* )
   	}
   	
   	def mapnMsg( mappings: ControlKBusMap* ) =
-  		OSCNodeMapnMessage( id, mappings: _* )
+  		osc.NodeMapnMessage( id, mappings: _* )
 
-   def mapa( pairs: SingleControlABusMap* ) {
+   def mapa( pairs: ControlABusMap.Single* ) {
       server ! mapaMsg( pairs: _* )
    }
 
-   def mapaMsg( pairs: SingleControlABusMap* ) =
-      OSCNodeMapaMessage( id, pairs: _* )
+   def mapaMsg( pairs: ControlABusMap.Single* ) =
+      osc.NodeMapaMessage( id, pairs: _* )
 
   	def mapan( mappings: ControlABusMap* ) {
   		server ! mapanMsg( mappings: _* )
   	}
 
   	def mapanMsg( mappings: ControlABusMap* ) =
-  		OSCNodeMapanMessage( id, mappings: _* )
+  		osc.NodeMapanMessage( id, mappings: _* )
 
    def fill( control: Any, numChannels: Int, value: Float ) {
       server ! fillMsg( control, numChannels, value )
    }
 
-  	def fill( fillings: OSCNodeFillInfo* ) {
+  	def fill( fillings: osc.NodeFillInfo* ) {
   		server ! fillMsg( fillings: _* )
   	}
 	
    def fillMsg( control: Any, numChannels: Int, value: Float ) =
-      OSCNodeFillMessage( id, OSCNodeFillInfo( control, numChannels, value ))
+      osc.NodeFillMessage( id, osc.NodeFillInfo( control, numChannels, value ))
    
-  	def fillMsg( fillings: OSCNodeFillInfo* ) = OSCNodeFillMessage( id, fillings: _* )
+  	def fillMsg( fillings: osc.NodeFillInfo* ) = osc.NodeFillMessage( id, fillings: _* )
 
    /**
     * Moves this node before another node
     *
     * @param   node  the node before which to move this node
     *
-    * @see  [[de.sciss.synth.osc.OSCNodeBeforeMessage]]
+    * @see  [[de.sciss.synth.osc.osc.NodeBeforeMessage]]
     */
    def moveBefore( node: Node ) { server ! moveBeforeMsg( node )}
    /**
-    * Creates an OSC message to move this node before another node
+    * Creates an osc. message to move this node before another node
     *
     * @param   node  the node before which to move this node
     *
-    * @see  [[de.sciss.synth.osc.OSCNodeBeforeMessage]]
+    * @see  [[de.sciss.synth.osc.osc.NodeBeforeMessage]]
     */
-   def moveBeforeMsg( node: Node )  = OSCNodeBeforeMessage( id -> node.id )
+   def moveBeforeMsg( node: Node )  = osc.NodeBeforeMessage( id -> node.id )
 
    /**
     * Moves this node after another node
     *
     * @param   node  the node after which to move this node
     *
-    * @see  [[de.sciss.synth.osc.OSCNodeAfterMessage]]
+    * @see  [[de.sciss.synth.osc.osc.NodeAfterMessage]]
     */
    def moveAfter( node: Node ) { server ! moveAfterMsg( node )}
    /**
-    * Creates an OSC message to move this node after another node
+    * Creates an osc. message to move this node after another node
     *
     * @param   node  the node after which to move this node
     *
-    * @see  [[de.sciss.synth.osc.OSCNodeAfterMessage]]
+    * @see  [[de.sciss.synth.osc.osc.NodeAfterMessage]]
     */
-   def moveAfterMsg( node: Node )   = OSCNodeAfterMessage( id -> node.id )
+   def moveAfterMsg( node: Node )   = osc.NodeAfterMessage( id -> node.id )
 
    def moveToHead( group: Group ) { server ! moveToHeadMsg( group )}
-  	def moveToHeadMsg( group: Group ) : OSCGroupHeadMessage = group.moveNodeToHeadMsg( this )
+  	def moveToHeadMsg( group: Group ) : osc.GroupHeadMessage = group.moveNodeToHeadMsg( this )
 
    def moveToTail( group: Group ) { server ! moveToTailMsg( group )}
-  	def moveToTailMsg( group: Group ) : OSCGroupTailMessage = group.moveNodeToTailMsg( this )
+  	def moveToTailMsg( group: Group ) : osc.GroupTailMessage = group.moveNodeToTailMsg( this )
 }
 
 //class NodeRef( val server: Server, val id: Int ) extends Node

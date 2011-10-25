@@ -2,7 +2,7 @@
  *  NodeManager.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -29,46 +29,39 @@
 package de.sciss.synth
 
 import collection.immutable.IntMap
-import osc.{ OSCGroupInfo, OSCNodeChange, OSCNodeGoMessage, OSCNodeEndMessage, OSCNodeMoveMessage,
-             OSCNodeOffMessage, OSCNodeOnMessage, OSCNodeInfo, OSCSynthInfo }
 
-/**
- *    @version 0.12, 10-May-10
- */
 object NodeManager {
-   abstract sealed class NodeChange { def node: Node; def info: OSCNodeInfo }
-   case class NodeGo(   node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeEnd(  node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeOn(   node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeOff(  node: Node, info: OSCNodeInfo ) extends NodeChange
-   case class NodeMove( node: Node, info: OSCNodeInfo ) extends NodeChange
+   abstract sealed class NodeChange { def node: Node; def info: osc.NodeInfo }
+   final case class NodeGo(   node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeEnd(  node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeOn(   node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeOff(  node: Node, info: osc.NodeInfo ) extends NodeChange
+   final case class NodeMove( node: Node, info: osc.NodeInfo ) extends NodeChange
    case object Cleared
 }
 
-class NodeManager( server: Server ) extends Model {
+final class NodeManager( server: Server ) extends Model {
 
    import NodeManager._
     
 	private var nodes: IntMap[ Node ] = _
-	private var autoAdd  = true
+//	private var autoAdd  = true
    private val sync     = new AnyRef
 	
 	// ---- constructor ----
-	{
-      clear
+   clear()
 //      if( server.isRunning ) {
 //         val defaultGroup = server.defaultGroup
 //         nodes += defaultGroup.id -> defaultGroup
 //      }
-	}
 
-	def nodeChange( e: OSCNodeChange ) : Unit = e match {
-      case OSCNodeGoMessage( nodeID, info ) => {
+	def nodeChange( e: osc.NodeChange ) { e match {
+      case osc.NodeGoMessage( nodeID, info ) => {
          val node = nodes.get( nodeID ) getOrElse {
-            if( autoAdd && nodes.contains( info.parentID )) {
+            if( /* autoAdd && */ nodes.contains( info.parentID )) {
                val created = info match {
-                  case ee: OSCSynthInfo => new Synth( server, nodeID )
-                  case ee: OSCGroupInfo => new Group( server, nodeID )
+                  case ee: osc.SynthInfo => new Synth( server, nodeID )
+                  case ee: osc.GroupInfo => new Group( server, nodeID )
                }
                register( created )
                created
@@ -76,29 +69,29 @@ class NodeManager( server: Server ) extends Model {
          }
          dispatchBoth( NodeGo( node, info ))
       }
-      case OSCNodeEndMessage( nodeID, info ) => {
+      case osc.NodeEndMessage( nodeID, info ) => {
          nodes.get( nodeID ).foreach( node => {
             unregister( node )
             dispatchBoth( NodeEnd( node, info ))
          })
       }
-      case OSCNodeOffMessage( nodeID, info ) => {
+      case osc.NodeOffMessage( nodeID, info ) => {
          nodes.get( e.nodeID ).foreach( node => {
             dispatchBoth( NodeOff( node, info ))
          })
       }
-      case OSCNodeOnMessage( nodeID, info ) => {
+      case osc.NodeOnMessage( nodeID, info ) => {
          nodes.get( e.nodeID ).foreach( node => {
             dispatchBoth( NodeOn( node, info ))
          })
       }
-      case OSCNodeMoveMessage( nodeID, info ) => {
+      case osc.NodeMoveMessage( nodeID, info ) => {
          nodes.get( e.nodeID ).foreach( node => {
             dispatchBoth( NodeMove( node, info ))
          })
       }
       case _ =>
-	}
+	}}
 
    private def dispatchBoth( change: NodeChange ) {
       dispatch( change )
@@ -122,7 +115,7 @@ class NodeManager( server: Server ) extends Model {
    def getNode( id: Int ) : Option[ Node ] = sync.synchronized { nodes.get( id )}
 //   def getAll : Iterable[ Node ] = sync.synchronized { nodes }
 
-   def clear {
+   def clear() {
       val rootNode = server.rootNode // new Group( server, 0 )
       sync.synchronized {
          nodes = IntMap( rootNode.id -> rootNode )

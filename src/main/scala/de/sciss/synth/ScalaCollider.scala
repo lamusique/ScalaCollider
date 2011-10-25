@@ -2,7 +2,7 @@
  *  ScalaCollider.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -30,62 +30,61 @@ package de.sciss.synth
 
 object ScalaCollider {
    val name          = "ScalaCollider"
-   val version       = 0.24
+   val version       = 0.30
    val copyright     = "(C)opyright 2008-2011 Hanns Holger Rutz"
+   val isSnapshot    = false
 
-   def versionString = (version + 0.001).toString.substring( 0, 4 )
-
-   def main( args: Array[ String ]) {
-      printInfo
-//      test2
-//      System.exit( 1 )
+   def versionString = {
+      val s = (version + 0.001).toString.substring( 0, 4 )
+      if( isSnapshot ) s + "-SNAPSHOT" else s
    }
 
-   def printInfo {
+   def main( args: Array[ String ]) {
+      printInfo()
+//      test4()
+      sys.exit( 1 )
+//      test()
+   }
+
+   def printInfo() {
       println( "\n" + name + " v" + versionString + "\n" + copyright +
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
    }
 
-//   def test2 {
-//      import de.sciss.osc._
-//      val so = new ServerOptionsBuilder
-//      so.transport = TCP
-//      so.port = 44444
-//      Server.test( so.build ) { s =>
-//         println( "Booted." )
+//   private def test4() {
+//      import ugen._
+//      SynthDef( "test" ) {
+//         val b = BrownNoise.ar( Seq( 0.5, 0.5 ))
+//         Out.ar( 0, HPF.ar(b) )
 //      }
 //   }
 
-//   def test {
+//   private def test3() {
 //      import ugen._
-////      SynthGraph {
-////         LinLin.kr( "thresh".kr( 1.0e-2 ), 1.0e-3, 1.0e-1, 32, 4 )
-////         Out.ar( 0, DC.ar( 0 ))
-////      }
-//
-//      SynthGraph.wrapOut {
-//          var n = 1        // number of keys playing
-//          Mix.fill(n) {    // mix an array of notes
-//              // calculate delay based on a random note
-//              val pitch  = IRand(36, 89)
-//              val strike = Impulse.ar(Rand(0.1,0.5), Rand(0,2*math.Pi)) * 0.1    // random period for each key
-//              val hammerEnv = Decay2.ar(strike, 0.008, 0.04)    // excitation envelope
-//              Pan2.ar(
-//                  // array of 3 strings per note
-//                  Mix.tabulate(3)( (i) => {
-//                      // detune strings, calculate delay time :
-//                      val detune = Array(-0.05, 0, 0.04)(i)
-//                      val delayTime = 1 / (pitch + detune).midicps
-//                      // each string gets own exciter :
-//                      val hammer = LFNoise2.ar(3000) * hammerEnv   // 3000 Hz was chosen by ear..
-//                      CombL.ar(hammer,   // used as a string resonator
-//                          delayTime,     // max delay time
-//                          delayTime,     // actual delay time
-//                          6)             // decay time of string
-//                  }),
-//                  (pitch - 36)/27 - 1    // pan position: lo notes left, hi notes right
-//              )
-//          }
+//      SynthDef( "simpler" ) {
+//          val basic = WhiteNoise.ar(Seq(0.03,0.03))
+//          Out.ar( 0, basic )
 //      }
+//   }
+
+//   private def test2() {
+//      import de.sciss.synth._
+//      import ugen._
+//      SynthDef( "zip" ) {
+//         Out.ar( 0, Zip( SinOsc.ar( Seq( 1, 2 )), SinOsc.ar( Seq( 3, 4 ))))
+//      }
+//   }
+
+//   private def test() {
+//      import de.sciss.synth._
+//      import ugen._
+//
+//      val g = SynthGraph {
+//         val sin1 = SinOsc.ar( Seq( 111, 222 ))
+//         val sin2 = SinOsc.ar( Seq( 333, 444, 555 ))
+//         val dem  = Demand.ar( Impulse.ar( 1 ), Seq( sin1, sin2 ))
+//         val out  = Out.ar( 0, dem )
+//      }
+//      val u = g.expand
 //   }
 }

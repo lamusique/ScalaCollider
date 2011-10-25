@@ -2,7 +2,7 @@
  *  DoneAction.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,6 +28,9 @@
 
 package de.sciss.synth
 
+object DoneAction {
+   implicit def toGE( x: DoneAction ) = Constant( x.id )
+}
 sealed abstract class DoneAction( val id: Int )
 
 /**

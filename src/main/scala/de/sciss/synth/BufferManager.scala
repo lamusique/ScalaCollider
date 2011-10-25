@@ -2,7 +2,7 @@
  *  BufferManager.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,28 +28,25 @@
 
 package de.sciss.synth
 
-import scala.collection.immutable.{ IntMap }
-import osc.{ OSCBufferInfo, OSCBufferInfoMessage }
+import scala.collection.immutable.IntMap
 
 object BufferManager {
-   case class BufferInfo( buffer: Buffer, info: OSCBufferInfo )
+   case class BufferInfo( buffer: Buffer, info: osc.BufferInfo )
 }
 
 /**
  *    @version 0.11, 09-May-10
  */
-class BufferManager( server: Server ) extends Model {
+final class BufferManager( server: Server ) extends Model {
    import BufferManager._
 
    private var buffers: IntMap[ Buffer ] = _
    private val sync = new AnyRef
 
    // ---- constructor ----
-   {
-      clear
-   }
+   clear()
 
-   def bufferInfo( msg: OSCBufferInfoMessage ) {
+   def bufferInfo( msg: osc.BufferInfoMessage ) {
       sync.synchronized {
          msg.infos.foreach( info => {
             buffers.get( info.bufID ).foreach( buf => {
@@ -79,7 +76,7 @@ class BufferManager( server: Server ) extends Model {
       sync.synchronized { buffers -= buf.id }
    }
 
-   def clear {
+   def clear() {
       sync.synchronized {
          buffers = IntMap.empty
       }

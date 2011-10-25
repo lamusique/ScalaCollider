@@ -2,7 +2,7 @@
  *  Bus.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,35 +28,30 @@
 
 package de.sciss.synth
 
-import osc.{ OSCControlBusGetMessage, OSCControlBusSetMessage, OSCControlBusSetnMessage }
+import aux.AllocatorExhaustedException
+import sys.error
 
-class AllocatorExhaustedException( reason: String )
-extends RuntimeException( reason )
-
-/**
- *    @version	0.12, 10-May-10
- */
 object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val alloc = server.busses.allocControl( numChannels )
-		if( alloc == -1 ) {
+		val id = server.busses.allocControl( numChannels )
+		if( id == -1 ) {
             throw new AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
 				+ numChannels + " channels on " + server.name + ")" )
 		}
-		ControlBus( server, alloc, numChannels )
+		ControlBus( server, id, numChannels )
 	}
   
 	def audio( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val alloc = server.busses.allocAudio( numChannels )
-		if( alloc == -1 ) {
+		val id = server.busses.allocAudio( numChannels )
+		if( id == -1 ) {
             throw new AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
 				+ numChannels + " channels on " + server.name + ")" )
 		}
-		AudioBus( server, alloc, numChannels )
+		AudioBus( server, id, numChannels )
 	}
 }
 
-trait Bus {
+sealed trait Bus {
    def rate: Rate
    def index: Int
    def numChannels: Int
@@ -64,9 +59,11 @@ trait Bus {
    def free: Unit
 }
 
-case class ControlBus( server: Server, index: Int, numChannels: Int )
-extends Bus with ControlRated {
+final case class ControlBus( server: Server, index: Int, numChannels: Int )
+extends Bus {
 	private var released = false
+
+   def rate : Rate = control
 
 	def free {
 	   if( released ) error( this.toString + " : has already been freed" )
@@ -92,44 +89,46 @@ extends Bus with ControlRated {
 
    def setMsg( v: Float ) = {
       require( numChannels == 1 )
-      OSCControlBusSetMessage( (index, v) )
+      osc.ControlBusSetMessage( (index, v) )
    }
 
    def setMsg( pairs: (Int, Float)* ) = {
       require( pairs.forall( tup => (tup._1 >= 0 && tup._1 < numChannels) ))
-      OSCControlBusSetMessage( pairs.map( tup => (tup._1 + index, tup._2) ): _* )
+      osc.ControlBusSetMessage( pairs.map( tup => (tup._1 + index, tup._2) ): _* )
    }
 
    def setnMsg( v: IndexedSeq[ Float ]) = {
       require( v.size == numChannels )
-      OSCControlBusSetnMessage( (index, v.toIndexedSeq) )
+      osc.ControlBusSetnMessage( (index, v.toIndexedSeq) )
    }
 
    def setnMsg( pairs: (Int, IndexedSeq[ Float ])* ) = {
       require( pairs.forall( tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numChannels) ))
       val ipairs = pairs.map( tup => (tup._1 + index, tup._2.toIndexedSeq ))
-      OSCControlBusSetnMessage( ipairs: _* )
+      osc.ControlBusSetnMessage( ipairs: _* )
    }
 
    def getMsg = {
       require( numChannels == 1 )
-      OSCControlBusGetMessage( index )
+      osc.ControlBusGetMessage( index )
    }
 
    def getMsg( offset: Int = 0 ) = {
       require( offset >= 0 && offset < numChannels )
-      OSCControlBusGetMessage( offset + index )
+      osc.ControlBusGetMessage( offset + index )
    }
 
    def getMsg( offsets: Int* ) = {
       require( offsets.forall( o => (o >= 0 && o < numChannels) ))
-      OSCControlBusGetMessage( offsets.map( _ + index ): _* )
+      osc.ControlBusGetMessage( offsets.map( _ + index ): _* )
    }
 }
 
-case class AudioBus( server: Server, index: Int, numChannels: Int )
-extends Bus with AudioRated {
+final case class AudioBus( server: Server, index: Int, numChannels: Int )
+extends Bus {
    private var released = false
+
+   def rate : Rate = audio
 
    def free {
       if( released ) error( this.toString + " : has already been freed" )

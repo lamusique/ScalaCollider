@@ -2,7 +2,7 @@
  *  Control.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,12 +26,11 @@
  *  Changelog:
  */
 
-package de.sciss.synth.ugen
+package de.sciss.synth
+package ugen
 
-import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
+import collection.immutable.{ IndexedSeq => IIdxSeq }
 import collection.breakOut
-import de.sciss.synth.{ scalar, control, audio, AbstractControlProxy, AudioRated, ControlFactoryLike,
-                        ControlProxyLike, ControlRated, MultiOutUGen, Rate, SideEffectUGen, SynthGraph, UGen }
 
 /**
  *    @version 0.12, 17-May-10
@@ -44,136 +43,87 @@ object Control {
     *    Note: we are not providing further convenience methods,
     *    as that is the task of ControlProxyFactory...
     */
-   def ir( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : Control = make( scalar, values, name )
-   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : Control = make( control, values, name )
+   def ir( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = apply(  scalar,  values, name )
+   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = apply( control, values, name )
 
-   def ir( values: Float* ) : Control = ir( Vector( values: _* ))
-   def kr( values: Float* ) : Control = kr( Vector( values: _* ))
+   def ir( values: Float* ) : Control = ir( IIdxSeq( values: _* ))
+   def kr( values: Float* ) : Control = kr( IIdxSeq( values: _* ))
 
-   private def make( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ]) : Control = {
-      val specialIndex = SynthGraph.builder.addControl( values, name )
-      apply( rate, values.size, specialIndex )
+   final class UGen private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
+   extends UGen.MultiOut( "Control", rate, IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty )
+}
+final case class Control( rate: Rate, values: IIdxSeq[ Float ], ctrlName: Option[ String ])
+extends UGenSource.MultiOut( "Control" /*, values.size */) {
+//def numOutputs = values.size
+   protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
+
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      val specialIndex = UGenGraph.builder.addControl( values, ctrlName )
+      new Control.UGen( rate, values.size, specialIndex )
    }
 }
-case class Control private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( rate, numChannels ) with SideEffectUGen
 
-case class ControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ ControlProxy ]( rate, values.size ) {
-   def factory = ControlFactory
+final case class ControlProxy( rate: Rate, values: IIdxSeq[ Float ], name: Option[ String ])( val factory: ControlFactory )
+extends AbstractControlProxy[ ControlProxy ] // IIdxSeq.fill( values.size )( rate )
 
-   override def toString: String = {
-      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
-   }
-
-   def displayName = "Control"
-}
-
-object ControlFactory extends ControlFactoryLike[ ControlProxy ] {
-   // XXX eventually we should try to factor this out for all controlfactories...
-   def build( proxies: ControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
-      val b = SynthGraph.builder
-      // XXX the 'force' is a remainder from a bug with the scala 2.8.0 release candidates,
-      // which exhibited a problem of not forcing varargs into being strict.
-      // this has probably been fixed, hence we should eventually check if
-      // the force is still necessary or could be removed!
-      // -- DONE
-      proxies.groupBy( _.rate ).flatMap( group => {
-         val (rate, ps)    = group
-         var numChannels   = 0
-         val specialIndex  = ps.map( p => {
-            numChannels += p.values.size
-            b.addControl( p.values, p.name )
-         }).head
-         val ugen: UGen = Control( rate, numChannels, specialIndex )
-         var offset = 0
-         ps.map( p => {
-            val res = p -> (ugen, offset)
-            offset += p.values.size
-            res
-         })
-      })( breakOut )
-   }
+final class ControlFactory( rate: Rate ) extends AbstractControlFactory[ ControlProxy ] {
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new Control.UGen( rate, numChannels, specialIndex )
 }
 
 // ---------- TrigControl ----------
 
 object TrigControl {
-   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : TrigControl = {
-      val specialIndex = SynthGraph.builder.addControl( values, name )
-      apply( values.size, specialIndex )
-   }
-   def kr( values: Float* ) : TrigControl = kr( Vector( values: _* ))
-}
-case class TrigControl private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( control, numChannels ) with ControlRated with SideEffectUGen
+   def kr( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = TrigControl( values, name )
+   def kr( values: Float* ) : TrigControl = kr( IIdxSeq( values: _* ))
 
-case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ TrigControlProxy ]( control, values.size ) with ControlRated {
+   final class UGen private[ugen]( numChannels: Int, override val specialIndex: Int )
+   extends UGen.MultiOut( "TrigControl", control, IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty )
+}
+final case class TrigControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ])
+extends UGenSource.MultiOut( "TrigControl" /*, values.size */) with ControlRated {
+//def numOutputs = values.size
+   protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
+
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      val specialIndex = UGenGraph.builder.addControl( values, ctrlName )
+      new TrigControl.UGen( values.size, specialIndex )
+   }
+}
+
+final case class TrigControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ TrigControlProxy ] /* ( IIdxSeq.fill( values.size )( control )) */ with ControlRated {
    def factory = TrigControlFactory
-
-   override def toString: String = {
-      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
-   }
-
-   def displayName = "TrigControl"
 }
 
-object TrigControlFactory extends ControlFactoryLike[ TrigControlProxy ] {
-   def build( proxies: TrigControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
-      val b = SynthGraph.builder
-      var numChannels   = 0
-      val specialIndex  = proxies.map( p => {
-         numChannels += p.values.size
-         b.addControl( p.values, p.name )
-      }).head
-      val ugen: UGen = TrigControl( numChannels, specialIndex )
-      var offset = 0
-      proxies.map( p => {
-         val res = p -> (ugen, offset)
-         offset += p.values.size
-         res
-      })( breakOut )
-   }
+object TrigControlFactory extends AbstractControlFactory[ TrigControlProxy ] {
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new TrigControl.UGen( numChannels, specialIndex )
 }
 
 // ---------- AudioControl ----------
 
 object AudioControl {
-   def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) : AudioControl = {
-      val specialIndex = SynthGraph.builder.addControl( values, name )
-      apply( values.size, specialIndex )
-   }
-   def ar( values: Float* ) : AudioControl = ar( Vector( values: _* ))
-}
-case class AudioControl private[ugen]( numChannels: Int, override val specialIndex: Int )
-extends MultiOutUGen( audio, numChannels ) with AudioRated with SideEffectUGen
+   def ar( values: IIdxSeq[ Float ], name: Option[ String ] = None ) = AudioControl( values, name )
+   def ar( values: Float* ) : AudioControl = ar( IIdxSeq( values: _* ))
 
-case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
-extends AbstractControlProxy[ AudioControlProxy ]( audio, values.size ) with AudioRated {
+   final class UGen private[ugen]( numChannels: Int, override val specialIndex: Int )
+   extends UGen.MultiOut( "AudioControl", audio, IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty )
+}
+final case class AudioControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ])
+extends UGenSource.MultiOut( "AudioControl" /*, values.size */) with AudioRated {
+//def numOutputs = values.size
+   protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      val specialIndex = UGenGraph.builder.addControl( values, ctrlName )
+      new AudioControl.UGen( values.size, specialIndex )
+   }
+}
+
+
+final case class AudioControlProxy( values: IIdxSeq[ Float ], name: Option[ String ])
+extends AbstractControlProxy[ AudioControlProxy ] /* ( IIdxSeq.fill( values.size )( audio )) */ with AudioRated {
    def factory = AudioControlFactory
-
-   override def toString: String = {
-      name.getOrElse( displayName ) + "." + rate.methodName + values.mkString( "(", ", ", ")" )
-   }
-
-   def displayName = "AudioControl"
 }
 
-object AudioControlFactory extends ControlFactoryLike[ AudioControlProxy ] {
-   def build( proxies: AudioControlProxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
-      val b = SynthGraph.builder
-      var numChannels   = 0
-      val specialIndex  = proxies.map( p => {
-         numChannels += p.values.size
-         b.addControl( p.values, p.name )
-      }).head
-      val ugen: UGen = AudioControl( numChannels, specialIndex )
-      var offset = 0
-      proxies.map( p => {
-         val res = p -> (ugen, offset)
-         offset += p.values.size
-         res
-      })( breakOut )
-   }
+object AudioControlFactory extends AbstractControlFactory[ AudioControlProxy ] {
+   protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen = new AudioControl.UGen( numChannels, specialIndex )
 }

@@ -2,7 +2,7 @@
  *  Synth.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,12 +28,7 @@
 
 package de.sciss.synth
 
-import osc.{ OSCSynthNewMessage }
-
-/**
- *    @version	0.15, 04-Jun-10
- */
-case class Synth( server: Server, id: Int )
+final case class Synth( server: Server, id: Int )
 extends Node {
    private var defNameVar = ""
 
@@ -43,7 +38,7 @@ extends Node {
 	def newMsg( defName: String, target: Node = server.defaultGroup, args: Seq[ ControlSetMap ] = Nil,
                addAction: AddAction = addToHead ) = {
       defNameVar = defName
-      OSCSynthNewMessage( defName, id, addAction.id, target.id, args: _* )
+      osc.SynthNewMessage( defName, id, addAction.id, target.id, args: _* )
    }
 
    def defName = defNameVar

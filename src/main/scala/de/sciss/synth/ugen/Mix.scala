@@ -2,7 +2,7 @@
  *  Mix.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,24 +26,79 @@
  *  Changelog:
  */
 
-package de.sciss.synth.ugen
+package de.sciss.synth
+package ugen
 
-import de.sciss.synth.{ GE }
+import collection.immutable.{ IndexedSeq => IIdxSeq, Stack => IStack }
+import collection.mutable.{ Queue => MQueue, Stack => MStack }
+import aux.UGenHelper
+
+object Mix {
+   /**
+    * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
+    */
+	def tabulate( n: Int )( fun: (Int) => GE )/* ( implicit rate: R ) */ : Mix.Seq =
+      Mix.Seq( IIdxSeq.tabulate( n )( i => fun( i )))
+
+   /**
+    * A mixing idiom that corresponds to @Seq.fill@.
+    */
+   def fill( n: Int )( thunk: => GE )/* ( implicit rate: R ) */ : Mix.Seq =
+      Mix.Seq( IIdxSeq.fill( n )( thunk ))
+
+   def seq( elems: IIdxSeq[ GE ])/* ( implicit rate: R ) */ = Seq( elems )
+
+   def mono( elem: GE ) = Mono( elem )
+
+   final case class Seq( elems: IIdxSeq[ GE ])
+   extends GE.Lazy {
+def numOutputs = if( elems.isEmpty ) 0 else 1 // XXX korrekt?
+      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+
+      def displayName = "Mix.Seq"
+      override def toString = displayName + elems.mkString( "(", ",", ")" )
+
+      def makeUGens : UGenInLike = if( elems.nonEmpty ) elems.reduceLeft( _ + _ ).expand else UGenInGroup.empty
+   }
+
+   final case class Mono( elem: GE )
+   extends GE.Lazy {
+def numOutputs = 1
+      def rate = elem.rate
+
+      def displayName = "Mix.Mono"
+      override def toString = displayName + "(" + elem + ")"
+
+      def makeUGens : UGenInLike = {
+         val flat = elem.expand.flatOutputs
+         if( flat.nonEmpty ) {
+            flat.reduceLeft( BinaryOp.Plus.make1( _, _ ))
+         } else UGenInGroup.empty
+      }
+   }
+}
 
 /**
- *	@version	0.10, 09-Dec-09
- */
-object Mix {
-	def apply( elements: GE ) : GE = elements.outputs.foldLeft[ GE ]( 0 )( (a, b) => a + b )
+ * Mixes the channels of a signal together. Works exactly like the sclang counterpart.
+ *
+ * Here are some examples:
+ *
+ * {{{
+ * Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> SinOsc.ar( 440 ) + SinOsc.ar( 660 )
+ * Mix( SinOsc.ar( 440 )) --> SinOsc.ar( 440 )
+ * Mix( Pan2.ar( SinOsc.ar )) --> left + right
+ * Mix( Pan2.ar( SinOsc.ar( 440 :: 660 :: Nil ))) --> [ left( 440 ) + left( 660 ), right( 440 ) + right( 660 )]
+ * }}}
+*/
+final case class Mix( elem: GE )
+extends UGenSource.SingleOut( "Mix" ) { // GE.Lazy
+   def rate = elem.rate
 
-	// support this common idiom
-    // (corresponds to fill in sclang)
-	def tabulate( n: Int )( func: (Int) => GE ) : GE = {
-      (0 until n).foldLeft[ GE ]( 0 )( (sum, i) => sum + func( i ))
-	}
+   protected def makeUGens : UGenInLike = unwrap( elem.expand.outputs )
 
-   def fill( n: Int )( thunk: => GE ) : GE = {
-      def func() = thunk
-      (0 until n).foldLeft[ GE ]( 0 )( (sum, i) => sum + func() )
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      if( args.nonEmpty ) {
+         args.reduceLeft( BinaryOp.Plus.make1( _, _ ))
+      } else UGenInGroup.empty
    }
 }

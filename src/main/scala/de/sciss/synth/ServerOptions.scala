@@ -31,7 +31,7 @@ package de.sciss.synth
 import collection.mutable.ListBuffer
 import io.{ AudioFileType, SampleFormat }
 import java.io.File
-import de.sciss.osc.{ OSCTransport, TCP, UDP }
+import de.sciss.osc.{Transport, TCP, UDP}
 import java.net.{InetAddress, DatagramSocket, ServerSocket}
 import java.nio.channels.DatagramChannel
 
@@ -65,7 +65,7 @@ trait ServerOptionsLike {
    // realtime only
    def host:                  String
    def port:                  Int
-   def transport:             OSCTransport
+   def transport:             Transport.Net
    def inputStreamsEnabled:   Option[ String ]
    def outputStreamsEnabled:  Option[ String ]
    def deviceName:            Option[ String ]
@@ -89,7 +89,14 @@ trait ServerOptionsLike {
    def firstPrivateBus: Int = outputBusChannels + inputBusChannels
 }
 
-abstract class ServerOptions extends ServerOptionsLike
+object ServerOptions {
+   /**
+    * Implicit conversion which allows you to use a `ServerOptionsBuilder`
+    * wherever a `ServerOptions` is required.
+    */
+   implicit def build( sob: ServerOptionsBuilder ) : ServerOptions = sob.build
+}
+abstract sealed class ServerOptions extends ServerOptionsLike
 
 object ServerOptionsBuilder {
    private def toNonRealtimeArgs( o: ServerOptionsLike ): List[ String ] = {
@@ -240,7 +247,7 @@ object ServerOptionsBuilder {
    }
 }
 
-class ServerOptionsBuilder extends ServerOptionsLike {
+final class ServerOptionsBuilder extends ServerOptionsLike {
    var programPath:           String = new File( System.getenv( "SC_HOME" ), "scsynth" ).getAbsolutePath
    var controlBusChannels:    Int                        = 4096
    var audioBusChannels:      Int                        = 128
@@ -267,7 +274,7 @@ class ServerOptionsBuilder extends ServerOptionsLike {
    // realtime only
    var host:                  String                     = "127.0.0.1"
    var port:                  Int                        = 57110
-   var transport:             OSCTransport               = UDP
+   var transport:             Transport.Net              = UDP
    var inputStreamsEnabled:   Option[ String ]           = None
    var outputStreamsEnabled:  Option[ String ]           = None
 
@@ -347,7 +354,7 @@ class ServerOptionsBuilder extends ServerOptionsLike {
                        val maxNodes: Int, val maxSynthDefs: Int, val memorySize: Int, val wireBuffers: Int,
                        val randomSeeds: Int, val loadSynthDefs: Boolean, val machPortName: Option[ (String, String) ],
                        val verbosity: Int, val plugInsPaths: List[ String ], val restrictedPath: Option[ String ],
-                       val memoryLocking: Boolean, val host: String, val port: Int, val transport: OSCTransport,
+                       val memoryLocking: Boolean, val host: String, val port: Int, val transport: Transport.Net,
                        val inputStreamsEnabled: Option[ String ], val outputStreamsEnabled: Option[ String ],
                        val deviceNames: Option[ (String, String) ], val deviceName: Option[ String ],
                        val inputBusChannels: Int,

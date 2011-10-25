@@ -2,7 +2,7 @@
  *  Server.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,20 +28,15 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{ OSCChannel, OSCClient, OSCMessage, OSCPacket, OSCTransport, TCP, UDP }
-import java.net.{ ConnectException, DatagramSocket, InetAddress, InetSocketAddress, ServerSocket, SocketAddress }
-import java.io.{ BufferedReader, File, InputStreamReader, IOException }
-import java.util.{ Timer, TimerTask }
-import actors.{ Actor, Channel, DaemonActor, Future, InputChannel, OutputChannel, TIMEOUT }
-import collection.breakOut
-import collection.immutable.Queue
+import java.io.{BufferedReader, File, InputStreamReader, IOException}
+import java.util.{Timer, TimerTask}
+import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
 import concurrent.SyncVar
-import osc.{ OSCBufferInfoMessage, OSCHandler, OSCNodeChange, OSCResponder, OSCServerNotifyMessage,
-             OSCServerQuitMessage, OSCStatusMessage, OSCStatusReplyMessage, OSCSyncMessage, ServerCodec }
+import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
+import sys.error
+import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
+import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 
-/**
- * 	@version    0.16, 03-Aug-10
- */
 object Server {
    private val allSync  = new AnyRef
 //   private var allVar   = Set.empty[ Server ]
@@ -60,13 +55,14 @@ object Server {
            ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
       val sc = initBoot( name, options, clientOptions )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
-      sc.start
+      sc.start()
       sc
    }
 
    private def initBoot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
              clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) = {
       val (addr, c) = prepareConnection( options, clientOptions )
+//c.dump()
       new BootingImpl( name, c, addr, options, clientOptions, true )
    }
 
@@ -80,11 +76,11 @@ object Server {
       val (addr, c) = prepareConnection( options, clientOptions )
       val sc = new ConnectionImpl( name, c, addr, options, clientOptions, true )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
-      sc.start
+      sc.start()
       sc
    }
 
-   def test( code: Server => Unit ) : Unit = test()( code )
+   def test( code: Server => Unit ) { test()( code )}
    
    /**
     *    Utility method to test code quickly with a running server. This boots a
@@ -99,12 +95,12 @@ object Server {
       sc.addListener {
          case ServerConnection.Running( srv ) => sync.synchronized { s = srv }; code( srv )
       }
-      Runtime.getRuntime().addShutdownHook( new Thread { override def run = sync.synchronized {
+      Runtime.getRuntime.addShutdownHook( new Thread { override def run() { sync.synchronized {
          if( s != null ) {
             if( s.condition != Server.Offline ) s.quit
          } else sc.abort
-      }})
-      sc.start
+      }}})
+      sc.start()
    }
 
    @throws( classOf[ IOException ])
@@ -133,12 +129,12 @@ object Server {
       (addr, c)
    }
    
-   def allocPort( transport: OSCTransport ) : Int = {
+   def allocPort( transport: Transport ) : Int = {
       transport match {
          case TCP => {
             val ss = new ServerSocket( 0 )
             try {
-               ss.getLocalPort()
+               ss.getLocalPort
             } finally {
                ss.close()
             }
@@ -146,7 +142,7 @@ object Server {
          case UDP => {
             val ds = new DatagramSocket()
             try {
-               ds.getLocalPort()
+               ds.getLocalPort
             } finally {
                ds.close()
             }
@@ -174,31 +170,47 @@ object Server {
       t.printStackTrace()
    }
 
+   implicit def defaultGroup( s: Server ) = s.defaultGroup
+
    abstract sealed class Condition
    case object Running extends Condition
 //   case object Booting extends Condition
    case object Offline extends Condition
-   private case object Terminating extends Condition
+//   private case object Terminating extends Condition
    private case object NoPending extends Condition
 
-   case class Counts( c: OSCStatusReplyMessage )
+   case class Counts( c: osc.StatusReplyMessage )
 
-   private def createClient( transport: OSCTransport, serverAddr: InetSocketAddress,
+   private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
-//      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, ServerCodec )
-      val client        = OSCClient.withAddress( transport, clientAddr, ServerCodec )
-      client.bufferSize = 0x10000
-      client.target     = serverAddr
+//      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, osc.ServerCodec )
+//println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
+      val client        = transport match {
+         case UDP =>
+            val cfg                 = UDP.Config()
+            cfg.localSocketAddress  = clientAddr
+            cfg.codec               = osc.ServerCodec
+            cfg.bufferSize          = 0x10000
+            UDP.Client( serverAddr, cfg )
+         case TCP =>
+            val cfg                 = TCP.Config()
+            cfg.codec               = osc.ServerCodec
+            cfg.localSocketAddress  = clientAddr
+            cfg.bufferSize          = 0x10000
+            TCP.Client( serverAddr, cfg )
+      }
+//      client.connect()
       client
    }
 
    // -------- internal class BootThread --------
 
    private object ConnectionImplLike {
+      case object Ready
       case object Abort
       case object QueryServer
-      case class AddListener( l: Model.Listener )
-      case class RemoveListener( l: Model.Listener )
+      final case class AddListener( l: Model.Listener )
+      final case class RemoveListener( l: Model.Listener )
 //      case object Aborted
    }
 
@@ -209,41 +221,69 @@ object Server {
 
       val actor = new DaemonActor {
 //         var state: Condition = Connecting
-         def act {
+         def act() { react {
 //            dispatch( Connecting )
-            loop {
+            case Abort => abortHandler( None )
+            case Ready => loop {
                if( connectionAlive ) {
-                  try {
-                     c.start
-                     c.action = (msg, addr, when) => this ! msg
+//                  def retryConnect() {
+//                     val tretry  = System.currentTimeMillis + 500
+//                     var looping = true
+//                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
+//                        case TIMEOUT            => looping = false
+//                        case AddListener( l )   => actAddList( l )
+//                        case RemoveListener( l )=> actRemoveList( l )
+//                        case Abort              => abortHandler( None )
+//                     }}
+//                  }
+//                  try {
+//println( "?? Connect")
+//                     c.start
+//println( "isConnected? " + c.isConnected + " ; isOpen? " + c.isOpen )
+                     if( !c.isConnected ) c.connect()
+//println( "!! Connect")
+//c.dumpOSC()
+                     c.action = p => this ! p
                      var tnotify = 0L
-                     def snotify {
-                        tnotify = System.currentTimeMillis + 5000
-                        c ! OSCServerNotifyMessage( true )
+                     def snotify() {
+                        tnotify = System.currentTimeMillis + 500
+//println( ">>> NOT" )
+//try {
+                        c ! osc.ServerNotifyMessage( true )
+//} catch {
+//   case n: PortUnreachableException => println( "caught : " + n )
+//}
                      }
-                     snotify
+                     snotify()
                      loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
-                        case TIMEOUT            => snotify // loop is retried
+                        case TIMEOUT            => snotify() // loop is retried
                         case AddListener( l )   => actAddList( l )
                         case RemoveListener( l )=> actRemoveList( l )
                         case Abort              => abortHandler( None )
-                        case OSCMessage( "/done", "/notify" ) => {
+                        case Message( "/done", "/notify" ) => {
+//println( "<<< NOT" )
                            var tstatus = 0L
-                           def sstatus {
+                           def sstatus() {
                               tstatus = System.currentTimeMillis + 500
-                              c ! OSCStatusMessage
+//println( ">>> STAT" )
+//try {
+   c ! osc.StatusMessage
+//} catch {
+//   case n: PortUnreachableException => println( "caught : " + n )
+//}
                            }
-                           sstatus
+                           sstatus()
                            loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
-                              case TIMEOUT            => sstatus // loop is retried
+                              case TIMEOUT            => sstatus() // loop is retried
                               case AddListener( l )   => actAddList( l )
                               case RemoveListener( l )=> actRemoveList( l )
                               case Abort              => abortHandler( None )
-                              case counts: OSCStatusReplyMessage => {
+                              case counts: osc.StatusReplyMessage => {
+//println( "<<< STAT" )
                                  val s = new Server( name, c, addr, options, clientOptions )
                                  s.counts = counts
                                  dispatch( Preparing( s ))
-                                 s.initTree
+                                 s.initTree()
                                  dispatch( SCRunning( s ))
                                  createAliveThread( s )
                                  loop { react {
@@ -252,7 +292,7 @@ object Server {
                                     case RemoveListener( l )=> actRemoveList( l )
                                     case Abort              => abortHandler( Some( s ))
                                     case ServerConnection.Aborted => {
-                                       s.serverOffline
+                                       s.serverOffline()
                                        dispatch( Aborted )
                                        loop { react {
                                           case AddListener( l )   => actAddList( l ); actDispatch( l, Aborted )
@@ -266,30 +306,30 @@ object Server {
                            }}
                         }
                      }}
-                  }
-                  catch { case e: ConnectException => // thrown when in TCP mode and socket not yet available
-                     val tretry  = System.currentTimeMillis + 500
-                     var looping = true
-                     loopWhile( looping ) { reactWithin( math.max( 0L, tretry - System.currentTimeMillis) ) {
-                        case TIMEOUT            => looping = false
-                        case AddListener( l )   => actAddList( l )
-                        case RemoveListener( l )=> actRemoveList( l )
-                        case Abort              => abortHandler( None )
-                     }}
-                  }
+//                  }
+//                  catch {
+//                     case _: ConnectException => retryConnect()   // thrown when TCP server not available
+//                     case _: PortUnreachableException => retryConnect() // thrown when server sets up UDP
+//                     case e: ClosedChannelException =>
+//println( "CAUGHT:" )
+//e.printStackTrace( Console.out )
+//println( "IS OPEN? " + c.isOpen() )
+//                        retryConnect() // thrown when in TCP mode and socket not yet available
+////println( "!= Connect")
+//                  }
                } else loop { react {
                   case Abort  => reply ()
                   case _      =>
                }}
             }
-         }
+         }}
 
          private def abortHandler( server: Option[ Server ]) {
-            handleAbort
+            handleAbort()
             val from = sender
             loop { react {
                case ServerConnection.Aborted => {
-                  server.foreach( _.serverOffline )
+                  server.foreach( _.serverOffline() )
                   dispatch( ServerConnection.Aborted )
                   from ! ()
                }
@@ -330,7 +370,7 @@ object Server {
       lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
       lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
 
-      def handleAbort : Unit
+      def handleAbort() : Unit
       def connectionAlive : Boolean
       def c : OSCClient
       def clientOptions : ClientOptions
@@ -341,19 +381,24 @@ object Server {
       ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
         val clientOptions: ClientOptions, aliveThread: Boolean )
    extends ConnectionImplLike {
-      import ConnectionImplLike._
+//      import ConnectionImplLike._
 
-      def start { actor.start }
+      def start() {
+         actor.start()
+      }
 
       override def toString = "connect<" + name + ">"
 
-      def handleAbort {}
+      def handleAbort() {}
       def connectionAlive = true // XXX could add a timeout?
       def createAliveThread( s: Server ) {
          if( aliveThread ) s.startAliveThread( 1.0f, 0.25f, 40 ) // allow for a luxury 10 seconds absence
       }
    }
 
+//   private object BootingImpl {
+//      final case class Booted( open: Boolean )
+//   }
    private class BootingImpl @throws( classOf[ IOException ])
       ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
         val clientOptions: ClientOptions, aliveThread: Boolean )
@@ -370,22 +415,41 @@ object Server {
       }
 
       lazy val processThread = new Thread {
-         override def run = try {
+         override def run() { try {
             p.waitFor()
          } catch { case e: InterruptedException =>
             p.destroy()
          } finally {
             println( "scsynth terminated (" + p.exitValue +")" )
             actor ! ServerConnection.Aborted
-         }
+         }}
       }
 
-      def start {
+//      @volatile private var isOpen      = false
+//      @volatile private var isBooting   = false
+//
+      def start() {
          val inReader   = new BufferedReader( new InputStreamReader( p.getInputStream ))
-         val postActor  = new DaemonActor {
-            def act {
-               var isOpen = true
-               loopWhile( isOpen ) {
+         val postThread = new Thread {
+            override def run() {
+               var isOpen         = true
+               var isBooting      = true
+               try {
+                  while( isOpen && isBooting ) {
+                     val line = inReader.readLine
+                     isOpen = line != null
+                     if( isOpen ) {
+                        println( line )
+// of course some sucker screwed it up and added another period in SC 3.4.4
+//                        if( line == "SuperCollider 3 server ready." ) isBooting = false
+if( line.startsWith( "SuperCollider 3 server ready." )) isBooting = false
+                     }
+                  }
+               } catch {
+                  case e => isOpen = false
+               }
+               actor ! (if( isOpen ) Ready else Abort)
+               while( isOpen ) {
                   val line = inReader.readLine
                   isOpen = line != null
                   if( isOpen ) println( line )
@@ -394,14 +458,14 @@ object Server {
          }
 
          // ...and go
-         postActor.start
-         processThread.start
-         actor.start
+         postThread.start()
+         processThread.start()
+         actor.start()
       }
 
       override def toString = "boot<" + name + ">"
 
-      def handleAbort { processThread.interrupt() }
+      def handleAbort() { processThread.interrupt() }
       def connectionAlive = processThread.isAlive
       def createAliveThread( s: Server ) {
          // note that we optimistically assume that if we boot the server, it
@@ -413,7 +477,7 @@ object Server {
    }
 }
 
-trait ServerLike extends Model {
+sealed trait ServerLike extends Model {
    def name: String
    def options: ServerOptions
    def addr: InetSocketAddress
@@ -426,14 +490,14 @@ object ServerConnection {
    case class Running( server: Server ) extends Condition
    case object Aborted extends Condition
 }
-trait ServerConnection extends ServerLike {
+sealed trait ServerConnection extends ServerLike {
 //   def start : Unit
    def server : Future[ Server ]
    def abort : Future[ Unit ]
 }
 
 //abstract class Server extends Model {}
-class Server private( val name: String, c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
+final class Server private( val name: String, c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
                       val clientOptions: ClientOptions )
 extends ServerLike {
    server =>
@@ -442,7 +506,7 @@ extends ServerLike {
 
    private var aliveThread: Option[StatusWatcher]	= None
 //   private var bootThread: Option[BootThread]		= None
-   private var countsVar							      = new OSCStatusReplyMessage( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
+   private var countsVar							      = new osc.StatusReplyMessage( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
 //   private var collBootCompletion					   = Queue.empty[ (Server) => Unit ]
    private val condSync                            = new AnyRef
    private var conditionVar: Condition 			   = Running // Offline
@@ -458,11 +522,9 @@ extends ServerLike {
 //   var latency                                     = 0.2f
 
    // ---- constructor ----
-   {
-      OSCReceiverActor.start
-      c.action = OSCReceiverActor.messageReceived
-      add( server )
-   }
+   OSCReceiverActor.start()
+   c.action = OSCReceiverActor.messageReceived
+   add( server )
 
    def isLocal : Boolean = {
       val host = addr.getAddress
@@ -476,26 +538,26 @@ extends ServerLike {
 //   def bufferAllocator = bufferAllocatorVar
 
    object nodes {
-      private var allocator = new NodeIDAllocator( clientOptions.clientID, clientOptions.nodeIDOffset )
+      private val allocator = new NodeIDAllocator( clientOptions.clientID, clientOptions.nodeIDOffset )
 
       def nextID = allocator.alloc
    }
 
    object busses {
-      private var controlAllocator = new ContiguousBlockAllocator( options.controlBusChannels )
-      private var audioAllocator = new ContiguousBlockAllocator( options.audioBusChannels, options.firstPrivateBus )
+      private val controlAllocator = new ContiguousBlockAllocator( options.controlBusChannels )
+      private val audioAllocator = new ContiguousBlockAllocator( options.audioBusChannels, options.firstPrivateBus )
 
       def allocControl( numChannels: Int ) = controlAllocator.alloc( numChannels )
       def allocAudio( numChannels: Int ) = audioAllocator.alloc( numChannels )
-      def freeControl( index: Int ) = controlAllocator.free( index )
-      def freeAudio( index: Int ) = audioAllocator.free( index )
+      def freeControl( index: Int ) { controlAllocator.free( index )}
+      def freeAudio( index: Int ) { audioAllocator.free( index )}
    }
 
    object buffers {
-      private var allocator = new ContiguousBlockAllocator( options.audioBuffers )
+      private val allocator = new ContiguousBlockAllocator( options.audioBuffers )
 
       def alloc( numChannels: Int ) = allocator.alloc( numChannels )
-      def free( index: Int ) = allocator.free( index )
+      def free( index: Int ) { allocator.free( index )}
    }
 
    private object uniqueID {
@@ -503,7 +565,7 @@ extends ServerLike {
       def nextID = this.synchronized { val res = id; id += 1; res }
    }
 
-   def !( p: OSCPacket ) { c ! p }
+   def !( p: Packet ) { c ! p }
 
    /**
     * Sends out an OSC packet that generates some kind of reply, and
@@ -533,12 +595,12 @@ extends ServerLike {
     *
     * @see  [[scala.actors.Futures]]
     */
-   def !![ A ]( p: OSCPacket, handler: PartialFunction[ OSCMessage, A ]) : RevocableFuture[ A ] = {
+   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ] = {
       val c    = new Channel[ A ]( Actor.self )
       val a = new FutureActor[ A ]( c ) {
          val sync    = new AnyRef
          var revoked = false
-         var oh: Option[ OSCHandler ] = None
+         var oh: Option[ osc.Handler ] = None
 
          def body( res: SyncVar[ A ]) {
             val futCh   = new Channel[ A ]( Actor.self )
@@ -550,7 +612,7 @@ extends ServerLike {
             }}
             futCh.react { case r => res.set( r )}
          }
-         def revoke { sync.synchronized {
+         def revoke() { sync.synchronized {
             revoked = true
             oh.foreach( OSCReceiverActor.removeHandler( _ ))
             oh = None
@@ -580,9 +642,9 @@ extends ServerLike {
     *
     * @see  [[scala.actors.TIMEOUT]]
     */
-   def !?( timeOut: Long, p: OSCPacket, handler: PartialFunction[ Any, Unit ]) {
+   def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) {
       val a = new DaemonActor {
-         def act {
+         def act() {
             val futCh   = new Channel[ Any ]( Actor.self )
             val oh      = new OSCTimeOutHandler( handler, futCh )
             OSCReceiverActor.addHandler( oh )
@@ -601,14 +663,14 @@ extends ServerLike {
    }
 
    def counts = countsVar
-   private[synth] def counts_=( newCounts: OSCStatusReplyMessage ) {
+   private[synth] def counts_=( newCounts: osc.StatusReplyMessage ) {
       countsVar = newCounts
       dispatch( Counts( newCounts ))
    }
 
    def sampleRate = counts.sampleRate
   
-   def dumpTree : Unit = dumpTree( false )
+   def dumpTree { dumpTree( false )}
 
    def dumpTree( controls: Boolean ) {
       rootNode.dumpTree( controls )
@@ -621,7 +683,7 @@ extends ServerLike {
             conditionVar = newCondition
             if( newCondition == Offline ) {
                pendingCondition = NoPending
-               serverLost
+               serverLost()
             }
 //            else if( newCondition == Running ) {
 //               if( pendingCondition == Booting ) {
@@ -644,86 +706,88 @@ extends ServerLike {
          if( aliveThread.isEmpty ) {
             val statusWatcher = new StatusWatcher( delay, period, deathBounces )
             aliveThread = Some( statusWatcher )
-            statusWatcher.start
+            statusWatcher.start()
          }
       }
    }
 
-   def stopAliveThread {
+   def stopAliveThread() {
       condSync.synchronized {
-         aliveThread.foreach( _.stop )
+         aliveThread.foreach( _.stop() )
          aliveThread = None
       }
   }
 
-   def queryCounts {
-      this ! OSCStatusMessage
+   def queryCounts() {
+      this ! osc.StatusMessage
    }
 
-   def syncMsg : OSCSyncMessage = syncMsg()
-   def syncMsg( id: Int = uniqueID.nextID ) = OSCSyncMessage( id )
+   def syncMsg : osc.SyncMessage = syncMsg()
+   def syncMsg( id: Int = uniqueID.nextID ) = osc.SyncMessage( id )
 
-   def dumpOSC( mode: Int = OSCChannel.DUMP_TEXT ) {
-      c.dumpIncomingOSC( mode, filter = {
-         case m: OSCStatusReplyMessage => false
+   def dumpOSC( mode: Dump = Dump.Text ) {
+      c.dumpIn( mode, filter = {
+         case m: osc.StatusReplyMessage => false
          case _ => true
       })
-      c.dumpOutgoingOSC( mode, filter = {
-         case OSCStatusMessage => false
+      c.dumpOut( mode, filter = {
+         case osc.StatusMessage => false
          case _ => true
       })
    }
 
-   private def serverLost {
-      nodeMgr.clear
-      bufMgr.clear
-      OSCReceiverActor.clear
+   private def serverLost() {
+      nodeMgr.clear()
+      bufMgr.clear()
+      OSCReceiverActor.clear()
    }
 
-   private def serverOffline {
+   private def serverOffline() {
       condSync.synchronized {
 //         bootThread = None
-         stopAliveThread
+         stopAliveThread()
          condition = Offline
       }
    }
 
    def quit {
       this ! quitMsg
-      cleanUpAfterQuit
+//      cleanUpAfterQuit()
+      dispose
    }
 
-   def quitMsg = OSCServerQuitMessage
+   def quitMsg = osc.ServerQuitMessage
 
-   private def cleanUpAfterQuit {
-      try {
-         condSync.synchronized {
-            stopAliveThread
-            pendingCondition = Terminating
-         }
-      }
-      catch { case e: IOException => printError( "Server.cleanUpAfterQuit", e )}
-   }
+//   private def cleanUpAfterQuit() {
+//      try {
+//         condSync.synchronized {
+//            stopAliveThread()
+//            pendingCondition = Terminating
+//         }
+//      }
+//      catch { case e: IOException => printError( "Server.cleanUpAfterQuit", e )}
+//   }
 
-   private[synth] def addResponder( resp: OSCResponder ) {
+   private[synth] def addResponder( resp: osc.Responder ) {
       OSCReceiverActor.addHandler( resp )
    }
 
-   private[synth] def removeResponder( resp: OSCResponder ) {
+   private[synth] def removeResponder( resp: osc.Responder ) {
       OSCReceiverActor.removeHandler( resp )
    }
 
-   private[synth] def initTree {
+   private[synth] def initTree() {
       nodeMgr.register( defaultGroup )
       server ! defaultGroup.newMsg( rootNode, addToHead )
    }
 
    def dispose {
       condSync.synchronized {
-         serverOffline
+         serverOffline()
          remove( this )
-         c.dispose // = (msg: OSCMessage, sender: SocketAddress, time: Long) => ()
-         OSCReceiverActor.dispose
+//         c.dispose // = (msg: Message, sender: SocketAddress, time: Long) => ()
+         c.close()
+         OSCReceiverActor.dispose()
 //         c.dispose
       }
    }
@@ -747,26 +811,26 @@ extends ServerLike {
 //      // ---- constructor ----
 //      timer.setInitialDelay( delayMillis )
 
-      def start {
-         stop
+      def start() {
+         stop()
          timer = {
             val t = new Timer( "StatusWatcher", true )
             t.schedule( new TimerTask {
-               def run = watcher.run // invokeOnMainThread( watcher )
+               def run() { watcher.run() } // invokeOnMainThread( watcher )
             }, delayMillis, periodMillis )
             Some( t )
          }
       }
 
-      def stop {
+      def stop() {
 //         timer.stop
          timer.foreach( t => {
-            t.cancel
+            t.cancel()
             timer = None
          })
       }
 
-      def run {
+      def run() {
          sync.synchronized {
             alive -= 1
             if( alive < 0 ) {
@@ -775,12 +839,12 @@ extends ServerLike {
             }
          }
          try {
-            queryCounts
+            queryCounts()
          }
          catch { case e: IOException => printError( "Server.status", e )}
       }
 
-      def statusReply( msg: OSCStatusReplyMessage ) {
+      def statusReply( msg: osc.StatusReplyMessage ) {
          sync.synchronized {
             alive = deathBounces
             // note: put the counts before running
@@ -799,25 +863,25 @@ extends ServerLike {
    private object OSCReceiverActor extends DaemonActor {
       private case object Clear
       private case object Dispose
-      private case class  ReceivedMessage( msg: OSCMessage, sender: SocketAddress, time: Long )
-      private case class  AddHandler( h: OSCHandler )
-      private case class  RemoveHandler( h: OSCHandler )
+//      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
+      private case class  AddHandler( h: osc.Handler )
+      private case class  RemoveHandler( h: osc.Handler )
       private case class  TimeOutHandler( h: OSCTimeOutHandler )
 
-      def clear {
+      def clear() {
          this ! Clear
       }
 
-      def dispose {
-         clear
+      def dispose() {
+         clear()
          this ! Dispose
       }
 
-      def addHandler( handler: OSCHandler ) {
+      def addHandler( handler: osc.Handler ) {
          this ! AddHandler( handler )
       }
 
-      def removeHandler( handler: OSCHandler ) {
+      def removeHandler( handler: osc.Handler ) {
          this ! RemoveHandler( handler )
       }
 
@@ -827,31 +891,32 @@ extends ServerLike {
 
       // ------------ OSCListener interface ------------
 
-      def messageReceived( msg: OSCMessage, sender: SocketAddress, time: Long ) {
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : ! : " + msg )
-         this ! ReceivedMessage( msg, sender, time )
+      def messageReceived( p: Packet ) {
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : ! : " + msg )
+         this ! p
       }
 
-      def act {
+      def act() {
          var running    = true
-         var handlers   = Set.empty[ OSCHandler ]
+         var handlers   = Set.empty[ osc.Handler ]
 //         while( running )( receive { })
          loopWhile( running )( react {
-            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : received : " + msg )
+            case msg: Message => debug( msg ) {
+//            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
                msg match {
-                  case nodeMsg:        OSCNodeChange           => nodeMgr.nodeChange( nodeMsg )
-                  case bufInfoMsg:     OSCBufferInfoMessage    => bufMgr.bufferInfo( bufInfoMsg )
-                  case statusReplyMsg: OSCStatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
+                  case nodeMsg:        osc.NodeChange           => nodeMgr.nodeChange( nodeMsg )
+                  case bufInfoMsg:     osc.BufferInfoMessage    => bufMgr.bufferInfo( bufInfoMsg )
+                  case statusReplyMsg: osc.StatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
                   case _ =>
                }
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : handlers" )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : handlers" )
                handlers.foreach( h => if( h.handle( msg )) handlers -= h )
             }
             case AddHandler( h )    => handlers += h
-            case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed }
-            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut }
-            case Clear              => handlers.foreach( _.removed ); handlers = Set.empty
+            case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed() }
+            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut() }
+            case Clear              => handlers.foreach( _.removed() ); handlers = Set.empty
             case Dispose            => running = false
             case m                  => println( "Received illegal message " + m )
          })
@@ -869,33 +934,33 @@ extends ServerLike {
       if( (t2 - t1) > 2000 ) println( "" + new java.util.Date() + " WOW this took long (" + (t2-t1) + "): " + msg )
    }
 
-   // -------- internal OSCHandler implementations --------
+   // -------- internal osc.Handler implementations --------
 
-   private class OSCInfHandler[ A ]( fun: PartialFunction[ OSCMessage, A ], ch: OutputChannel[ A ])
-   extends OSCHandler {
-      def handle( msg: OSCMessage ) : Boolean = {
+   private class OSCInfHandler[ A ]( fun: PartialFunction[ Message, A ], ch: OutputChannel[ A ])
+   extends osc.Handler {
+      def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : inf handled : " + msg + " ? " + handled )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
          if( handled ) try {
             ch ! fun.apply( msg )
          } catch { case e => e.printStackTrace() }
          handled
       }
-      def removed {}
+      def removed() {}
    }
 
    private class OSCTimeOutHandler( fun: PartialFunction[ Any, Unit ], ch: OutputChannel[ Any ])
-   extends OSCHandler {
-      def handle( msg: OSCMessage ) : Boolean = {
+   extends osc.Handler {
+      def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
-//if( msg.name == "/synced" ) println( "" + new java.util.Date() + " : to handled : " + msg + " ? " + handled )
+//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )
          if( handled ) try {
             ch ! fun.apply( msg )
          } catch { case e => e.printStackTrace() }
          handled
       }
-      def removed {}
-      def timedOut {
+      def removed() {}
+      def timedOut() {
          if( fun.isDefinedAt( TIMEOUT )) try {
             fun.apply( TIMEOUT )
          } catch { case e => e.printStackTrace() }

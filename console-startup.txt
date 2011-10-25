@@ -9,7 +9,7 @@ def boot {
    Server.boot( options = so.build ) {
       case ServerConnection.Running( srv ) =>
          s = srv
-         play( fadeTime = None ) {
+         play( s, 0, None ) {
             val f0 = XLine.ar(40,0.2,10)
             val off = PulseCount.ar(Impulse.ar(f0)).madd(1,40)
             val f = LFPulse.kr(f0,1).madd(24, LFSaw.kr(List(8, 7.23),1).madd(3, off)).midicps // glissando function

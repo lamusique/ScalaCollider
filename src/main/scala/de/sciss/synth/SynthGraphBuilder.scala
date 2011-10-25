@@ -2,7 +2,7 @@
  *  SynthGraphBuilder.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -31,15 +31,25 @@ package de.sciss.synth
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
 trait SynthGraphBuilder {
-   def addUGen( ugen: UGen ) : Unit
+   def addLazy( g: Lazy ) : Unit
    def addControlProxy( proxy: ControlProxyLike[ _ ]) : Unit
-   def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
    def build : SynthGraph
+}
 
-   private var indivCnt = 0
-   def individuate : Int = {
-      val res = indivCnt
-      indivCnt += 1
-      res
-   }
+trait UGenGraphBuilder {
+   def addUGen( ugen: UGen ) : Unit
+//   def addUGenElem( u: Expands[ UGen ]) : Unit
+//   def addControlProxy( proxy: ControlProxyLike[ _, _ ]) : Unit
+   def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int
+   def build : UGenGraph
+
+//   def visit[ U ]( src: Lazy, init: => U ) : U
+   def visit[ U ]( ref: AnyRef, init: => U ) : U
+
+//   private var indivCnt = 0
+//   def individuate : Int = {
+//      val res = indivCnt
+//      indivCnt += 1
+//      res
+//   }
 }

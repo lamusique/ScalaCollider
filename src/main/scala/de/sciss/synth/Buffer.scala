@@ -2,7 +2,7 @@
  *  Buffer.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,19 +28,13 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{ OSCBundle, OSCMessage, OSCPacket }
 import de.sciss.synth.{ Completion => Comp, play => scplay }
-import de.sciss.synth.io.{ AudioFileType, SampleFormat }
-import ugen.{ BufRateScale, FreeSelfWhenDone, PlayBuf }
-import osc.{ OSCBufferAllocMessage, OSCBufferAllocReadChannelMessage, OSCBufferAllocReadMessage,
-             OSCBufferCloseMessage, OSCBufferFreeMessage, OSCBufferReadChannelMessage, OSCBufferReadMessage,
-             OSCBufferQueryMessage, OSCBufferSetMessage, OSCBufferSetnMessage, OSCBufferWriteMessage,
-             OSCBufferZeroMessage }
+import de.sciss.osc.{Bundle, Packet}
 import Model._
+import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
+import aux.AllocatorExhaustedException
+import sys.error
 
-/**
- * 	@version	0.18, 17-May-10
- */
 object Buffer {
 //   sealed abstract class Completion {
 //      private[Buffer] val message: Option[ Buffer => OSCMessage ]
@@ -77,15 +71,25 @@ object Buffer {
       b
    }
 
-   def apply( server: Server = Server.default ) : Buffer = apply( server, server.buffers.alloc( 1 ))
+   def apply( server: Server = Server.default ) : Buffer = {
+      apply( server, allocID( server ))
+   }
+
+   private def allocID( server: Server ) : Int = {
+      val id = server.buffers.alloc( 1 )
+      if( id == -1 ) {
+            throw new AllocatorExhaustedException( "Buffer: failed to get a buffer allocated (on " + server.name + ")" )
+      }
+      id
+   }
 
    private def isPowerOfTwo( i: Int ) = (i & (i-1)) == 0
 }
 
-case class Buffer( server: Server, id: Int ) extends Model {
+final case class Buffer( server: Server, id: Int ) extends Model {
    b =>
 
-   def this( server: Server = Server.default ) = this( server, server.buffers.alloc( 1 ))
+   def this( server: Server = Server.default ) = this( server, Buffer.allocID( server ))
 
    import Buffer._
 
@@ -113,15 +117,15 @@ case class Buffer( server: Server, id: Int ) extends Model {
       dispatch( change )
    }
 
-   def queryMsg = OSCBufferQueryMessage( id )
+   def queryMsg = osc.BufferQueryMessage( id )
 
    def free { server ! freeMsg }
 
-	def free( completion: Option[ OSCPacket ] = None ) {
+	def free( completion: Option[ Packet ] = None ) {
 		server ! freeMsg( completion, true )
 	}
 
-   def freeMsg: OSCBufferFreeMessage = freeMsg( None, true )
+   def freeMsg: osc.BufferFreeMessage = freeMsg( None, true )
 
    /**
     *    @param   release  whether the buffer id should be immediately returned to the id-allocator or not.
@@ -130,9 +134,9 @@ case class Buffer( server: Server, id: Int ) extends Model {
     *                      <code>false</code> here, and manually release the id, using the <code>release</code>
     *                      method
     */
-	def freeMsg( completion: Option[ OSCPacket ] = None, release: Boolean = true ) = {
+	def freeMsg( completion: Option[ Packet ] = None, release: Boolean = true ) = {
       if( release ) this.release
-      OSCBufferFreeMessage( id, completion )
+      osc.BufferFreeMessage( id, completion )
 	}
 
    /**
@@ -147,14 +151,14 @@ case class Buffer( server: Server, id: Int ) extends Model {
 
    def close { server ! closeMsg }
 
-   def close( completion: Option[ OSCPacket ]) {
+   def close( completion: Option[ Packet ]) {
       server ! closeMsg( completion )
    }
 
-	def closeMsg: OSCBufferCloseMessage = closeMsg( None )
+	def closeMsg: osc.BufferCloseMessage = closeMsg( None )
 
-	def closeMsg( completion: Option[ OSCPacket ] = None ) =
-      OSCBufferCloseMessage( id, completion )
+	def closeMsg( completion: Option[ Packet ] = None ) =
+      osc.BufferCloseMessage( id, completion )
 
 //	def alloc { server ! allocMsg }
 
@@ -162,13 +166,13 @@ case class Buffer( server: Server, id: Int ) extends Model {
 		server ! allocMsg( numFrames, numChannels, makePacket( completion ))
 	}
 
-//	def allocMsg: OSCBufferAllocMessage = allocMsg( None )
+//	def allocMsg: osc.BufferAllocMessage = allocMsg( None )
 
-	def allocMsg( numFrames: Int, numChannels: Int = 1, completion: Option[ OSCPacket ] = None ) = {
+	def allocMsg( numFrames: Int, numChannels: Int = 1, completion: Option[ Packet ] = None ) = {
       numFramesVar   = numFrames
       numChannelsVar = numChannels
       sampleRateVar  = server.sampleRate.toFloat
-      OSCBufferAllocMessage( id, numFrames, numChannels, completion )
+      osc.BufferAllocMessage( id, numFrames, numChannels, completion )
    }
 
    def allocRead( path: String, startFrame: Int = 0, numFrames: Int = -1,
@@ -178,10 +182,10 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    def allocReadMsg( path: String, startFrame: Int = 0, numFrames: Int = -1,
-                     completion: Option[ OSCPacket ] = None ) = {
+                     completion: Option[ Packet ] = None ) = {
 //      this.cache;
 //      path = argpath;
-      OSCBufferAllocReadMessage( id, path, startFrame, numFrames, completion )
+      osc.BufferAllocReadMessage( id, path, startFrame, numFrames, completion )
    }
 
    def allocReadChannel( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
@@ -191,14 +195,14 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    def allocReadChannelMsg( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
-                            completion: Option[ OSCPacket ] = None ) = {
+                            completion: Option[ Packet ] = None ) = {
 //      this.cache;
 //      path = argpath;
-      OSCBufferAllocReadChannelMessage( id, path, startFrame, numFrames, channels.toList, completion )
+      osc.BufferAllocReadChannelMessage( id, path, startFrame, numFrames, channels.toList, completion )
    }
 
    def cueMsg( path: String, startFrame: Int = 0, completion: Completion = NoCompletion ) =
-      OSCBufferReadMessage( id, path, startFrame, numFrames, 0, true, makePacket( completion ))
+      osc.BufferReadMessage( id, path, startFrame, numFrames, 0, true, makePacket( completion ))
 
    def read( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
              leaveOpen: Boolean = false, completion: Completion = NoCompletion ) {
@@ -206,8 +210,8 @@ case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    def readMsg( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
-                leaveOpen: Boolean = false, completion: Option[ OSCPacket ] = None ) =
-      OSCBufferReadMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, completion )
+                leaveOpen: Boolean = false, completion: Option[ Packet ] = None ) =
+      osc.BufferReadMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, completion )
 
    def readChannel( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
              leaveOpen: Boolean = false, channels: Seq[ Int ],
@@ -218,8 +222,8 @@ case class Buffer( server: Server, id: Int ) extends Model {
 
    def readChannelMsg( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                 leaveOpen: Boolean = false, channels: Seq[ Int ],
-                completion: Option[ OSCPacket ] = None ) =
-      OSCBufferReadChannelMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
+                completion: Option[ Packet ] = None ) =
+      osc.BufferReadChannelMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
          completion )
 
    /**
@@ -275,45 +279,45 @@ case class Buffer( server: Server, id: Int ) extends Model {
    def setMsg( pairs: (Int, Float)* ) = {
       val numSmp = numChannels * numFrames
       require( pairs.forall( tup => (tup._1 >= 0 && tup._1 < numSmp) ))
-      OSCBufferSetMessage( id, pairs: _* )
+      osc.BufferSetMessage( id, pairs: _* )
    }
 
    def setnMsg( v: IndexedSeq[ Float ]) = {
       val numSmp = numChannels * numFrames
       require( v.size == numSmp )
-      OSCBufferSetnMessage( id, (0, v.toIndexedSeq) )
+      osc.BufferSetnMessage( id, (0, v.toIndexedSeq) )
    }
 
    def setnMsg( pairs: (Int, IndexedSeq[ Float ])* ) = {
       val numSmp = numChannels * numFrames
       require( pairs.forall( tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp) ))
       val ipairs = pairs.map( tup => (tup._1, tup._2.toIndexedSeq ))
-      OSCBufferSetnMessage( id, ipairs: _* )
+      osc.BufferSetnMessage( id, ipairs: _* )
    }
    
    def zero { server ! zeroMsg }
 
-   def zero( completion: Option[ OSCPacket ]) {
+   def zero( completion: Option[ Packet ]) {
       server ! zeroMsg( completion )
    }
 
-	def zeroMsg: OSCBufferZeroMessage = zeroMsg( None )
+	def zeroMsg: osc.BufferZeroMessage = zeroMsg( None )
 
-	def zeroMsg( completion: Option[ OSCPacket ]) =
-      OSCBufferZeroMessage( id, completion )
+	def zeroMsg( completion: Option[ Packet ]) =
+      osc.BufferZeroMessage( id, completion )
 
-   def write( path: String, fileType: AudioFileType = AudioFileType.AIFF,
-              sampleFormat: SampleFormat = SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
+   def write( path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
+              sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
               leaveOpen: Boolean = false, completion: Completion = NoCompletion) {
 //         path = path ?? { thisProcess.platform.recordingsDir +/+ "SC_" ++ Date.localtime.stamp ++ "." ++ headerFormat };
          server ! writeMsg( path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, makePacket( completion ))
       }
 
-   def writeMsg( path: String, fileType: AudioFileType = AudioFileType.AIFF,
-                 sampleFormat: SampleFormat = SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
-                 leaveOpen: Boolean = false, completion: Option[ OSCPacket] = None ) = {
+   def writeMsg( path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
+                 sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
+                 leaveOpen: Boolean = false, completion: Option[ Packet] = None ) = {
 //      require( isPowerOfTwo( this.numFrames ))
-      OSCBufferWriteMessage( id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion )
+      osc.BufferWriteMessage( id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion )
    }
 
    // ---- utility methods ----
@@ -325,7 +329,7 @@ case class Buffer( server: Server, id: Int ) extends Model {
          ply * "amp".kr( amp )
       }
 
-   private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ OSCPacket ] = {
+   private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ Packet ] = {
       val a = completion.action
       if( forceQuery || a.isDefined ) {
          register
@@ -341,9 +345,9 @@ case class Buffer( server: Server, id: Int ) extends Model {
       }
       (completion.message, a) match {
          case (None, None)                => if( forceQuery ) Some( queryMsg ) else None
-         case (Some( msg ), None)         => Some( if( forceQuery ) OSCBundle( msg.apply( b ), queryMsg ) else msg.apply( b ))
+         case (Some( msg ), None)         => Some( if( forceQuery ) Bundle.now( msg.apply( b ), queryMsg ) else msg.apply( b ))
          case (None, Some( act ))         => Some( queryMsg )
-         case (Some( msg ), Some( act ))  => Some( OSCBundle( msg.apply( b ), queryMsg ))
+         case (Some( msg ), Some( act ))  => Some( Bundle.now( msg.apply( b ), queryMsg ))
       }
    }
 }

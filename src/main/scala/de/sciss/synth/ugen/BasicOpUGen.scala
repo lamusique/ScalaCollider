@@ -2,7 +2,7 @@
  *  BasicOpUGen.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2010 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -26,63 +26,65 @@
  *  Changelog:
  */
 
-package de.sciss.synth.ugen
+package de.sciss.synth
+package ugen
 
-import de.sciss.synth.{ scalar, Constant => c, GE, Rate, RichFloat, SideEffectUGen, SingleOutUGen, SynthGraph,
-                        UGenIn }
-import SynthGraph._
+import collection.immutable.{IndexedSeq => IIdxSeq}
+import de.sciss.synth.{Constant => c}
 
-/**
- *    @version 0.12, 02-Aug-10
- */
-object MulAdd extends UGen3Args {
-   def ar( in: GE, mul: GE, add: GE ) : GE = arExp( in, mul, add )
-   def kr( in: GE, mul: GE, add: GE ) : GE = krExp( in, mul, add )
-   def ir( in: GE, mul: GE, add: GE ) : GE = irExp( in, mul, add )
+//object MulAdd {
+//   def ar( in: GE, mul: GE, add: GE ) : MulAdd = apply( audio, in, mul, add )
+//   def kr( in: GE, mul: GE, add: GE ) : MulAdd = apply( control, in, mul, add )
+//   def ir( in: GE, mul: GE, add: GE ) : MulAdd = apply( scalar, in, mul, add )
+//}
 
-   protected[synth] def make( in: GE, mul: GE, add: GE ) : GE = {
-      for( Seq( i, m, a ) <- expand( in, mul, add )) yield make1( i, m, a )
+final case class MulAdd( /* rate: MaybeRate, */ in: GE, mul: GE, add: GE )
+extends UGenSource.SingleOut( "MulAdd" ) {
+   protected def makeUGens : UGenInLike = unwrap( IIdxSeq( in.expand, mul.expand, add.expand ))
+
+   def rate: MaybeRate = in.rate
+
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      val in0  = args(0)
+      val mul0 = args(1)
+      val add0 = args(2)
+      (mul0, add0) match {
+         case (c(0),  _)    => add0
+         case (c(1),  c(0)) => in0
+         case (c(1),  _)    => BinaryOp.Plus.make1( in0, add0 )
+         case (c(-1), c(0)) => UnaryOp.Neg.make1( in0 )
+         case (_,     c(0)) => BinaryOp.Times.make1( in0,  mul0 )
+         case (c(-1), _)    => BinaryOp.Minus.make1( add0, in0 )
+         case _             =>
+            if( in0.rate == `audio` ||
+               (in0.rate == `control` && (mul0.rate == `control` || mul0.rate == `scalar`) &&
+                                         (add0.rate == `control` || add0.rate == `scalar`)) ) {
+               new UGen.SingleOut( name, in0.rate, args )
+            } else {
+               BinaryOp.Plus.make1( BinaryOp.Times.make1( in0, mul0 ), add0 )
+            }
+      }
    }
 
-   private def make1( in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
-      make1( Rate.highest( in.rate, mul.rate, add.rate ), in, mul, add )
-
-   private def make1( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn ) : GE =
-      (mul, add) match {
-         case (c(0),  _)    => add
-         case (c(1),  c(0)) => in
-         case (c(1),  _)    => in + add
-         case (c(-1), c(0)) => -in
-         case (_,     c(0)) => in * mul
-         case (c(-1), _)    => add - in
-         case _             => this( rate, in, mul, add )
-      }
-}
-
-case class MulAdd( rate: Rate, in: UGenIn, mul: UGenIn, add: UGenIn )
-extends SingleOutUGen( in, mul, add ) {
    override def toString = in.toString + ".madd(" + mul + ", " + add + ")"
 }
 
-private[ugen] abstract class BasicOpUGen( override val specialIndex: Int, inputs: UGenIn* )
-extends SingleOutUGen( inputs: _* )
-
 /**
- *    Unary operations are generally constructed by calling one of the methods of <code>GEOps</code>.
+ *    Unary operations are generally constructed by calling one of the methods of <code>GE</code>.
  *
- *    @see  GEOps
+ *    @see  GE
  *    @see  BinaryOpUGen
  */
-object UnaryOpUGen {
+object UnaryOp {
    unop =>
 
-   import RichFloat._
+   import RichNumber._
 
    sealed abstract class Op( val id: Int ) {
-      def make( a: GE ) : GE = UnaryOpUGen.make( this, a )
-      protected[synth] def make1( a: UGenIn ) : GE = a match {
-         case c(a)   => c( make1( a ))
-         case _      => unop.apply( a.rate, this, a )
+      def make( a: GE ) = UnaryOp( /* a.rate, */ this, a )
+      protected[synth] def make1( a: UGenIn ) : UGenIn = a match {
+         case c(f)   => c( make1( f ))
+         case _      => new UnaryOpUGen( /* a.rate, */ this, a ) // unop.apply( a.rate, this, a )
       }
 
       protected def make1( a: Float ) : Float
@@ -93,7 +95,7 @@ object UnaryOpUGen {
          cn.charAt( i ).toLower + cn.substring( i + 1, if( cn.charAt( sz - 1 ) == '$' ) sz - 1 else sz )
       }
    }
-   
+
    case object Neg         extends Op(  0 ) {
       protected def make1( a: Float ) = -a
    }
@@ -221,15 +223,35 @@ object UnaryOpUGen {
       protected def make1( a: Float ) = rf_scurve( a )
    }
 
-   protected[synth] def make( selector: Op, a: GE ) : GE = {
-      for( Seq( ai ) <- expand( a )) yield selector.make1( ai )
+//   protected[synth] def make( selector: Op, a: GE ) : GE = {
+//      for( Seq( ai ) <- expand( a )) yield selector.make1( ai )
+//   }
+}
+
+final case class UnaryOp( /* rate: MaybeRate, */ selector: UnaryOp.Op, a: GE )
+extends UGenSource.SingleOut( "UnaryOpUGen" ) {
+//   override def toString = a.toString + "." + selector.name
+//   override def displayName = selector.name
+
+   def rate : MaybeRate = a.rate
+
+   protected def makeUGens : UGenInLike = unwrap( IIdxSeq( a.expand ))
+
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      val IIdxSeq( a ) = args
+//      new UnaryOpUGen( rate ?| a.rate, selector, a )
+      selector.make1( a )
    }
+
+   override def toString = a.toString + "." + selector.name
 }
 
 // Note: only deterministic selectors are implemented!!
-case class UnaryOpUGen( rate: Rate, selector: UnaryOpUGen.Op, a: UGenIn )
-extends BasicOpUGen( selector.id, a ) {
-   override def toString = a.toString + "." + selector.name
+final class UnaryOpUGen /**/( /* rate: Rate, */ selector: UnaryOp.Op, a: UGenIn /*[ R ]*/)
+extends UGen.SingleOut( "UnaryOpUGen", a.rate, IIdxSeq( a )) {
+   override def specialIndex = selector.id
+//   override def name = "UnaryOpUGen"
+//   override def toString = a.toString + "." + selector.name
    override def displayName = selector.name
 }
 
@@ -239,31 +261,34 @@ extends BasicOpUGen( selector.id, a ) {
  *    @see  GEOps
  *    @see  UnaryOpUGen
  */
-object BinaryOpUGen {
+object BinaryOp {
    binop =>
 
    sealed abstract class Op( val id: Int ) {
-      def make( a: GE, b: GE ) : GE = BinaryOpUGen.make( this, a, b )
-      protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
-         case (c(a), c(b)) => c( make1( a, b ))
-         case _            => binop.apply( Rate.highest( a.rate, b.rate ), this, a, b )
-      } 
+      op =>
+
+//      def make( rate: R, a: GE[ UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
+      def make( a: GE, b: GE ) : GE = BinaryOp( this, a, b )
+      protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
+         case (c(af), c(bf)) => c( make1( af, bf ))
+         case _ => new BinaryOpUGen( op, a, b)
+      }
 
       protected def make1( a: Float, b: Float ) : Float
 
-      def name = { val cn = getClass.getName
+      def name: String = { val cn = getClass.getName
          val sz   = cn.length
          val i    = cn.indexOf( '$' ) + 1
          cn.charAt( i ).toLower + cn.substring( i + 1, if( cn.charAt( sz - 1 ) == '$' ) sz - 1 else sz )
       }
    }
 
-   import RichFloat._
+   import RichNumber._
 
    case object Plus           extends Op(  0 ) {
       override val name = "+"
       protected def make1( a: Float, b: Float ) = a + b
-      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
+      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (c(0), _)       => b
          case (_, c(0))       => a
          case _               => super.make1( a, b )
@@ -272,8 +297,9 @@ object BinaryOpUGen {
    case object Minus          extends Op(  1 ) {
       override val name = "-"
       protected def make1( a: Float, b: Float ) = a - b
-      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
-         case (c(0), _)       => -b
+      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
+//         case (c(0), _)       => -b
+         case (c(0), _)       => UnaryOp.Neg.make1( b )
          case (_, c(0))       => a
          case _               => super.make1( a, b )
       }
@@ -281,13 +307,13 @@ object BinaryOpUGen {
    case object Times          extends Op(  2 ) {
       override val name = "*"
       protected def make1( a: Float, b: Float ) = a * b
-      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
+      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (c(0), _)       => a
          case (_, c(0))       => b
          case (c(1), _)       => b
          case (_, c(1))       => a
-         case (c(-1), _)      => -b
-         case (_, c(-1))      => -a
+         case (c(-1), _)      => UnaryOp.Neg.make1( b ) // -b
+         case (_, c(-1))      => UnaryOp.Neg.make1( a ) // -a
          case _               => super.make1( a, b )
       }
    }
@@ -295,11 +321,16 @@ object BinaryOpUGen {
    case object Div            extends Op(  4 ) {
       override val name = "/"
       protected def make1( a: Float, b: Float ) = a / b
-      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
+      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (_, c(1))       => a
-         case (_, c(-1))      => -a
-         case (_, _) if b.rate == scalar => a * b.reciprocal
-         case _               => super.make1( a, b )
+         case (_, c(-1))      => UnaryOp.Neg.make1( a ) // -a
+         case _               =>
+            if( b.rate == scalar ) {
+//               a * b.reciprocal
+               BinaryOp.Times.make1( a, UnaryOp.Reciprocal.make1( b ))
+            } else {
+               super.make1( a, b )
+            }
       }
    }
    case object Mod            extends Op(  5 ) {
@@ -424,18 +455,17 @@ object BinaryOpUGen {
       protected def make1( a: Float, b: Float ) = rf_wrap2( a, b )
    }
    case object Firstarg       extends Op( 46 ) {
-      override protected[synth] def make1( a: UGenIn, b: UGenIn ) : GE = (a, b) match {
-         case (c(a), c(b)) => c( make1( a, b ))
-         case _            => FirstargUGen( Rate.highest( a.rate, b.rate ), a, b )
-      }
+      override def make( /* rate: T, */ a: GE, b: GE ) : GE = new Firstarg( a, b )
+
       protected def make1( a: Float, b: Float ) = a
    }
+
 // case object Rrand          extends Op( 47 )
 // case object ExpRRand       extends Op( 48 )
 
-   protected[synth] def make( selector: Op, a: GE, b: GE ) : GE = {
-      for( Seq( ai, bi ) <- expand( a, b )) yield selector.make1( ai, bi )
-   }
+//   protected[synth] def make( selector: Op, a: GE, b: GE ) : GE = {
+//      for( Seq( ai, bi ) <- expand( a, b )) yield selector.make1( ai, bi )
+//   }
 
 /*
   private def determineRate( a: UGenIn, b: UGenIn ) : Rate = {
@@ -451,22 +481,51 @@ object BinaryOpUGen {
   */
 }
 
-// Note: only deterministic selectors are implemented!!
-case class BinaryOpUGen( rate: Rate, selector: BinaryOpUGen.Op, a: UGenIn, b: UGenIn )
-extends BasicOpUGen( selector.id, a, b ) {
+// XXX this could become private once the op's make method return type is changed to GE
+abstract sealed class BinaryOpLike extends UGenSource.SingleOut( "BinaryOpUGen" ) {
+   def selector: BinaryOp.Op
+   def a: GE
+   def b: GE
+
+   final def rate: MaybeRate = MaybeRate.max_?( a.rate, b.rate )
+
+   protected final def makeUGens : UGenInLike = unwrap( IIdxSeq( a.expand, b.expand ))
+
+   protected final def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
+      val a0 = args( 0 )
+      val a1 = args( 1 )
+      selector.make1( a0, a1 )
+   }
+
    override def toString = if( (selector.id <= 11) || ((selector.id >=14) && (selector.id <= 16)) ) {
       "(" + a + " " + selector.name + " " + b + ")"
    } else {
       a.toString + "." + selector.name + "(" + b + ")"
    }
-   override def displayName = selector.name
+}
+
+final case class BinaryOp( /* rate: MaybeRate, */ selector: BinaryOp.Op, a: GE, b: GE )
+extends BinaryOpLike
+
+final case class Firstarg( /* rate: MaybeRate, */ a: GE, b: GE )
+extends BinaryOpLike with HasSideEffect {
+   def selector = BinaryOp.Firstarg
+}
+
+// Note: only deterministic selectors are implemented!!
+final class BinaryOpUGen( selector: BinaryOp.Op, a: UGenIn, b: UGenIn )
+extends UGen.SingleOut( "BinaryOpUGen", a.rate max b.rate, IIdxSeq( a, b )) {
+//   override def displayName = selector.name
+   override def specialIndex = selector.id
 }
 
 // Special case since it should not be erased. Might be that we
 // better transform BinaryOpUGen from case class to regular class with extractor?
-case class FirstargUGen( rate: Rate, a: UGenIn, b: UGenIn )
-extends BasicOpUGen( BinaryOpUGen.Firstarg.id, a, b ) with SideEffectUGen {
-   override def name = "BinaryOpUGen"
-   override def displayName = "firstarg"
-   override def toString = a.toString + "." + displayName + "(" + b + ")"
-}
+
+//class FirstargUGen( rate: Rate, a: UGenIn, b: UGenIn )
+//extends SingleOutUGen( "BinaryOpUGen", rate, IIdxSeq( a, b )) with HasSideEffect {
+//   override def specialIndex = BinaryOp.Firstarg.id
+////   override def name = "BinaryOpUGen"
+////   override def displayName = "firstarg"
+////   override def toString = a.toString + "." + displayName + "(" + b + ")"
+//}
