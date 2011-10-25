@@ -41,7 +41,7 @@ object ScalaCollider {
 
    def main( args: Array[ String ]) {
       printInfo()
-//      test2()
+      test3()
       sys.exit( 1 )
 //      test()
    }
@@ -49,6 +49,14 @@ object ScalaCollider {
    def printInfo() {
       println( "\n" + name + " v" + versionString + "\n" + copyright +
          ". All rights reserved.\n\nThis is a library which cannot be executed directly.\n" )
+   }
+
+   private def test3() {
+      import ugen._
+      SynthDef( "simpler" ) {
+          val basic = WhiteNoise.ar(Seq(0.03,0.03))
+          Out.ar( 0, basic )
+      }
    }
 
 //   private def test2() {

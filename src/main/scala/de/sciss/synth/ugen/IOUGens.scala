@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -16,7 +16,7 @@ object OffsetOut {
 }
 final case class OffsetOut(bus: GE, in: GE) extends UGenSource.ZeroOut("OffsetOut") with AudioRated with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args, true)
 }
 object LocalIn {
    def kr: LocalIn = kr()
@@ -40,14 +40,14 @@ object XOut {
  */
 final case class XOut(rate: Rate, bus: GE, in: GE, xfade: GE) extends UGenSource.ZeroOut("XOut") with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand, xfade.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args, true)
 }
 object ReplaceOut {
    def ar(bus: GE, in: GE) = apply(bus, in)
 }
 final case class ReplaceOut(bus: GE, in: GE) extends UGenSource.ZeroOut("ReplaceOut") with AudioRated with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args, true)
 }
 object Out {
    def ar(bus: GE, in: GE) = apply(audio, bus, in)
@@ -56,7 +56,7 @@ object Out {
 }
 final case class Out(rate: Rate, bus: GE, in: GE) extends UGenSource.ZeroOut("Out") with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args, true)
 }
 object LocalOut {
    def kr(in: GE) = apply(control, in)

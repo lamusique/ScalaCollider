@@ -32,7 +32,7 @@ import aux.Optional
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import ugen.{Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, MulAdd}
+import ugen.{ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, MulAdd}
 
 /**
  *    The UGen graph is constructed from interconnecting graph elements (GE).
@@ -160,13 +160,11 @@ trait GE /* extends GEIn */ {
     */
 //   def numOutputs : Int // = outputs.size
 
-// BBB
-//   error( "CURRENTLY DISABLED IN SYNTHETIC UGENS BRANCH" )
-//   def `\\`( idx: Int ) : UGenIn = outputs( idx )
+   def `\\`( index: Int ) = ChannelProxy( this, index )
 
 //   private[synth] def ops = new GEOps( this )
 
-   def madd( mul: GE, add: GE ) = MulAdd( MaybeRate.max_?( rate, mul.rate, add.rate ), this, mul, add )
+   def madd( mul: GE, add: GE ) = MulAdd( this, mul, add )
 
    def flatten = Flatten( this )
 

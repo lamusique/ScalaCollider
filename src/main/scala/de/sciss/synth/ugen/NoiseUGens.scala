@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -19,7 +19,7 @@ object WhiteNoise {
 }
 final case class WhiteNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("WhiteNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty, true), _args(0))
 }
 object GrayNoise {
    def kr: GrayNoise = kr()
@@ -29,7 +29,7 @@ object GrayNoise {
 }
 final case class GrayNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("GrayNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty, true), _args(0))
 }
 object ClipNoise {
    def kr: ClipNoise = kr()
@@ -39,7 +39,7 @@ object ClipNoise {
 }
 final case class ClipNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("ClipNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty, true), _args(0))
 }
 object PinkNoise {
    def kr: PinkNoise = kr()
@@ -49,7 +49,7 @@ object PinkNoise {
 }
 final case class PinkNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("PinkNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty, true), _args(0))
 }
 object BrownNoise {
    def kr: BrownNoise = kr()
@@ -59,7 +59,7 @@ object BrownNoise {
 }
 final case class BrownNoise(rate: Rate, mul: GE) extends UGenSource.SingleOut("BrownNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(mul.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty), _args(0))
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = BinaryOp.Times.make1(new UGen.SingleOut(name, rate, IIdxSeq.empty, true), _args(0))
 }
 /**
  * A UGen generating random impulses with values ranging from
@@ -93,7 +93,7 @@ object Dust {
  */
 final case class Dust(rate: Rate, density: GE) extends UGenSource.SingleOut("Dust") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(density.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 /**
  * A UGen generating random impulses with values ranging from
@@ -127,7 +127,7 @@ object Dust2 {
  */
 final case class Dust2(rate: Rate, density: GE) extends UGenSource.SingleOut("Dust2") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(density.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object Crackle {
    def kr: Crackle = kr()
@@ -173,7 +173,7 @@ object LFClipNoise {
 }
 final case class LFClipNoise(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFClipNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object LFNoise0 {
    def kr: LFNoise0 = kr()
@@ -183,7 +183,7 @@ object LFNoise0 {
 }
 final case class LFNoise0(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFNoise0") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object LFNoise1 {
    def kr: LFNoise1 = kr()
@@ -193,7 +193,7 @@ object LFNoise1 {
 }
 final case class LFNoise1(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFNoise1") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object LFNoise2 {
    def kr: LFNoise2 = kr()
@@ -203,15 +203,15 @@ object LFNoise2 {
 }
 final case class LFNoise2(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFNoise2") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 final case class Rand(lo: GE = 0.0f, hi: GE = 1.0f) extends UGenSource.SingleOut("Rand") with ScalarRated with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args, true)
 }
 final case class IRand(lo: GE = 0.0f, hi: GE = 127.0f) extends UGenSource.SingleOut("IRand") with ScalarRated with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args, true)
 }
 object TRand {
    def kr(lo: GE = 0.0f, hi: GE = 1.0f, trig: GE) = apply(control, lo, hi, trig)
@@ -219,7 +219,7 @@ object TRand {
 }
 final case class TRand(rate: Rate, lo: GE, hi: GE, trig: GE) extends UGenSource.SingleOut("TRand") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object TExpRand {
    def kr(lo: GE = 0.01f, hi: GE = 1.0f, trig: GE) = apply(control, lo, hi, trig)
@@ -227,7 +227,7 @@ object TExpRand {
 }
 final case class TExpRand(rate: Rate, lo: GE, hi: GE, trig: GE) extends UGenSource.SingleOut("TExpRand") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object TIRand {
    def kr(lo: GE = 0.0f, hi: GE = 127.0f, trig: GE) = apply(control, lo, hi, trig)
@@ -235,19 +235,19 @@ object TIRand {
 }
 final case class TIRand(rate: Rate, lo: GE, hi: GE, trig: GE) extends UGenSource.SingleOut("TIRand") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 final case class NRand(lo: GE = 0.0f, hi: GE = 127.0f, n: GE = 0.0f) extends UGenSource.SingleOut("NRand") with ScalarRated with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, n.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args, true)
 }
 final case class LinRand(lo: GE = 0.0f, hi: GE = 127.0f, minMax: GE = 0.0f) extends UGenSource.SingleOut("LinRand") with ScalarRated with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand, minMax.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args, true)
 }
 final case class ExpRand(lo: GE = 0.01f, hi: GE = 1.0f) extends UGenSource.SingleOut("ExpRand") with ScalarRated with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(lo.expand, hi.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args, true)
 }
 /**
  * '''Warning''': The argument order is different from its sclang counterpart.
@@ -261,7 +261,7 @@ object CoinGate {
  */
 final case class CoinGate(rate: Rate, in: GE, prob: GE) extends UGenSource.SingleOut("CoinGate") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(prob.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object RandSeed {
    def ir: RandSeed = ir()
@@ -271,7 +271,7 @@ object RandSeed {
 }
 final case class RandSeed(rate: Rate, trig: GE, seed: GE) extends UGenSource.SingleOut("RandSeed") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, seed.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
 object RandID {
    def ir: RandID = ir()
@@ -281,5 +281,5 @@ object RandID {
 }
 final case class RandID(rate: Rate, id: GE) extends UGenSource.SingleOut("RandID") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(id.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }

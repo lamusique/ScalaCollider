@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -61,7 +61,7 @@ object LFDNoise0 {
  */
 final case class LFDNoise0(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFDNoise0") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 /**
  * A dynamic ramp noise UGen. Like `LFNoise1`, it generates linearly interpolated random values
@@ -113,7 +113,7 @@ object LFDNoise1 {
  */
 final case class LFDNoise1(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFDNoise1") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object LFDNoise3 {
    def kr: LFDNoise3 = kr()
@@ -132,7 +132,7 @@ object LFDNoise3 {
  */
 final case class LFDNoise3(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFDNoise3") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object LFDClipNoise {
    def kr: LFDClipNoise = kr()
@@ -151,5 +151,5 @@ object LFDClipNoise {
  */
 final case class LFDClipNoise(rate: Rate, freq: GE) extends UGenSource.SingleOut("LFDClipNoise") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }

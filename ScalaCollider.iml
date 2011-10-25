@@ -26,7 +26,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib_managed/jars/de.sciss/scalaaudiofile_2.9.1/scalaaudiofile_2.9.1-0.20.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib_managed/jars/de.sciss/scalaosc_2.9.1/scalaosc_2.9.1-0.30.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -35,7 +35,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib_managed/jars/de.sciss/scalaosc_2.9.1/scalaosc_2.9.1-0.30-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib_managed/jars/de.sciss/scalaaudiofile_2.9.1/scalaaudiofile_2.9.1-0.20.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

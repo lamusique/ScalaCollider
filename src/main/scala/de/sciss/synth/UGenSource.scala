@@ -70,7 +70,7 @@ sealed trait UGenSource[ U ] extends Lazy.Expander[ U ] {
             exp      = math.max( exp, g.numOutputs )
             uinsOk   = false // don't bother adding further UGenIns to uins
       })
-      if( uins.size == args.size ) {
+      if( uinsOk ) { // aka uins.size == args.size
          makeUGen( uins )
       } else {
          rewrap( args, exp )

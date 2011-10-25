@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -52,7 +52,7 @@ object DiskIn {
  */
 final case class DiskIn(numChannels: Int, buf: GE, loop: GE) extends UGenSource.MultiOut("DiskIn") with HasSideEffect with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, loop.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args, false, true)
 }
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
@@ -101,7 +101,7 @@ object DiskOut {
  */
 final case class DiskOut(buf: GE, in: GE) extends UGenSource.SingleOut("DiskOut") with AudioRated with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args, true, true)
 }
 /**
  * A UGen to stream in a signal from an audio file with variable playback speed.
@@ -164,5 +164,5 @@ object VDiskIn {
  */
 final case class VDiskIn(numChannels: Int, buf: GE, speed: GE, loop: GE, sendID: GE) extends UGenSource.MultiOut("VDiskIn") with HasSideEffect with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, loop.expand, sendID.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args, false, true)
 }

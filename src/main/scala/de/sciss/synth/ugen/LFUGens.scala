@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -290,7 +290,7 @@ object Line {
  */
 final case class Line(rate: Rate, start: GE, end: GE, dur: GE, doneAction: GE) extends UGenSource.SingleOut("Line") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, end.expand, dur.expand, doneAction.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
 object XLine {
    def ar: XLine = ar()
@@ -300,7 +300,7 @@ object XLine {
 }
 final case class XLine(rate: Rate, start: GE, end: GE, dur: GE, doneAction: GE) extends UGenSource.SingleOut("XLine") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, end.expand, dur.expand, doneAction.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
 object Wrap {
    def ir(in: GE, lo: GE = 0.0f, hi: GE = 1.0f) = apply(scalar, in, lo, hi)
@@ -465,7 +465,7 @@ object EnvGen {
 }
 final case class EnvGen(rate: Rate, envelope: GE, gate: GE, levelScale: GE, levelBias: GE, timeScale: GE, doneAction: GE) extends UGenSource.SingleOut("EnvGen") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(gate.expand, levelScale.expand, levelBias.expand, timeScale.expand, doneAction.expand).++(envelope.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
 object Linen {
    def kr: Linen = kr()
@@ -475,7 +475,7 @@ object Linen {
 }
 final case class Linen(rate: Rate, gate: GE, attack: GE, sustain: GE, release: GE, doneAction: GE) extends UGenSource.SingleOut("Linen") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(gate.expand, attack.expand, sustain.expand, release.expand, doneAction.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
 object IEnvGen {
    def kr(envelope: GE, index: GE = 1.0f) = apply(control, envelope, index)

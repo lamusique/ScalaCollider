@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -1104,7 +1104,7 @@ final case class DetectSilence(rate: MaybeRate, in: GE, amp: GE, dur: GE, doneAc
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, amp.expand, dur.expand, doneAction.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
       val _rate = rate.?|(_args(0).rate)
-      new UGen.SingleOut(name, _rate, _args)
+      new UGen.SingleOut(name, _rate, _args, false, true)
    }
 }
 object Hilbert {

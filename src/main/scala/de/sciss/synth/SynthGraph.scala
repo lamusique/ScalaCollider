@@ -270,7 +270,9 @@ object UGenGraph {
          while( g.nonEmpty ) {
             // XXX these two lines could be more efficient eventually -- using a 'clearable' SynthGraph
             controlProxies ++= g.controlProxies
-            g = SynthGraph( g.sources.foreach( _.force( builder )))  // allow for further graphs being created
+            g = SynthGraph( g.sources.foreach { src =>
+               src.force( builder )
+            })  // allow for further graphs being created
          }
 //         val ctrlProxyMap        = buildControls( graph.controlProxies )
          val ctrlProxyMap        = buildControls( controlProxies )

@@ -32,7 +32,7 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 import annotation.switch
 import runtime.ScalaRunTime
 
-sealed trait UGen extends Product with MaybeIndividual {
+sealed trait UGen extends Product /* with MaybeIndividual */ {
    // ---- constructor ----
    UGenGraph.builder.addUGen( this )
 
@@ -63,7 +63,8 @@ sealed trait UGen extends Product with MaybeIndividual {
       case 0 => name
       case 1 => rate
       case 2 => specialIndex
-      case 3 => inputs
+//      case 3 => inputs
+      case 3 => inputs.map( _.ref )
       case 4 => outputRates
       case _ => throw new java.lang.IndexOutOfBoundsException( n.toString )
    }
@@ -76,7 +77,11 @@ sealed trait UGen extends Product with MaybeIndividual {
      case _ => false
    })
 
-   private[synth] def ref: AnyRef = this
+   def isIndividual: Boolean
+   def hasSideEffect: Boolean
+
+//   private[synth] def ref: AnyRef = this
+   final private[synth] lazy val ref = if( isIndividual ) new AnyRef else this
 }
 
 object UGen {
@@ -84,7 +89,8 @@ object UGen {
     *    A SingleOutUGen is a UGen which has exactly one output, and
     *    hence can directly function as input to another UGen without expansion.
     */
-   class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ])
+   class SingleOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ],
+                    val isIndividual: Boolean = false, val hasSideEffect: Boolean = false )
    extends UGenProxy with UGen {
 final def numOutputs = 1
 //      final override def outputs: IIdxSeq[ UGenIn ] = IIdxSeq( this ) // increase visibility
@@ -103,17 +109,19 @@ final def numOutputs = 1
    object ZeroOut {
       private val outputRates: IIdxSeq[ Rate ] = IIdxSeq.empty
    }
-   class ZeroOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ])
-   extends UGen with HasSideEffect {
+   class ZeroOut( val name: String, val rate: Rate, val inputs: IIdxSeq[ UGenIn ], val isIndividual: Boolean = false )
+   extends UGen /* with HasSideEffect */ {
       final /* override */ def numOutputs = 0
 //      final def outputs = IIdxSeq.empty
       final def outputRates: IIdxSeq[ Rate ] = ZeroOut.outputRates // IIdxSeq.empty
+      final def hasSideEffect = true
    }
 
    /**
     * A class for UGens with multiple outputs
     */
-   class MultiOut( val name: String, val rate: Rate, val outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ])
+   class MultiOut( val name: String, val rate: Rate, val outputRates: IIdxSeq[ Rate ], val inputs: IIdxSeq[ UGenIn ],
+                   val isIndividual: Boolean = false, val hasSideEffect: Boolean = false )
    extends UGen with UGenInGroup {
       final def numOutputs                      = outputRates.size
 //      final lazy val outputs: IIdxSeq[ UGenIn ] = outputRates.zipWithIndex.map( tup => OutProxy( this, tup._2, tup._1 ))
@@ -150,6 +158,8 @@ final def numOutputs = 1
          if( source.numOutputs == 1 ) source.displayName else source.displayName + " \\ " + outputIndex
       }
       def rate : Rate = source.outputRates( outputIndex )
+
+      private[synth] def ref: AnyRef = this
    }
 }
 
@@ -192,6 +202,7 @@ sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ 
    private[synth] final def flatOutputs : IIdxSeq[ UGenIn ] = IIdxSeq( this )
 //   private[synth] final def isWrapped : Boolean = false
    private[synth] final def unbubble: UGenInLike = this
+   private[synth] def ref: AnyRef
 }
 
 object UGenInGroup {
@@ -245,6 +256,8 @@ final case class Constant( value: Float ) extends GE with UGenIn {
    override def toString = value.toString
    def displayName = value.toString
    def rate: Rate = scalar
+
+   private[synth] final def ref: AnyRef = this
 
 //   def expand : UGenInLike = this
 
@@ -320,4 +333,5 @@ extends UGenIn { // UGenIn[ R ] {
    def rate = source.rate
    override def toString = source.toString + ".\\(" + outputIndex + ")"
    def displayName = source.displayName + " \\ " + outputIndex
+   private[synth] def ref: AnyRef = this
 }

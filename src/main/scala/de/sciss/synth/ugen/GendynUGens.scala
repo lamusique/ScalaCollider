@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -19,7 +19,7 @@ object Gendy1 {
 }
 final case class Gendy1(rate: Rate, ampDist: GE, durDist: GE, adParam: GE, ddParam: GE, minFreq: GE, maxFreq: GE, ampScale: GE, durScale: GE, initCPs: GE, kNum: GE) extends UGenSource.SingleOut("Gendy1") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(ampDist.expand, durDist.expand, adParam.expand, ddParam.expand, minFreq.expand, maxFreq.expand, ampScale.expand, durScale.expand, initCPs.expand, kNum.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object Gendy2 {
    def ar: Gendy2 = ar()
@@ -29,7 +29,7 @@ object Gendy2 {
 }
 final case class Gendy2(rate: Rate, ampDist: GE, durDist: GE, adParam: GE, ddParam: GE, minFreq: GE, maxFreq: GE, ampScale: GE, durScale: GE, initCPs: GE, kNum: GE, a: GE, c: GE) extends UGenSource.SingleOut("Gendy2") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(ampDist.expand, durDist.expand, adParam.expand, ddParam.expand, minFreq.expand, maxFreq.expand, ampScale.expand, durScale.expand, initCPs.expand, kNum.expand, a.expand, c.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }
 object Gendy3 {
    def ar: Gendy3 = ar()
@@ -39,5 +39,5 @@ object Gendy3 {
 }
 final case class Gendy3(rate: Rate, ampDist: GE, durDist: GE, adParam: GE, ddParam: GE, freq: GE, ampScale: GE, durScale: GE, initCPs: GE, kNum: GE) extends UGenSource.SingleOut("Gendy3") with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(ampDist.expand, durDist.expand, adParam.expand, ddParam.expand, freq.expand, ampScale.expand, durScale.expand, initCPs.expand, kNum.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true)
 }

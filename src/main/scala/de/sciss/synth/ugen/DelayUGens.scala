@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -336,7 +336,7 @@ object PlayBuf {
  */
 final case class PlayBuf(rate: Rate, numChannels: Int, buf: GE, speed: GE, trig: GE, startPos: GE, loop: GE, doneAction: GE) extends UGenSource.MultiOut("PlayBuf") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, trig.expand, startPos.expand, loop.expand, doneAction.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args, false, true)
 }
 object RecordBuf {
    def kr(in: GE, buf: GE, offset: GE = 0.0f, recLevel: GE = 1.0f, preLevel: GE = 0.0f, run: GE = 1.0f, loop: GE = 1.0f, trig: GE = 1.0f, doneAction: GE = doNothing) = apply(control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
@@ -344,7 +344,7 @@ object RecordBuf {
 }
 final case class RecordBuf(rate: Rate, in: GE, buf: GE, offset: GE, recLevel: GE, preLevel: GE, run: GE, loop: GE, trig: GE, doneAction: GE) extends UGenSource.SingleOut("RecordBuf") with WritesBuffer with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, offset.expand, recLevel.expand, preLevel.expand, run.expand, loop.expand, trig.expand, doneAction.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 /**
  * A UGen which reads the content of a buffer, using an index pointer.
@@ -423,7 +423,7 @@ object BufWr {
 }
 final case class BufWr(rate: Rate, in: GE, buf: GE, index: GE, loop: GE) extends UGenSource.SingleOut("BufWr") with WritesBuffer with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 /**
  * An autocorrelation based pitch following UGen. It is more accurate than `ZeroCrossing`, but
@@ -547,63 +547,63 @@ object BufDelayN {
 }
 final case class BufDelayN(rate: Rate, buf: GE, in: GE, delayTime: GE) extends UGenSource.SingleOut("BufDelayN") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufDelayL {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f) = apply(audio, buf, in, delayTime)
 }
 final case class BufDelayL(rate: Rate, buf: GE, in: GE, delayTime: GE) extends UGenSource.SingleOut("BufDelayL") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufDelayC {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f) = apply(audio, buf, in, delayTime)
 }
 final case class BufDelayC(rate: Rate, buf: GE, in: GE, delayTime: GE) extends UGenSource.SingleOut("BufDelayC") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufCombN {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
 final case class BufCombN(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufCombN") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufCombL {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
 final case class BufCombL(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufCombL") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufCombC {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
 final case class BufCombC(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufCombC") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufAllpassN {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
 final case class BufAllpassN(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufAllpassN") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufAllpassL {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
 final case class BufAllpassL(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufAllpassL") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object BufAllpassC {
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
 final case class BufAllpassC(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufAllpassC") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object DelayN {
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(control, in, maxDelayTime, delayTime)
@@ -697,7 +697,7 @@ object ScopeOut {
 }
 final case class ScopeOut(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("ScopeOut") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object Pluck {
    def ar(in: GE, trig: GE = 1.0f, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f, coef: GE = 0.5f) = apply(in, trig, maxDelayTime, delayTime, decayTime, coef)
@@ -712,7 +712,7 @@ object DelTapWr {
 }
 final case class DelTapWr(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("DelTapWr") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
 object DelTapRd {
    def ar(buf: GE, phase: GE, delayTime: GE, interp: GE = 1.0f) = apply(audio, buf, phase, delayTime, interp)

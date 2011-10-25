@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -128,7 +128,7 @@ final case class SendTrig(rate: MaybeRate, trig: GE, id: GE, value: GE) extends 
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, value.expand, id.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
       val _rate = rate.?|(_args(0).rate)
-      new UGen.SingleOut(name, _rate, _args)
+      new UGen.SingleOut(name, _rate, _args, false, true)
    }
 }
 /**
@@ -189,7 +189,7 @@ final case class SendReply(rate: MaybeRate, trig: GE, values: GE, msgName: Strin
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, id.expand).++(stringArg(msgName).++(values.expand.outputs)))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
       val _rate = rate.?|(_args(0).rate)
-      new UGen.SingleOut(name, _rate, _args)
+      new UGen.SingleOut(name, _rate, _args, false, true)
    }
 }
 /**
@@ -231,7 +231,7 @@ final case class Poll(rate: MaybeRate, trig: GE, in: GE, label: String, trigID: 
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, in.expand, trigID.expand).++(stringArg(label)))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
       val _rate = rate.?|(_args(0).rate)
-      new UGen.SingleOut(name, _rate, _args)
+      new UGen.SingleOut(name, _rate, _args, false, true)
    }
 }
 /**
@@ -725,7 +725,7 @@ object Done {
  */
 final case class Done(src: GE with HasDoneFlag) extends UGenSource.SingleOut("Done") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(src.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }
 /**
  * A UGen which pauses and resumes another node.
@@ -766,7 +766,7 @@ object Pause {
  */
 final case class Pause(gate: GE, node: GE) extends UGenSource.SingleOut("Pause") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(gate.expand, node.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }
 /**
  * A UGen that, when triggered, frees enclosing synth.
@@ -797,7 +797,7 @@ object FreeSelf {
  */
 final case class FreeSelf(trig: GE) extends UGenSource.SingleOut("FreeSelf") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }
 /**
  * A UGen that, when triggered, pauses enclosing synth.
@@ -828,7 +828,7 @@ object PauseSelf {
  */
 final case class PauseSelf(trig: GE) extends UGenSource.SingleOut("PauseSelf") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }
 /**
  * A UGen that, when triggered, frees a given node.
@@ -859,7 +859,7 @@ object Free {
  */
 final case class Free(trig: GE, node: GE) extends UGenSource.SingleOut("Free") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, node.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }
 /**
  * A UGen that, when its input UGen is finished, frees enclosing synth.
@@ -898,7 +898,7 @@ object FreeSelfWhenDone {
  */
 final case class FreeSelfWhenDone(src: GE with HasDoneFlag) extends UGenSource.SingleOut("FreeSelfWhenDone") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(src.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }
 /**
  * A UGen that, when its input UGen is finished, pauses enclosing synth.
@@ -937,5 +937,5 @@ object PauseSelfWhenDone {
  */
 final case class PauseSelfWhenDone(src: GE with HasDoneFlag) extends UGenSource.SingleOut("PauseSelfWhenDone") with HasSideEffect with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(src.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, false, true)
 }

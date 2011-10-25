@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -166,7 +166,7 @@ final case class Convolution3(rate: Rate, in: GE, kernel: GE, trig: GE, frameSiz
 }
 final case class PV_ConformalMap(chain: GE, real: GE = 0.0f, imag: GE = 0.0f) extends UGenSource.SingleOut("PV_ConformalMap") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, real.expand, imag.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
 object PV_JensenAndersen {
    def ar(chain: GE, propSC: GE = 0.25f, propHFE: GE = 0.25f, propHFC: GE = 0.25f, propSF: GE = 0.25f, thresh: GE = 1.0f, waitTime: GE = 0.04f) = apply(audio, chain, propSC, propHFE, propHFC, propSF, thresh, waitTime)

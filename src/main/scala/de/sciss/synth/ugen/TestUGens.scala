@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Sat Oct 08 23:33:09 BST 2011
+ * Created: Tue Oct 25 17:24:22 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -54,5 +54,5 @@ object CheckBadValues {
  */
 final case class CheckBadValues(rate: Rate, in: GE, id: GE, post: GE) extends UGenSource.SingleOut("CheckBadValues") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, id.expand, post.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
