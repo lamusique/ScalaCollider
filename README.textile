@@ -1,4 +1,4 @@
-h2. ScalaCollider <small>v0.30</small>
+h2. ScalaCollider <small>v0.31-SNAPSHOT</small>
 
 h3. statement
 

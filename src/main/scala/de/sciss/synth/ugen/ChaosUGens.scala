@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Oct 25 17:24:22 BST 2011
+ * Created: Thu Oct 27 17:42:00 BST 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -11,42 +11,187 @@ package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+/**
+ * A non-interpolating sound generator based on the difference equation:
+ * {{{
+ * x[n+1] = a - b * sqrt(abs(x[n]))
+ * }}}
+ */
 object CuspN {
    def ar: CuspN = ar()
+   /**
+    * @param freq            Iteration frequency in Hertz
+    * @param a               Equation variable
+    * @param b               Equation variable
+    * @param xi              Initial value of x
+    */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 1.9f, xi: GE = 0.0f) = apply(audio, freq, a, b, xi)
 }
+/**
+ * A non-interpolating sound generator based on the difference equation:
+ * {{{
+ * x[n+1] = a - b * sqrt(abs(x[n]))
+ * }}}
+ * 
+ * @param freq            Iteration frequency in Hertz
+ * @param a               Equation variable
+ * @param b               Equation variable
+ * @param xi              Initial value of x
+ */
 final case class CuspN(rate: Rate, freq: GE, a: GE, b: GE, xi: GE) extends UGenSource.SingleOut("CuspN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, xi.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+/**
+ * A linear-interpolating sound generator based on the difference equation:
+ * {{{
+ * x[n+1] = a - b * sqrt(abs(x[n]))
+ * }}}
+ */
 object CuspL {
    def ar: CuspL = ar()
+   /**
+    * @param freq            Iteration frequency in Hertz
+    * @param a               Equation variable
+    * @param b               Equation variable
+    * @param xi              Initial value of x
+    */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 1.9f, xi: GE = 0.0f) = apply(audio, freq, a, b, xi)
 }
+/**
+ * A linear-interpolating sound generator based on the difference equation:
+ * {{{
+ * x[n+1] = a - b * sqrt(abs(x[n]))
+ * }}}
+ * 
+ * @param freq            Iteration frequency in Hertz
+ * @param a               Equation variable
+ * @param b               Equation variable
+ * @param xi              Initial value of x
+ */
 final case class CuspL(rate: Rate, freq: GE, a: GE, b: GE, xi: GE) extends UGenSource.SingleOut("CuspL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, xi.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+/**
+ * A non-interpolating sound generator based on the difference equations:
+ * {{{
+ * x[n+1] = sin(im * y[n] + fb * x[n])
+ * y[n+1] = (a * y[n] + c) % 2pi
+ * }}}
+ * This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+ */
 object FBSineN {
    def ar: FBSineN = ar()
+   /**
+    * @param freq            Iteration frequency in Hertz
+    * @param im              Index multiplier amount
+    * @param fb              Feedback amount
+    * @param a               Phase multiplier amount
+    * @param c               Phase increment amount
+    * @param xi              Initial value of x
+    * @param yi              Initial value of y
+    */
    def ar(freq: GE = SampleRate.ir * 0.5, im: GE = 1.0f, fb: GE = 0.1f, a: GE = 1.1f, c: GE = 0.5f, xi: GE = 0.1f, yi: GE = 0.1f) = apply(audio, freq, im, fb, a, c, xi, yi)
 }
+/**
+ * A non-interpolating sound generator based on the difference equations:
+ * {{{
+ * x[n+1] = sin(im * y[n] + fb * x[n])
+ * y[n+1] = (a * y[n] + c) % 2pi
+ * }}}
+ * This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+ * 
+ * @param freq            Iteration frequency in Hertz
+ * @param im              Index multiplier amount
+ * @param fb              Feedback amount
+ * @param a               Phase multiplier amount
+ * @param c               Phase increment amount
+ * @param xi              Initial value of x
+ * @param yi              Initial value of y
+ */
 final case class FBSineN(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("FBSineN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, im.expand, fb.expand, a.expand, c.expand, xi.expand, yi.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+/**
+ * A non-interpolating sound generator based on the difference equations:
+ * {{{
+ * x[n+1] = sin(im * y[n] + fb * x[n])
+ * y[n+1] = (a * y[n] + c) % 2pi
+ * }}}
+ * This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+ */
 object FBSineL {
    def ar: FBSineL = ar()
+   /**
+    * @param freq            Iteration frequency in Hertz
+    * @param im              Index multiplier amount
+    * @param fb              Feedback amount
+    * @param a               Phase multiplier amount
+    * @param c               Phase increment amount
+    * @param xi              Initial value of x
+    * @param yi              Initial value of y
+    */
    def ar(freq: GE = SampleRate.ir * 0.5, im: GE = 1.0f, fb: GE = 0.1f, a: GE = 1.1f, c: GE = 0.5f, xi: GE = 0.1f, yi: GE = 0.1f) = apply(audio, freq, im, fb, a, c, xi, yi)
 }
+/**
+ * A non-interpolating sound generator based on the difference equations:
+ * {{{
+ * x[n+1] = sin(im * y[n] + fb * x[n])
+ * y[n+1] = (a * y[n] + c) % 2pi
+ * }}}
+ * This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+ * 
+ * @param freq            Iteration frequency in Hertz
+ * @param im              Index multiplier amount
+ * @param fb              Feedback amount
+ * @param a               Phase multiplier amount
+ * @param c               Phase increment amount
+ * @param xi              Initial value of x
+ * @param yi              Initial value of y
+ */
 final case class FBSineL(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("FBSineL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, im.expand, fb.expand, a.expand, c.expand, xi.expand, yi.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+/**
+ * A non-interpolating sound generator based on the difference equations:
+ * {{{
+ * x[n+1] = sin(im * y[n] + fb * x[n])
+ * y[n+1] = (a * y[n] + c) % 2pi
+ * }}}
+ * This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+ */
 object FBSineC {
    def ar: FBSineC = ar()
+   /**
+    * @param freq            Iteration frequency in Hertz
+    * @param im              Index multiplier amount
+    * @param fb              Feedback amount
+    * @param a               Phase multiplier amount
+    * @param c               Phase increment amount
+    * @param xi              Initial value of x
+    * @param yi              Initial value of y
+    */
    def ar(freq: GE = SampleRate.ir * 0.5, im: GE = 1.0f, fb: GE = 0.1f, a: GE = 1.1f, c: GE = 0.5f, xi: GE = 0.1f, yi: GE = 0.1f) = apply(audio, freq, im, fb, a, c, xi, yi)
 }
+/**
+ * A non-interpolating sound generator based on the difference equations:
+ * {{{
+ * x[n+1] = sin(im * y[n] + fb * x[n])
+ * y[n+1] = (a * y[n] + c) % 2pi
+ * }}}
+ * This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+ * 
+ * @param freq            Iteration frequency in Hertz
+ * @param im              Index multiplier amount
+ * @param fb              Feedback amount
+ * @param a               Phase multiplier amount
+ * @param c               Phase increment amount
+ * @param xi              Initial value of x
+ * @param yi              Initial value of y
+ */
 final case class FBSineC(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("FBSineC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, im.expand, fb.expand, a.expand, c.expand, xi.expand, yi.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
