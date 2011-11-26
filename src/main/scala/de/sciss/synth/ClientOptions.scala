@@ -21,18 +21,12 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
 
 import java.net.InetSocketAddress
 
-/**
- * @version 0.11, 20-Aug-10
- */
 trait ClientOptionsLike {
    def clientID:     Int
    def nodeIDOffset: Int

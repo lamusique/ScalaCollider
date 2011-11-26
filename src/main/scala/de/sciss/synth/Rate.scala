@@ -21,18 +21,12 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
-/**
- *    @version 0.12, 28-Dec-10
- */
 //object Rate {
 //   def highest( rate: Rate, rates: Rate* ) : Rate = rates.foldLeft[ Rate ]( scalar )( (a, b) => if( a.id > b.id ) a else b )
 //   def max( rates: Rate* ) : Rate = rates.reduceLeft( (a, b) => if( a.id > b.id ) a else b )

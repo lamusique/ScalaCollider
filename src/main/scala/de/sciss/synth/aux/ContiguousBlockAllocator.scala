@@ -21,16 +21,10 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth.aux
 
-/**
- * 	@version	0.13, 22-Apr-10
- */
 final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /* extends BlockAllocator */ {
    private val array = new Array[ Block ]( size )
    private var freed = Map[ Int, Set[ Block ]]()

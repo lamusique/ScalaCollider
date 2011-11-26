@@ -21,9 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
@@ -34,9 +31,6 @@ object BufferManager {
    case class BufferInfo( buffer: Buffer, info: osc.BufferInfo )
 }
 
-/**
- *    @version 0.11, 09-May-10
- */
 final class BufferManager( server: Server ) extends Model {
    import BufferManager._
 

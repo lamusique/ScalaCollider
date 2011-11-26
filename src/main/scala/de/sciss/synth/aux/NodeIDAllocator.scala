@@ -1,5 +1,3 @@
-package de.sciss.synth.aux
-
 /*
  *  NodeIDAllocator.scala
  *  (ScalaCollider)
@@ -23,14 +21,10 @@ package de.sciss.synth.aux
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
-/**
- *    @version	0.12, 22-Apr-10
- */
+package de.sciss.synth.aux
+
 final class NodeIDAllocator( user: Int, initTemp: Int ) {
    private var temp  = initTemp
    private val mask  = user << 26

@@ -21,10 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
- *    28-Jan-10   integrated IEnv
  */
 
 package de.sciss.synth

@@ -21,16 +21,12 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
 package ugen
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-import collection.breakOut
 
 /**
  *    @version 0.12, 17-May-10

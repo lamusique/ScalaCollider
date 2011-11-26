@@ -21,9 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
@@ -31,7 +28,6 @@ package aux
 
 import ugen.WrapOut
 import de.sciss.osc.{Bundle, Message}
-import de.sciss.synth.UGenSource.ZeroOut
 
 object GraphFunction {
    private var uniqueIDCnt = 0

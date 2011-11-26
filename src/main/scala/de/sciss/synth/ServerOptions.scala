@@ -21,9 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
@@ -33,11 +30,7 @@ import io.{ AudioFileType, SampleFormat }
 import java.io.File
 import de.sciss.osc.{Transport, TCP, UDP}
 import java.net.{InetAddress, DatagramSocket, ServerSocket}
-import java.nio.channels.DatagramChannel
 
-/**
- * 	@version    0.14, 27-May-10
- */
 trait ServerOptionsLike {
    def programPath:           String
    def controlBusChannels:    Int

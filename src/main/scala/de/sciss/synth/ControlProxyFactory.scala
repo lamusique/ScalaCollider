@@ -21,9 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
@@ -32,9 +29,6 @@ import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
 import ugen.{ControlFactory, AudioControlProxy, ControlProxy, TrigControlProxy}
 
-/**
- *    @version	0.14, 07-Jan-10
- */
 object ControlProxyFactory {
    private val controlIrFactory = new ControlFactory( scalar )
    private val controlKrFactory = new ControlFactory( control )

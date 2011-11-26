@@ -21,9 +21,6 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss.synth
@@ -38,8 +35,6 @@ import scala.collection.immutable.{ Queue }
  *    invokes the apply method of all observers who are
  *    defined for the given message. Dispatching is
  *    synchronous, but exceptions are caught. 
- *
- *    @version 0.11, 29-Aug-10
  */
 object Model {
    type Listener = PartialFunction[ AnyRef, Unit ]

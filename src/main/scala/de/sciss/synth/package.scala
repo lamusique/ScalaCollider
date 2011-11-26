@@ -21,18 +21,14 @@
  *
  *  For further information, please contact Hanns Holger Rutz at
  *  contact@sciss.de
- *
- *
- *  Changelog:
  */
 
 package de.sciss
 
-import collection.breakOut
-import collection.immutable.{ IndexedSeq => IIdxSeq }
 import osc.Packet
 import synth._
 import aux.GraphFunction
+
 package synth {
    abstract private[synth] sealed class LowPriorityImplicits {
       /**
