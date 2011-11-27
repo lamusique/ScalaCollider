@@ -1,12 +1,16 @@
 name := "scalacollider"
 
-version := "0.31-SNAPSHOT"
+version := "0.31"
 
 organization := "de.sciss"
 
 scalaVersion := "2.9.1"
 
-// crossScalaVersions := Seq("2.9.1", "2.9.0", "2.8.1")
+description := "A sound synthesis library for the SuperCollider server"
+
+homepage := Some( url( "https://github.com/Sciss/ScalaCollider" ))
+
+licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "0.30",
@@ -36,3 +40,15 @@ pomExtra :=
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
+// ---- ls.implicit.ly ----
+
+seq( lsSettings :_* )
+
+(LsKeys.tags in LsKeys.lsync) := Seq( "sound-synthesis", "sound", "music", "supercollider" )
+
+(LsKeys.ghUser in LsKeys.lsync) := Some( "Sciss" )
+
+(LsKeys.ghRepo in LsKeys.lsync) := Some( "ScalaCollider" )
+
+// bug in ls -- doesn't find the licenses from global scope
+(licenses in LsKeys.lsync) := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))

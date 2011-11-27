@@ -25,6 +25,7 @@
 
 package de.sciss.synth
 
+import io.{AudioFileType, SampleFormat}
 import java.io.{BufferedReader, File, InputStreamReader, IOException}
 import java.util.{Timer, TimerTask}
 import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
@@ -33,62 +34,389 @@ import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAlloca
 import sys.error
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
+import collection.mutable.ListBuffer
 
 object Server {
    private val allSync  = new AnyRef
 //   private var allVar   = Set.empty[ Server ]
    var default: Server  = null
 
-//   def all     = allVar
-
    def defaultCmdPath = new File( System.getenv( "SC_HOME" ), "scsynth" ).getAbsolutePath
+
+   trait ConfigLike {
+      def programPath:           String
+      def controlBusChannels:    Int
+      def audioBusChannels:      Int
+      def outputBusChannels:     Int
+      def blockSize:             Int
+      def sampleRate:            Int
+      def audioBuffers:          Int
+      def maxNodes:              Int
+      def maxSynthDefs:          Int
+      def memorySize:            Int
+      def wireBuffers:           Int
+      def randomSeeds:           Int
+      def loadSynthDefs:         Boolean
+      def machPortName:          Option[ (String, String) ]
+      def verbosity:             Int
+      def plugInsPaths:          List[ String ]
+      def restrictedPath:        Option[ String ]
+      def memoryLocking:         Boolean
+
+//   // client only
+//   def clientID:              Int
+//   def nodeIDOffset:          Int
+
+      // realtime only
+      def host:                  String
+      def port:                  Int
+      def transport:             Transport.Net
+      def inputStreamsEnabled:   Option[ String ]
+      def outputStreamsEnabled:  Option[ String ]
+      def deviceName:            Option[ String ]
+      def deviceNames:           Option[ (String, String) ]
+      def inputBusChannels:      Int
+      def hardwareBlockSize:     Int
+      def zeroConf:              Boolean
+      def maxLogins:             Int
+      def sessionPassword:       Option[ String ]
+
+      // nonrealtime only
+      def nrtCommandPath:        String
+      def nrtInputPath:          Option[ String ]
+      def nrtOutputPath:         String
+      def nrtHeaderFormat:       AudioFileType
+      def nrtSampleFormat:       SampleFormat
+
+      final def toRealtimeArgs    : List[ String ] = Config.toRealtimeArgs( this )
+      final def toNonRealtimeArgs : List[ String ] = Config.toNonRealtimeArgs( this )
+
+      final def firstPrivateBus: Int = outputBusChannels + inputBusChannels
+   }
+
+   object Config {
+      /**
+       * Creates a new configuration builder with default settings
+       */
+      def apply() : ConfigBuilder = new ConfigBuilder()
+
+      /**
+       * Implicit conversion which allows you to use a `ConfigBuilder`
+       * wherever a `Config` is required.
+       */
+      implicit def build( cb: ConfigBuilder ) : Config = cb.build
+
+      private[Server] def toNonRealtimeArgs( o: ConfigLike ): List[ String ] = {
+       val result = new ListBuffer[ String ]()
+
+       // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
+       result += o.programPath
+       result += "-N"
+       result += o.nrtCommandPath
+       result += o.nrtInputPath.getOrElse( "_" )
+       result += o.nrtOutputPath
+       result += o.sampleRate.toString
+       result += o.nrtHeaderFormat.id
+       result += o.nrtSampleFormat.id
+
+       addCommonArgs( o, result )
+       result.toList
+    }
+
+      private[Server] def toRealtimeArgs( o: ConfigLike ): List[ String ] = {
+       val result = new ListBuffer[ String ]()
+
+       result += o.programPath
+       o.transport match {
+          case TCP => {
+             result += "-t"
+             result += o.port.toString
+          }
+          case UDP => {
+             result += "-u"
+             result += o.port.toString
+          }
+       }
+
+       addCommonArgs( o, result )
+
+       if( o.hardwareBlockSize != 0 ) {
+           result += "-Z"
+           result += o.hardwareBlockSize.toString
+       }
+       if( o.sampleRate != 0 ) {
+          result += "-S"
+          result += o.sampleRate.toString
+       }
+       if( o.maxLogins != 64 ) {
+          result += "-l"
+          result += o.maxLogins.toString
+       }
+       o.sessionPassword.foreach( pwd => {
+          result += "-p"
+          result += pwd
+       })
+       o.inputStreamsEnabled.foreach( stream => {
+          result += "-I"
+          result += stream
+       })
+       o.outputStreamsEnabled.foreach( stream => {
+          result += "-O"
+          result += stream
+       })
+       if( !o.zeroConf ) {
+          result += "-R"
+          result += "0"
+       }
+       o.deviceNames.foreach( tup => {
+          val (inDev, outDev) = tup
+          result += "-H"
+          result += tup._1
+          result += tup._2
+       })
+       o.deviceName.foreach( n => {
+          result += "-H"
+          result += n
+       })
+       o.restrictedPath.foreach( path => {
+          result += "-P"
+          result += path
+       })
+
+       result.toList
+    }
+
+      private[Server] def addCommonArgs( o: ConfigLike, result: ListBuffer[ String ]) = {
+       if( o.controlBusChannels != 4096 ) {
+          result += "-c"
+          result += o.controlBusChannels.toString
+       }
+       if( o.audioBusChannels != 128 ) {
+          result += "-a"
+          result += o.audioBusChannels.toString
+       }
+       if( o.inputBusChannels != 8 ) {
+          result += "-i"
+          result += o.inputBusChannels.toString
+       }
+       if( o.outputBusChannels != 8 ) {
+          result += "-o"
+          result += o.outputBusChannels.toString
+       }
+       if( o.blockSize != 64 ) {
+           result += "-z"
+           result += o.blockSize.toString
+       }
+       if( o.audioBuffers != 1024 ) {
+          result += "-b"
+          result += o.audioBuffers.toString
+       }
+       if( o.maxNodes != 1024 ) {
+          result += "-n"
+          result += o.maxNodes.toString
+       }
+       if( o.maxSynthDefs != 1024 ) {
+          result += "-d"
+          result += o.maxSynthDefs.toString
+       }
+       if( o.memorySize != 8192 ) {
+          result += "-m"
+          result += o.memorySize.toString
+       }
+       if( o.wireBuffers != 64 ) {
+          result += "-w"
+          result += o.wireBuffers.toString
+       }
+       if( o.randomSeeds != 64 ) {
+          result += "-r"
+          result += o.randomSeeds.toString
+       }
+       if( !o.loadSynthDefs ) {
+          result += "-D"
+          result += "0"
+       }
+       o.machPortName.foreach( tup => {
+          result += "-M"
+          result += tup._1
+          result += tup._2
+       })
+       if( o.verbosity != 0 ) {
+          result += "-v"
+          result += o.verbosity.toString
+       }
+       if( o.plugInsPaths.nonEmpty ) {
+          result += "-U"
+          result += o.plugInsPaths.mkString( ":" )
+       }
+       if( o.memoryLocking ) {
+          result += "-L"
+       }
+    }
+   }
+   final class Config private[Server]( val programPath: String, val controlBusChannels: Int, val audioBusChannels: Int,
+                       val outputBusChannels: Int, val blockSize: Int, val sampleRate: Int, val audioBuffers: Int,
+                       val maxNodes: Int, val maxSynthDefs: Int, val memorySize: Int, val wireBuffers: Int,
+                       val randomSeeds: Int, val loadSynthDefs: Boolean, val machPortName: Option[ (String, String) ],
+                       val verbosity: Int, val plugInsPaths: List[ String ], val restrictedPath: Option[ String ],
+                       val memoryLocking: Boolean, val host: String, val port: Int, val transport: Transport.Net,
+                       val inputStreamsEnabled: Option[ String ], val outputStreamsEnabled: Option[ String ],
+                       val deviceNames: Option[ (String, String) ], val deviceName: Option[ String ],
+                       val inputBusChannels: Int,
+                       val hardwareBlockSize: Int, val zeroConf: Boolean, val maxLogins: Int,
+                       val sessionPassword: Option[ String ], val nrtCommandPath: String,
+                       val nrtInputPath: Option[ String ],
+                       val nrtOutputPath: String, val nrtHeaderFormat: AudioFileType,
+                       val nrtSampleFormat: SampleFormat )
+   extends ConfigLike {
+      override def toString = "ServerOptions"
+   }
+
+  final class ConfigBuilder private[Server] () extends ConfigLike {
+     var programPath:           String                     = defaultCmdPath
+     var controlBusChannels:    Int                        = 4096
+     var audioBusChannels:      Int                        = 128
+     var outputBusChannels:     Int                        = 8
+     var blockSize:             Int                        = 64
+     var sampleRate:            Int                        = 0
+     var audioBuffers:          Int                        = 1024
+     var maxNodes:              Int                        = 1024
+     var maxSynthDefs:          Int                        = 1024
+     var memorySize:            Int                        = 8192
+     var wireBuffers:           Int                        = 64
+     var randomSeeds:           Int                        = 64
+     var loadSynthDefs:         Boolean                    = true
+     var machPortName:          Option[ (String, String) ] = None
+     var verbosity:             Int                        = 0
+     var plugInsPaths:          List[ String ]             = Nil
+     var restrictedPath:        Option[ String ]           = None
+     var memoryLocking:         Boolean                    = false
+
+//   // client only
+//   var clientID:              Int                        = 0
+//   var nodeIDOffset:          Int                        = 1000
+
+     // realtime only
+     var host:                  String                     = "127.0.0.1"
+     var port:                  Int                        = 57110
+     var transport:             Transport.Net              = UDP
+     var inputStreamsEnabled:   Option[ String ]           = None
+     var outputStreamsEnabled:  Option[ String ]           = None
+
+     private var deviceNameVar:  Option[ String ] = None
+     private var deviceNamesVar: Option[ (String, String) ] = None
+
+     def deviceName:            Option[ String ]           = deviceNameVar
+     def deviceNames:           Option[ (String, String) ] = deviceNamesVar
+     def deviceName_=( value: Option[ String ]) {
+        deviceNameVar = value
+        if( value.isDefined ) deviceNamesVar = None
+     }
+     def deviceNames_=( value: Option[ (String, String) ]) {
+        deviceNamesVar = value
+        if( value.isDefined ) deviceNameVar = None
+     }
+
+     var inputBusChannels:      Int                        = 8
+     var hardwareBlockSize:     Int                        = 0
+     var zeroConf:              Boolean                    = true
+     var maxLogins:             Int                        = 64
+     var sessionPassword:       Option[ String ]           = None
+
+     // nonrealtime only
+     var nrtCommandPath:        String                     = ""
+     var nrtInputPath:          Option[ String ]           = None
+     var nrtOutputPath:         String                     = ""
+     var nrtHeaderFormat:       AudioFileType              = AudioFileType.AIFF
+     var nrtSampleFormat:       SampleFormat               = SampleFormat.Float
+
+     /**
+      * Picks and assigns a random free port for the server. This implies that
+      * the server will be running on the local machine.
+      *
+      * As a result, this method will change this config builder's `port` value.
+      * The caller must ensure that the `host` and `transport` fields have been
+      * decided on before calling this method. Later changes of either of these
+      * will render the result invalid.
+      *
+      * This method will fail with runtime exception if the host is not local.
+      */
+     def pickPort() {
+        require( isLocal )
+        transport match {
+           case UDP =>
+              val tmp = new DatagramSocket()
+              port = tmp.getLocalPort
+              tmp.close()
+           case TCP =>
+              val tmp = new ServerSocket( 0 )
+              port = tmp.getLocalPort
+              tmp.close()
+        }
+     }
+
+     /**
+      * Checks if the currently set `host` is located on the local machine.
+      */
+     def isLocal : Boolean = {
+        val hostAddr = InetAddress.getByName( host )
+        hostAddr.isLoopbackAddress || hostAddr.isSiteLocalAddress
+     }
+
+     def build : Config = new Config(
+        programPath, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
+        maxNodes, maxSynthDefs, memorySize, wireBuffers, randomSeeds, loadSynthDefs, machPortName, verbosity,
+        plugInsPaths, restrictedPath, memoryLocking, host, port, transport, inputStreamsEnabled, outputStreamsEnabled,
+        deviceNames, deviceName, inputBusChannels, hardwareBlockSize, zeroConf, maxLogins, sessionPassword,
+        nrtCommandPath,
+        nrtInputPath, nrtOutputPath, nrtHeaderFormat, nrtSampleFormat )
+  }
 
    @throws( classOf[ IOException ])
    def boot: ServerConnection = boot()()
 
    @throws( classOf[ IOException ])
-   def boot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
-             clientOptions: ClientOptions = (new ClientOptionsBuilder).build )
+   def boot( name: String = "localhost", config: Config = Config().build,
+             clientConfig: Client.Config = Client.Config().build )
            ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
-      val sc = initBoot( name, options, clientOptions )
+      val sc = initBoot( name, config, clientConfig )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
       sc.start()
       sc
    }
 
-   private def initBoot( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
-             clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) = {
-      val (addr, c) = prepareConnection( options, clientOptions )
+   private def initBoot( name: String = "localhost", config: Config = Config().build,
+             clientConfig: Client.Config = Client.Config().build ) = {
+      val (addr, c) = prepareConnection( config, clientConfig )
 //c.dump()
-      new BootingImpl( name, c, addr, options, clientOptions, true )
+      new BootingImpl( name, c, addr, config, clientConfig, true )
    }
 
    @throws( classOf[ IOException ])
    def connect: ServerConnection = connect()()
 
    @throws( classOf[ IOException ])
-   def connect( name: String = "localhost", options: ServerOptions = (new ServerOptionsBuilder).build,
-                clientOptions: ClientOptions = (new ClientOptionsBuilder).build )
+   def connect( name: String = "localhost", config: Config = Config().build,
+                clientConfig: Client.Config = Client.Config().build )
               ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
-      val (addr, c) = prepareConnection( options, clientOptions )
-      val sc = new ConnectionImpl( name, c, addr, options, clientOptions, true )
+      val (addr, c) = prepareConnection( config, clientConfig )
+      val sc = new ConnectionImpl( name, c, addr, config, clientConfig, true )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
       sc.start()
       sc
    }
 
-   def test( code: Server => Unit ) { test()( code )}
+   def run( code: Server => Unit ) { run()( code )}
    
    /**
     *    Utility method to test code quickly with a running server. This boots a
     *    server and executes the passed in code when the server is up. A shutdown
     *    hook is registered to make sure the server is destroyed when the VM exits.
     */
-   def test( options: ServerOptions = (new ServerOptionsBuilder).build )( code: Server => Unit ) {
-//      val b = boot( options = options )
+   def run( config: Config = Config().build )( code: Server => Unit ) {
+//      val b = boot( config = config )
       val sync = new AnyRef
       var s : Server = null
-      val sc = initBoot( options = options )
+      val sc = initBoot( config = config )
       sc.addListener {
          case ServerConnection.Running( srv ) => sync.synchronized { s = srv }; code( srv )
       }
@@ -108,21 +436,21 @@ object Server {
     * Any attempt to try to send messages to the server will fail.
     */
    @throws( classOf[ IOException ])
-   def dummy( name: String = "dummy", options: ServerOptions = (new ServerOptionsBuilder).build,
-                clientOptions: ClientOptions = (new ClientOptionsBuilder).build ) : Server = {
-      val (addr, c) = prepareConnection( options, clientOptions )
-      new Server( name, c, addr, options, clientOptions )
+   def dummy( name: String = "dummy", config: Config = Config().build,
+                clientConfig: Client.Config = Client.Config().build ) : Server = {
+      val (addr, c) = prepareConnection( config, clientConfig )
+      new Server( name, c, addr, config, clientConfig )
    }
 
    @throws( classOf[ IOException ])
-   private def prepareConnection( options: ServerOptions, clientOptions: ClientOptions ) : (InetSocketAddress, OSCClient) = {
-      val addr = new InetSocketAddress( options.host, options.port )
-      val clientAddr = clientOptions.addr getOrElse {
+   private def prepareConnection( config: Config, clientConfig: Client.Config ) : (InetSocketAddress, OSCClient) = {
+      val addr = new InetSocketAddress( config.host, config.port )
+      val clientAddr = clientConfig.addr getOrElse {
           if( addr.getAddress.isLoopbackAddress )
              new InetSocketAddress( "127.0.0.1", 0 ) else
              new InetSocketAddress( InetAddress.getLocalHost, 0 )
       }
-      val c    = createClient( options.transport, addr, clientAddr )
+      val c    = createClient( config.transport, addr, clientAddr )
       (addr, c)
    }
    
@@ -277,7 +605,7 @@ object Server {
                               case Abort              => abortHandler( None )
                               case counts: osc.StatusReplyMessage => {
 //println( "<<< STAT" )
-                                 val s = new Server( name, c, addr, options, clientOptions )
+                                 val s = new Server( name, c, addr, config, clientConfig )
                                  s.counts = counts
                                  dispatch( Preparing( s ))
                                  s.initTree()
@@ -370,13 +698,13 @@ object Server {
       def handleAbort() : Unit
       def connectionAlive : Boolean
       def c : OSCClient
-      def clientOptions : ClientOptions
+      def clientConfig: Client.Config
       def createAliveThread( s: Server ) : Unit
    }
 
    private class ConnectionImpl @throws( classOf[ IOException ])
-      ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
-        val clientOptions: ClientOptions, aliveThread: Boolean )
+      ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val config: Config,
+        val clientConfig: Client.Config, aliveThread: Boolean )
    extends ConnectionImplLike {
 //      import ConnectionImplLike._
 
@@ -397,14 +725,14 @@ object Server {
 //      final case class Booted( open: Boolean )
 //   }
    private class BootingImpl @throws( classOf[ IOException ])
-      ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
-        val clientOptions: ClientOptions, aliveThread: Boolean )
+      ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val config: Config,
+        val clientConfig: Client.Config, aliveThread: Boolean )
    extends ConnectionImplLike {
       import ConnectionImplLike._
 
       lazy val p = {
-         val processArgs   = options.toRealtimeArgs
-         val directory     = new File( options.programPath ).getParentFile
+         val processArgs   = config.toRealtimeArgs
+         val directory     = new File( config.programPath ).getParentFile
          val pb            = new ProcessBuilder( processArgs: _* )
             .directory( directory )
             .redirectErrorStream( true )
@@ -476,7 +804,7 @@ if( line.startsWith( "SuperCollider 3 server ready." )) isBooting = false
 
 sealed trait ServerLike extends Model {
    def name: String
-   def options: ServerOptions
+   def config: Server.Config
    def addr: InetSocketAddress
 }
 
@@ -494,8 +822,8 @@ sealed trait ServerConnection extends ServerLike {
 }
 
 //abstract class Server extends Model {}
-final class Server private( val name: String, c: OSCClient, val addr: InetSocketAddress, val options: ServerOptions,
-                      val clientOptions: ClientOptions )
+final class Server private( val name: String, c: OSCClient, val addr: InetSocketAddress, val config: Server.Config,
+                      val clientConfig: Client.Config )
 extends ServerLike {
    server =>
 
@@ -509,9 +837,9 @@ extends ServerLike {
    private var conditionVar: Condition 			   = Running // Offline
    private var pendingCondition: Condition      	= NoPending
 //   private var bufferAllocatorVar: ContiguousBlockAllocator = null
-//   private val host                                = InetAddress.getByName( options.host.value )
+//   private val host                                = InetAddress.getByName( config.host.value )
 
-//   val addr                                        = new InetSocketAddress( host, options.port.value )
+//   val addr                                        = new InetSocketAddress( host, config.port.value )
    val rootNode                                    = new Group( this, 0 )
    val defaultGroup                                = new Group( this, 1 )
    val nodeMgr                                     = new NodeManager( this )
@@ -535,14 +863,14 @@ extends ServerLike {
 //   def bufferAllocator = bufferAllocatorVar
 
    object nodes {
-      private val allocator = new NodeIDAllocator( clientOptions.clientID, clientOptions.nodeIDOffset )
+      private val allocator = new NodeIDAllocator( clientConfig.clientID, clientConfig.nodeIDOffset )
 
       def nextID = allocator.alloc
    }
 
    object busses {
-      private val controlAllocator = new ContiguousBlockAllocator( options.controlBusChannels )
-      private val audioAllocator = new ContiguousBlockAllocator( options.audioBusChannels, options.firstPrivateBus )
+      private val controlAllocator = new ContiguousBlockAllocator( config.controlBusChannels )
+      private val audioAllocator = new ContiguousBlockAllocator( config.audioBusChannels, config.firstPrivateBus )
 
       def allocControl( numChannels: Int ) = controlAllocator.alloc( numChannels )
       def allocAudio( numChannels: Int ) = audioAllocator.alloc( numChannels )
@@ -551,7 +879,7 @@ extends ServerLike {
    }
 
    object buffers {
-      private val allocator = new ContiguousBlockAllocator( options.audioBuffers )
+      private val allocator = new ContiguousBlockAllocator( config.audioBuffers )
 
       def alloc( numChannels: Int ) = allocator.alloc( numChannels )
       def free( index: Int ) { allocator.free( index )}

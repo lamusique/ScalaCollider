@@ -1,5 +1,5 @@
 /*
- *  ClientOptions.scala
+ *  Client.scala
  *  (ScalaCollider)
  *
  *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
@@ -27,23 +27,36 @@ package de.sciss.synth
 
 import java.net.InetSocketAddress
 
-trait ClientOptionsLike {
-   def clientID:     Int
-   def nodeIDOffset: Int
-   def addr:         Option[ InetSocketAddress ]
-}
+object Client {
+   sealed trait ConfigLike {
+      def clientID:     Int
+      def nodeIDOffset: Int
+      def addr:         Option[ InetSocketAddress ]
+   }
 
-abstract class ClientOptions extends ClientOptionsLike
+   object Config {
+      /**
+       * Creates a new configuration builder with default settings
+       */
+      def apply() : ConfigBuilder = new ConfigBuilder()
 
-class ClientOptionsBuilder extends ClientOptionsLike {
-   var clientID:     Int                        = 0
-   var nodeIDOffset: Int                        = 1000
-   var addr:         Option[ InetSocketAddress ]= None
+      /**
+       * Implicit conversion which allows you to use a `ConfigBuilder`
+       * wherever a `Config` is required.
+       */
+      implicit def build( cb: ConfigBuilder ) : Config = cb.build
+   }
 
-   def build : ClientOptions = new Impl( clientID, nodeIDOffset, addr )
-
-   private class Impl( val clientID: Int, val nodeIDOffset: Int, val addr: Option[ InetSocketAddress ])
-   extends ClientOptions {
+   final class Config private[Client]( val clientID: Int, val nodeIDOffset: Int, val addr: Option[ InetSocketAddress ])
+   extends ConfigLike {
       override def toString = "ClientOptions"
+   }
+
+   final class ConfigBuilder private[Client] () extends ConfigLike {
+      var clientID:     Int                        = 0
+      var nodeIDOffset: Int                        = 1000
+      var addr:         Option[ InetSocketAddress ]= None
+
+      def build : Config = new Config( clientID, nodeIDOffset, addr )
    }
 }
