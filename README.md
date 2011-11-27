@@ -8,12 +8,12 @@ ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyrigh
 
 #### changes in v0.31
 
-* `ServerOptions` became `Server.Config`. And a config builder is created via `Server.Config()`. This makes it more regular with the nomenclature of ScalaOSC. Likewise, `ClientOptions` became `Client.Options`.
+* `ServerOptions` became `Server.Config`. And a config builder is created via `Server.Config()`. This makes it more regular with the nomenclature of ScalaOSC. Likewise, `ClientOptions` became `Client.Config`.
 * `Server.test` which was originally really meant just for quick testing, was renamed to `Server.run`, because it is generally useful for running a server without caring too much about the booting process.
 
 #### changes in v0.30
 
-__Note:___ There have been made several changes from 0.25 to 0.30...
+__Note:__ There have been made several changes from 0.25 to 0.30...
 
 * To facilitate future graph re-writing, elements are now _lazy_ which means they do not instantly (multi-channel) expand into UGens. The idea is to be able to capture the whole expression tree, which then could be used to transform it, to visualize it (before multi-channel expansion!), to persist it, etc.
 * In the meantime, the UGens themselves are not represented any more by individual classes but only generic classes such as `UGen.SingleOut`. As we expect manipulations to happen at the `GE` level, this keeps the number of classes smaller.
