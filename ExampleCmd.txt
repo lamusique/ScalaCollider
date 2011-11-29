@@ -518,3 +518,24 @@ val x = play {
       AllpassN.ar(sig, 0.040, Seq(Rand(0, 0.040), Rand(0, 0.040)), 2)
    }
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+Multichannel controls example:
+
+// a synth def that has 4 partials
+SynthDef.recv( "multi-con" ) {
+   // harmonics
+   val harm  = "harm".ir( 1, 2, 3, 4 )
+   // amplitudes
+   val amp   = "amp".ir( 0.05, 0.05, 0.05, 0.05 )
+   // ring times
+   val ring  = "ring".ir( 1, 1, 1, 1 )
+   val klank = Klank.ar( Zip( harm, amp, ring ), ClipNoise.ar( Seq( 0.01, 0.01 )), "freq".ir( 300 ))
+   Out.ar( "out".kr( 0 ), klank )
+}
+
+val x = Synth.play( "multi-con", Seq( "harm" -> Vector( 1f, 3.3f, 4.5f, 7.8f )))
+x.free
+val x = Synth.play( "multi-con", Seq( "harm" -> Vector( 2f, 3f, 4f, 5f )))
+x.free

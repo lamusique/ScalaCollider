@@ -35,7 +35,7 @@ import de.sciss.osc.{Bundle, Message, Packet, PacketCodec}
 object ServerCodec extends PacketCodec {
    import Packet._
 
-   private val superCodec = PacketCodec.Builder().scsynth().build
+   private val superCodec = PacketCodec().scsynth().build
 
 	private val decodeStatusReply: (String, ByteBuffer) => Message = (name, b) => {
 		// ",iiiiiffdd"
@@ -54,7 +54,7 @@ object ServerCodec extends PacketCodec {
 		val actualSampleRate= b.getDouble()
 
 		StatusReplyMessage( numUGens, numSynths, numGroups, numDefs,
-		                       avgCPU, peakCPU, sampleRate, actualSampleRate )
+		                    avgCPU, peakCPU, sampleRate, actualSampleRate )
 	}
 
    private val decodeSynced: (String, ByteBuffer) => Message = (name, b) => {
@@ -139,7 +139,7 @@ object ServerCodec extends PacketCodec {
 */	}
 
    def encodeMessage( msg: Message, b: ByteBuffer ) { superCodec.encodeMessage( msg, b )}
-   def getEncodedMessageSize( msg: Message ) = superCodec.getEncodedMessageSize( msg )
+   def encodedMessageSize( msg: Message ) = superCodec.encodedMessageSize( msg )
    def encodeBundle( bndl: Bundle, b: ByteBuffer ) { superCodec.encodeBundle( bndl, b )}
    def printAtom( value: Any, stream: PrintStream, nestCount: Int ) { superCodec.printAtom( value, stream, nestCount )}
    val charsetName = superCodec.charsetName
@@ -284,7 +284,7 @@ with Receive
 
 // ---- messages to the server ----
 final case class ServerNotifyMessage( onOff: Boolean )
-extends Message( "/notify", if( onOff ) 1 else 0 )
+extends Message( "/notify", onOff )
 with AsyncSend
 
 case object ServerQuitMessage extends Message( "/quit" )
@@ -321,15 +321,15 @@ with AsyncSend
 final case class BufferReadMessage( id: Int, path: String, fileStartFrame: Int, numFrames: Int, bufStartFrame: Int,
                                  leaveOpen: Boolean, completion: Option[ Packet ])
 extends Message( "/b_read", (completion.map(
-   m =>      List( id, path, fileStartFrame, numFrames, bufStartFrame, if( leaveOpen ) 1 else 0, m ))
-   getOrElse List( id, path, fileStartFrame, numFrames, bufStartFrame, if( leaveOpen ) 1 else 0 )): _* )
+   m =>      List( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, m ))
+   getOrElse List( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen )): _* )
 with AsyncSend
 
 final case class BufferReadChannelMessage( id: Int, path: String, fileStartFrame: Int, numFrames: Int,
                                         bufStartFrame: Int, leaveOpen: Boolean, channels: List[ Int ],
                                         completion: Option[ Packet ])
-extends Message( "/b_readChannel", (List( id, path, fileStartFrame, numFrames, bufStartFrame,
-   if( leaveOpen ) 1 else 0 ) ::: channels ::: completion.map( msg => List( msg )).getOrElse( Nil )): _* )
+extends Message( "/b_readChannel", (List( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen ) :::
+   channels ::: completion.map( msg => List( msg )).getOrElse( Nil )): _* )
 with AsyncSend
 
 final case class BufferZeroMessage( id: Int, completion: Option[ Packet ])
@@ -339,8 +339,8 @@ with AsyncSend
 final case class BufferWriteMessage( id: Int, path: String, fileType: io.AudioFileType, sampleFormat: io.SampleFormat,
                                   numFrames: Int, startFrame: Int, leaveOpen: Boolean,
                                   completion: Option[ Packet])
-extends Message( "/b_write", (List( id, path, fileType.id, sampleFormat.id, numFrames, startFrame,
-   if( leaveOpen ) 1 else 0 ) ::: completion.map( msg => List( msg )).getOrElse( Nil )): _* )
+extends Message( "/b_write", (List( id, path, fileType.id, sampleFormat.id, numFrames, startFrame, leaveOpen ) :::
+   completion.map( msg => List( msg )).getOrElse( Nil )): _* )
 with AsyncSend
 
 final case class BufferSetMessage( id: Int, indicesAndValues: (Int, Float)* )
@@ -372,11 +372,11 @@ with SyncCmd
 
 //case class NodeFlagPair( id: Int, flag: Boolean )
 final case class GroupDumpTreeMessage( groups: (Int, Boolean)* )
-extends Message( "/g_dumpTree", groups.flatMap( g => List( g._1, if( g._2 ) 1 else 0 )): _* )
+extends Message( "/g_dumpTree", groups.flatMap( g => List( g._1, g._2 )): _* )
 with SyncCmd
 
 final case class GroupQueryTreeMessage( groups: (Int, Boolean)* )
-extends Message( "/g_queryTree", groups.flatMap( g => List( g._1, if( g._2 ) 1 else 0 )): _* )
+extends Message( "/g_queryTree", groups.flatMap( g => List( g._1, g._2 )): _* )
 with SyncQuery
 
 /**
@@ -425,7 +425,7 @@ extends Message( "/s_new",
 with SyncCmd
 
 final case class NodeRunMessage( nodes: (Int, Boolean)* )
-extends Message( "/n_run", nodes.flatMap( n => List( n._1, if( n._2 ) 1 else 0 )): _* )
+extends Message( "/n_run", nodes.flatMap( n => List( n._1, n._2 )): _* )
 with SyncCmd
 
 final case class NodeSetMessage( id: Int, pairs: ControlSetMap* )

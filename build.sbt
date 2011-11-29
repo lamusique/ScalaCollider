@@ -1,6 +1,6 @@
 name := "scalacollider"
 
-version := "0.31"
+version := "0.32-SNAPSHOT"
 
 organization := "de.sciss"
 
@@ -13,7 +13,7 @@ homepage := Some( url( "https://github.com/Sciss/ScalaCollider" ))
 licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 
 libraryDependencies ++= Seq(
-   "de.sciss" %% "scalaosc" % "0.30",
+   "de.sciss" %% "scalaosc" % "0.33",
    "de.sciss" %% "scalaaudiofile" % "0.20"
 )
 

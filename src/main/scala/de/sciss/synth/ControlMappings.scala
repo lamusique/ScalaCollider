@@ -39,7 +39,7 @@ object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMa
    object Multi extends MultiControlSetMapImplicits
    case class Multi( key: Any, values: IIdxSeq[ Float ])
    extends ControlSetMap {
-      def toSetSeq: IIdxSeq[ Any ]  = error( "Not yet supported" )
+      def toSetSeq: IIdxSeq[ Any ]  = IIdxSeq( key, values )
       def toSetnSeq: IIdxSeq[ Any ] = key +: values.size +: values
    }
 }
