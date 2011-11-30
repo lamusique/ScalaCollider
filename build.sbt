@@ -21,6 +21,10 @@ retrieveManaged := true
 
 scalacOptions ++= Seq( "-deprecation", "-unchecked" )
 
+// ---- console ----
+
+initialCommands in console := """import de.sciss.synth._; import ugen._; var s: Server = null; def boot = Server.run( s = _ )"""
+
 // ---- publishing ----
 
 publishTo <<= version { (v: String) =>
