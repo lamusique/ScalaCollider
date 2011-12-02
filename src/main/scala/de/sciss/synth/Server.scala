@@ -767,7 +767,8 @@ object Server {
                         println( line )
 // of course some sucker screwed it up and added another period in SC 3.4.4
 //                        if( line == "SuperCollider 3 server ready." ) isBooting = false
-if( line.startsWith( "SuperCollider 3 server ready." )) isBooting = false
+// one more... this should allow for debug versions and supernova to be detected, too
+if( line.startsWith( "Super" ) && line.contains( " ready" )) isBooting = false
                      }
                   }
                } catch {
