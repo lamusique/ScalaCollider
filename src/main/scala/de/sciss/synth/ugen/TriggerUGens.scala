@@ -3,7 +3,7 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Mon Oct 31 11:22:31 GMT 2011
+ * Created: Tue Dec 06 20:51:57 GMT 2011
  * ScalaCollider-UGens version: 0.14-SNAPSHOT
  */
 
@@ -91,21 +91,21 @@ object SendTrig {
    /**
     * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
     *                        when passing from non-positive to positive.
-    * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
-    *                        This is useful to distinguish between several SendTrig instances per SynthDef.
     * @param value           a changing signal or constant that will be polled at the time of trigger,
     *                        and its value passed with the trigger message
+    * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
+    *                        This is useful to distinguish between several SendTrig instances per SynthDef.
     */
-   def ar(trig: GE, id: GE = 0.0f, value: GE = 0.0f) = apply(audio, trig, id, value)
+   def ar(trig: GE, value: GE = 0.0f, id: GE = 0.0f) = apply(audio, trig, value, id)
    /**
     * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
     *                        when passing from non-positive to positive.
-    * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
-    *                        This is useful to distinguish between several SendTrig instances per SynthDef.
     * @param value           a changing signal or constant that will be polled at the time of trigger,
     *                        and its value passed with the trigger message
+    * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
+    *                        This is useful to distinguish between several SendTrig instances per SynthDef.
     */
-   def kr(trig: GE, id: GE = 0.0f, value: GE = 0.0f) = apply(control, trig, id, value)
+   def kr(trig: GE, value: GE = 0.0f, id: GE = 0.0f) = apply(control, trig, value, id)
 }
 /**
  * A UGen that sends a value from the server to all notified clients upon receiving triggers.
@@ -117,15 +117,15 @@ object SendTrig {
  * 
  * @param trig            the trigger signal causing the value to be read and sent. A trigger occurs
  *                        when passing from non-positive to positive.
- * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
- *                        This is useful to distinguish between several SendTrig instances per SynthDef.
  * @param value           a changing signal or constant that will be polled at the time of trigger,
  *                        and its value passed with the trigger message
+ * @param id              an arbitrary integer that will be sent along with the `"/tr"` message.
+ *                        This is useful to distinguish between several SendTrig instances per SynthDef.
  * 
  * @see [[de.sciss.synth.ugen.SendReply]]
  */
-final case class SendTrig(rate: MaybeRate, trig: GE, id: GE, value: GE) extends UGenSource.SingleOut("SendTrig") with HasSideEffect {
-   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, value.expand, id.expand))
+final case class SendTrig(rate: MaybeRate, trig: GE, value: GE, id: GE) extends UGenSource.SingleOut("SendTrig") with HasSideEffect {
+   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, id.expand, value.expand))
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
       val _rate = rate.?|(_args(0).rate)
       new UGen.SingleOut(name, _rate, _args, false, true)
