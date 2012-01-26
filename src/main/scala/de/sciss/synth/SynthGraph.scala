@@ -27,7 +27,7 @@ package de.sciss.synth
 
 import java.io.DataOutputStream
 import collection.breakOut
-import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack }
+import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack, Queue => MQueue }
 import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
 import ugen.EnvGen
 import sys.error
@@ -75,7 +75,7 @@ final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[
    }
 
    @inline private def writePascalString( dos: DataOutputStream, str: String ) {
-      dos.writeByte( str.size )
+      dos.writeByte( str.length )
       dos.write( str.getBytes )
    }
 }
@@ -362,6 +362,25 @@ object UGenGraph {
          }
          sorted
       }
+
+// trying with Queue versus Stack -- no particular effect on wire buffer usage
+//      private def sortUGens( indexedUGens: MBuffer[ IndexedUGen ]) : Array[ IndexedUGen ] = {
+//         indexedUGens.foreach( iu => iu.children = iu.children.sortWith( (a, b) => a.index > b.index ))
+//         val sorted  = new Array[ IndexedUGen ]( indexedUGens.size )
+//         val avail   = MQueue( indexedUGens.filter( _.parents.isEmpty ) : _* )
+//         var cnt     = 0
+//         while( avail.nonEmpty ) {
+//            val iu   = avail.dequeue()
+//            iu.index = cnt
+//            sorted( cnt ) = iu
+//            cnt     += 1
+//            iu.children foreach { iuc =>
+//               iuc.parents.remove( iuc.parents.indexOf( iu ))
+//               if( iuc.parents.isEmpty ) avail.enqueue( iuc )
+//            }
+//         }
+//         sorted
+//      }
 
 //      def visit[ U ]( src: Lazy, init: => U ) : U = {
 //         sourceMap.getOrElse( src, {
