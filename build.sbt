@@ -44,6 +44,10 @@ pomExtra :=
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
+// ---- disable scaladoc generation during development phase ----
+
+publishArtifact in (Compile, packageDoc) := false
+
 // ---- ls.implicit.ly ----
 
 seq( lsSettings :_* )

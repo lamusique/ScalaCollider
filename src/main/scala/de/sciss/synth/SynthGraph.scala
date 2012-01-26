@@ -286,53 +286,51 @@ object UGenGraph {
          val constantMap   = MMap.empty[ Float, RichConstant ]
          var constants     = IIdxSeq.empty[ Float ]
          var numIneff      = ugens.size
-         val indexedUGens  = ugens.zipWithIndex.map( tup => {
-            val (ugen, idx) = tup
-//            val eff        = ugen.isInstanceOf[ HasSideEffect ]
-// BBB
-val eff=true
+         val indexedUGens  = ugens.zipWithIndex.map { tup =>
+            val ugen = tup._1
+            val idx  = tup._2
+            val eff  = ugen.hasSideEffect
             if( eff ) numIneff -= 1
             new IndexedUGen( ugen, idx, eff )
-         })
+         }
 //indexedUGens.foreach( iu => println( iu.ugen.ref ))
 //val a0 = indexedUGens(1).ugen
 //val a1 = indexedUGens(3).ugen
 //val ee = a0.equals(a1)
 
-         val ugenMap: Map[ AnyRef, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen /* .ref */, iu))( breakOut )
-         indexedUGens.foreach( iu => {
+         val ugenMap: Map[ AnyRef, IndexedUGen ] = indexedUGens.map( iu => (iu.ugen /* .ref */, iu) )( breakOut )
+         indexedUGens.foreach { iu =>
             // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
             // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
             // might be http://lampsvn.epfl.ch/trac/scala/ticket/4020
             iu.richInputs = iu.ugen.inputs.map({ // don't worry -- the match _is_ exhaustive
                case Constant( value ) => constantMap.get( value ) getOrElse {
-                  val rc         = new RichConstant( constants.size )
-                  constantMap   += value -> rc
-                  constants    :+= value
-                  rc
-               }
-               case up: UGenProxy => {
+                     val rc         = new RichConstant( constants.size )
+                     constantMap   += value -> rc
+                     constants    :+= value
+                     rc
+                  }
+
+               case up: UGenProxy =>
                   val iui         = ugenMap( up.source /* .ref */)
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, up.outputIndex )
-               }
-               case ControlUGenOutProxy( proxy, outputIndex /* , _ */) => {
+
+               case ControlUGenOutProxy( proxy, outputIndex /* , _ */) =>
                   val (ugen, off) = ctrlProxyMap( proxy )
                   val iui         = ugenMap( ugen /* .ref */)
                   iu.parents     += iui
                   iui.children   += iu
                   new RichUGenProxyBuilder( iui, off + outputIndex )
-               }
+
             })( breakOut )
             if( iu.effective ) iu.richInputs.foreach( numIneff -= _.makeEffective )
-         })
-         val filtered = if( numIneff == 0 ) indexedUGens else {
-            val res = indexedUGens.filter( _.effective )
-            res foreach { iu =>
+         }
+         val filtered = if( numIneff == 0 ) indexedUGens else indexedUGens.collect {
+            case iu if iu.effective =>
                iu.children = iu.children.filter( _.effective )
-            }
-            res
+               iu
          }
          (filtered, constants)
       }
