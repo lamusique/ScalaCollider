@@ -10,13 +10,18 @@
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import aux.UGenHelper
 import aux.UGenHelper._
+
 object OffsetOut {
    def ar(bus: GE, in: GE) = apply(bus, in)
 }
 final case class OffsetOut(bus: GE, in: GE) extends UGenSource.ZeroOut("OffsetOut") with AudioRated with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args, true)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
+      val _args1 = if( rate == audio ) _args.head +: UGenHelper.replaceZeroesWithSilence( _args.tail ) else _args
+      new UGen.ZeroOut(name, audio, _args1, true)
+   }
 }
 object LocalIn {
    def kr: LocalIn = kr()
@@ -40,14 +45,20 @@ object XOut {
  */
 final case class XOut(rate: Rate, bus: GE, in: GE, xfade: GE) extends UGenSource.ZeroOut("XOut") with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand, xfade.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args, true)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
+      val _args1 = if( rate == audio ) _args.take( 2 ) ++ UGenHelper.replaceZeroesWithSilence( _args.drop( 2 )) else _args
+      new UGen.ZeroOut(name, rate, _args1, true)
+   }
 }
 object ReplaceOut {
    def ar(bus: GE, in: GE) = apply(bus, in)
 }
 final case class ReplaceOut(bus: GE, in: GE) extends UGenSource.ZeroOut("ReplaceOut") with AudioRated with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args, true)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
+      val _args1 = if( rate == audio ) _args.head +: UGenHelper.replaceZeroesWithSilence( _args.tail ) else _args
+      new UGen.ZeroOut(name, audio, _args1, true)
+   }
 }
 object Out {
    def ar(bus: GE, in: GE) = apply(audio, bus, in)
@@ -56,7 +67,10 @@ object Out {
 }
 final case class Out(rate: Rate, bus: GE, in: GE) extends UGenSource.ZeroOut("Out") with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args, true)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
+      val _args1 = if( rate == audio ) _args.head +: UGenHelper.replaceZeroesWithSilence( _args.tail ) else _args
+      new UGen.ZeroOut(name, rate, _args1, true)
+   }
 }
 object LocalOut {
    def kr(in: GE) = apply(control, in)
@@ -64,7 +78,10 @@ object LocalOut {
 }
 final case class LocalOut(rate: Rate, in: GE) extends UGenSource.ZeroOut("LocalOut") {
    protected def makeUGens: Unit = unwrap(in.expand.outputs)
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args)
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
+      val _args1 = if( rate == audio ) UGenHelper.replaceZeroesWithSilence( _args ) else _args
+      new UGen.ZeroOut(name, rate, _args1)
+   }
 }
 object In {
    def ir(bus: GE, numChannels: Int = 1) = apply(scalar, bus, numChannels)
