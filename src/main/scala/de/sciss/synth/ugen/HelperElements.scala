@@ -2,7 +2,7 @@
  *  HelperElements.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2012 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ package ugen
 
 import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.Optional
+import aux.{UGenHelper, Optional}
 
 final case class Flatten( elem: GE ) extends GE.Lazy {
    def rate = elem.rate
@@ -188,23 +188,6 @@ object WrapOut {
 
       new UGen.SingleOut( "EnvGen", control, IIdxSeq[ UGenIn ]( cGate, 1, 0, cFadeTime, freeSelf ) ++ env )
    }
-
-   private def replaceZeroesWithSilence( ins: IIdxSeq[ UGenIn ]) : IIdxSeq[ UGenIn ] = {
-      val numZeroes  = ins.foldLeft( 0 )( (sum, in) => in match {
-         case Constant( 0 )   => sum + 1
-         case _               => sum
-      })
-      if( numZeroes == 0 ) {
-         ins
-      } else {
-//         val silent = Silent.ar( numZeroes ).outputs.iterator
-         val silent = new UGen.MultiOut( "Silent", audio, IIdxSeq.fill( numZeroes )( audio ), IIdxSeq.empty ).outputs.iterator
-         ins map (in => in match {
-            case Constant( 0 )   => silent.next()
-            case _               => in
-         })
-      }
-   }
 }
 
 /**
@@ -220,10 +203,9 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
       if( (rate == audio) || (rate == control) ) {
          val ins3 = fadeTime.option match {
             case Some( fdt ) =>
-               val ins2 = if( rate == audio ) replaceZeroesWithSilence( ins ) else ins
                val env  = makeFadeEnv( fdt )
-               ins2.map( ch => BinaryOp.Times.make1( ch, env ))
-               //* res1
+               val ins2 = ins.map( BinaryOp.Times.make1( _, env ))
+               if( rate == audio ) UGenHelper.replaceZeroesWithSilence( ins2 ) else ins2
             case None => ins
          }
          val cOut = new Control.UGen( control, 1, UGenGraph.builder.addControl( IIdxSeq( 0 ), Some( "out" ))).outputs( 0 )

@@ -2,7 +2,7 @@
 
 ### statement
 
-ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2011 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
+ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2012 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
 ### changes
 
@@ -28,7 +28,7 @@ __Note:__ There have been made several changes from 0.25 to 0.30...
 
 ScalaCollider currently builds with xsbt (sbt 0.11) against Scala 2.9.1. It requires Java 1.6 and SuperCollider 3 (it has been tested with SuperCollider 3.4 and 3.5 snapshots). It depends on ScalaOSC ([github.com/Sciss/ScalaOSC](http://github.com/Sciss/ScalaOSC)) and ScalaAudioFile ([github.com/Sciss/ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile)).
 
-Targets for xsbt:
+Targets for sbt:
 
 * `clean` &ndash; removes previous build artefacts
 * `compile` &ndash; compiles classes into target/scala-version/classes
@@ -36,7 +36,7 @@ Targets for xsbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-Running `xsbt update` should download all the dependencies from scala-tools.org.
+Running `sbt update` should download all the dependencies from scala-tools.org.
 
 ### creating an IntelliJ IDEA project
 

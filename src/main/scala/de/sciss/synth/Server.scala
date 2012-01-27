@@ -2,7 +2,7 @@
  *  Server.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2011 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2012 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License
@@ -41,7 +41,13 @@ object Server {
 //   private var allVar   = Set.empty[ Server ]
    var default: Server  = null
 
-   def defaultCmdPath = new File( System.getenv( "SC_HOME" ), "scsynth" ).getAbsolutePath
+   /**
+    * The default file path to `scsynth`. If the runtime (system) property `"SC_HOME"` is provided,
+    * this specifies the directory of `scsynth. Otherwise, an environment (shell) variable named
+    * `"SC_HOME"` is checked. If neither exists, this returns `scsynth` in the current working directory.
+    */
+   def defaultProgramPath = new File( sys.props.getOrElse( "SC_HOME", sys.env.getOrElse( "SC_HOME", "" )),
+                                      "scsynth" ).getAbsolutePath
 
    trait ConfigLike {
       def programPath:           String
@@ -272,7 +278,7 @@ object Server {
    }
 
   final class ConfigBuilder private[Server] () extends ConfigLike {
-     var programPath:           String                     = defaultCmdPath
+     var programPath:           String                     = defaultProgramPath
      var controlBusChannels:    Int                        = 4096
      var audioBusChannels:      Int                        = 128
      var outputBusChannels:     Int                        = 8
