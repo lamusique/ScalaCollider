@@ -4,29 +4,9 @@
 
 ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2012 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
-### changes
-
-#### changes in v0.31
-
-* `ServerOptions` became `Server.Config`. And a config builder is created via `Server.Config()`. This makes it more regular with the nomenclature of ScalaOSC. Likewise, `ClientOptions` became `Client.Config`.
-* `Server.test` which was originally really meant just for quick testing, was renamed to `Server.run`, because it is generally useful for running a server without caring too much about the booting process.
-
-#### changes in v0.30
-
-__Note:__ There have been made several changes from 0.25 to 0.30...
-
-* To facilitate future graph re-writing, elements are now _lazy_ which means they do not instantly (multi-channel) expand into UGens. The idea is to be able to capture the whole expression tree, which then could be used to transform it, to visualize it (before multi-channel expansion!), to persist it, etc.
-* In the meantime, the UGens themselves are not represented any more by individual classes but only generic classes such as `UGen.SingleOut`. As we expect manipulations to happen at the `GE` level, this keeps the number of classes smaller.
-* The SynthDef creation process is now two staged. The `GE` tree is captured as a `SynthGraph` which in turn expands into a `UGenGraph`.
-* Automatic subtree omission for side-effect-free roots is currently disabled.
-* the implicit conversion to `GraphFunction` has been disabled. so instead of `{ }.play`, use `play { }`
-* Multi-channel nesting and expansion now behaves like in sclang.
-* Recursive graph generation may require type annotations. Specifically all UGen source classes now return the UGen source type itself instead of a generic `GE`, which comes with the need to annotate `var`s in certain cases.
-* Methods `outputs` and `numOutputs` are not available for the lazy graph elements. You can mostly work around this by using special graph elements for channel handling, like `Zip`, `Reduce`, `Splay`, `Mix`, `Flatten`. Method `\` (backslash) is still preserved, but it may change in a future version if it causes problems with graph re-writing. If you really need to re-arrange the channels of an element, you can currently work around this by using the `MapExpanded` element.
-
 ### requirements / installation
 
-ScalaCollider currently builds with xsbt (sbt 0.11) against Scala 2.9.1. It requires Java 1.6 and SuperCollider 3 (it has been tested with SuperCollider 3.4 and 3.5 snapshots). It depends on ScalaOSC ([github.com/Sciss/ScalaOSC](http://github.com/Sciss/ScalaOSC)) and ScalaAudioFile ([github.com/Sciss/ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile)).
+ScalaCollider currently builds with xsbt (sbt 0.11) against Scala 2.9.1. It requires Java 1.6 and SuperCollider 3 (it has been tested with SuperCollider 3.4 and 3.5 snapshots). It depends on [ScalaOSC](http://github.com/Sciss/ScalaOSC) and [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile).
 
 Targets for sbt:
 
@@ -36,7 +16,7 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-Running `sbt update` should download all the dependencies from scala-tools.org.
+Running `sbt update` should download all the dependencies from scala-tools.org (In the course of the next half year, we will migrate to Sonatype).
 
 ### creating an IntelliJ IDEA project
 
@@ -44,7 +24,7 @@ The IDEA project files have now been removed from the git repository, but they c
 
     resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
     
-    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "0.11.0")
+    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
 
 Then to create the IDEA project, run the following two commands from the xsbt shell:
 
@@ -78,7 +58,7 @@ The following short example illustrates how a server can be launched and a synth
     
 ```
 
-You might omit to set the `programPath` of the server's configuration, as ScalaCollider will by default read the environment variable `SC_HOME`. Environment variables are stored depending on your operating system. On OS X, if you use the app-bundle of ScalaCollider-Swing, you can access them from the terminal:
+You might omit to set the `programPath` of the server's configuration, as ScalaCollider will by default read the system property `SC_HOME`, and if that is not set, the environment variable `SC_HOME`. Environment variables are stored depending on your operating system. On OS X, if you use the app-bundle of ScalaCollider-Swing, you can access them from the terminal:
 
     $ touch ~/.MacOSX/environment.plist
     $ open ~/.MacOSX/environment.plist
@@ -94,3 +74,29 @@ The current version can be downloaded from [github.com/Sciss/ScalaCollider](http
 More information is available from the wiki at [github.com/Sciss/ScalaCollider/wiki](http://github.com/Sciss/ScalaCollider/wiki).
 
 A mailing list is available at [groups.google.com/group/scalacollider](http://groups.google.com/group/scalacollider).
+
+### changes
+
+#### changes in v0.32
+
+* OSC array support (e.g. setting multi-channel controls directly in synth instantiation).
+* fix for `SendTrig` argument names
+* elimination of functionally equivalent UGens and removal of no-op subtrees re-enabled
+
+#### changes in v0.31
+
+* `ServerOptions` became `Server.Config`. And a config builder is created via `Server.Config()`. This makes it more regular with the nomenclature of ScalaOSC. Likewise, `ClientOptions` became `Client.Config`.
+* `Server.test` which was originally really meant just for quick testing, was renamed to `Server.run`, because it is generally useful for running a server without caring too much about the booting process.
+
+#### changes in v0.30
+
+__Note:__ There have been made several changes from 0.25 to 0.30...
+
+* To facilitate future graph re-writing, elements are now _lazy_ which means they do not instantly (multi-channel) expand into UGens. The idea is to be able to capture the whole expression tree, which then could be used to transform it, to visualize it (before multi-channel expansion!), to persist it, etc.
+* In the meantime, the UGens themselves are not represented any more by individual classes but only generic classes such as `UGen.SingleOut`. As we expect manipulations to happen at the `GE` level, this keeps the number of classes smaller.
+* The SynthDef creation process is now two staged. The `GE` tree is captured as a `SynthGraph` which in turn expands into a `UGenGraph`.
+* Automatic subtree omission for side-effect-free roots is currently disabled.
+* the implicit conversion to `GraphFunction` has been disabled. so instead of `{ }.play`, use `play { }`
+* Multi-channel nesting and expansion now behaves like in sclang.
+* Recursive graph generation may require type annotations. Specifically all UGen source classes now return the UGen source type itself instead of a generic `GE`, which comes with the need to annotate `var`s in certain cases.
+* Methods `outputs` and `numOutputs` are not available for the lazy graph elements. You can mostly work around this by using special graph elements for channel handling, like `Zip`, `Reduce`, `Splay`, `Mix`, `Flatten`. Method `\` (backslash) is still preserved, but it may change in a future version if it causes problems with graph re-writing. If you really need to re-arrange the channels of an element, you can currently work around this by using the `MapExpanded` element.
