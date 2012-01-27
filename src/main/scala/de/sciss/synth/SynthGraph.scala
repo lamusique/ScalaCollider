@@ -27,8 +27,8 @@ package de.sciss.synth
 
 import java.io.DataOutputStream
 import collection.breakOut
-import collection.mutable.{ Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack, Queue => MQueue }
-import collection.immutable.{ IndexedSeq => IIdxSeq, Set => ISet }
+import collection.mutable.{Buffer => MBuffer, Map => MMap, Set => MSet, Stack => MStack}
+import collection.immutable.{IndexedSeq => IIdxSeq, Set => ISet}
 import ugen.EnvGen
 import sys.error
 

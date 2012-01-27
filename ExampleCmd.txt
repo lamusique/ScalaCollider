@@ -438,8 +438,8 @@ x.free
 
 val df = SynthDef("AnalogBubbles" ) {
     val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(Seq(8, 7.23)).madd(3, 80)).midicps // glissando function
-    CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
-    WrapOut( f, None )
+    val x = CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
+    WrapOut( x, None )
 }
 val f = viewDef( df )
 f.display.setBackground( java.awt.Color.white )
@@ -506,9 +506,11 @@ val hasFreq = pch \ 1
 
 for example:
 
+// WARNING: can produce feedback like tones. turn down the volume first !!!
+
 val x = play {
    val in      = Mix(In.ar(NumOutputBuses.ir + Seq(0, 1)))
-   val amp     = Amplitude.kr(in, 0.05, 0.05)
+   val amp     = Amplitude.kr(in, 0.05, 0.05) * 0.3
    val pch     = Pitch.kr(in, ampThresh = 0.02, median = 7)
    val freq    = pch \ 0
    val hasFreq = pch \ 1
@@ -539,3 +541,34 @@ val x = Synth.play( "multi-con", Seq( "harm" -> Vector( 1f, 3.3f, 4.5f, 7.8f )))
 x.free
 val x = Synth.play( "multi-con", Seq( "harm" -> Vector( 2f, 3f, 4f, 5f )))
 x.free
+
+//////////////////////////////////////////////////////////////////////////
+
+Some translated SC tweets
+
+// quite loud, so let's use a limiter first:
+val lim = play( s, addAction = addToTail ) { ReplaceOut.ar( 0, Limiter.ar( In.ar( 0, 2 ), 0.3 ))}
+// some noise by fredrik olofsson
+val x = play {
+   RHPF.ar(
+      GbmanN.ar( Seq( 2300, 1150 )),
+      LFSaw.ar( Pulse.ar( 4, Seq( 0.125, 0.25 )) + LFPulse.ar( 0.125 ) / 5 + 1 ) + 2
+   )
+}
+
+x release 10
+lim release 10
+
+// ambient by tim walters (added a LeakDC)
+val x = play {
+  GVerb.ar( LeakDC.ar(
+     Mix.tabulate( 16 ) { k =>
+        Mix.tabulate( 6 ) { i =>
+           val x = Impulse.kr( 0.5.pow( i ) / k )
+           SinOsc.ar( i, SinOsc.ar( (i + k).pow( i )) / (Decay.kr( x, Seq( i, i + 1 )) * k ))
+        }
+     }
+  ), roomSize = 1 ) / 384
+}
+
+x release 10

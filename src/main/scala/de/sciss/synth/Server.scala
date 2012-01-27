@@ -49,55 +49,257 @@ object Server {
    def defaultProgramPath = new File( sys.props.getOrElse( "SC_HOME", sys.env.getOrElse( "SC_HOME", "" )),
                                       "scsynth" ).getAbsolutePath
 
+   /**
+    * The base trait for `Config` and `ConfigBuilder` describes the settings used to boot scsynth in
+    * realtime or non-realtime mode, as well as its server address and port.
+    *
+    * You obtain a `ConfigBuilder` by calling `Server.Config()`. This builder can then be mutated and
+    * will be implicitly converted to an immutable `Config` when required.
+    *
+    * See `ConfigBuilder` for its default values.
+    *
+    * @see [[de.sciss.synth.Server.ConfigBuilder]]
+    * @see [[de.sciss.synth.Server.Config]]
+    */
    trait ConfigLike {
+      /**
+       * The path to `scsynth`, used when booting a server. This can be either a relative path
+       * (relating to the JVM's working directory), or an absolute path.
+       *
+       * @see [[de.sciss.synth.Server#defaultProgramPath]]
+       */
       def programPath:           String
+
+      /**
+       * The maximum number of control bus channels.
+       */
       def controlBusChannels:    Int
+
+      /**
+       * The maximum number of audio bus channels. This includes the channels connected
+       * to hardware (`outputBusChannels`) as well as all channels for internal routing.
+       */
       def audioBusChannels:      Int
+
+      /**
+       * The number of connected audio hardware output channels. This does not need to
+       * correspond to the actual number of channels your sound card provides, but can
+       * be lower or higher, although a higher value doesn't have any effect as channel
+       * indices above the number of channels of the sound card will be treated as
+       * internal channels.
+       */
       def outputBusChannels:     Int
+
+      /**
+       * The calculation block size. That is, the number of audio samples calculated en-bloc.
+       * This corresponds with the control rate, such that
+       * `controlRate := audioRate / blockSize`. It should be a power of two.
+       */
       def blockSize:             Int
+
+      /**
+       * The audio hardware sampling rate to use. A value of `0` indicates that scsynth
+       * should use the current sampling rate of the audio hardware. An explicit setting
+       * will make scsynth try to switch the sound card's sample rate if necessary.
+       */
       def sampleRate:            Int
+
+      /**
+       * The maximum number of audio buffers (for the `Buffer` class).
+       */
       def audioBuffers:          Int
+
+      /**
+       * The maximum number of concurrent nodes (synths and groups).
+       */
       def maxNodes:              Int
+
+      /**
+       * The maximum number of synth defs.
+       */
       def maxSynthDefs:          Int
+
+      /**
+       * The maximum number of pre-allocated realtime memory in bytes. This memory
+       * is used for many UGens such as `Limiter`, `DelayN` etc. It does not
+       * affect dynamically allocated memory such as audio buffers.
+       */
       def memorySize:            Int
+
+      /**
+       * The maximum number of concurrent connections between UGens in a single synth.
+       * ScalaCollider performs a depth-first topological sorting of the synth defs,
+       * so you should not worry too much about this value. It can become important
+       * in very heavy channel expansions and mixdown.
+       *
+       * This value will be automatically increased if a more complex def is loaded
+       * at startup, but it cannot be increased thereafter without rebooting.
+       */
       def wireBuffers:           Int
+
+      /**
+       * The number of individual random number generators allocated.
+       */
       def randomSeeds:           Int
+
+      /**
+       * Whether scsynth should load synthdefs stored on the harddisk when booted.
+       */
       def loadSynthDefs:         Boolean
+
+      /**
+       * ?
+       */
       def machPortName:          Option[ (String, String) ]
+
+      /**
+       * The verbosity level of scsynth. The standard value is `0`, while
+       * `-1` suppresses informational messages, `-2` also suppresses many error messages.
+       */
       def verbosity:             Int
+
+      /**
+       * An explicit list of paths where DSP plugins are found. Usually this is not
+       * specified, and scsynth looks for plugins in their default location.
+       */
       def plugInsPaths:          List[ String ]
+
+      /**
+       * An option to restrict access to files (e.g. for loading and saving buffers) to
+       * a particular directory. This is a security measure, preventing malicious clients from
+       * accessing parts of the harddisk which they shouldn't.
+       */
       def restrictedPath:        Option[ String ]
-      def memoryLocking:         Boolean
+//      def memoryLocking:         Boolean
 
 //   // client only
 //   def clientID:              Int
 //   def nodeIDOffset:          Int
 
-      // realtime only
+      // ---- realtime only ----
+
+      /**
+       * (Realtime) Host address of scsynth, when trying to `connect` to an already running server on the net.
+       */
       def host:                  String
+
+      /**
+       * (Realtime) UDP or TCP port used by scsynth.
+       */
       def port:                  Int
+
+      /**
+       * (Realtime) Open Sound Control transport used by scsynth. (Either of `UDP` and `TCP`).
+       */
       def transport:             Transport.Net
+
+      /**
+       * (Realtime) An option to enable particular input 'streams' or 'bundles' of a sound card.
+       * This is a 'binary' String made of `'0'` and `'1'` characters.
+       * If the string is `"01100"`, for example, then only the second and third input streams on
+       * the device will be enabled.
+       */
       def inputStreamsEnabled:   Option[ String ]
+
+      /**
+       * (Realtime) An option to enable particular output 'streams' or 'bundles' of a sound card.
+       * This is a 'binary' String made of `'0'` and `'1'` characters.
+       * If the string is `"01100"`, for example, then only the second and third output streams on
+       * the device will be enabled.
+       */
       def outputStreamsEnabled:  Option[ String ]
+
+      /**
+       * (Realtime) An option denoting the name of the sound card to use. On systems which distinguish
+       * input and output devices (OS X), this implies that both are the same. Otherwise, you can
+       * use the `deviceNames` method instead.
+       *
+       * @see deviceNames
+       */
       def deviceName:            Option[ String ]
+
+      /**
+       * (Realtime) An option denoting the name of the input and output sound device to use. This is for
+       * systems which distinguish input and output devices (OS X). If you use a single device both for
+       * input and output (applies to most professional audio interfaces), you can simply use the
+       * single string method `deviceName`.
+       *
+       * @see deviceName
+       */
       def deviceNames:           Option[ (String, String) ]
+
+      /**
+       * (Realtime) The number of connected audio hardware input channels. This does not need to
+       * correspond to the actual number of channels your sound card provides, but can
+       * be lower or higher, although a higher value doesn't have any effect as channel
+       * indices above the number of channels of the sound card will be treated as
+       * internal channels.
+       */
       def inputBusChannels:      Int
+
+      /**
+       * (Realtime) A value to adjust the sound card's hardware block size. Typically you will leave
+       * this to `0` which means that the current block size is used. The block sizes supported depend
+       * on the particular sound card. Lower values decrease latency but may increase CPU load.
+       */
       def hardwareBlockSize:     Int
+
+      /**
+       * (Realtime) Whether to announce scsynth's OSC service via zero conf. See
+       * [[http://en.wikipedia.org/wiki/Zero_configuration_networking Wikipedia]] for more details.
+       */
       def zeroConf:              Boolean
+
+      /**
+       * (Realtime) The maximum number of client connections when using TCP transport.
+       */
       def maxLogins:             Int
+
+      /**
+       * (Realtime) A requires session password when using TCP transport. When using TCP and the password option
+       * is set, each client must send the correct password as the first command to the server, otherwise it is
+       * rejected.
+       */
       def sessionPassword:       Option[ String ]
 
-      // nonrealtime only
+      // ---- nonrealtime only ----
+
+      /**
+       * (Non-Realtime) Path to the binary OSC file.
+       */
       def nrtCommandPath:        String
+      /**
+       * (Non-Realtime) Path to the audio input file used as audio input bus supplement.
+       */
       def nrtInputPath:          Option[ String ]
+      /**
+       * (Non-Realtime) Path to the audio output file used as audio output bus supplement.
+       */
       def nrtOutputPath:         String
+      /**
+       * (Non-Realtime) Audio file format for writing the output.
+       */
       def nrtHeaderFormat:       AudioFileType
+      /**
+       * (Non-Realtime) Audio sample format for writing the output.
+       */
       def nrtSampleFormat:       SampleFormat
 
+      /**
+       * Produces a command line for booting scsynth in realtime mode.
+       */
       final def toRealtimeArgs    : List[ String ] = Config.toRealtimeArgs( this )
+
+      /**
+       * Produces a command line for booting scsynth in non-realtime mode.
+       */
       final def toNonRealtimeArgs : List[ String ] = Config.toNonRealtimeArgs( this )
 
-      final def firstPrivateBus: Int = outputBusChannels + inputBusChannels
+      /**
+       * A utility method providing the audio bus offset for the start of
+       * the internal channels. (simply the sum of `outputBusChannels` and `inputBusChannels`).
+       */
+      final def internalBusIndex: Int = outputBusChannels + inputBusChannels
    }
 
    object Config {
@@ -134,14 +336,12 @@ object Server {
 
        result += o.programPath
        o.transport match {
-          case TCP => {
+          case TCP =>
              result += "-t"
              result += o.port.toString
-          }
-          case UDP => {
+          case UDP =>
              result += "-u"
              result += o.port.toString
-          }
        }
 
        addCommonArgs( o, result )
@@ -158,36 +358,35 @@ object Server {
           result += "-l"
           result += o.maxLogins.toString
        }
-       o.sessionPassword.foreach( pwd => {
+       o.sessionPassword.foreach { pwd =>
           result += "-p"
           result += pwd
-       })
-       o.inputStreamsEnabled.foreach( stream => {
+       }
+       o.inputStreamsEnabled.foreach { stream =>
           result += "-I"
           result += stream
-       })
-       o.outputStreamsEnabled.foreach( stream => {
+       }
+       o.outputStreamsEnabled.foreach { stream =>
           result += "-O"
           result += stream
-       })
+       }
        if( !o.zeroConf ) {
           result += "-R"
           result += "0"
        }
-       o.deviceNames.foreach( tup => {
-          val (inDev, outDev) = tup
+       o.deviceNames.foreach { case (inDev, outDev) =>
           result += "-H"
-          result += tup._1
-          result += tup._2
-       })
-       o.deviceName.foreach( n => {
+          result += inDev
+          result += outDev
+       }
+       o.deviceName.foreach { n =>
           result += "-H"
           result += n
-       })
-       o.restrictedPath.foreach( path => {
+       }
+       o.restrictedPath.foreach { path =>
           result += "-P"
           result += path
-       })
+       }
 
        result.toList
     }
@@ -241,11 +440,11 @@ object Server {
           result += "-D"
           result += "0"
        }
-       o.machPortName.foreach( tup => {
+       o.machPortName.foreach { case (send, reply) =>
           result += "-M"
-          result += tup._1
-          result += tup._2
-       })
+          result += send
+          result += reply
+       }
        if( o.verbosity != 0 ) {
           result += "-v"
           result += o.verbosity.toString
@@ -254,17 +453,22 @@ object Server {
           result += "-U"
           result += o.plugInsPaths.mkString( ":" )
        }
-       if( o.memoryLocking ) {
-          result += "-L"
-       }
+//       if( o.memoryLocking ) {
+//          result += "-L"
+//       }
     }
    }
+
+   /**
+    * @see [[de.sciss.synth.Server.ConfigBuilder]]
+    * @see [[de.sciss.synth.Server.ConfigLike]]
+    */
    final class Config private[Server]( val programPath: String, val controlBusChannels: Int, val audioBusChannels: Int,
                        val outputBusChannels: Int, val blockSize: Int, val sampleRate: Int, val audioBuffers: Int,
                        val maxNodes: Int, val maxSynthDefs: Int, val memorySize: Int, val wireBuffers: Int,
                        val randomSeeds: Int, val loadSynthDefs: Boolean, val machPortName: Option[ (String, String) ],
                        val verbosity: Int, val plugInsPaths: List[ String ], val restrictedPath: Option[ String ],
-                       val memoryLocking: Boolean, val host: String, val port: Int, val transport: Transport.Net,
+                       /* val memoryLocking: Boolean, */ val host: String, val port: Int, val transport: Transport.Net,
                        val inputStreamsEnabled: Option[ String ], val outputStreamsEnabled: Option[ String ],
                        val deviceNames: Option[ (String, String) ], val deviceName: Option[ String ],
                        val inputBusChannels: Int,
@@ -277,38 +481,122 @@ object Server {
       override def toString = "ServerOptions"
    }
 
+   /**
+    * @see [[de.sciss.synth.Server.Config]]
+    * @see [[de.sciss.synth.Server.ConfigLike]]
+    */
   final class ConfigBuilder private[Server] () extends ConfigLike {
+     /**
+      * The default `programPath` is read from `defaultProgramPath`
+      *
+      * @see [[de.sciss.synth.Server#defaultProgramPath]]
+      */
      var programPath:           String                     = defaultProgramPath
+     /**
+      * The default number of control bus channels is `4096` (scsynth default)
+      */
      var controlBusChannels:    Int                        = 4096
+     /**
+      * The default number of audio bus channels is `128` (scsynth default)
+      */
      var audioBusChannels:      Int                        = 128
+     /**
+      * The default number of output bus channels is `8` (scsynth default)
+      */
      var outputBusChannels:     Int                        = 8
+     /**
+      * The default calculation block size is `64` (scsynth default)
+      */
      var blockSize:             Int                        = 64
+     /**
+      * The default sample rate is `0` (meaning that it is adjusted to
+      * the sound card's current rate; scsynth default)
+      */
      var sampleRate:            Int                        = 0
+     /**
+      * The default number of audio buffers is `1024` (scsynth default)
+      */
      var audioBuffers:          Int                        = 1024
+     /**
+      * The default maximum number of nodes is `1024` (scsynth default)
+      */
      var maxNodes:              Int                        = 1024
+     /**
+      * The default maximum number of synth defs is `1024` (scsynth default)
+      */
      var maxSynthDefs:          Int                        = 1024
-     var memorySize:            Int                        = 8192
-     var wireBuffers:           Int                        = 64
+     /**
+      * The default memory size is `65536` (64 KB) (higher than scsynth's default of 8 KB)
+      */
+     var memorySize:            Int                        = 65536 // 8192
+     /**
+      * The default number of wire buffers is `256` (higher than scsynth's default of `64`).
+      */
+     var wireBuffers:           Int                        = 256 // 64
+     /**
+      * The default number of random number generators is `64` (scsynth default)
+      */
      var randomSeeds:           Int                        = 64
+     /**
+      * The default setting for loading synth defs is `true` (scsynth default)
+      */
      var loadSynthDefs:         Boolean                    = true
+     /**
+      * The default settings for mach port name is `None` (scsynth default)
+      */
      var machPortName:          Option[ (String, String) ] = None
+     /**
+      * The default verbosity level is `0` (scsynth default)
+      */
      var verbosity:             Int                        = 0
+     /**
+      * The default setting for plugin path redirection is `Nil`
+      * (use standard paths; scsynth default)
+      */
      var plugInsPaths:          List[ String ]             = Nil
+     /**
+      * The default setting for restricting file access is `None` (scsynth default)
+      */
      var restrictedPath:        Option[ String ]           = None
-     var memoryLocking:         Boolean                    = false
+
+//     var memoryLocking:         Boolean                    = false
 
 //   // client only
 //   var clientID:              Int                        = 0
 //   var nodeIDOffset:          Int                        = 1000
 
-     // realtime only
+     // ---- realtime only ----
+
+     /**
+      * (Realtime) The default host name is `127.0.0.1`
+      */
      var host:                  String                     = "127.0.0.1"
+     /**
+      * (Realtime) The default port is `57110`.
+      */
      var port:                  Int                        = 57110
+     /**
+      * (Realtime) The default transport is `UDP`.
+      */
      var transport:             Transport.Net              = UDP
+     /**
+      * (Realtime) The default settings for enabled input streams is `None`
+      */
      var inputStreamsEnabled:   Option[ String ]           = None
+     /**
+      * (Realtime) The default settings for enabled output streams is `None`
+      */
      var outputStreamsEnabled:  Option[ String ]           = None
 
+     /**
+      * (Realtime) The default device name is `None` (scsynth default; it will
+      * use the system default sound card)
+      */
      private var deviceNameVar:  Option[ String ] = None
+     /**
+      * (Realtime) The default input/output device names is `None` (scsynth default; it will
+      * use the system default sound card)
+      */
      private var deviceNamesVar: Option[ (String, String) ] = None
 
      def deviceName:            Option[ String ]           = deviceNameVar
@@ -322,13 +610,32 @@ object Server {
         if( value.isDefined ) deviceNameVar = None
      }
 
+     /**
+      * (Realtime) The default number of input bus channels is `8` (scsynth default)
+      */
      var inputBusChannels:      Int                        = 8
+     /**
+      * (Realtime) The default setting for hardware block size is `0` (meaning that
+      * scsynth uses the hardware's current block size; scsynth default)
+      */
      var hardwareBlockSize:     Int                        = 0
-     var zeroConf:              Boolean                    = true
+     /**
+      * (Realtime) The default setting for zero-conf is `false` (other than
+      * scsynth's default which is `true`)
+      */
+     var zeroConf:              Boolean                    = false // true
+     /**
+      * (Realtime) The maximum number of TCP clients is `64` (scsynth default)
+      */
      var maxLogins:             Int                        = 64
+     /**
+      * (Realtime) The default TCP session password is `None`
+      */
      var sessionPassword:       Option[ String ]           = None
 
-     // nonrealtime only
+     // ---- nonrealtime only ----
+
+
      var nrtCommandPath:        String                     = ""
      var nrtInputPath:          Option[ String ]           = None
      var nrtOutputPath:         String                     = ""
@@ -371,7 +678,7 @@ object Server {
      def build : Config = new Config(
         programPath, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
         maxNodes, maxSynthDefs, memorySize, wireBuffers, randomSeeds, loadSynthDefs, machPortName, verbosity,
-        plugInsPaths, restrictedPath, memoryLocking, host, port, transport, inputStreamsEnabled, outputStreamsEnabled,
+        plugInsPaths, restrictedPath, /* memoryLocking, */ host, port, transport, inputStreamsEnabled, outputStreamsEnabled,
         deviceNames, deviceName, inputBusChannels, hardwareBlockSize, zeroConf, maxLogins, sessionPassword,
         nrtCommandPath,
         nrtInputPath, nrtOutputPath, nrtHeaderFormat, nrtSampleFormat )
@@ -877,7 +1184,7 @@ extends ServerLike {
 
    object busses {
       private val controlAllocator = new ContiguousBlockAllocator( config.controlBusChannels )
-      private val audioAllocator = new ContiguousBlockAllocator( config.audioBusChannels, config.firstPrivateBus )
+      private val audioAllocator = new ContiguousBlockAllocator( config.audioBusChannels, config.internalBusIndex )
 
       def allocControl( numChannels: Int ) = controlAllocator.alloc( numChannels )
       def allocAudio( numChannels: Int ) = audioAllocator.alloc( numChannels )

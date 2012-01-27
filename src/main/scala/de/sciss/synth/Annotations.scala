@@ -75,6 +75,8 @@ trait IsIndividual {
 //   override def hashCode() = super.hashCode()
 //}
 
+//trait IsControl extends HasSideEffect
+
 trait UsesRandSeed extends IsIndividual {
 //   me: MaybeIndividual =>
 }

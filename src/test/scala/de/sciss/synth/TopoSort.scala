@@ -16,4 +16,11 @@ object TopoSort extends App {
         },
      roomSize = 1 ) / 512
    )}
+
+   val df2 = SynthDef( "error" ) {
+      val x = "x".ar
+      Out.ar( 0, x )
+   }
+
+   println( df2 )
 }

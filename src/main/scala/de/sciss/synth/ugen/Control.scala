@@ -28,10 +28,6 @@ package ugen
 
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
-/**
- *    @version 0.12, 17-May-10
- */
-
 // ---------- Control ----------
 
 object Control {
@@ -45,11 +41,14 @@ object Control {
    def ir( values: Float* ) : Control = ir( IIdxSeq( values: _* ))
    def kr( values: Float* ) : Control = kr( IIdxSeq( values: _* ))
 
+   // side-effect: receiving messages from clients!
+   // and more importantly: control ugens created from proxies are not wired, so they would
+   // be eliminated if side-effect was false!!!
    final class UGen private[ugen]( rate: Rate, numChannels: Int, override val specialIndex: Int )
-   extends UGen.MultiOut( "Control", rate, IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty )
+   extends UGen.MultiOut( "Control", rate, IIdxSeq.fill( numChannels )( rate ), IIdxSeq.empty, false, true )
 }
 final case class Control( rate: Rate, values: IIdxSeq[ Float ], ctrlName: Option[ String ])
-extends UGenSource.MultiOut( "Control" /*, values.size */) {
+extends UGenSource.MultiOut( "Control" /*, values.size */) /* with IsControl */ {
 //def numOutputs = values.size
    protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
 
@@ -73,10 +72,10 @@ object TrigControl {
    def kr( values: Float* ) : TrigControl = kr( IIdxSeq( values: _* ))
 
    final class UGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-   extends UGen.MultiOut( "TrigControl", control, IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty )
+   extends UGen.MultiOut( "TrigControl", control, IIdxSeq.fill( numChannels )( control ), IIdxSeq.empty, false, true )
 }
 final case class TrigControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ])
-extends UGenSource.MultiOut( "TrigControl" /*, values.size */) with ControlRated {
+extends UGenSource.MultiOut( "TrigControl" /*, values.size */) with ControlRated /* with IsControl */ {
 //def numOutputs = values.size
    protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
 
@@ -102,10 +101,10 @@ object AudioControl {
    def ar( values: Float* ) : AudioControl = ar( IIdxSeq( values: _* ))
 
    final class UGen private[ugen]( numChannels: Int, override val specialIndex: Int )
-   extends UGen.MultiOut( "AudioControl", audio, IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty )
+   extends UGen.MultiOut( "AudioControl", audio, IIdxSeq.fill( numChannels )( audio ), IIdxSeq.empty, false, true )
 }
 final case class AudioControl( values: IIdxSeq[ Float ], ctrlName: Option[ String ])
-extends UGenSource.MultiOut( "AudioControl" /*, values.size */) with AudioRated {
+extends UGenSource.MultiOut( "AudioControl" /*, values.size */) with AudioRated /* with IsControl */ {
 //def numOutputs = values.size
    protected def makeUGens : UGenInLike = makeUGen( IIdxSeq.empty )
    protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
