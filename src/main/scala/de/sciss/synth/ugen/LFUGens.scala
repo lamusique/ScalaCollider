@@ -240,14 +240,14 @@ final case class DC(rate: Rate, in: GE) extends UGenSource.MultiOut("DC") {
    protected def makeUGens: UGenInLike = unwrap(in.expand.outputs)
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(_args.size)(rate), _args)
 }
-object Silent {
-   def ar: Silent = ar()
-   def ar(numChannels: Int = 1) = apply(numChannels)
-}
-final case class Silent(numChannels: Int) extends UGenSource.MultiOut("Silent") with AudioRated {
-   protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
-}
+//object Silent {
+//   def ar: Silent = ar()
+//   def ar(numChannels: Int = 1) = apply(numChannels)
+//}
+//final case class Silent(numChannels: Int) extends UGenSource.MultiOut("Silent") with AudioRated {
+//   protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+//   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
+//}
 /**
  * A line generator UGen that moves from a start value to the end value in a given duration.
  * 

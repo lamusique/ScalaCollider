@@ -44,12 +44,14 @@ private[synth] object UGenHelper {
       if( numZeroes == 0 ) {
          ins
       } else {
+         // WARNING: Silent has been removed now from scsynth !!!
 //         val silent = Silent.ar( numZeroes ).outputs.iterator
-         val silent = new UGen.MultiOut( "Silent", audio, IIdxSeq.fill( numZeroes )( audio ), IIdxSeq.empty ).outputs.iterator
-         ins map (in => in match {
-            case Constant( 0 )   => silent.next()
-            case _               => in
-         })
+//         val silent = new UGen.MultiOut( "Silent", audio, IIdxSeq.fill( numZeroes )( audio ), IIdxSeq.empty ).outputs.iterator
+         val silent = new UGen.MultiOut( "DC", audio, IIdxSeq( audio ), IIdxSeq( Constant( 0 ))).outputs.head
+         ins.map {
+            case Constant( 0 )   => silent // .next()
+            case x               => x
+         }
       }
    }
 }
