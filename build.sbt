@@ -1,6 +1,6 @@
 name := "scalacollider"
 
-version := "0.33-SNAPSHOT"
+version := "0.33"
 
 organization := "de.sciss"
 
@@ -23,26 +23,44 @@ scalacOptions ++= Seq( "-deprecation", "-unchecked" )
 
 // ---- console ----
 
-initialCommands in console := """import de.sciss.synth._; import ugen._; var s: Server = null; def boot = Server.run( s = _ )"""
+initialCommands in console := """import de.sciss.osc; import de.sciss.synth.{ osc => sosc, _ }; import ugen._; var s: Server = null; def boot = Server.run( s = _ )"""
 
 // ---- publishing ----
 
+publishMavenStyle := true
+
+// publishTo <<= version { (v: String) =>
+//    Some( "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/".+(
+//       if( v.endsWith( "-SNAPSHOT")) "snapshots/" else "releases/"
+//    ))
+// }
+
 publishTo <<= version { (v: String) =>
-   Some( "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/".+(
-      if( v.endsWith( "-SNAPSHOT")) "snapshots/" else "releases/"
-   ))
+   Some( if( v.endsWith( "-SNAPSHOT" ))
+      "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+   else
+      "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+   )
 }
 
-pomExtra :=
-<licenses>
-  <license>
-    <name>GPL v2+</name>
-    <url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
-    <distribution>repo</distribution>
-  </license>
-</licenses>
+publishArtifact in Test := false
 
-credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+pomIncludeRepository := { _ => false }
+
+pomExtra :=
+<scm>
+  <url>git@github.com:Sciss/Strugatzki.git</url>
+  <connection>scm:git:git@github.com:Sciss/Strugatzki.git</connection>
+</scm>
+<developers>
+   <developer>
+      <id>sciss</id>
+      <name>Hanns Holger Rutz</name>
+      <url>http://www.sciss.de</url>
+   </developer>
+</developers>
+
+// credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 // ---- disable scaladoc generation during development phase ----
 
