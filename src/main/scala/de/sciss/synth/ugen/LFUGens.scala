@@ -401,64 +401,6 @@ final case class LinExp(rate: MaybeRate, in: GE, srcLo: GE, srcHi: GE, dstLo: GE
       new UGen.SingleOut(name, _rate, _args)
    }
 }
-/**
- * A UGen which maps a linear range to another linear range.
- * The equivalent formula is `(in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo`.
- * 
- * '''Note''': No clipping is performed. If the input signal exceeds the input range, the output will also exceed its range.
- * 
- * @see [[de.sciss.synth.ugen.LinExp]]
- * @see [[de.sciss.synth.ugen.Clip]]
- */
-object LinLin {
-   
-   /**
-    * @param in              The input signal to convert.
-    * @param srcLo           The lower limit of input range.
-    * @param srcHi           The upper limit of input range.
-    * @param dstLo           The lower limit of output range.
-    * @param dstHi           The upper limit of output range.
-    */
-   def ir(in: GE, srcLo: GE = 0.0f, srcHi: GE = 1.0f, dstLo: GE = 0.0f, dstHi: GE = 1.0f) = apply(scalar, in, srcLo, srcHi, dstLo, dstHi)
-   /**
-    * @param in              The input signal to convert.
-    * @param srcLo           The lower limit of input range.
-    * @param srcHi           The upper limit of input range.
-    * @param dstLo           The lower limit of output range.
-    * @param dstHi           The upper limit of output range.
-    */
-   def kr(in: GE, srcLo: GE = 0.0f, srcHi: GE = 1.0f, dstLo: GE = 0.0f, dstHi: GE = 1.0f) = apply(control, in, srcLo, srcHi, dstLo, dstHi)
-   /**
-    * @param in              The input signal to convert.
-    * @param srcLo           The lower limit of input range.
-    * @param srcHi           The upper limit of input range.
-    * @param dstLo           The lower limit of output range.
-    * @param dstHi           The upper limit of output range.
-    */
-   def ar(in: GE, srcLo: GE = 0.0f, srcHi: GE = 1.0f, dstLo: GE = 0.0f, dstHi: GE = 1.0f) = apply(audio, in, srcLo, srcHi, dstLo, dstHi)
-}
-/**
- * A UGen which maps a linear range to another linear range.
- * The equivalent formula is `(in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo`.
- * 
- * '''Note''': No clipping is performed. If the input signal exceeds the input range, the output will also exceed its range.
- * 
- * @param in              The input signal to convert.
- * @param srcLo           The lower limit of input range.
- * @param srcHi           The upper limit of input range.
- * @param dstLo           The lower limit of output range.
- * @param dstHi           The upper limit of output range.
- * 
- * @see [[de.sciss.synth.ugen.LinExp]]
- * @see [[de.sciss.synth.ugen.Clip]]
- */
-final case class LinLin(rate: MaybeRate, in: GE, srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE) extends UGenSource.SingleOut("LinLin") {
-   protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, srcLo.expand, srcHi.expand, dstLo.expand, dstHi.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
-      val _rate = rate.?|(_args(0).rate)
-      new UGen.SingleOut(name, _rate, _args)
-   }
-}
 object EnvGen {
    def kr(envelope: GE, gate: GE = 1.0f, levelScale: GE = 1.0f, levelBias: GE = 0.0f, timeScale: GE = 1.0f, doneAction: GE = doNothing) = apply(control, envelope, gate, levelScale, levelBias, timeScale, doneAction)
    def ar(envelope: GE, gate: GE = 1.0f, levelScale: GE = 1.0f, levelBias: GE = 0.0f, timeScale: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, envelope, gate, levelScale, levelBias, timeScale, doneAction)

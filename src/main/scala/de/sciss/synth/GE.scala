@@ -353,7 +353,7 @@ trait GE /* extends GEIn */ {
 // def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
 
    def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
-      LinLin( rate, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+      LinLin( /* rate, */ this, srcLo, srcHi, dstLo, dstHi )
 
    def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
       LinExp( rate, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX

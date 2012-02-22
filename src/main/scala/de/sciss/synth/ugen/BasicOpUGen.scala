@@ -39,7 +39,7 @@ final case class MulAdd( /* rate: MaybeRate, */ in: GE, mul: GE, add: GE )
 extends UGenSource.SingleOut( "MulAdd" ) {
    protected def makeUGens : UGenInLike = unwrap( IIdxSeq( in.expand, mul.expand, add.expand ))
 
-   def rate: MaybeRate = in.rate
+   def rate: MaybeRate = in.rate // XXX correct?
 
    protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
       val in0  = args(0)

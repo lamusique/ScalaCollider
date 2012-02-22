@@ -233,3 +233,109 @@ extends GE.Lazy {
       mix.expand
    }
 }
+
+/**
+ * A graph element which maps a linear range to another linear range.
+ * The equivalent formula is `(in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo`.
+ *
+ * '''Note''': No clipping is performed. If the input signal exceeds the input range, the output will also exceed its range.
+ *
+ * @param in              The input signal to convert.
+ * @param srcLo           The lower limit of input range.
+ * @param srcHi           The upper limit of input range.
+ * @param dstLo           The lower limit of output range.
+ * @param dstHi           The upper limit of output range.
+ *
+ * @see [[de.sciss.synth.ugen.LinExp]]
+ * @see [[de.sciss.synth.ugen.Clip]]
+ */
+final case class LinLin( /* rate: MaybeRate, */ in: GE, srcLo: GE = 0f, srcHi: GE = 1f, dstLo: GE = 0f, dstHi: GE = 1f )
+extends GE.Lazy {
+   def displayName = "LinLin"
+
+   def rate: MaybeRate = in.rate // XXX correct?
+
+   protected def makeUGens : UGenInLike = {
+      val scale  = (dstHi - dstLo) / (srcHi - srcLo)
+      val offset = dstLo - (scale * srcLo)
+      MulAdd( in, scale, offset ).expand
+   }
+}
+
+object Silent {
+   def ar: Silent = ar()
+   def ar( numChannels: Int = 1 ) = apply( numChannels )
+}
+final case class Silent( numChannels: Int ) extends GE.Lazy with AudioRated {
+   def displayName = "Silent"
+
+   protected def makeUGens: UGenInLike = {
+      val dc = DC.ar( 0 )
+      val ge: GE = if( numChannels == 1 ) dc else Seq.fill( numChannels )( dc )
+      ge.expand
+   }
+}
+
+/**
+ * A graph element which reads from a connected sound driver input. This is a convenience
+ * element for accessing physical input signals, e.g. from a microphone connected to your
+ * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
+ */
+object PhysicalIn {
+   /**
+    * Short cut for reading a mono signal from the first physical input
+    */
+   def ar : PhysicalIn = ar()
+   /**
+    * @param bus           the physical index to read from (beginning at zero which corresponds to
+                           the first channel of the audio interface or sound driver)
+    * @param numChannels   the number of consecutive channels to read
+    */
+   def ar( bus: GE = 0, numChannels: Int = 1 ) : PhysicalIn = apply( Seq( (bus, numChannels) ))
+//   def apply( index: GE, moreIndices: GE* ) : PhysicalIn = apply( (index +: moreIndices).map( (_, 1) ): _* )
+}
+/**
+ * A graph element which reads from a connected sound driver input. This is a convenience
+ * element for accessing physical input signals, e.g. from a microphone connected to your
+ * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
+ *
+ * @param pairs   pairs of channel indices and number of channels which will be concatenated. As with the `ar`
+ *                method, indices start at zero which corresponds to the first channel of the audio interface.
+ *                For example, consider an audio interface with channels 1 to 8 being analog line inputs,
+ *                channels 9 and 10 being AES/EBU and channels 11 to 18 being ADAT inputs. To read a combination
+ *                of the analog and ADAT inputs, the `pairs` would be the `Seq( (0, 8), (10, 8) )`.
+ */
+final case class PhysicalIn( pairs: Seq[ (GE, Int) ]) extends GE.Lazy with AudioRated {
+   def displayName = "PhyiscalIn"
+
+   protected def makeUGens: UGenInLike = {
+      val offset = NumOutputBuses.ir
+      Flatten( pairs.map { case (index, numChannels) => In.ar( index + offset, numChannels )}).expand
+   }
+}
+
+object PhysicalOut {
+   /**
+    * @param bus           the physical index to write to (beginning at zero which corresponds to
+                           the first channel of the audio interface or sound driver)
+    * @param in            the signal to write
+    */
+   def ar( bus: GE = 0, in: GE ) : PhysicalOut = apply( Seq( bus ), in )
+}
+final case class PhysicalOut( indices: Seq[ GE ], in: GE ) extends UGenSource.ZeroOut( "PhyiscalOut" ) with AudioRated {
+//   def displayName = "PhyiscalOut"
+
+   protected def makeUGens {
+      val chans = in.expand.outputs
+      indices.dropRight( 1 ).zip( chans ).foreach { case (index, sig) =>
+         Out.ar( index, sig )
+      }
+      (indices.lastOption, chans.drop( indices.size - 1 )) match {
+         case (Some( index ), sig) if( sig.nonEmpty ) =>
+            Out.ar( index, sig )
+         case _ =>
+      }
+   }
+
+   protected def makeUGen( args: IIdxSeq[ UGenIn ]) {}   // XXX not used, ugly
+}

@@ -18,19 +18,6 @@ Targets for sbt:
 
 Running `sbt update` should download all the dependencies from scala-tools.org (In the course of the next half year, we will migrate to Sonatype).
 
-### creating an IntelliJ IDEA project
-
-The IDEA project files have now been removed from the git repository, but they can be easily recreated, given that you have installed the sbt-idea plugin. If you haven't yet, create the following contents in `~/.sbt/plugins/build.sbt`:
-
-    resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
-    
-    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
-
-Then to create the IDEA project, run the following two commands from the xsbt shell:
-
-    > set ideaProjectName := "ScalaCollider"
-    > gen-idea
-
 ### starting a SuperCollider server
 
 The following short example illustrates how a server can be launched and a synth played:
@@ -67,6 +54,19 @@ On the other hand, if you run ScalaCollider from a Bash terminal, you instead ed
 
 For more sound examples, see `ExampleCmd.txt`. There is also an introductory video for the [Swing frontend](http://github.com/Sciss/ScalaColliderSwing) at [www.screencast.com/t/YjUwNDZjMT](http://www.screencast.com/t/YjUwNDZjMT).
 
+### creating an IntelliJ IDEA project
+
+If you want to develop the sources of ScalaCollider, the recommended way is to use IntelliJ IDEA. To create the project files, proceed as follows. If you have not installed the sbt-idea plugin yet, create the following contents in `~/.sbt/plugins/build.sbt`:
+
+    resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
+
+    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
+
+Then to create the IDEA project, run the following two commands from the xsbt shell:
+
+    > set ideaProjectName := "ScalaCollider"
+    > gen-idea
+
 ### download and resources
 
 The current version can be downloaded from [github.com/Sciss/ScalaCollider](http://github.com/Sciss/ScalaCollider).
@@ -77,11 +77,16 @@ A mailing list is available at [groups.google.com/group/scalacollider](http://gr
 
 ### changes
 
+#### changes in v0.33
+
+* fix for `LinLin` UGen removed from SuperCollider.
+
 #### changes in v0.32
 
 * OSC array support (e.g. setting multi-channel controls directly in synth instantiation).
 * fix for `SendTrig` argument names
 * elimination of functionally equivalent UGens and removal of no-op subtrees re-enabled
+* fix for `Silent` UGen removed from SuperCollider.
 
 #### changes in v0.31
 
