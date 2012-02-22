@@ -287,11 +287,22 @@ object PhysicalIn {
     */
    def ar : PhysicalIn = ar()
    /**
-    * @param bus           the physical index to read from (beginning at zero which corresponds to
-                           the first channel of the audio interface or sound driver)
-    * @param numChannels   the number of consecutive channels to read
+    * @param indices       the physical index to read from (beginning at zero which corresponds to
+    *                      the first channel of the audio interface or sound driver). Maybe be a
+    *                      multichannel element to specify discrete indices.
+    * @param numChannels   the number of consecutive channels to read. For discrete indices this
+    *                      applies to each index!
     */
-   def ar( bus: GE = 0, numChannels: Int = 1 ) : PhysicalIn = apply( Seq( (bus, numChannels) ))
+   def ar( indices: GE = 0, numChannels: Int = 1 ) : PhysicalIn = apply( indices, Seq( numChannels ))
+
+   /**
+    * @param indices       the physical index to read from (beginning at zero which corresponds to
+    *                      the first channel of the audio interface or sound driver). Maybe be a
+    *                      multichannel element to specify discrete indices.
+    * @param numChannels   the number of consecutive channels to read for each index. Wraps around
+    *                      if the sequence has less elements than indices has channels.
+    */
+   def ar( indices: GE, numChannels: Seq[ Int ]) : PhysicalIn = apply( indices, numChannels )
 //   def apply( index: GE, moreIndices: GE* ) : PhysicalIn = apply( (index +: moreIndices).map( (_, 1) ): _* )
 }
 /**
@@ -299,38 +310,71 @@ object PhysicalIn {
  * element for accessing physical input signals, e.g. from a microphone connected to your
  * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
  *
- * @param pairs   pairs of channel indices and number of channels which will be concatenated. As with the `ar`
- *                method, indices start at zero which corresponds to the first channel of the audio interface.
- *                For example, consider an audio interface with channels 1 to 8 being analog line inputs,
- *                channels 9 and 10 being AES/EBU and channels 11 to 18 being ADAT inputs. To read a combination
- *                of the analog and ADAT inputs, the `pairs` would be the `Seq( (0, 8), (10, 8) )`.
+ * For example, consider an audio interface with channels 1 to 8 being analog line inputs,
+ * channels 9 and 10 being AES/EBU and channels 11 to 18 being ADAT inputs. To read a combination
+ * of the analog and ADAT inputs, either of the following statement can be used:
+ *
+ * {{{
+ * PhysicalIn( Seq( 0, 8 ), Seq( 8, 8 ))
+ * PhysicalIn( Seq( 0, 8 ), Seq( 8 ))      // numChannels wraps!
+ * }}}
+ *
+ * @param indices       the physical index to read from (beginning at zero which corresponds to
+ *                      the first channel of the audio interface or sound driver). Maybe be a
+ *                      multichannel element to specify discrete indices.
+ * @param numChannels   the number of consecutive channels to read for each index. Wraps around
+ *                      if the sequence has less elements than indices has channels.
  */
-final case class PhysicalIn( pairs: Seq[ (GE, Int) ]) extends GE.Lazy with AudioRated {
+final case class PhysicalIn( indices: GE, numChannels: Seq[ Int ]) extends GE.Lazy with AudioRated {
    def displayName = "PhyiscalIn"
 
    protected def makeUGens: UGenInLike = {
-      val offset = NumOutputBuses.ir
-      Flatten( pairs.map { case (index, numChannels) => In.ar( index + offset, numChannels )}).expand
+      val offset        = NumOutputBuses.ir
+      val _indices      = indices.expand.outputs
+      val iNumCh        = numChannels.toIndexedSeq
+      val _numChannels  = if( _indices.size <= iNumCh.size ) iNumCh else {
+         IIdxSeq.tabulate( _indices.size )( ch => iNumCh( ch % iNumCh.size ))
+      }
+
+      Flatten( (_indices zip _numChannels).map {
+         case (index, num) => In.ar( index + offset, num )
+      }).expand
    }
 }
 
+/**
+ * A graph element which writes to a connected sound driver output. This is a convenience
+ * element for `Out` with the ability to povide a set of discrete indices to which
+ * corresponding channels of the input signal are mapped, whereas multichannel expansion
+ * with respect to the index argument of `Out` typically do not achieve what you expect.
+ *
+ * For example, to flip left and right when writing a stereo signal:
+ *
+ * {{{
+ * // sine appears on the right channel, and noise on the left
+ * play { PhysicalOut( Seq( 1, 0 ), Seq( SinOsc.ar * LFPulse.ar(4), WhiteNoise.ar ) * 0.2 )}
+ * }}}
+ */
 object PhysicalOut {
    /**
-    * @param bus           the physical index to write to (beginning at zero which corresponds to
-                           the first channel of the audio interface or sound driver)
+    * @param indices       the physical index to write to (beginning at zero which corresponds to
+    *                      the first channel of the audio interface or sound driver). may be a
+    *                      multichannel argument to specify discrete channels. In this case, any
+    *                      remaining channels in `in` are associated with the last bus index offset.
     * @param in            the signal to write
     */
-   def ar( bus: GE = 0, in: GE ) : PhysicalOut = apply( Seq( bus ), in )
+   def ar( indices: GE = 0, in: GE ) : PhysicalOut = apply( indices, in )
 }
-final case class PhysicalOut( indices: Seq[ GE ], in: GE ) extends UGenSource.ZeroOut( "PhyiscalOut" ) with AudioRated {
+final case class PhysicalOut( indices: GE, in: GE ) extends UGenSource.ZeroOut( "PhyiscalOut" ) with AudioRated {
 //   def displayName = "PhyiscalOut"
 
    protected def makeUGens {
-      val chans = in.expand.outputs
-      indices.dropRight( 1 ).zip( chans ).foreach { case (index, sig) =>
+      val _in        = in.expand.outputs
+      val _indices   = indices.expand.outputs
+      _indices.dropRight( 1 ).zip( _in ).foreach { case (index, sig) =>
          Out.ar( index, sig )
       }
-      (indices.lastOption, chans.drop( indices.size - 1 )) match {
+      (_indices.lastOption, _in.drop( _indices.size - 1 )) match {
          case (Some( index ), sig) if( sig.nonEmpty ) =>
             Out.ar( index, sig )
          case _ =>
