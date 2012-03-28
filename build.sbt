@@ -64,7 +64,7 @@ pomExtra :=
 
 // ---- disable scaladoc generation during development phase ----
 
-publishArtifact in (Compile, packageDoc) := false
+// publishArtifact in (Compile, packageDoc) := false
 
 // ---- ls.implicit.ly ----
 
