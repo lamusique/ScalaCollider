@@ -88,7 +88,7 @@ sealed trait ControlFactoryLike[ T ] {
    def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ]
 }
 
-abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends ControlFactoryLike[ T ] {
+abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends ControlFactoryLike[ T ] with Serializable {
    def build( b: UGenGraphBuilder, proxies: T* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {
@@ -107,7 +107,7 @@ abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends C
    protected def makeUGen( numChannels: Int, specialIndex: Int ) : UGen
 }
 
-sealed trait ControlProxyLike[ Impl ] extends GE /* extends RatedGE[ U ] */ {
+sealed trait ControlProxyLike[ Impl ] extends GE {
 //   def values: IIdxSeq[ Float ]
    def rate: Rate
    def factory: ControlFactoryLike[ Impl ]
