@@ -248,7 +248,7 @@ object Constant {
  *    These constants are stored in a separate table of
  *    the synth graph.
  */
-final case class Constant( value: Float ) extends GE with UGenIn {
+final case class Constant( value: Float ) extends /* GE with */ UGenIn {
    import Constant._
 
    override def toString = value.toString

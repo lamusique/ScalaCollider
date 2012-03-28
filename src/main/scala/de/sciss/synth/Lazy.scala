@@ -47,6 +47,6 @@ object Lazy {
 //   }
 }
 
-trait Lazy {
+trait Lazy extends Serializable {
    def force( b: UGenGraphBuilder ) : Unit
 }
