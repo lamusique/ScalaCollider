@@ -77,7 +77,7 @@ object UnaryOp {
 
    import RichNumber._
 
-   sealed abstract class Op( val id: Int ) {
+   sealed abstract class Op( val id: Int ) extends Serializable {
       def make( a: GE ) = UnaryOp( /* a.rate, */ this, a )
       protected[synth] def make1( a: UGenIn ) : UGenIn = a match {
          case c(f)   => c( make1( f ))
@@ -261,7 +261,7 @@ extends UGen.SingleOut( "UnaryOpUGen", a.rate, IIdxSeq( a )) {
 object BinaryOp {
    binop =>
 
-   sealed abstract class Op( val id: Int ) {
+   sealed abstract class Op( val id: Int ) extends Serializable {
       op =>
 
 //      def make( rate: R, a: GE[ UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
