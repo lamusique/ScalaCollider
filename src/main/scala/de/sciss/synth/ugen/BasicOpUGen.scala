@@ -75,7 +75,7 @@ extends UGenSource.SingleOut( "MulAdd" ) {
 object UnaryOp {
    unop =>
 
-   import RichNumber._
+   import RichFloat._
 
    sealed abstract class Op( val id: Int ) extends Serializable {
       def make( a: GE ) = UnaryOp( /* a.rate, */ this, a )
@@ -103,7 +103,7 @@ object UnaryOp {
 // case object NotNil      extends Op(  3 )
 // case object BitNot      extends Op(  4 )
    case object Abs         extends Op(  5 ) {
-      protected def make1( a: Float ) = math.abs( a )
+      protected def make1( a: Float ) = rf_abs( a )
    }
 // case object ToFloat     extends Op(  6 )
 // case object ToInt       extends Op(  7 )
@@ -280,7 +280,7 @@ object BinaryOp {
       }
    }
 
-   import RichNumber._
+   import RichFloat._
 
    case object Plus           extends Op(  0 ) {
       override val name = "+"

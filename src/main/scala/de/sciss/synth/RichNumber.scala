@@ -30,149 +30,6 @@ import collection.immutable.NumericRange
 object RichNumber {
    private[synth] val LOG2 = math.log( 2 )
 
-   // ---- Float ----
-
-   @inline def rf_fold( in: Float, lo: Float, hi: Float ) : Float = {
-      val x = in - lo
-      // avoid the divide if possible
-      if( in >= hi ) {
-         val f = hi + hi - in
-         if (f >= lo) return f
-      } else if( in < lo ) {
-         val f = lo + lo - in
-         if( f < hi ) return f
-      } else return in
-
-      if( hi == lo ) return lo
-      // ok do the divide
-      val range   = hi - lo
-      val range2  = range + range
-      val c       = x - range2 * math.floor( x / range2 ).toFloat
-      lo + (if( c >= range ) range2 - c else c)
-   }
-
-   @inline def rf_wrap( in: Float, lo: Float, hi: Float ) : Float = {
-      // avoid the divide if possible
-      if( in >= hi ) {
-         val range   = hi - lo
-         val in2     = in - range;
-         if( in2 < hi ) in2 else if( hi == lo ) lo else {
-            in2 - range * math.floor( (in2 - lo) / range ).toFloat
-         }
-      } else if( in < lo ) {
-         val range   = hi - lo
-         val in2     = in + range
-         if( in2 >= lo ) in2 else if( hi == lo ) lo else {
-            in2 - range * math.floor( (in2 - lo) / range ).toFloat
-         }
-      } else in
-   }
-
-   @inline def rf_not( f: Float ) = if( f > 0f ) 0f else 1f
-   @inline def rf_ceil( f: Float ) = math.ceil( f ).toFloat
-   @inline def rf_floor( f: Float ) = math.floor( f ).toFloat
-   @inline def rf_frac( f: Float ) = (f - math.floor( f )).toFloat // according to jmc
-   @inline def rf_squared( f: Float ) = f * f
-   @inline def rf_cubed( f: Float ) = f * f * f
-   @inline def rf_sqrt( f: Float ) = math.sqrt( f ).toFloat
-   @inline def rf_exp( f: Float ) = math.exp( f ).toFloat
-   @inline def rf_reciprocal( f: Float ) = 1.0f / f
-   @inline def rf_midicps( f: Float ) = (440 * math.pow( 2, (f - 69) / 12 )).toFloat
-   @inline def rf_cpsmidi( f: Float ) = (math.log( f / 440 ) / LOG2 * 12 + 69).toFloat
-   @inline def rf_midiratio( f: Float ) = (math.pow( 2, f / 12 )).toFloat
-   @inline def rf_ratiomidi( f: Float ) = (12 * math.log( f ) / LOG2).toFloat
-   @inline def rf_dbamp( f: Float ) = (math.pow( 10, f * 0.05 )).toFloat
-   @inline def rf_ampdb( f: Float ) = (math.log10( f )* 20).toFloat
-   @inline def rf_octcps( f: Float ) = (440 * math.pow( 2, f - 4.75 )).toFloat
-   @inline def rf_cpsoct( f: Float ) = (math.log( f / 440 ) / LOG2 + 4.75).toFloat
-   @inline def rf_log( f: Float ) = math.log( f ).toFloat
-   @inline def rf_log2( f: Float ) = (math.log( f ) / LOG2).toFloat
-   @inline def rf_log10( f: Float ) = math.log10( f ).toFloat
-   @inline def rf_sin( f: Float ) = math.sin( f ).toFloat
-   @inline def rf_cos( f: Float ) = math.cos( f ).toFloat
-   @inline def rf_tan( f: Float ) = math.tan( f ).toFloat
-   @inline def rf_asin( f: Float ) = math.asin( f ).toFloat
-   @inline def rf_acos( f: Float ) = math.acos( f ).toFloat
-   @inline def rf_atan( f: Float ) = math.atan( f ).toFloat
-   @inline def rf_sinh( f: Float ) = math.sinh( f ).toFloat
-   @inline def rf_cosh( f: Float ) = math.cosh( f ).toFloat
-   @inline def rf_tanh( f: Float ) = math.tanh( f ).toFloat
-
-   @inline def rf_distort( f: Float ) = f / (1 + math.abs( f ))
-   @inline def rf_softclip( f: Float ) = { val absx = math.abs( f ); if( absx <= 0.5f ) f else (absx - 0.25f) / f}
-   @inline def rf_ramp( f: Float ) = if( f <= 0 ) 0 else if( f >= 1 ) 1 else f
-   @inline def rf_scurve( f: Float ) = if( f <= 0 ) 0 else if( f > 1 ) 1 else f * f * (3 - 2 * f)
-
-   @inline def rf_round( a: Float, b: Float ) =
-      if( b == 0 ) a else (math.floor( a / b + 0.5f ) * b).toFloat
-
-   @inline def rf_roundup( a: Float, b: Float ) =
-      if( b == 0 ) a else (math.ceil( a / b ) * b).toFloat
-
-   @inline def rf_trunc( a: Float, b: Float ) =
-      if( b == 0 ) a else (math.floor( a / b ) * b).toFloat
-
-   @inline def rf_hypotx( a: Float, b: Float ) = {
-      val minab = math.min( math.abs( a ), math.abs( b ))
-      (a + b - (math.sqrt(2) - 1) * minab).toFloat
-   }
-
-   @inline def rf_ring1( a: Float, b: Float ) =
-      a * b + a
-
-   @inline def rf_ring2( a: Float, b: Float ) =
-      a * b + a + b
-
-   @inline def rf_ring3( a: Float, b: Float ) =
-      a * a * b
-
-   @inline def rf_ring4( a: Float, b: Float ) = {
-      val ab = a * b; a * ab - b * ab
-   }
-
-   @inline def rf_difsqr( a: Float, b: Float ) =
-      a * a - b * b
-
-   @inline def rf_sumsqr( a: Float, b: Float ) =
-      a * a + b * b
-
-   @inline def rf_sqrsum( a: Float, b: Float ) = {
-      val z = a + b; z * z
-   }
-
-   @inline def rf_sqrdif( a: Float, b: Float ) = {
-      val z = a - b; z * z
-   }
-
-   @inline def rf_absdif( a: Float, b: Float ) = math.abs( a - b )
-
-   @inline def rf_thresh( a: Float, b: Float ) =
-      if( a < b ) 0 else a
-
-   @inline def rf_amclip( a: Float, b: Float ) =
-      a * 0.5f * (b + math.abs( a ))
-
-   @inline def rf_scaleneg( a: Float, b: Float ) =
-      (math.abs( a ) - a) * (0.5f * b + 0.5f) + a
-
-   @inline def rf_clip2( a: Float, b: Float ) =
-      math.max( math.min( a, b ), -b )
-
-   @inline def rf_excess( a: Float, b: Float ) =
-      a - math.max( math.min( a, b ), -b )
-
-   @inline def rf_fold2( a: Float, b: Float ) = rf_fold( a, -b, b )
-
-   @inline def rf_wrap2( a: Float, b: Float ) = rf_wrap( a, -b, b )
-
-   @inline def rf_linlin( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
-      (in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
-   }
-
-   @inline def rf_linexp( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
-      math.pow( dstHi / dstLo, (in - srcLo) / (srcHi - srcLo)).toFloat * dstLo
-   }
-   
    sealed trait NAryFloatOps {
       import RichFloat._
 
@@ -526,9 +383,159 @@ extends Proxy with Ordered[ Int ] with RichNumber.UnaryFloatOps with RichNumber.
 
 // ---------------------------- Float ----------------------------
 
+object RichFloat {
+   import RichNumber.LOG2
+
+   @inline def rf_fold( in: Float, lo: Float, hi: Float ) : Float = {
+      val x = in - lo
+      // avoid the divide if possible
+      if( in >= hi ) {
+         val f = hi + hi - in
+         if (f >= lo) return f
+      } else if( in < lo ) {
+         val f = lo + lo - in
+         if( f < hi ) return f
+      } else return in
+
+      if( hi == lo ) return lo
+      // ok do the divide
+      val range   = hi - lo
+      val range2  = range + range
+      val c       = x - range2 * math.floor( x / range2 ).toFloat
+      lo + (if( c >= range ) range2 - c else c)
+   }
+
+   @inline def rf_wrap( in: Float, lo: Float, hi: Float ) : Float = {
+      // avoid the divide if possible
+      if( in >= hi ) {
+         val range   = hi - lo
+         val in2     = in - range;
+         if( in2 < hi ) in2 else if( hi == lo ) lo else {
+            in2 - range * math.floor( (in2 - lo) / range ).toFloat
+         }
+      } else if( in < lo ) {
+         val range   = hi - lo
+         val in2     = in + range
+         if( in2 >= lo ) in2 else if( hi == lo ) lo else {
+            in2 - range * math.floor( (in2 - lo) / range ).toFloat
+         }
+      } else in
+   }
+
+   @inline def rf_not( f: Float ) : Float          = if( f > 0f ) 0f else 1f
+   @inline def rf_abs( f: Float ) : Float          = math.abs( f )
+   @inline def rf_ceil( f: Float ) : Float         = math.ceil( f ).toFloat
+   @inline def rf_floor( f: Float ) : Float        = math.floor( f ).toFloat
+   @inline def rf_frac( f: Float ) : Float         = (f - math.floor( f )).toFloat // according to jmc
+   @inline def rf_signum( f: Float ) : Float       = math.signum( f )
+   @inline def rf_squared( f: Float ) : Float      = f * f
+   @inline def rf_cubed( f: Float ) : Float        = f * f * f
+   @inline def rf_sqrt( f: Float ) : Float         = math.sqrt( f ).toFloat
+   @inline def rf_exp( f: Float ) : Float          = math.exp( f ).toFloat
+   @inline def rf_reciprocal( f: Float ) : Float   = 1.0f / f
+   @inline def rf_midicps( f: Float ) : Float      = (440 * math.pow( 2, (f - 69) / 12 )).toFloat
+   @inline def rf_cpsmidi( f: Float ) : Float      = (math.log( f / 440 ) / LOG2 * 12 + 69).toFloat
+   @inline def rf_midiratio( f: Float ) : Float    = (math.pow( 2, f / 12 )).toFloat
+   @inline def rf_ratiomidi( f: Float ) : Float    = (12 * math.log( f ) / LOG2).toFloat
+   @inline def rf_dbamp( f: Float ) : Float        = (math.pow( 10, f * 0.05 )).toFloat
+   @inline def rf_ampdb( f: Float ) : Float        = (math.log10( f )* 20).toFloat
+   @inline def rf_octcps( f: Float ) : Float       = (440 * math.pow( 2, f - 4.75 )).toFloat
+   @inline def rf_cpsoct( f: Float ) : Float       = (math.log( f / 440 ) / LOG2 + 4.75).toFloat
+   @inline def rf_log( f: Float ) : Float          = math.log( f ).toFloat
+   @inline def rf_log2( f: Float ) : Float         = (math.log( f ) / LOG2).toFloat
+   @inline def rf_log10( f: Float ) : Float        = math.log10( f ).toFloat
+   @inline def rf_sin( f: Float ) : Float          = math.sin( f ).toFloat
+   @inline def rf_cos( f: Float ) : Float          = math.cos( f ).toFloat
+   @inline def rf_tan( f: Float ) : Float          = math.tan( f ).toFloat
+   @inline def rf_asin( f: Float ) : Float         = math.asin( f ).toFloat
+   @inline def rf_acos( f: Float ) : Float         = math.acos( f ).toFloat
+   @inline def rf_atan( f: Float ) : Float         = math.atan( f ).toFloat
+   @inline def rf_sinh( f: Float ) : Float         = math.sinh( f ).toFloat
+   @inline def rf_cosh( f: Float ) : Float         = math.cosh( f ).toFloat
+   @inline def rf_tanh( f: Float ) : Float         = math.tanh( f ).toFloat
+
+   @inline def rf_distort( f: Float ) : Float      = f / (1 + math.abs( f ))
+   @inline def rf_softclip( f: Float ) : Float = {
+      val absx = math.abs( f )
+      if( absx <= 0.5f ) f else (absx - 0.25f) / f
+   }
+   @inline def rf_ramp( f: Float ) : Float         = if( f <= 0 ) 0 else if( f >= 1 ) 1 else f
+   @inline def rf_scurve( f: Float ) : Float       = if( f <= 0 ) 0 else if( f > 1 ) 1 else f * f * (3 - 2 * f)
+
+   @inline def rf_round( a: Float, b: Float ) =
+      if( b == 0 ) a else (math.floor( a / b + 0.5f ) * b).toFloat
+
+   @inline def rf_roundup( a: Float, b: Float ) =
+      if( b == 0 ) a else (math.ceil( a / b ) * b).toFloat
+
+   @inline def rf_trunc( a: Float, b: Float ) =
+      if( b == 0 ) a else (math.floor( a / b ) * b).toFloat
+
+   @inline def rf_hypotx( a: Float, b: Float ) = {
+      val minab = math.min( math.abs( a ), math.abs( b ))
+      (a + b - (math.sqrt(2) - 1) * minab).toFloat
+   }
+
+   @inline def rf_ring1( a: Float, b: Float ) =
+      a * b + a
+
+   @inline def rf_ring2( a: Float, b: Float ) =
+      a * b + a + b
+
+   @inline def rf_ring3( a: Float, b: Float ) =
+      a * a * b
+
+   @inline def rf_ring4( a: Float, b: Float ) = {
+      val ab = a * b; a * ab - b * ab
+   }
+
+   @inline def rf_difsqr( a: Float, b: Float ) =
+      a * a - b * b
+
+   @inline def rf_sumsqr( a: Float, b: Float ) =
+      a * a + b * b
+
+   @inline def rf_sqrsum( a: Float, b: Float ) = {
+      val z = a + b; z * z
+   }
+
+   @inline def rf_sqrdif( a: Float, b: Float ) = {
+      val z = a - b; z * z
+   }
+
+   @inline def rf_absdif( a: Float, b: Float ) = math.abs( a - b )
+
+   @inline def rf_thresh( a: Float, b: Float ) =
+      if( a < b ) 0 else a
+
+   @inline def rf_amclip( a: Float, b: Float ) =
+      a * 0.5f * (b + math.abs( a ))
+
+   @inline def rf_scaleneg( a: Float, b: Float ) =
+      (math.abs( a ) - a) * (0.5f * b + 0.5f) + a
+
+   @inline def rf_clip2( a: Float, b: Float ) =
+      math.max( math.min( a, b ), -b )
+
+   @inline def rf_excess( a: Float, b: Float ) =
+      a - math.max( math.min( a, b ), -b )
+
+   @inline def rf_fold2( a: Float, b: Float ) = rf_fold( a, -b, b )
+
+   @inline def rf_wrap2( a: Float, b: Float ) = rf_wrap( a, -b, b )
+
+   @inline def rf_linlin( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
+      (in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
+   }
+
+   def rf_linexp( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
+      math.pow( dstHi / dstLo, (in - srcLo) / (srcHi - srcLo)).toFloat * dstLo
+   }
+}
 final case class RichFloat private[synth]( protected val f: Float )
-extends Proxy with Ordered[ Float ] with RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
+extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
    import RichNumber._
+   import RichFloat._
 
    protected def d  = f.toDouble
    protected def cn = Constant( f )
@@ -546,11 +553,11 @@ extends Proxy with Ordered[ Float ] with RichNumber.UnaryFloatOps with RichNumbe
 
    // more unary ops
 // def unary_- : Float     = -f
-   def abs : Float	      = math.abs( f )
-   def ceil : Float	      = math.ceil( f ).toFloat
-   def floor : Float	      = math.floor( f ).toFloat
+   def abs : Float	      = rf_abs( f )
+   def ceil : Float	      = rf_ceil( f )
+   def floor : Float	      = rf_floor( f )
    def frac : Float	      = rf_frac( f )
-   def signum : Float      = math.signum( f )
+   def signum : Float      = rf_signum( f )
    def squared : Float     = rf_squared( f )
    def cubed : Float       = rf_cubed( f )
 
@@ -565,53 +572,46 @@ extends Proxy with Ordered[ Float ] with RichNumber.UnaryFloatOps with RichNumbe
 object RichDouble {
    import RichNumber.LOG2
 
-   def rd_abs( d: Double ) : Double	         = math.abs( d )
-   def rd_ceil( d: Double ) : Double	      = math.ceil( d )
-   def rd_floor( d: Double ) : Double	      = math.floor( d )
-   def rd_frac( d: Double ) : Double	      = (d - math.floor( d )) // according to jmc
-   def rd_signum( d: Double ) : Double       = math.signum( d )
-   def rd_squared( d: Double ) : Double      = d * d
-   def rd_cubed( d: Double ) : Double        = d * d * d
-   def rd_sqrt( d: Double ) : Double         = math.sqrt( d )
-   def rd_exp( d: Double ) : Double          = math.exp( d )
-   def rd_reciprocal( d: Double ) : Double   = 1.0 / d
-   def rd_midicps( d: Double ) : Double      = (440 * math.pow( 2, (d - 69) / 12 ))
-   def rd_cpsmidi( d: Double ) : Double      = (math.log( d / 440 ) / LOG2 * 12 + 69)
-   def rd_midiratio( d: Double ) : Double    = (math.pow( 2, d / 12 ))
-   def rd_ratiomidi( d: Double ) : Double    = (12 * math.log( d ) / LOG2)
-   def rd_dbamp( d: Double ) : Double        = (math.pow( 10, d * 0.05 ))
-   def rd_ampdb( d: Double ) : Double        = (math.log10( d ) * 20)
-   def rd_octcps( d: Double ) : Double       = (440 * math.pow( 2, d - 4.75 ))
-   def rd_cpsoct( d: Double ) : Double       = (math.log( d / 440 ) / LOG2 + 4.75)
-   def rd_log( d: Double ) : Double          = math.log( d )
-   def rd_log2( d: Double ) : Double         = (math.log( d ) / LOG2)
-   def rd_log10( d: Double ) : Double        = math.log10( d )
-   def rd_sin( d: Double ) : Double          = math.sin( d )
-   def rd_cos( d: Double ) : Double          = math.cos( d )
-   def rd_tan( d: Double ) : Double          = math.tan( d )
-   def rd_asin( d: Double ) : Double         = math.asin( d )
-   def rd_acos( d: Double ) : Double         = math.acos( d )
-   def rd_atan( d: Double ) : Double         = math.atan( d )
-   def rd_sinh( d: Double ) : Double         = math.sinh( d )
-   def rd_cosh( d: Double ) : Double         = math.cosh( d )
-   def rd_tanh( d: Double ) : Double         = math.tanh( d )
-//   def rd_distort( d: Double ) : Double    = d / (1 + math.abs( d ))
-//   def rd_softclip( d: Double ) : Double   = { val absx = math.abs( d ); if( absx <= 0.5 ) d else (absx - 0.25) / d}
-//   def rd_ramp( d: Double ) : Double       = if( d <= 0 ) 0 else if( d >= 1 ) 1 else d
-//   def rd_scurve( d: Double ) : Double     = if( d <= 0 ) 0 else if( d > 1 ) 1 else d * d * (3 - 2 * d)
+   @inline def rd_abs( d: Double ) : Double	      = math.abs( d )
+   @inline def rd_ceil( d: Double ) : Double       = math.ceil( d )
+   @inline def rd_floor( d: Double ) : Double	   = math.floor( d )
+   @inline def rd_frac( d: Double ) : Double	      = (d - math.floor( d )) // according to jmc
+   @inline def rd_signum( d: Double ) : Double     = math.signum( d )
+   @inline def rd_squared( d: Double ) : Double    = d * d
+   @inline def rd_cubed( d: Double ) : Double      = d * d * d
+   @inline def rd_sqrt( d: Double ) : Double       = math.sqrt( d )
+   @inline def rd_exp( d: Double ) : Double        = math.exp( d )
+   @inline def rd_reciprocal( d: Double ) : Double = 1.0 / d
+   @inline def rd_midicps( d: Double ) : Double    = (440 * math.pow( 2, (d - 69) / 12 ))
+   @inline def rd_cpsmidi( d: Double ) : Double    = (math.log( d / 440 ) / LOG2 * 12 + 69)
+   @inline def rd_midiratio( d: Double ) : Double  = (math.pow( 2, d / 12 ))
+   @inline def rd_ratiomidi( d: Double ) : Double  = (12 * math.log( d ) / LOG2)
+   @inline def rd_dbamp( d: Double ) : Double      = (math.pow( 10, d * 0.05 ))
+   @inline def rd_ampdb( d: Double ) : Double      = (math.log10( d ) * 20)
+   @inline def rd_octcps( d: Double ) : Double     = (440 * math.pow( 2, d - 4.75 ))
+   @inline def rd_cpsoct( d: Double ) : Double     = (math.log( d / 440 ) / LOG2 + 4.75)
+   @inline def rd_log( d: Double ) : Double        = math.log( d )
+   @inline def rd_log2( d: Double ) : Double       = (math.log( d ) / LOG2)
+   @inline def rd_log10( d: Double ) : Double      = math.log10( d )
+   @inline def rd_sin( d: Double ) : Double        = math.sin( d )
+   @inline def rd_cos( d: Double ) : Double        = math.cos( d )
+   @inline def rd_tan( d: Double ) : Double        = math.tan( d )
+   @inline def rd_asin( d: Double ) : Double       = math.asin( d )
+   @inline def rd_acos( d: Double ) : Double       = math.acos( d )
+   @inline def rd_atan( d: Double ) : Double       = math.atan( d )
+   @inline def rd_sinh( d: Double ) : Double       = math.sinh( d )
+   @inline def rd_cosh( d: Double ) : Double       = math.cosh( d )
+   @inline def rd_tanh( d: Double ) : Double       = math.tanh( d )
+//   @inline def rd_distort( d: Double ) : Double    = d / (1 + math.abs( d ))
+//   @inline def rd_softclip( d: Double ) : Double   = { val absx = math.abs( d ); if( absx <= 0.5 ) d else (absx - 0.25) / d}
+//   @inline def rd_ramp( d: Double ) : Double       = if( d <= 0 ) 0 else if( d >= 1 ) 1 else d
+//   @inline def rd_scurve( d: Double ) : Double     = if( d <= 0 ) 0 else if( d > 1 ) 1 else d * d * (3 - 2 * d)
 }
 final class RichDouble private[synth]( protected val d: Double )
-extends /* Proxy */ /* with Ordered[ Double ] */ /* with */ RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
-   import RichNumber._
+extends RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
    import RichDouble._
 
    protected def cn = Constant( d.toFloat )
-
-//   // Proxy
-//   def self: Any = d
-//
-//   // Ordered
-//   def compare( b: Double ): Int = java.lang.Double.compare( d, b )
 
    // recover these from scala.runtime.RichDouble
    def isInfinity: Boolean = java.lang.Double.isInfinite( d )
