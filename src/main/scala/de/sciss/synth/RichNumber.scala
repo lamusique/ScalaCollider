@@ -437,6 +437,7 @@ object RichFloat {
    // -------- unary ops --------
 
    @inline def rf_not( f: Float ) : Float          = if( f > 0f ) 0f else 1f
+   @inline def rf_neg( f: Float ) : Float          = -f
    @inline def rf_abs( f: Float ) : Float          = math.abs( f )
    @inline def rf_ceil( f: Float ) : Float         = math.ceil( f ).toFloat
    @inline def rf_floor( f: Float ) : Float        = math.floor( f ).toFloat
@@ -652,6 +653,7 @@ object RichDouble {
 
    // -------- unary ops --------
 
+   @inline def rd_neg( d: Double ) : Double	      = -d
    @inline def rd_abs( d: Double ) : Double	      = math.abs( d )
    @inline def rd_ceil( d: Double ) : Double       = math.ceil( d )
    @inline def rd_floor( d: Double ) : Double	   = math.floor( d )
