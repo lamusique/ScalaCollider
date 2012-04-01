@@ -312,6 +312,9 @@ object RichNumber {
       def &( b: GE ) : GE          = cn.&( b )
       def |( b: GE ) : GE          = cn.|( b )
       def ^( b: GE ) : GE          = cn.^( b )
+      def round( b: GE ) : GE      = cn.round( b )
+      def roundup( b: GE ) : GE    = cn.roundup( b )
+      def trunc( b: GE ) : GE      = cn.trunc( b )
       def atan2( b: GE ) : GE      = cn.atan2( b )
       def hypot( b: GE ) : GE      = cn.hypot( b )
       def hypotx( b: GE ) : GE     = cn.hypotx( b )
@@ -342,11 +345,11 @@ object RichNumber {
          cn.linexp( srcLo, srcHi, dstLo, dstHi )
    }
 
-   sealed trait NAryGEOps2 extends NAryGEOps {
-      def round( b: GE ) : GE   = cn.round( b )
-      def roundup( b: GE ) : GE = cn.roundup( b )
-      def trunc( b: GE ) : GE   = cn.trunc( b )
-   }
+//   sealed trait NAryGEOps2 extends NAryGEOps {
+//      def round( b: GE ) : GE   = cn.round( b )
+//      def roundup( b: GE ) : GE = cn.roundup( b )
+//      def trunc( b: GE ) : GE   = cn.trunc( b )
+//   }
 }
 
 // ---------------------------- Int ----------------------------
@@ -590,7 +593,7 @@ object RichFloat {
    }
 }
 final case class RichFloat private[synth]( protected val f: Float )
-extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryGEOps2 {
+extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryGEOps {
    import RichFloat._
 
    protected def d  = f.toDouble
@@ -660,7 +663,7 @@ object RichDouble {
 //   @inline def rd_scurve( d: Double ) : Double     = if( d <= 0 ) 0 else if( d > 1 ) 1 else d * d * (3 - 2 * d)
 }
 final class RichDouble private[synth]( protected val d: Double )
-extends RichNumber.NAryDoubleOps with RichNumber.NAryGEOps2 {
+extends RichNumber.NAryDoubleOps with RichNumber.NAryGEOps {
    import RichDouble._
 
    protected def cn = Constant( d.toFloat )
