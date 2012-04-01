@@ -37,26 +37,27 @@ object RichNumber {
 
       // -------- binary ops --------
 
-// def +( b: Float ) : Float        = f + b.f
-// def -( b: Float ) : Float        = f - b.f
-// def *( b: Float ) : Float        = f * b.f
-// def /( b: Float ) : Float        = f / b.f
-// def %( b: Float ) : Float        = f % b.f
-// def ===( b: Float ) : Int        = if( f == b ) 1 else 0
-// def !==( b: Float ) : Int        = if( f != b ) 1 else 0
-// def <( b: Float ) : Float	      = f < b.f
-// def >( b: Float ) : Float	      = f > b.f
-// def <=( b: Float ) : Float	      = f <= b.f
-// def >=( b: Float ) : Float	      = f >= b.f
-      def min( b: Float ) : Float      = math.min( f, b )
-      def max( b: Float ) : Float      = math.max( f, b )
-// def &( b: Float ) : Float	      = f.toInt & b.f.toInt
-// def |( b: Float ) : Float	      = f.toInt | b.f.toInt
-// def ^( b: Float ) : Float	      = f.toInt ^ b.f.toInt
-      def atan2( b: Float ) : Float    = math.atan2( f, b ).toFloat
-      def hypot( b: Float ) : Float    = math.hypot( f, b ).toFloat
+// def +( b: Float ) : Float        = rf_+( f, b )
+// def -( b: Float ) : Float        = rf_-( f, b )
+// def *( b: Float ) : Float        = rf_*( f, b )
+      def div( b: Float ) : Int     = rf_div( f, b )
+// def /( b: Float ) : Float        = rf_/( f, b )
+// def %( b: Float ) : Float        = rf_%( f, b )
+// def ===( b: Float ) : Int        = rf_===( f, b )
+// def !==( b: Float ) : Int        = rf_!==( f, b )
+// def <( b: Float ) : Float	      = rf_<( f, b )
+// def >( b: Float ) : Float	      = rf_>( f, b )
+// def <=( b: Float ) : Float	      = rf_<=( f, b )
+// def >=( b: Float ) : Float	      = rf_>=( f, b )
+      def min( b: Float ) : Float      = rf_min( f, b )
+      def max( b: Float ) : Float      = rf_max( f, b )
+// def &( b: Float ) : Float	      = rf_&( f, b )
+// def |( b: Float ) : Float	      = rf_|( f, b )
+// def ^( b: Float ) : Float	      = rf_^( f, b )
+      def atan2( b: Float ) : Float    = rf_atan2( f, b )
+      def hypot( b: Float ) : Float    = rf_hypot( f, b )
       def hypotx( b: Float ) : Float   = rf_hypotx( f, b )
-      def pow( b: Float ) : Float      = math.pow( f, b ).toFloat
+      def pow( b: Float ) : Float      = rf_pow( f, b )
       def ring1( b: Float ) : Float    = rf_ring1( f, b )
       def ring2( b: Float ) : Float    = rf_ring2( f, b )
       def ring3( b: Float ) : Float    = rf_ring3( f, b )
@@ -448,8 +449,9 @@ object RichFloat {
    @inline def rf_&( a: Float, b: Float ) : Float	   = a.toInt & b.toInt
    @inline def rf_|( a: Float, b: Float ) : Float	   = a.toInt | b.toInt
    @inline def rf_^( a: Float, b: Float ) : Float	   = a.toInt ^ b.toInt
-   @inline def rf_atan2( a: Float, b: Float ) : Float = math.atan2( a, b ).toFloat
-   @inline def rf_hypot( a: Float, b: Float ) : Float = math.hypot( a, b ).toFloat
+
+   // lcm
+   // gcd
 
    @inline def rf_round( a: Float, b: Float ) =
       if( b == 0 ) a else (math.floor( a / b + 0.5f ) * b).toFloat
@@ -460,10 +462,20 @@ object RichFloat {
    @inline def rf_trunc( a: Float, b: Float ) =
       if( b == 0 ) a else (math.floor( a / b ) * b).toFloat
 
+   @inline def rf_atan2( a: Float, b: Float ) : Float = math.atan2( a, b ).toFloat
+   @inline def rf_hypot( a: Float, b: Float ) : Float = math.hypot( a, b ).toFloat
+
    @inline def rf_hypotx( a: Float, b: Float ) = {
       val minab = math.min( math.abs( a ), math.abs( b ))
       (a + b - (math.sqrt(2) - 1) * minab).toFloat
    }
+
+   @inline def rf_pow( a: Float, b: Float ) : Float = math.pow( a, b ).toFloat
+
+// <<
+// >>
+// UnsgnRghtShft
+// fill
 
    @inline def rf_ring1( a: Float, b: Float ) =
       a * b + a
@@ -582,7 +594,6 @@ extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NA
    def cubed : Float       = rf_cubed( f )
 
    // more binary ops
-   def div( b: Float ) : Float      = rf_div( f, b )
    def round( b: Float ) : Float    = rf_round( f, b )
    def roundup( b: Float ) : Float  = rf_roundup( f, b )
    def trunc( b: Float ) : Float    = rf_trunc( f, b )

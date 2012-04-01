@@ -388,16 +388,16 @@ object BinaryOp {
       protected def make1( a: Float, b: Float ) = rf_trunc( a, b )
    }
    case object Atan2          extends Op( 22 ) {
-      protected def make1( a: Float, b: Float ) = math.atan2( a, b ).toFloat
+      protected def make1( a: Float, b: Float ) = rf_atan2( a, b )
    }
    case object Hypot          extends Op( 23 ) {
-      protected def make1( a: Float, b: Float ) = math.hypot( a, b ).toFloat
+      protected def make1( a: Float, b: Float ) = rf_hypot( a, b )
    }
    case object Hypotx         extends Op( 24 ) {
       protected def make1( a: Float, b: Float ) = rf_hypotx( a, b )
    }
    case object Pow            extends Op( 25 ) {
-      protected def make1( a: Float, b: Float ) = math.pow( a, b ).toFloat
+      protected def make1( a: Float, b: Float ) = rf_pow( a, b )
    }
 // case object <<             extends Op( 26 )
 // case object >>             extends Op( 27 )
