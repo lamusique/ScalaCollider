@@ -27,8 +27,9 @@ class RichNumberSuite extends FunSpec {
          assert( intDouble == 8.0, "found " + intDouble )
          assert( intDouble.isInstanceOf[ Double ], "found " + intDouble.getClass )
 
-         val binOp = BinaryOp( BinaryOp.Round, Constant(6f), Constant(4f) )
-         val intGE = 6.round(Constant(4f))
+         val c4      = Constant(4f)
+         val binOp   = BinaryOp( BinaryOp.Round, Constant(6f), c4 )
+         val intGE   = 6.round(c4)
          assert( intGE == binOp, "found " + intGE )
 //         assert( intGE.isInstanceOf[ Constant ], "found " + intGE.getClass )
 
@@ -44,7 +45,7 @@ class RichNumberSuite extends FunSpec {
          assert( floatDouble == 8.0, "found " + floatDouble )
          assert( floatDouble.isInstanceOf[ Double ], "found " + floatDouble.getClass )
 
-         val floatGE = 6f.round(Constant(4f))
+         val floatGE = 6f.round(c4)
          assert( floatGE == binOp, "found " + floatGE )
 //         assert( floatGE.isInstanceOf[ Constant ], "found " + floatGE.getClass )
 
@@ -60,7 +61,7 @@ class RichNumberSuite extends FunSpec {
          assert( doubleDouble == 8.0, "found " + doubleDouble )
          assert( doubleDouble.isInstanceOf[ Double ], "found " + doubleDouble.getClass )
 
-         val doubleGE = 6.0.round(Constant(4f))
+         val doubleGE = 6.0.round(c4)
          assert( doubleGE == binOp, "found " + doubleGE )
 //         assert( doubleGE.isInstanceOf[ Constant ], "found " + doubleGE.getClass )
       }

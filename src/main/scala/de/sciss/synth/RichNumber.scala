@@ -163,6 +163,23 @@ object RichNumber {
       } else in
    }
 
+   // ---- binary ops ----
+
+   @inline def rd_+( a: Double, b: Double ) : Double     = a + b
+   @inline def rd_-( a: Double, b: Double ) : Double     = a - b
+   @inline def rd_*( a: Double, b: Double ) : Double     = a * b
+   @inline def rd_div( a: Double, b: Double ) : Int      = (a / b).toInt
+   @inline def rd_/( a: Double, b: Double ) : Double     = a / b
+   @inline def rd_%( a: Double, b: Double ) : Double     = a % b
+//   @inline def rd_===
+//   @inline def rd_!==
+   @inline def rd_<( a: Double, b: Double ) : Boolean    = a < b
+   @inline def rd_>( a: Double, b: Double ) : Boolean    = a > b
+   @inline def rd_<=( a: Double, b: Double ) : Boolean   = a <= b
+   @inline def rd_>=( a: Double, b: Double ) : Boolean   = a >= b
+   @inline def rd_min( a: Double, b: Double ) : Double   = math.min( a, b )
+   @inline def rd_max( a: Double, b: Double ) : Double   = math.max( a, b )
+
    @inline def rd_round( a: Double, b: Double ) =
       if( b == 0 ) a else math.floor( a / b + 0.5f ) * b
 
@@ -172,10 +189,20 @@ object RichNumber {
    @inline def rd_trunc( a: Double, b: Double ) =
       if( b == 0 ) a else math.floor( a / b ) * b
 
+   @inline def rd_atan2( a: Double, b: Double ) : Double = math.atan2( a, b )
+   @inline def rd_hypot( a: Double, b: Double ) : Double = math.hypot( a, b )
+
    @inline def rd_hypotx( a: Double, b: Double ) = {
       val minab = math.min( math.abs( a ), math.abs( b ))
       a + b - (math.sqrt(2) - 1) * minab
    }
+
+   @inline def rd_pow( a: Double, b: Double ) : Double = math.pow( a, b )
+
+// <<
+// >>
+// UnsgnRghtShft
+// fill
 
    @inline def rd_ring1( a: Double, b: Double ) =
       a * b + a
@@ -234,8 +261,6 @@ object RichNumber {
    }
 
    sealed trait NAryDoubleOps {
-      import RichDouble._
-
       protected def d: Double
 
       // recover these from scala.runtime.RichDouble
@@ -245,15 +270,15 @@ object RichNumber {
       def to( end: Double, step: Double ): NumericRange[ Double ] = Range.Double.inclusive( d, end, step )
 
       // binary ops
-      def min( b: Double ) : Double       = math.min( d, b )
-      def max( b: Double ) : Double       = math.max( d, b )
+      def min( b: Double ) : Double       = rd_min( d, b )
+      def max( b: Double ) : Double       = rd_max( d, b )
       def round( b: Double ) : Double     = rd_round( d, b )
       def roundup( b: Double ) : Double   = rd_roundup( d, b )
       def trunc( b: Double ) : Double     = rd_trunc( d, b )
-      def atan2( b: Double ) : Double     = math.atan2( d, b )
-      def hypot( b: Double ) : Double     = math.hypot( d, b )
+      def atan2( b: Double ) : Double     = rd_atan2( d, b )
+      def hypot( b: Double ) : Double     = rd_hypot( d, b )
       def hypotx( b: Double ) : Double    = rd_hypotx( d, b )
-      def pow( b: Double ) : Double       = math.pow( d, b )
+      def pow( b: Double ) : Double       = rd_pow( d, b )
       def ring1( b: Double ) : Double     = rd_ring1( d, b )
       def ring2( b: Double ) : Double     = rd_ring2( d, b )
       def ring3( b: Double ) : Double     = rd_ring3( d, b )
@@ -593,7 +618,7 @@ object RichFloat {
    }
 }
 final case class RichFloat private[synth]( protected val f: Float )
-extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryGEOps {
+extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps with RichNumber.NAryGEOps {
    import RichFloat._
 
    protected def d  = f.toDouble

@@ -38,10 +38,14 @@ package synth {
        * view bounds, e.g. `implicit def[ T <% GE ]( ... )`
        * will not work on Ints.
        */
-      implicit def intToGE( i: Int )      = Constant( i.toFloat )
-      implicit def floatToGE( f: Float )  = Constant( f )
-      implicit def doubleToGE( d: Double )= Constant( d.toFloat )
+      implicit def intToGE( i: Int ) : Constant       = Constant( i.toFloat )
+      implicit def floatToGE( f: Float ) : Constant   = Constant( f )
+      implicit def doubleToGE( d: Double ) : Constant = Constant( d.toFloat )
    }
+
+//   abstract private[synth] sealed class MedPriorityImplicits extends LowPriorityImplicits {
+//      implicit def floatToDouble( f: Float ) : RichDouble = new RichDouble( f.toDouble )
+//   }
 }
 
 /**
@@ -80,17 +84,17 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
     * Note that we use the same name as scala.Predef.intWrapper. That
     * way the original conversion is hidden!
     */
-   implicit def intWrapper( i: Int ) = new RichInt( i )
+   implicit def intWrapper( i: Int ) : RichInt = new RichInt( i )
    /**
     * Note that we use the same name as scala.Predef.floatWrapper. That
     * way the original conversion is hidden!
     */
-   implicit def floatWrapper( f: Float ) = new RichFloat( f )
+   implicit def floatWrapper( f: Float ) : RichFloat = new RichFloat( f )
    /**
     * Note that we use the same name as scala.Predef.doubleWrapper. That
     * way the original conversion is hidden!
     */
-   implicit def doubleWrapper( d: Double ) = new RichDouble( d )
+   implicit def doubleWrapper( d: Double ) : RichDouble = new RichDouble( d )
 
 //   implicit def geOps( ge: GE ) = ge.ops
 
@@ -137,7 +141,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //   implicit def bubbleGE[ R <: Rate, G <% GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
 
    // pimping
-   implicit def stringToControlProxyFactory( name: String ) = new ControlProxyFactory( name )
+   implicit def stringToControlProxyFactory( name: String ) : ControlProxyFactory = new ControlProxyFactory( name )
 //   implicit def thunkToGraphFunction[ R <: Rate, /* S <: Rate,*/ T ]( thunk: => T )
 //      ( implicit view: T => Multi[ GE[ R ]] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction[ R ]( thunk )
 
@@ -150,7 +154,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
    def complete[T]( msg: T => Packet, action: => Unit ) = Completion[T]( Some( msg ), Some( _ => action ))
    def complete[T]( msg: => Packet, action: T => Unit ) = Completion[T]( Some( _ => msg ), Some( action ))
    def complete[T]( msg: T => Packet, action: T => Unit ) = Completion[T]( Some( msg ), Some( action ))
-   implicit def messageToOption( msg: Packet ) = Some( msg )
+   implicit def messageToOption( msg: Packet ) : Option[ Packet ] = Some( msg )
 
    // explicit methods
 
