@@ -29,12 +29,6 @@ initialCommands in console := """import de.sciss.osc; import de.sciss.synth.{ os
 
 publishMavenStyle := true
 
-// publishTo <<= version { (v: String) =>
-//    Some( "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/".+(
-//       if( v.endsWith( "-SNAPSHOT")) "snapshots/" else "releases/"
-//    ))
-// }
-
 publishTo <<= version { (v: String) =>
    Some( if( v.endsWith( "-SNAPSHOT" ))
       "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -49,8 +43,8 @@ pomIncludeRepository := { _ => false }
 
 pomExtra :=
 <scm>
-  <url>git@github.com:Sciss/Strugatzki.git</url>
-  <connection>scm:git:git@github.com:Sciss/Strugatzki.git</connection>
+  <url>git@github.com:Sciss/ScalaCollider.git</url>
+  <connection>scm:git:git@github.com:Sciss/ScalaCollider.git</connection>
 </scm>
 <developers>
    <developer>
@@ -59,8 +53,6 @@ pomExtra :=
       <url>http://www.sciss.de</url>
    </developer>
 </developers>
-
-// credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 // ---- disable scaladoc generation during development phase ----
 

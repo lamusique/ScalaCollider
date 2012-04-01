@@ -30,6 +30,10 @@ import collection.immutable.NumericRange
 object RichNumber {
    private[synth] val LOG2 = math.log( 2 )
 
+   /**
+    * This would be better `RichFloat.NAryOps`, but scalac can't handle the case
+    * op `class RichFloat extends RichFloat.NAryOps` (says it's cyclic) -- damn...
+    */
    sealed trait NAryFloatOps {
       import RichFloat._
 
@@ -54,6 +58,9 @@ object RichNumber {
 // def &( b: Float ) : Float	      = rf_&( f, b )
 // def |( b: Float ) : Float	      = rf_|( f, b )
 // def ^( b: Float ) : Float	      = rf_^( f, b )
+      def round( b: Float ) : Float    = rf_round( f, b )
+      def roundup( b: Float ) : Float  = rf_roundup( f, b )
+      def trunc( b: Float ) : Float    = rf_trunc( f, b )
       def atan2( b: Float ) : Float    = rf_atan2( f, b )
       def hypot( b: Float ) : Float    = rf_hypot( f, b )
       def hypotx( b: Float ) : Float   = rf_hypotx( f, b )
@@ -594,9 +601,9 @@ extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NA
    def cubed : Float       = rf_cubed( f )
 
    // more binary ops
-   def round( b: Float ) : Float    = rf_round( f, b )
-   def roundup( b: Float ) : Float  = rf_roundup( f, b )
-   def trunc( b: Float ) : Float    = rf_trunc( f, b )
+//   def round( b: Float ) : Float    = rf_round( f, b )
+//   def roundup( b: Float ) : Float  = rf_roundup( f, b )
+//   def trunc( b: Float ) : Float    = rf_trunc( f, b )
 }
 
 // ---------------------------- Double ----------------------------
