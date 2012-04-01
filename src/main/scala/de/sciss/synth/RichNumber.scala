@@ -434,6 +434,7 @@ object RichFloat {
    @inline def rf_+( a: Float, b: Float ) : Float     = a + b
    @inline def rf_-( a: Float, b: Float ) : Float     = a - b
    @inline def rf_*( a: Float, b: Float ) : Float     = a * b
+   @inline def rf_div( a: Float, b: Float ) : Int     = (a / b).toInt
    @inline def rf_/( a: Float, b: Float ) : Float     = a / b
    @inline def rf_%( a: Float, b: Float ) : Float     = a % b
    @inline def rf_===( a: Float, b: Float ) : Int     = if( a == b ) 1 else 0
@@ -560,17 +561,10 @@ object RichFloat {
 }
 final case class RichFloat private[synth]( protected val f: Float )
 extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
-   import RichNumber._
    import RichFloat._
 
    protected def d  = f.toDouble
    protected def cn = Constant( f )
-
-//   // Proxy
-//   def self: Any = f
-//
-//   // Ordered
-//   def compare( b: Float ): Int = java.lang.Float.compare( f, b )
 
    // recover these from scala.runtime.RichFloat
    def isInfinity: Boolean = java.lang.Float.isInfinite( f )
@@ -588,6 +582,7 @@ extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NA
    def cubed : Float       = rf_cubed( f )
 
    // more binary ops
+   def div( b: Float ) : Float      = rf_div( f, b )
    def round( b: Float ) : Float    = rf_round( f, b )
    def roundup( b: Float ) : Float  = rf_roundup( f, b )
    def trunc( b: Float ) : Float    = rf_trunc( f, b )

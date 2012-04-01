@@ -284,7 +284,7 @@ object BinaryOp {
 
    case object Plus           extends Op(  0 ) {
       override val name = "+"
-      protected def make1( a: Float, b: Float ) = a + b
+      protected def make1( a: Float, b: Float ) = rf_+( a, b )
       override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (c(0), _)       => b
          case (_, c(0))       => a
@@ -293,7 +293,7 @@ object BinaryOp {
    }
    case object Minus          extends Op(  1 ) {
       override val name = "-"
-      protected def make1( a: Float, b: Float ) = a - b
+      protected def make1( a: Float, b: Float ) = rf_-( a, b )
       override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
 //         case (c(0), _)       => -b
          case (c(0), _)       => UnaryOp.Neg.make1( b )
@@ -303,7 +303,7 @@ object BinaryOp {
    }
    case object Times          extends Op(  2 ) {
       override val name = "*"
-      protected def make1( a: Float, b: Float ) = a * b
+      protected def make1( a: Float, b: Float ) = rf_*( a, b )
       override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (c(0), _)       => a
          case (_, c(0))       => b
@@ -317,7 +317,7 @@ object BinaryOp {
 // case object IDiv           extends Op(  3 )
    case object Div            extends Op(  4 ) {
       override val name = "/"
-      protected def make1( a: Float, b: Float ) = a / b
+      protected def make1( a: Float, b: Float ) = rf_/( a, b )
       override protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
          case (_, c(1))       => a
          case (_, c(-1))      => UnaryOp.Neg.make1( a ) // -a
@@ -332,49 +332,49 @@ object BinaryOp {
    }
    case object Mod            extends Op(  5 ) {
       override val name = "%"
-      protected def make1( a: Float, b: Float ) = a % b
+      protected def make1( a: Float, b: Float ) = rf_%( a, b )
    }
    case object Eq             extends Op(  6 ) {
       override val name = "==="
-      protected def make1( a: Float, b: Float ) = if( a == b ) 1f else 0f
+      protected def make1( a: Float, b: Float ) = rf_===( a, b )
    }
    case object Neq            extends Op(  7 ) {
       override val name = "!=="
-      protected def make1( a: Float, b: Float ) = if( a != b ) 1f else 0f
+      protected def make1( a: Float, b: Float ) = rf_!==( a, b )
    }
    case object Lt             extends Op(  8 ) {
       override val name = "<"
-      protected def make1( a: Float, b: Float ) = if( a < b ) 1f else 0f
+      protected def make1( a: Float, b: Float ) = if( a < b ) 1f else 0f   // NOT rf_< !
    }
    case object Gt             extends Op(  9 ) {
       override val name = ">"
-      protected def make1( a: Float, b: Float ) = if( a > b ) 1f else 0f
+      protected def make1( a: Float, b: Float ) = if( a > b ) 1f else 0f   // NOT rf_> !
    }
    case object Leq            extends Op( 10 ) {
       override val name = "<="
-      protected def make1( a: Float, b: Float ) = if( a <= b ) 1f else 0f
+      protected def make1( a: Float, b: Float ) = if( a <= b ) 1f else 0f   // NOT rf_<= !
    }
    case object Geq            extends Op( 11 ) {
       override val name = ">="
-      protected def make1( a: Float, b: Float ) = if( a >= b ) 1f else 0f
+      protected def make1( a: Float, b: Float ) = if( a >= b ) 1f else 0f   // NOT rf_>= !
    }
    case object Min            extends Op( 12 ) {
-      protected def make1( a: Float, b: Float ) = math.min( a, b )
+      protected def make1( a: Float, b: Float ) = rf_min( a, b )
    }
    case object Max            extends Op( 13 ) {
-      protected def make1( a: Float, b: Float ) = math.max( a, b )
+      protected def make1( a: Float, b: Float ) = rf_max( a, b )
    }
    case object BitAnd         extends Op( 14 ) {
       override val name = "&"
-      protected def make1( a: Float, b: Float ) = (a.toInt & b.toInt).toFloat
+      protected def make1( a: Float, b: Float ) = rf_&( a, b )
    }
    case object BitOr          extends Op( 15 ) {
       override val name = "|"
-      protected def make1( a: Float, b: Float ) = (a.toInt | b.toInt).toFloat
+      protected def make1( a: Float, b: Float ) = rf_|( a, b )
    }
    case object BitXor         extends Op( 16 ) {
       override val name = "^"
-      protected def make1( a: Float, b: Float ) = (a.toInt ^ b.toInt).toFloat
+      protected def make1( a: Float, b: Float ) = rf_^( a, b )
    }
 // case object Lcm            extends Op( 17 )
 // case object Gcd            extends Op( 18 )
