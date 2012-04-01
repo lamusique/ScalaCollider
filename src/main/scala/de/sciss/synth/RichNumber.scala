@@ -27,8 +27,8 @@ package de.sciss.synth
 
 import collection.immutable.NumericRange
 
-private[synth] object RichNumber {
-   val LOG2 = math.log( 2 )
+object RichNumber {
+   private[synth] val LOG2 = math.log( 2 )
 
    // ---- Float ----
 
@@ -368,6 +368,8 @@ private[synth] object RichNumber {
    }
 
    sealed trait NAryDoubleOps {
+      import RichDouble._
+
       protected def d: Double
 
       // recover these from scala.runtime.RichDouble
@@ -560,17 +562,56 @@ extends Proxy with Ordered[ Float ] with RichNumber.UnaryFloatOps with RichNumbe
 
 // ---------------------------- Double ----------------------------
 
+object RichDouble {
+   import RichNumber.LOG2
+
+   def rd_abs( d: Double ) : Double	         = math.abs( d )
+   def rd_ceil( d: Double ) : Double	      = math.ceil( d )
+   def rd_floor( d: Double ) : Double	      = math.floor( d )
+   def rd_frac( d: Double ) : Double	      = (d - math.floor( d )) // according to jmc
+   def rd_signum( d: Double ) : Double       = math.signum( d )
+   def rd_squared( d: Double ) : Double      = d * d
+   def rd_cubed( d: Double ) : Double        = d * d * d
+   def rd_sqrt( d: Double ) : Double         = math.sqrt( d )
+   def rd_exp( d: Double ) : Double          = math.exp( d )
+   def rd_reciprocal( d: Double ) : Double   = 1.0 / d
+   def rd_midicps( d: Double ) : Double      = (440 * math.pow( 2, (d - 69) / 12 ))
+   def rd_cpsmidi( d: Double ) : Double      = (math.log( d / 440 ) / LOG2 * 12 + 69)
+   def rd_midiratio( d: Double ) : Double    = (math.pow( 2, d / 12 ))
+   def rd_ratiomidi( d: Double ) : Double    = (12 * math.log( d ) / LOG2)
+   def rd_dbamp( d: Double ) : Double        = (math.pow( 10, d * 0.05 ))
+   def rd_ampdb( d: Double ) : Double        = (math.log10( d ) * 20)
+   def rd_octcps( d: Double ) : Double       = (440 * math.pow( 2, d - 4.75 ))
+   def rd_cpsoct( d: Double ) : Double       = (math.log( d / 440 ) / LOG2 + 4.75)
+   def rd_log( d: Double ) : Double          = math.log( d )
+   def rd_log2( d: Double ) : Double         = (math.log( d ) / LOG2)
+   def rd_log10( d: Double ) : Double        = math.log10( d )
+   def rd_sin( d: Double ) : Double          = math.sin( d )
+   def rd_cos( d: Double ) : Double          = math.cos( d )
+   def rd_tan( d: Double ) : Double          = math.tan( d )
+   def rd_asin( d: Double ) : Double         = math.asin( d )
+   def rd_acos( d: Double ) : Double         = math.acos( d )
+   def rd_atan( d: Double ) : Double         = math.atan( d )
+   def rd_sinh( d: Double ) : Double         = math.sinh( d )
+   def rd_cosh( d: Double ) : Double         = math.cosh( d )
+   def rd_tanh( d: Double ) : Double         = math.tanh( d )
+//   def rd_distort( d: Double ) : Double    = d / (1 + math.abs( d ))
+//   def rd_softclip( d: Double ) : Double   = { val absx = math.abs( d ); if( absx <= 0.5 ) d else (absx - 0.25) / d}
+//   def rd_ramp( d: Double ) : Double       = if( d <= 0 ) 0 else if( d >= 1 ) 1 else d
+//   def rd_scurve( d: Double ) : Double     = if( d <= 0 ) 0 else if( d > 1 ) 1 else d * d * (3 - 2 * d)
+}
 final class RichDouble private[synth]( protected val d: Double )
-extends Proxy with Ordered[ Double ] with RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
+extends /* Proxy */ /* with Ordered[ Double ] */ /* with */ RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
    import RichNumber._
+   import RichDouble._
 
    protected def cn = Constant( d.toFloat )
 
-   // Proxy
-   def self: Any = d
-
-   // Ordered
-   def compare( b: Double ): Int = java.lang.Double.compare( d, b )
+//   // Proxy
+//   def self: Any = d
+//
+//   // Ordered
+//   def compare( b: Double ): Int = java.lang.Double.compare( d, b )
 
    // recover these from scala.runtime.RichDouble
    def isInfinity: Boolean = java.lang.Double.isInfinite( d )
@@ -579,38 +620,38 @@ extends Proxy with Ordered[ Double ] with RichNumber.NAryDoubleOps2 with RichNum
 
    // unary ops
 //   def unary_- : Double    = -d
-   def abs : Double	      = math.abs( d )
-   def ceil : Double	      = math.ceil( d )
-   def floor : Double	   = math.floor( d )
-   def frac : Double	      = (d - math.floor( d )) // according to jmc
-   def signum : Double     = math.signum( d )
-   def squared : Double    = d * d
-   def cubed : Double      = d * d * d
-   def sqrt : Double       = math.sqrt( d )
-   def exp : Double        = math.exp( d )
-   def reciprocal : Double = 1.0 / d
-   def midicps : Double    = (440 * math.pow( 2, (d - 69) / 12 ))
-   def cpsmidi : Double    = (math.log( d / 440 ) / LOG2 * 12 + 69)
-   def midiratio : Double  = (math.pow( 2, d / 12 ))
-   def ratiomidi : Double  = (12 * math.log( d ) / LOG2)
-   def dbamp : Double      = (math.pow( 10, d * 0.05 ))
-   def ampdb : Double      = (math.log10( d ) * 20)
-   def octcps : Double     = (440 * math.pow( 2, d - 4.75 ))
-   def cpsoct : Double     = (math.log( d / 440 ) / LOG2 + 4.75)
-   def log : Double        = math.log( d )
-   def log2 : Double       = (math.log( d ) / LOG2)
-   def log10 : Double      = math.log10( d )
-   def sin : Double        = math.sin( d )
-   def cos : Double        = math.cos( d )
-   def tan : Double        = math.tan( d )
-   def asin : Double       = math.asin( d )
-   def acos : Double       = math.acos( d )
-   def atan : Double       = math.atan( d )
-   def sinh : Double       = math.sinh( d )
-   def cosh : Double       = math.cosh( d )
-   def tanh : Double       = math.tanh( d )
-//   def distort : Double    = d / (1 + math.abs( d ))
-//   def softclip : Double   = { val absx = math.abs( d ); if( absx <= 0.5 ) d else (absx - 0.25) / d}
-//   def ramp : Double       = if( d <= 0 ) 0 else if( d >= 1 ) 1 else d
-//   def scurve : Double     = if( d <= 0 ) 0 else if( d > 1 ) 1 else d * d * (3 - 2 * d)
+   def abs : Double	      = rd_abs( d )
+   def ceil : Double	      = rd_ceil( d )
+   def floor : Double	   = rd_floor( d )
+   def frac : Double	      = rd_frac( d )
+   def signum : Double     = rd_signum( d )
+   def squared : Double    = rd_squared( d )
+   def cubed : Double      = rd_cubed( d )
+   def sqrt : Double       = rd_sqrt( d )
+   def exp : Double        = rd_exp( d )
+   def reciprocal : Double = rd_reciprocal( d )
+   def midicps : Double    = rd_midicps( d )
+   def cpsmidi : Double    = rd_cpsmidi( d )
+   def midiratio : Double  = rd_midiratio( d )
+   def ratiomidi : Double  = rd_ratiomidi( d )
+   def dbamp : Double      = rd_dbamp( d )
+   def ampdb : Double      = rd_ampdb( d )
+   def octcps : Double     = rd_octcps( d )
+   def cpsoct : Double     = rd_cpsoct( d )
+   def log : Double        = rd_log( d )
+   def log2 : Double       = rd_log2( d )
+   def log10 : Double      = rd_log10( d )
+   def sin : Double        = rd_sin( d )
+   def cos : Double        = rd_cos( d )
+   def tan : Double        = rd_tan( d )
+   def asin : Double       = rd_asin( d )
+   def acos : Double       = rd_acos( d )
+   def atan : Double       = rd_atan( d )
+   def sinh : Double       = rd_sinh( d )
+   def cosh : Double       = rd_cosh( d )
+   def tanh : Double       = rd_tanh( d )
+//   def distort : Double    = rd_distort( d )
+//   def softclip : Double   = rd_softclip( d )
+//   def ramp : Double       = rd_ramp( d )
+//   def scurve : Double     = rd_scurve( d )
 }
