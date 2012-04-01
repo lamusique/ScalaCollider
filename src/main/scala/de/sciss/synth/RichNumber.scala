@@ -35,7 +35,8 @@ object RichNumber {
 
       protected def f: Float
 
-      // binary ops
+      // -------- binary ops --------
+
 // def +( b: Float ) : Float        = f + b.f
 // def -( b: Float ) : Float        = f - b.f
 // def *( b: Float ) : Float        = f * b.f
@@ -386,41 +387,7 @@ extends Proxy with Ordered[ Int ] with RichNumber.UnaryFloatOps with RichNumber.
 object RichFloat {
    import RichNumber.LOG2
 
-   @inline def rf_fold( in: Float, lo: Float, hi: Float ) : Float = {
-      val x = in - lo
-      // avoid the divide if possible
-      if( in >= hi ) {
-         val f = hi + hi - in
-         if (f >= lo) return f
-      } else if( in < lo ) {
-         val f = lo + lo - in
-         if( f < hi ) return f
-      } else return in
-
-      if( hi == lo ) return lo
-      // ok do the divide
-      val range   = hi - lo
-      val range2  = range + range
-      val c       = x - range2 * math.floor( x / range2 ).toFloat
-      lo + (if( c >= range ) range2 - c else c)
-   }
-
-   @inline def rf_wrap( in: Float, lo: Float, hi: Float ) : Float = {
-      // avoid the divide if possible
-      if( in >= hi ) {
-         val range   = hi - lo
-         val in2     = in - range;
-         if( in2 < hi ) in2 else if( hi == lo ) lo else {
-            in2 - range * math.floor( (in2 - lo) / range ).toFloat
-         }
-      } else if( in < lo ) {
-         val range   = hi - lo
-         val in2     = in + range
-         if( in2 >= lo ) in2 else if( hi == lo ) lo else {
-            in2 - range * math.floor( (in2 - lo) / range ).toFloat
-         }
-      } else in
-   }
+   // -------- unary ops --------
 
    @inline def rf_not( f: Float ) : Float          = if( f > 0f ) 0f else 1f
    @inline def rf_abs( f: Float ) : Float          = math.abs( f )
@@ -461,6 +428,27 @@ object RichFloat {
    }
    @inline def rf_ramp( f: Float ) : Float         = if( f <= 0 ) 0 else if( f >= 1 ) 1 else f
    @inline def rf_scurve( f: Float ) : Float       = if( f <= 0 ) 0 else if( f > 1 ) 1 else f * f * (3 - 2 * f)
+
+   // -------- binary ops --------
+
+   @inline def rf_+( a: Float, b: Float ) : Float     = a + b
+   @inline def rf_-( a: Float, b: Float ) : Float     = a - b
+   @inline def rf_*( a: Float, b: Float ) : Float     = a * b
+   @inline def rf_/( a: Float, b: Float ) : Float     = a / b
+   @inline def rf_%( a: Float, b: Float ) : Float     = a % b
+   @inline def rf_===( a: Float, b: Float ) : Int     = if( a == b ) 1 else 0
+   @inline def rf_!==( a: Float, b: Float ) : Int     = if( a != b ) 1 else 0
+   @inline def rf_<( a: Float, b: Float ) : Boolean   = a < b
+   @inline def rf_>( a: Float, b: Float ) : Boolean   = a > b
+   @inline def rf_<=( a: Float, b: Float ) : Boolean  = a <= b
+   @inline def rf_>=( a: Float, b: Float ) : Boolean  = a >= b
+   @inline def rf_min( a: Float, b: Float ) : Float   = math.min( a, b )
+   @inline def rf_max( a: Float, b: Float ) : Float   = math.max( a, b )
+   @inline def rf_&( a: Float, b: Float ) : Float	   = a.toInt & b.toInt
+   @inline def rf_|( a: Float, b: Float ) : Float	   = a.toInt | b.toInt
+   @inline def rf_^( a: Float, b: Float ) : Float	   = a.toInt ^ b.toInt
+   @inline def rf_atan2( a: Float, b: Float ) : Float = math.atan2( a, b ).toFloat
+   @inline def rf_hypot( a: Float, b: Float ) : Float = math.hypot( a, b ).toFloat
 
    @inline def rf_round( a: Float, b: Float ) =
       if( b == 0 ) a else (math.floor( a / b + 0.5f ) * b).toFloat
@@ -524,11 +512,49 @@ object RichFloat {
 
    @inline def rf_wrap2( a: Float, b: Float ) = rf_wrap( a, -b, b )
 
+   // -------- n-ary ops --------
+
+   @inline def rf_fold( in: Float, lo: Float, hi: Float ) : Float = {
+      val x = in - lo
+      // avoid the divide if possible
+      if( in >= hi ) {
+         val f = hi + hi - in
+         if (f >= lo) return f
+      } else if( in < lo ) {
+         val f = lo + lo - in
+         if( f < hi ) return f
+      } else return in
+
+      if( hi == lo ) return lo
+      // ok do the divide
+      val range   = hi - lo
+      val range2  = range + range
+      val c       = x - range2 * math.floor( x / range2 ).toFloat
+      lo + (if( c >= range ) range2 - c else c)
+   }
+
+   @inline def rf_wrap( in: Float, lo: Float, hi: Float ) : Float = {
+      // avoid the divide if possible
+      if( in >= hi ) {
+         val range   = hi - lo
+         val in2     = in - range;
+         if( in2 < hi ) in2 else if( hi == lo ) lo else {
+            in2 - range * math.floor( (in2 - lo) / range ).toFloat
+         }
+      } else if( in < lo ) {
+         val range   = hi - lo
+         val in2     = in + range
+         if( in2 >= lo ) in2 else if( hi == lo ) lo else {
+            in2 - range * math.floor( (in2 - lo) / range ).toFloat
+         }
+      } else in
+   }
+
    @inline def rf_linlin( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
       (in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo
    }
 
-   def rf_linexp( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
+   @inline def rf_linexp( in: Float, srcLo: Float, srcHi: Float, dstLo: Float, dstHi: Float ) : Float = {
       math.pow( dstHi / dstLo, (in - srcLo) / (srcHi - srcLo)).toFloat * dstLo
    }
 }
@@ -540,11 +566,11 @@ extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NA
    protected def d  = f.toDouble
    protected def cn = Constant( f )
 
-   // Proxy
-   def self: Any = f
-
-   // Ordered
-   def compare( b: Float ): Int = java.lang.Float.compare( f, b )
+//   // Proxy
+//   def self: Any = f
+//
+//   // Ordered
+//   def compare( b: Float ): Int = java.lang.Float.compare( f, b )
 
    // recover these from scala.runtime.RichFloat
    def isInfinity: Boolean = java.lang.Float.isInfinite( f )
@@ -571,6 +597,8 @@ extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NA
 
 object RichDouble {
    import RichNumber.LOG2
+
+   // -------- unary ops --------
 
    @inline def rd_abs( d: Double ) : Double	      = math.abs( d )
    @inline def rd_ceil( d: Double ) : Double       = math.ceil( d )
