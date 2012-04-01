@@ -247,6 +247,9 @@ object RichNumber {
       // binary ops
       def min( b: Double ) : Double       = math.min( d, b )
       def max( b: Double ) : Double       = math.max( d, b )
+      def round( b: Double ) : Double     = rd_round( d, b )
+      def roundup( b: Double ) : Double   = rd_roundup( d, b )
+      def trunc( b: Double ) : Double     = rd_trunc( d, b )
       def atan2( b: Double ) : Double     = math.atan2( d, b )
       def hypot( b: Double ) : Double     = math.hypot( d, b )
       def hypotx( b: Double ) : Double    = rd_hypotx( d, b )
@@ -276,11 +279,11 @@ object RichNumber {
          rd_linexp( d, srcLo, srcHi, dstLo, dstHi )
    }
 
-   sealed trait NAryDoubleOps2 extends NAryDoubleOps {
-      def round( b: Double ) : Double     = rd_round( d, b )
-      def roundup( b: Double ) : Double   = rd_roundup( d, b )
-      def trunc( b: Double ) : Double     = rd_trunc( d, b )
-   }
+//   sealed trait NAryDoubleOps2 extends NAryDoubleOps {
+//      def round( b: Double ) : Double     = rd_round( d, b )
+//      def roundup( b: Double ) : Double   = rd_roundup( d, b )
+//      def trunc( b: Double ) : Double     = rd_trunc( d, b )
+//   }
 
    // ---- Constant / GE ----
 
@@ -348,17 +351,25 @@ object RichNumber {
 
 // ---------------------------- Int ----------------------------
 
+object RichInt {
+   // ---- unary ops ----
+
+   @inline def ri_abs( a: Int ) : Int        = math.abs( a )
+   @inline def ri_signum( a: Int ) : Int     = math.signum( a )
+   @inline def ri_squared( a: Int ) : Long   = { val n = a.toLong; n * n }
+   @inline def ri_cubed( a: Int ) : Long     = { val n = a.toLong; n * n * n }
+
+   // ---- binary ops ----
+   @inline def ri_min( a: Int, b: Int ) : Int   = math.min( a, b )
+   @inline def ri_max( a: Int, b: Int ) : Int   = math.max( a, b )
+}
 final case class RichInt private[synth]( i: Int )
-extends Proxy with Ordered[ Int ] with RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps with RichNumber.NAryGEOps {
+extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps with RichNumber.NAryGEOps {
+   import RichInt._
+
    protected def f  = i.toFloat
    protected def d  = i.toDouble
    protected def cn = Constant( i.toFloat )
-
-   // Proxy
-   def self: Any = i
-
-   // Ordered
-   def compare( that: Int ): Int = if( i < that ) -1 else if( i > that ) 1 else 0
 
    // recover these from scala.runtime.RichFloat
 //   def isInfinity: Boolean = java.lang.Float.isInfinite( x )
@@ -367,27 +378,27 @@ extends Proxy with Ordered[ Int ] with RichNumber.UnaryFloatOps with RichNumber.
 
    // more unary ops
 // def unary_- : Int       = -i
-   def abs : Int	         = math.abs( i )
+   def abs : Int	         = ri_abs( i )
 //   def ceil : Float	      = math.ceil( i ).toFloat
 //   def floor : Float	      = math.floor( i ).toFloat
 //   def frac : Float	      = rf_frac( i )
-   def signum : Int        = math.signum( i )
-//   def squared : Float     = i * i // or should we use Float to avoid overflow?
-//   def cubed : Float       = i * i * i // or should we use Float to avoid overflow?
+   def signum : Int        = ri_signum( i )
+   def squared : Long      = ri_squared( i )
+   def cubed : Long        = ri_cubed( i )
 
    // more binary ops
-   def min( b: Int ) : Int      = if( i < b ) i else b // math.min( f, b )
-   def max( b: Int ) : Int      = if( i > b ) i else b // math.max( f, b )
+   def min( b: Int ) : Int      = ri_min( i, b )
+   def max( b: Int ) : Int      = ri_max( i, b )
 
    // recover these from scala.runtime.RichInt
-   def until( end: Int ): Range = Range( i, end )
-   def until( end: Int, step: Int ): Range = Range( i, end, step )
-   def to( end: Int ): Range.Inclusive = Range.inclusive( i, end )
-	def to( end: Int, step: Int ): Range.Inclusive = Range.inclusive( i, end, step )
+   def until( end: Int ): Range                    = Range( i, end )
+   def until( end: Int, step: Int ): Range         = Range( i, end, step )
+   def to( end: Int ): Range.Inclusive             = Range.inclusive( i, end )
+	def to( end: Int, step: Int ): Range.Inclusive  = Range.inclusive( i, end, step )
 
    def toBinaryString: String = java.lang.Integer.toBinaryString( i )
-	def toHexString: String = java.lang.Integer.toHexString( i )
-	def toOctalString: String = java.lang.Integer.toOctalString( i )
+	def toHexString: String    = java.lang.Integer.toHexString( i )
+	def toOctalString: String  = java.lang.Integer.toOctalString( i )
 }
 
 // ---------------------------- Float ----------------------------
@@ -579,14 +590,14 @@ object RichFloat {
    }
 }
 final case class RichFloat private[synth]( protected val f: Float )
-extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
+extends RichNumber.UnaryFloatOps with RichNumber.NAryFloatOps with RichNumber.NAryGEOps2 {
    import RichFloat._
 
    protected def d  = f.toDouble
    protected def cn = Constant( f )
 
    // recover these from scala.runtime.RichFloat
-   def isInfinity: Boolean = java.lang.Float.isInfinite( f )
+   def isInfinity: Boolean    = java.lang.Float.isInfinite( f )
    def isPosInfinity: Boolean = isInfinity && f > 0.0
    def isNegInfinity: Boolean = isInfinity && f < 0.0
 
@@ -649,13 +660,13 @@ object RichDouble {
 //   @inline def rd_scurve( d: Double ) : Double     = if( d <= 0 ) 0 else if( d > 1 ) 1 else d * d * (3 - 2 * d)
 }
 final class RichDouble private[synth]( protected val d: Double )
-extends RichNumber.NAryDoubleOps2 with RichNumber.NAryGEOps2 {
+extends RichNumber.NAryDoubleOps with RichNumber.NAryGEOps2 {
    import RichDouble._
 
    protected def cn = Constant( d.toFloat )
 
    // recover these from scala.runtime.RichDouble
-   def isInfinity: Boolean = java.lang.Double.isInfinite( d )
+   def isInfinity: Boolean    = java.lang.Double.isInfinite( d )
    def isPosInfinity: Boolean = isInfinity && d > 0.0
    def isNegInfinity: Boolean = isInfinity && d < 0.0
 
