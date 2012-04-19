@@ -1,10 +1,10 @@
 name := "scalacollider"
 
-version := "0.34-SNAPSHOT"
+version := "0.34"
 
 organization := "de.sciss"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -15,7 +15,7 @@ licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "0.33",
    "de.sciss" %% "scalaaudiofile" % "0.20",
-   "org.scalatest" %% "scalatest" % "1.7.1" % "test"
+   "org.scalatest" %% "scalatest" % "1.7.2" % "test"
 )
 
 retrieveManaged := true
