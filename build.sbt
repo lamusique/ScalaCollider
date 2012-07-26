@@ -4,7 +4,7 @@ version := "0.34"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0-M5"
+scalaVersion := "2.10.0-M6"
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -15,8 +15,8 @@ licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "0.33",
    "de.sciss" %% "scalaaudiofile" % "0.20",
-   "org.scala-lang" % "scala-actors" % "2.10.0-M5",
-   "org.scalatest" %% "scalatest" % "1.9-2.10.0-M5-B2" % "test"
+   "org.scala-lang" % "scala-actors" % "2.10.0-M6",
+   "org.scalatest" % "scalatest_2.10.0-M5" % "1.9-2.10.0-M5-B2" % "test"
 )
 
 retrieveManaged := true
