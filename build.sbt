@@ -12,11 +12,13 @@ homepage := Some( url( "https://github.com/Sciss/ScalaCollider" ))
 
 licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 
+resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/groups/public"
+
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "0.33",
    "de.sciss" %% "scalaaudiofile" % "0.20",
    "org.scala-lang" % "scala-actors" % "2.10.0-M6",
-   "org.scalatest" % "scalatest_2.10.0-M5" % "1.9-2.10.0-M5-B2" % "test"
+   "org.scalatest" %% "scalatest" % "1.9-2.10.0-M6-B1" % "test"
 )
 
 retrieveManaged := true
