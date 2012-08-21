@@ -6,7 +6,7 @@ ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyrigh
 
 ### requirements / installation
 
-ScalaCollider currently builds with xsbt (sbt 0.11) against Scala 2.9.2. It requires Java 1.6 and SuperCollider 3.5 or higher. It depends on [ScalaOSC](http://github.com/Sciss/ScalaOSC) and [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile).
+ScalaCollider currently builds with sbt 0.12.0 against Scala 2.9.2. It requires Java 1.6 and SuperCollider 3.5 or higher. It depends on [ScalaOSC](http://github.com/Sciss/ScalaOSC) and [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile).
 
 Targets for sbt:
 
@@ -16,7 +16,9 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-Running `sbt update` should download all the dependencies from scala-tools.org (In the course of the next half year, we will migrate to Sonatype).
+To link to ScalaCollider:
+
+    libraryDependencies += "de.sciss" %% "scalacollider" % "1.0.+"
 
 ### starting a SuperCollider server
 
@@ -62,10 +64,7 @@ If you want to develop the sources of ScalaCollider, the recommended way is to u
 
     addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
 
-Then to create the IDEA project, run the following two commands from the xsbt shell:
-
-    > set ideaProjectName := "ScalaCollider"
-    > gen-idea
+Then to create the IDEA project, run `sbt gen-idea`.
 
 ### download and resources
 

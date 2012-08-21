@@ -1,10 +1,10 @@
 name := "scalacollider"
 
-version := "0.34"
+version := "1.0.0"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0-M6"
+scalaVersion := "2.9.2"
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -15,11 +15,24 @@ licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/groups/public"
 
 libraryDependencies ++= Seq(
-   "de.sciss" %% "scalaosc" % "0.33",
-   "de.sciss" %% "scalaaudiofile" % "0.20",
-   "org.scala-lang" % "scala-actors" % "2.10.0-M6",
-   "org.scalatest" %% "scalatest" % "1.9-2.10.0-M6-B1" % "test"
+   "de.sciss" %% "scalaosc" % "1.0.+",
+   "de.sciss" %% "scalaaudiofile" % "1.0.+"
 )
+
+libraryDependencies <++= scalaVersion { sv =>
+   sv match {
+      case "2.9.2" => Seq.empty
+      case _ => Seq( "org.scala-lang" % "scala-actors" % sv )
+   }
+}
+
+libraryDependencies <+= scalaVersion { sv =>
+   val v = sv match {
+      case "2.10.0-M7" => "org.scalatest" % "scalatest_2.10.0-M6" % "1.9-2.10.0-M6-B2"
+      case _ => "org.scalatest" %% "scalatest" % "1.8"
+   }
+   v % "test"
+}
 
 retrieveManaged := true
 
@@ -28,6 +41,19 @@ scalacOptions ++= Seq( "-deprecation", "-unchecked" )
 // ---- console ----
 
 initialCommands in console := """import de.sciss.osc; import de.sciss.synth.{ osc => sosc, _ }; import ugen._; var s: Server = null; def boot = Server.run( s = _ )"""
+
+// ---- build info ----
+
+buildInfoSettings
+
+sourceGenerators in Compile <+= buildInfo
+
+buildInfoKeys := Seq( name, organization, version, scalaVersion, description,
+   BuildInfoKey.map( homepage ) { case (k, opt) => k -> opt.get },
+   BuildInfoKey.map( licenses ) { case (_, Seq( (lic, _) )) => "license" -> lic }
+)
+
+buildInfoPackage := "de.sciss.synth"
 
 // ---- publishing ----
 
