@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+
 /**
  * A UGen to stream in a signal from an audio file. Continuously plays a longer audio file
  * from disk. This requires a buffer to be preloaded with one buffer size of sound. If loop is
@@ -24,15 +24,15 @@ import aux.UGenHelper._
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
 object DiskIn {
-   
    /**
     * @param numChannels     the amount of channels the file and the buffer will have. This is an Int and hence
     *                        must be pre-determined. Different SynthDefs must be created for different numbers of channels.
     * @param buf             the id of the buffer with the correct number of channels and frames
     * @param loop            whether the file should loop when its end is reached
     */
-   def ar(numChannels: Int, buf: GE, loop: GE = 0.0f) = apply(numChannels, buf, loop)
+   def ar(numChannels: Int, buf: GE, loop: GE = 0.0f) = apply(audio, numChannels, buf, loop)
 }
+
 /**
  * A UGen to stream in a signal from an audio file. Continuously plays a longer audio file
  * from disk. This requires a buffer to be preloaded with one buffer size of sound. If loop is
@@ -50,10 +50,12 @@ object DiskIn {
  * @see [[de.sciss.synth.ugen.VDiskIn]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-final case class DiskIn(numChannels: Int, buf: GE, loop: GE) extends UGenSource.MultiOut("DiskIn") with HasSideEffect with AudioRated {
+final case class DiskIn(rate: Rate, numChannels: Int, buf: GE, loop: GE) extends UGenSource.MultiOut("DiskIn") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, loop.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args, false, true)
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args, false, true)
 }
+
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
  * needs to be provides which is used to buffer the incoming signal.
@@ -68,7 +70,6 @@ final case class DiskIn(numChannels: Int, buf: GE, loop: GE) extends UGenSource.
  * @see [[de.sciss.synth.ugen.RecordBuf]]
  */
 object DiskOut {
-   
    /**
     * @param buf             the buffer used internally by the UGen. this number of frames in the buffer must
     *                        be a power of two (this is currently not checked!). The buffer must have been initialized
@@ -77,8 +78,9 @@ object DiskOut {
     *                        (and not write anything to the file).
     * @param in              the signal to be recorded
     */
-   def ar(buf: GE, in: GE) = apply(buf, in)
+   def ar(buf: GE, in: GE) = apply(audio, buf, in)
 }
+
 /**
  * A UGen which writes a signal to a soundfile on disk. To achieve this efficiently, a buffer is
  * needs to be provides which is used to buffer the incoming signal.
@@ -99,10 +101,15 @@ object DiskOut {
  * @see [[de.sciss.synth.ugen.DiskIn]]
  * @see [[de.sciss.synth.ugen.RecordBuf]]
  */
-final case class DiskOut(buf: GE, in: GE) extends UGenSource.SingleOut("DiskOut") with AudioRated with WritesBuffer {
+final case class DiskOut(rate: MaybeRate, buf: GE, in: GE) extends UGenSource.SingleOut("DiskOut") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args, true, true)
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = {
+      val _rate = rate.?|(_args(1).rate)
+      new UGen.SingleOut(name, _rate, _args, true, true)
+   }
 }
+
 /**
  * A UGen to stream in a signal from an audio file with variable playback speed.
  * Continuously plays a longer audio file
@@ -120,7 +127,6 @@ final case class DiskOut(buf: GE, in: GE) extends UGenSource.SingleOut("DiskOut"
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
 object VDiskIn {
-   
    /**
     * @param numChannels     the amount of channels the file and the buffer will have. This is an Int and hence
     *                        must be pre-determined. Different SynthDefs must be created for different numbers of channels
@@ -133,8 +139,9 @@ object VDiskIn {
     * @param sendID          If a value other than zero is used, the UGen sends an OSC message with this id and the
     *                        file position each time it reloads the buffer: `OSCMessage( "/diskin", nodeID, sendID, frame )`
     */
-   def ar(numChannels: Int, buf: GE, speed: GE = 1.0f, loop: GE = 0.0f, sendID: GE = 0.0f) = apply(numChannels, buf, speed, loop, sendID)
+   def ar(numChannels: Int, buf: GE, speed: GE = 1.0f, loop: GE = 0.0f, sendID: GE = 0.0f) = apply(audio, numChannels, buf, speed, loop, sendID)
 }
+
 /**
  * A UGen to stream in a signal from an audio file with variable playback speed.
  * Continuously plays a longer audio file
@@ -162,7 +169,8 @@ object VDiskIn {
  * @see [[de.sciss.synth.ugen.DiskOut]]
  * @see [[de.sciss.synth.ugen.PlayBuf]]
  */
-final case class VDiskIn(numChannels: Int, buf: GE, speed: GE, loop: GE, sendID: GE) extends UGenSource.MultiOut("VDiskIn") with HasSideEffect with AudioRated {
+final case class VDiskIn(rate: Rate, numChannels: Int, buf: GE, speed: GE, loop: GE, sendID: GE) extends UGenSource.MultiOut("VDiskIn") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, loop.expand, sendID.expand))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args, false, true)
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args, false, true)
 }

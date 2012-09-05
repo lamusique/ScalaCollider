@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+
 /**
  * A UGen that reports the server's current control rate. This is equivalent to the reciprocal
  * of `ControlDur`
@@ -21,6 +21,7 @@ import aux.UGenHelper._
 object ControlRate {
    def ir = apply()
 }
+
 /**
  * A UGen that reports the server's current control rate. This is equivalent to the reciprocal
  * of `ControlDur`
@@ -30,8 +31,10 @@ object ControlRate {
  */
 final case class ControlRate() extends UGenSource.SingleOut("ControlRate") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * A UGen that reports the server's current (audio) sample rate. This is equivalent to the reciprocal
  * of `SampleDur`
@@ -43,6 +46,7 @@ final case class ControlRate() extends UGenSource.SingleOut("ControlRate") with 
 object SampleRate {
    def ir = apply()
 }
+
 /**
  * A UGen that reports the server's current (audio) sample rate. This is equivalent to the reciprocal
  * of `SampleDur`
@@ -53,8 +57,10 @@ object SampleRate {
  */
 final case class SampleRate() extends UGenSource.SingleOut("SampleRate") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * A UGen that reports the server's current (audio) sample period in seconds. This is equivalent to the reciprocal
  * of `SampleRate`
@@ -65,6 +71,7 @@ final case class SampleRate() extends UGenSource.SingleOut("SampleRate") with Sc
 object SampleDur {
    def ir = apply()
 }
+
 /**
  * A UGen that reports the server's current (audio) sample period in seconds. This is equivalent to the reciprocal
  * of `SampleRate`
@@ -74,8 +81,10 @@ object SampleDur {
  */
 final case class SampleDur() extends UGenSource.SingleOut("SampleDur") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * A UGen that reports the server's current control period in seconds. This is equivalent to the reciprocal
  * of `ControlRate`
@@ -86,6 +95,7 @@ final case class SampleDur() extends UGenSource.SingleOut("SampleDur") with Scal
 object ControlDur {
    def ir = apply()
 }
+
 /**
  * A UGen that reports the server's current control period in seconds. This is equivalent to the reciprocal
  * of `ControlRate`
@@ -95,8 +105,10 @@ object ControlDur {
  */
 final case class ControlDur() extends UGenSource.SingleOut("ControlDur") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * A UGen that reports the fractional sample offset of the current Synth from its requested scheduled start.
  * 
@@ -116,6 +128,7 @@ final case class ControlDur() extends UGenSource.SingleOut("ControlDur") with Sc
 object SubsampleOffset {
    def ir = apply()
 }
+
 /**
  * A UGen that reports the fractional sample offset of the current Synth from its requested scheduled start.
  * 
@@ -134,8 +147,10 @@ object SubsampleOffset {
  */
 final case class SubsampleOffset() extends UGenSource.SingleOut("SubsampleOffset") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * A UGen that delivers the conversion factor from frequency in Hertz to radians (normalized frequency).
  * The relation is `RadiansPerSample * sr = 2pi`, thus multiplying the UGen with a frequency between
@@ -146,6 +161,7 @@ final case class SubsampleOffset() extends UGenSource.SingleOut("SubsampleOffset
 object RadiansPerSample {
    def ir = apply()
 }
+
 /**
  * A UGen that delivers the conversion factor from frequency in Hertz to radians (normalized frequency).
  * The relation is `RadiansPerSample * sr = 2pi`, thus multiplying the UGen with a frequency between
@@ -155,8 +171,10 @@ object RadiansPerSample {
  */
 final case class RadiansPerSample() extends UGenSource.SingleOut("RadiansPerSample") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Number of input busses.
  * 
@@ -169,6 +187,7 @@ final case class RadiansPerSample() extends UGenSource.SingleOut("RadiansPerSamp
 object NumInputBuses {
    def ir = apply()
 }
+
 /**
  * Number of input busses.
  * 
@@ -180,8 +199,10 @@ object NumInputBuses {
  */
 final case class NumInputBuses() extends UGenSource.SingleOut("NumInputBuses") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Number of output busses.
  * 
@@ -194,6 +215,7 @@ final case class NumInputBuses() extends UGenSource.SingleOut("NumInputBuses") w
 object NumOutputBuses {
    def ir = apply()
 }
+
 /**
  * Number of output busses.
  * 
@@ -205,8 +227,10 @@ object NumOutputBuses {
  */
 final case class NumOutputBuses() extends UGenSource.SingleOut("NumOutputBuses") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Number of audio busses.
  * 
@@ -219,6 +243,7 @@ final case class NumOutputBuses() extends UGenSource.SingleOut("NumOutputBuses")
 object NumAudioBuses {
    def ir = apply()
 }
+
 /**
  * Number of audio busses.
  * 
@@ -230,8 +255,10 @@ object NumAudioBuses {
  */
 final case class NumAudioBuses() extends UGenSource.SingleOut("NumAudioBuses") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Number of control busses.
  * 
@@ -244,6 +271,7 @@ final case class NumAudioBuses() extends UGenSource.SingleOut("NumAudioBuses") w
 object NumControlBuses {
    def ir = apply()
 }
+
 /**
  * Number of control busses.
  * 
@@ -255,8 +283,10 @@ object NumControlBuses {
  */
 final case class NumControlBuses() extends UGenSource.SingleOut("NumControlBuses") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Number of open buffers.
  * 
@@ -269,6 +299,7 @@ final case class NumControlBuses() extends UGenSource.SingleOut("NumControlBuses
 object NumBuffers {
    def ir = apply()
 }
+
 /**
  * Number of open buffers.
  * 
@@ -280,8 +311,10 @@ object NumBuffers {
  */
 final case class NumBuffers() extends UGenSource.SingleOut("NumBuffers") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Number of currently running synths.
  * 
@@ -294,6 +327,7 @@ final case class NumBuffers() extends UGenSource.SingleOut("NumBuffers") with Sc
 object NumRunningSynths {
    def ir = apply()
 }
+
 /**
  * Number of currently running synths.
  * 
@@ -305,24 +339,27 @@ object NumRunningSynths {
  */
 final case class NumRunningSynths() extends UGenSource.SingleOut("NumRunningSynths") with ScalarRated {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, scalar, _args)
 }
+
 /**
  * Returns the buffer's current sample rate.
  * 
  * Returns the buffer's current sample rate.
  */
 object BufSampleRate {
-   
    /**
     * @param buf             Buffer index.
     */
    def ir(buf: GE) = apply(scalar, buf)
+   
    /**
     * @param buf             Buffer index.
     */
    def kr(buf: GE) = apply(control, buf)
 }
+
 /**
  * Returns the buffer's current sample rate.
  * 
@@ -332,8 +369,10 @@ object BufSampleRate {
  */
 final case class BufSampleRate(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufSampleRate") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Returns a ratio by which the playback of the buffer at the provided index is to be scaled relative to the current sample rate of the server.
  * {{{
@@ -346,16 +385,17 @@ final case class BufSampleRate(rate: Rate, buf: GE) extends UGenSource.SingleOut
  * }}}
  */
 object BufRateScale {
-   
    /**
     * @param buf             Buffer index.
     */
    def ir(buf: GE) = apply(scalar, buf)
+   
    /**
     * @param buf             Buffer index.
     */
    def kr(buf: GE) = apply(control, buf)
 }
+
 /**
  * Returns a ratio by which the playback of the buffer at the provided index is to be scaled relative to the current sample rate of the server.
  * {{{
@@ -371,8 +411,10 @@ object BufRateScale {
  */
 final case class BufRateScale(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufRateScale") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Returns the current number of allocated samples in the Buffer at the provided index. A sample is not the same as a frame (compare with [[ugen.BufFrames]] ); a frame includes the samples in each channel of the buffer. Only for a mono buffer are samples the same as frames.
  * {{{
@@ -385,16 +427,17 @@ final case class BufRateScale(rate: Rate, buf: GE) extends UGenSource.SingleOut(
  * }}}
  */
 object BufSamples {
-   
    /**
     * @param buf             Buffer index.
     */
    def ir(buf: GE) = apply(scalar, buf)
+   
    /**
     * @param buf             Buffer index.
     */
    def kr(buf: GE) = apply(control, buf)
 }
+
 /**
  * Returns the current number of allocated samples in the Buffer at the provided index. A sample is not the same as a frame (compare with [[ugen.BufFrames]] ); a frame includes the samples in each channel of the buffer. Only for a mono buffer are samples the same as frames.
  * {{{
@@ -410,24 +453,27 @@ object BufSamples {
  */
 final case class BufSamples(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufSamples") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Returns the number of allocated frames of the buffer at the provided index.
  * 
  * Returns the number of allocated frames of the buffer at the provided index.
  */
 object BufFrames {
-   
    /**
     * @param buf             Buffer index.
     */
    def ir(buf: GE) = apply(scalar, buf)
+   
    /**
     * @param buf             Buffer index.
     */
    def kr(buf: GE) = apply(control, buf)
 }
+
 /**
  * Returns the number of allocated frames of the buffer at the provided index.
  * 
@@ -437,24 +483,27 @@ object BufFrames {
  */
 final case class BufFrames(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufFrames") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Returns the current number of channels of the buffer at the provided index.
  * 
  * Returns the current number of channels of the buffer at the provided index.
  */
 object BufChannels {
-   
    /**
     * @param buf             Buffer index.
     */
    def ir(buf: GE) = apply(scalar, buf)
+   
    /**
     * @param buf             Buffer index.
     */
    def kr(buf: GE) = apply(control, buf)
 }
+
 /**
  * Returns the current number of channels of the buffer at the provided index.
  * 
@@ -464,24 +513,27 @@ object BufChannels {
  */
 final case class BufChannels(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufChannels") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Returns the current duration of the buffer at the provided index.
  * 
  * Returns the current duration of the buffer at the provided index.
  */
 object BufDur {
-   
    /**
     * @param buf             Buffer index.
     */
    def ir(buf: GE) = apply(scalar, buf)
+   
    /**
     * @param buf             Buffer index.
     */
    def kr(buf: GE) = apply(control, buf)
 }
+
 /**
  * Returns the current duration of the buffer at the provided index.
  * 
@@ -491,8 +543,10 @@ object BufDur {
  */
 final case class BufDur(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufDur") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A UGen to play back samples from a buffer in memory.
  * 
@@ -510,7 +564,6 @@ final case class BufDur(rate: Rate, buf: GE) extends UGenSource.SingleOut("BufDu
  * @see [[de.sciss.synth.ugen.BufFrames]]
  */
 object PlayBuf {
-   
    /**
     * @param numChannels     the number of channels that the buffer will be. Since
     *                        this is a constant, a change in number of channels of the underlying bus must
@@ -529,6 +582,7 @@ object PlayBuf {
     * @param doneAction      what to do when the play head reaches the buffer end.
     */
    def kr(numChannels: Int, buf: GE, speed: GE = 1.0f, trig: GE = 1.0f, startPos: GE = 0.0f, loop: GE = 1.0f, doneAction: GE = doNothing) = apply(control, numChannels, buf, speed, trig, startPos, loop, doneAction)
+   
    /**
     * @param numChannels     the number of channels that the buffer will be. Since
     *                        this is a constant, a change in number of channels of the underlying bus must
@@ -548,6 +602,7 @@ object PlayBuf {
     */
    def ar(numChannels: Int, buf: GE, speed: GE = 1.0f, trig: GE = 1.0f, startPos: GE = 0.0f, loop: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, numChannels, buf, speed, trig, startPos, loop, doneAction)
 }
+
 /**
  * A UGen to play back samples from a buffer in memory.
  * 
@@ -582,8 +637,10 @@ object PlayBuf {
  */
 final case class PlayBuf(rate: Rate, numChannels: Int, buf: GE, speed: GE, trig: GE, startPos: GE, loop: GE, doneAction: GE) extends UGenSource.MultiOut("PlayBuf") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, speed.expand, trig.expand, startPos.expand, loop.expand, doneAction.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args, false, true)
 }
+
 /**
  * Records input into a Buffer.
  * If recLevel is 1.0 and preLevel is 0.0 then the new input overwrites the old data. If they are both 1.0 then the new data is added to the existing data. (Any other settings are also valid.)
@@ -593,8 +650,10 @@ final case class PlayBuf(rate: Rate, numChannels: Int, buf: GE, speed: GE, trig:
  */
 object RecordBuf {
    def kr(in: GE, buf: GE, offset: GE = 0.0f, recLevel: GE = 1.0f, preLevel: GE = 0.0f, run: GE = 1.0f, loop: GE = 1.0f, trig: GE = 1.0f, doneAction: GE = doNothing) = apply(control, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
+   
    def ar(in: GE, buf: GE, offset: GE = 0.0f, recLevel: GE = 1.0f, preLevel: GE = 0.0f, run: GE = 1.0f, loop: GE = 1.0f, trig: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, in, buf, offset, recLevel, preLevel, run, loop, trig, doneAction)
 }
+
 /**
  * Records input into a Buffer.
  * If recLevel is 1.0 and preLevel is 0.0 then the new input overwrites the old data. If they are both 1.0 then the new data is added to the existing data. (Any other settings are also valid.)
@@ -604,8 +663,10 @@ object RecordBuf {
  */
 final case class RecordBuf(rate: Rate, in: GE, buf: GE, offset: GE, recLevel: GE, preLevel: GE, run: GE, loop: GE, trig: GE, doneAction: GE) extends UGenSource.SingleOut("RecordBuf") with WritesBuffer with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, offset.expand, recLevel.expand, preLevel.expand, run.expand, loop.expand, trig.expand, doneAction.expand).++(in.expand.outputs))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * A UGen which reads the content of a buffer, using an index pointer.
  * 
@@ -625,7 +686,6 @@ final case class RecordBuf(rate: Rate, in: GE, buf: GE, offset: GE, recLevel: GE
  * @see [[de.sciss.synth.ugen.BufRateScale]]
  */
 object BufRd {
-   
    /**
     * @param numChannels     number of channels that the buffer will be.
     *                        Since this is an integer constant, a change in the number of channels must
@@ -636,6 +696,7 @@ object BufRd {
     * @param interp          1 for no interpolation, 2 for linear, and 4 for cubic interpolation
     */
    def kr(numChannels: Int, buf: GE, index: GE = 0.0f, loop: GE = 1.0f, interp: GE = 2.0f) = apply(control, numChannels, buf, index, loop, interp)
+   
    /**
     * @param numChannels     number of channels that the buffer will be.
     *                        Since this is an integer constant, a change in the number of channels must
@@ -647,6 +708,7 @@ object BufRd {
     */
    def ar(numChannels: Int, buf: GE, index: GE = 0.0f, loop: GE = 1.0f, interp: GE = 2.0f) = apply(audio, numChannels, buf, index, loop, interp)
 }
+
 /**
  * A UGen which reads the content of a buffer, using an index pointer.
  * 
@@ -675,16 +737,22 @@ object BufRd {
  */
 final case class BufRd(rate: Rate, numChannels: Int, buf: GE, index: GE, loop: GE, interp: GE) extends UGenSource.MultiOut("BufRd") with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand, interp.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
+
 object BufWr {
    def kr(in: GE, buf: GE, index: GE = 0.0f, loop: GE = 1.0f) = apply(control, in, buf, index, loop)
+   
    def ar(in: GE, buf: GE, index: GE = 0.0f, loop: GE = 1.0f) = apply(audio, in, buf, index, loop)
 }
+
 final case class BufWr(rate: Rate, in: GE, buf: GE, index: GE, loop: GE) extends UGenSource.SingleOut("BufWr") with WritesBuffer with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, index.expand, loop.expand).++(in.expand.outputs))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * An autocorrelation based pitch following UGen. It is more accurate than `ZeroCrossing`, but
  * more also more CPU costly. For most purposes the default settings can be used and only `in`
@@ -702,7 +770,6 @@ final case class BufWr(rate: Rate, in: GE, buf: GE, index: GE, loop: GE) extends
  * above `peakThresh` times the amplitude of the peak at lag zero is reported.
  */
 object Pitch {
-   
    /**
     * @param in              The signal to be analyzed.
     * @param initFreq        The initial value of the `freq` output, until the first valid pitch is found.
@@ -744,6 +811,7 @@ object Pitch {
     */
    def kr(in: GE, initFreq: GE = 440.0f, minFreq: GE = 60.0f, maxFreq: GE = 4000.0f, execFreq: GE = 100.0f, binsPerOct: GE = 16.0f, median: GE = 1.0f, ampThresh: GE = 0.01f, peakThresh: GE = 0.5f, downSample: GE = 1.0f, clarity: GE = 0.0f) = apply(control, in, initFreq, minFreq, maxFreq, execFreq, binsPerOct, median, ampThresh, peakThresh, downSample, clarity)
 }
+
 /**
  * An autocorrelation based pitch following UGen. It is more accurate than `ZeroCrossing`, but
  * more also more CPU costly. For most purposes the default settings can be used and only `in`
@@ -800,8 +868,10 @@ object Pitch {
  */
 final case class Pitch(rate: Rate, in: GE, initFreq: GE, minFreq: GE, maxFreq: GE, execFreq: GE, binsPerOct: GE, median: GE, ampThresh: GE, peakThresh: GE, downSample: GE, clarity: GE) extends UGenSource.MultiOut("Pitch") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, initFreq.expand, minFreq.expand, maxFreq.expand, execFreq.expand, binsPerOct.expand, median.expand, ampThresh.expand, peakThresh.expand, downSample.expand, clarity.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(2)(rate), _args)
 }
+
 /**
  * Simple delay line with no interpolation which uses a buffer for its internal memory.
  * 
@@ -809,7 +879,6 @@ final case class Pitch(rate: Rate, in: GE, initFreq: GE, minFreq: GE, maxFreq: G
  * @see [[de.sciss.synth.ugen.BufDelayC]]
  */
 object BufDelayN {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -817,6 +886,7 @@ object BufDelayN {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f) = apply(audio, buf, in, delayTime)
 }
+
 /**
  * Simple delay line with no interpolation which uses a buffer for its internal memory.
  * 
@@ -829,8 +899,10 @@ object BufDelayN {
  */
 final case class BufDelayN(rate: Rate, buf: GE, in: GE, delayTime: GE) extends UGenSource.SingleOut("BufDelayN") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Simple delay line with linear interpolation which uses a buffer for its internal memory.
  * 
@@ -838,7 +910,6 @@ final case class BufDelayN(rate: Rate, buf: GE, in: GE, delayTime: GE) extends U
  * @see [[de.sciss.synth.ugen.BufDelayC]]
  */
 object BufDelayL {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -846,6 +917,7 @@ object BufDelayL {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f) = apply(audio, buf, in, delayTime)
 }
+
 /**
  * Simple delay line with linear interpolation which uses a buffer for its internal memory.
  * 
@@ -858,8 +930,10 @@ object BufDelayL {
  */
 final case class BufDelayL(rate: Rate, buf: GE, in: GE, delayTime: GE) extends UGenSource.SingleOut("BufDelayL") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Simple delay line with cubic interpolation which uses a buffer for its internal memory.
  * 
@@ -867,7 +941,6 @@ final case class BufDelayL(rate: Rate, buf: GE, in: GE, delayTime: GE) extends U
  * @see [[de.sciss.synth.ugen.BufDelayL]]
  */
 object BufDelayC {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -875,6 +948,7 @@ object BufDelayC {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f) = apply(audio, buf, in, delayTime)
 }
+
 /**
  * Simple delay line with cubic interpolation which uses a buffer for its internal memory.
  * 
@@ -887,8 +961,10 @@ object BufDelayC {
  */
 final case class BufDelayC(rate: Rate, buf: GE, in: GE, delayTime: GE) extends UGenSource.SingleOut("BufDelayC") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Comb delay line with no interpolation which uses a buffer for its internal memory.
  * 
@@ -896,7 +972,6 @@ final case class BufDelayC(rate: Rate, buf: GE, in: GE, delayTime: GE) extends U
  * @see [[de.sciss.synth.ugen.BufCombC]]
  */
 object BufCombN {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -906,6 +981,7 @@ object BufCombN {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
+
 /**
  * Comb delay line with no interpolation which uses a buffer for its internal memory.
  * 
@@ -920,8 +996,10 @@ object BufCombN {
  */
 final case class BufCombN(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufCombN") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Comb delay line with linear interpolation which uses a buffer for its internal memory.
  * 
@@ -929,7 +1007,6 @@ final case class BufCombN(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime:
  * @see [[de.sciss.synth.ugen.BufCombC]]
  */
 object BufCombL {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -939,6 +1016,7 @@ object BufCombL {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
+
 /**
  * Comb delay line with linear interpolation which uses a buffer for its internal memory.
  * 
@@ -953,8 +1031,10 @@ object BufCombL {
  */
 final case class BufCombL(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufCombL") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Comb delay line with cubic interpolation which uses a buffer for its internal memory.
  * 
@@ -962,7 +1042,6 @@ final case class BufCombL(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime:
  * @see [[de.sciss.synth.ugen.BufCombL]]
  */
 object BufCombC {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -972,6 +1051,7 @@ object BufCombC {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
+
 /**
  * Comb delay line with cubic interpolation which uses a buffer for its internal memory.
  * 
@@ -986,8 +1066,10 @@ object BufCombC {
  */
 final case class BufCombC(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufCombC") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * All pass delay line with no interpolation which uses a buffer for its internal memory.
  * 
@@ -995,7 +1077,6 @@ final case class BufCombC(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime:
  * @see [[de.sciss.synth.ugen.BufAllpassC]]
  */
 object BufAllpassN {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -1005,6 +1086,7 @@ object BufAllpassN {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
+
 /**
  * All pass delay line with no interpolation which uses a buffer for its internal memory.
  * 
@@ -1019,8 +1101,10 @@ object BufAllpassN {
  */
 final case class BufAllpassN(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufAllpassN") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * All pass delay line with linear interpolation which uses a buffer for its internal memory.
  * 
@@ -1028,7 +1112,6 @@ final case class BufAllpassN(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTi
  * @see [[de.sciss.synth.ugen.BufAllpassC]]
  */
 object BufAllpassL {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -1038,6 +1121,7 @@ object BufAllpassL {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
+
 /**
  * All pass delay line with linear interpolation which uses a buffer for its internal memory.
  * 
@@ -1052,8 +1136,10 @@ object BufAllpassL {
  */
 final case class BufAllpassL(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufAllpassL") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * All pass delay line with cubic interpolation which uses a buffer for its internal memory.
  * 
@@ -1061,7 +1147,6 @@ final case class BufAllpassL(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTi
  * @see [[de.sciss.synth.ugen.BufAllpassL]]
  */
 object BufAllpassC {
-   
    /**
     * @param buf             Buffer index.
     * @param in              The input signal.
@@ -1071,6 +1156,7 @@ object BufAllpassC {
     */
    def ar(buf: GE, in: GE, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, buf, in, delayTime, decayTime)
 }
+
 /**
  * All pass delay line with cubic interpolation which uses a buffer for its internal memory.
  * 
@@ -1085,8 +1171,10 @@ object BufAllpassC {
  */
 final case class BufAllpassC(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("BufAllpassC") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Simple delay line with no interpolation.
  * 
@@ -1094,13 +1182,13 @@ final case class BufAllpassC(rate: Rate, buf: GE, in: GE, delayTime: GE, decayTi
  * @see [[de.sciss.synth.ugen.DelayC]]
  */
 object DelayN {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
     * @param delayTime       Delay time in seconds.
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(control, in, maxDelayTime, delayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1108,6 +1196,7 @@ object DelayN {
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(audio, in, maxDelayTime, delayTime)
 }
+
 /**
  * Simple delay line with no interpolation.
  * 
@@ -1120,8 +1209,10 @@ object DelayN {
  */
 final case class DelayN(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE) extends UGenSource.SingleOut("DelayN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Simple delay line with linear interpolation.
  * 
@@ -1129,13 +1220,13 @@ final case class DelayN(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE) ext
  * @see [[de.sciss.synth.ugen.DelayC]]
  */
 object DelayL {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
     * @param delayTime       Delay time in seconds.
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(control, in, maxDelayTime, delayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1143,6 +1234,7 @@ object DelayL {
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(audio, in, maxDelayTime, delayTime)
 }
+
 /**
  * Simple delay line with linear interpolation.
  * 
@@ -1155,8 +1247,10 @@ object DelayL {
  */
 final case class DelayL(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE) extends UGenSource.SingleOut("DelayL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Simple delay line with cubic interpolation.
  * 
@@ -1164,13 +1258,13 @@ final case class DelayL(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE) ext
  * @see [[de.sciss.synth.ugen.DelayL]]
  */
 object DelayC {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
     * @param delayTime       Delay time in seconds.
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(control, in, maxDelayTime, delayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1178,6 +1272,7 @@ object DelayC {
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f) = apply(audio, in, maxDelayTime, delayTime)
 }
+
 /**
  * Simple delay line with cubic interpolation.
  * 
@@ -1190,8 +1285,10 @@ object DelayC {
  */
 final case class DelayC(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE) extends UGenSource.SingleOut("DelayC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Comb delay line with no interpolation.
  * 
@@ -1199,7 +1296,6 @@ final case class DelayC(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE) ext
  * @see [[de.sciss.synth.ugen.CombC]]
  */
 object CombN {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1208,6 +1304,7 @@ object CombN {
     *                        coefficient will be negative, thus emphasizing only odd harmonics at an octave lower.
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, in, maxDelayTime, delayTime, decayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1217,6 +1314,7 @@ object CombN {
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(control, in, maxDelayTime, delayTime, decayTime)
 }
+
 /**
  * Comb delay line with no interpolation.
  * 
@@ -1231,8 +1329,10 @@ object CombN {
  */
 final case class CombN(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("CombN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Comb delay line with linear interpolation.
  * 
@@ -1240,7 +1340,6 @@ final case class CombN(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, deca
  * @see [[de.sciss.synth.ugen.CombC]]
  */
 object CombL {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1249,6 +1348,7 @@ object CombL {
     *                        coefficient will be negative, thus emphasizing only odd harmonics at an octave lower.
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, in, maxDelayTime, delayTime, decayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1258,6 +1358,7 @@ object CombL {
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(control, in, maxDelayTime, delayTime, decayTime)
 }
+
 /**
  * Comb delay line with linear interpolation.
  * 
@@ -1272,8 +1373,10 @@ object CombL {
  */
 final case class CombL(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("CombL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * Comb delay line with cubic interpolation.
  * 
@@ -1281,7 +1384,6 @@ final case class CombL(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, deca
  * @see [[de.sciss.synth.ugen.CombL]]
  */
 object CombC {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1290,6 +1392,7 @@ object CombC {
     *                        coefficient will be negative, thus emphasizing only odd harmonics at an octave lower.
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, in, maxDelayTime, delayTime, decayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1299,6 +1402,7 @@ object CombC {
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(control, in, maxDelayTime, delayTime, decayTime)
 }
+
 /**
  * Comb delay line with cubic interpolation.
  * 
@@ -1313,8 +1417,10 @@ object CombC {
  */
 final case class CombC(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("CombC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * All pass delay line with no interpolation.
  * 
@@ -1322,7 +1428,6 @@ final case class CombC(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, deca
  * @see [[de.sciss.synth.ugen.AllpassC]]
  */
 object AllpassN {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1331,6 +1436,7 @@ object AllpassN {
     *                        coefficient will be negative, thus emphasizing only odd harmonics at an octave lower.
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, in, maxDelayTime, delayTime, decayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1340,6 +1446,7 @@ object AllpassN {
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(control, in, maxDelayTime, delayTime, decayTime)
 }
+
 /**
  * All pass delay line with no interpolation.
  * 
@@ -1354,8 +1461,10 @@ object AllpassN {
  */
 final case class AllpassN(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("AllpassN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * All pass delay line with linear interpolation.
  * 
@@ -1363,7 +1472,6 @@ final case class AllpassN(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, d
  * @see [[de.sciss.synth.ugen.AllpassC]]
  */
 object AllpassL {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1372,6 +1480,7 @@ object AllpassL {
     *                        coefficient will be negative, thus emphasizing only odd harmonics at an octave lower.
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, in, maxDelayTime, delayTime, decayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1381,6 +1490,7 @@ object AllpassL {
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(control, in, maxDelayTime, delayTime, decayTime)
 }
+
 /**
  * All pass delay line with linear interpolation.
  * 
@@ -1395,8 +1505,10 @@ object AllpassL {
  */
 final case class AllpassL(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("AllpassL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * All pass delay line with cubic interpolation.
  * 
@@ -1404,7 +1516,6 @@ final case class AllpassL(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, d
  * @see [[de.sciss.synth.ugen.AllpassL]]
  */
 object AllpassC {
-   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1413,6 +1524,7 @@ object AllpassC {
     *                        coefficient will be negative, thus emphasizing only odd harmonics at an octave lower.
     */
    def ar(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(audio, in, maxDelayTime, delayTime, decayTime)
+   
    /**
     * @param in              The input signal.
     * @param maxDelayTime    The maximum delay time in seconds. used to initialize the delay buffer size.
@@ -1422,6 +1534,7 @@ object AllpassC {
     */
    def kr(in: GE, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f) = apply(control, in, maxDelayTime, delayTime, decayTime)
 }
+
 /**
  * All pass delay line with cubic interpolation.
  * 
@@ -1436,14 +1549,15 @@ object AllpassC {
  */
 final case class AllpassC(rate: Rate, in: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE) extends UGenSource.SingleOut("AllpassC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A time domain granular pitch shifter. Grains have a triangular amplitude
  * envelope and an overlap of 4:1.
  */
 object PitchShift {
-   
    /**
     * @param in              The input signal.
     * @param winSize         The size of the grain window in seconds. This value cannot be modulated.
@@ -1455,6 +1569,7 @@ object PitchShift {
     */
    def ar(in: GE, winSize: GE = 0.2f, pitchRatio: GE = 1.0f, pitchDispersion: GE = 0.0f, timeDispersion: GE = 0.0f) = apply(in, winSize, pitchRatio, pitchDispersion, timeDispersion)
 }
+
 /**
  * A time domain granular pitch shifter. Grains have a triangular amplitude
  * envelope and an overlap of 4:1.
@@ -1469,8 +1584,10 @@ object PitchShift {
  */
 final case class PitchShift(in: GE, winSize: GE, pitchRatio: GE, pitchDispersion: GE, timeDispersion: GE) extends UGenSource.SingleOut("PitchShift") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, winSize.expand, pitchRatio.expand, pitchDispersion.expand, timeDispersion.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args)
 }
+
 /**
  * Triggers generate grains from a buffer. Each grain has a Hanning envelope
  * {{{
@@ -1479,7 +1596,6 @@ final case class PitchShift(in: GE, winSize: GE, pitchRatio: GE, pitchDispersion
  * and is panned between two channels of multiple outputs.
  */
 object TGrains {
-   
    /**
     * @param numChannels     Number of output channels.
     * @param trig            At each trigger, the following arguments are sampled and used as the arguments of a new grain.
@@ -1496,6 +1612,7 @@ object TGrains {
     */
    def ar(numChannels: Int, trig: GE, buf: GE, speed: GE = 1.0f, centerPos: GE = 0.0f, dur: GE = 0.1f, pan: GE = 0.0f, amp: GE = 0.1f, interp: GE = 4.0f) = apply(numChannels, trig, buf, speed, centerPos, dur, pan, amp, interp)
 }
+
 /**
  * Triggers generate grains from a buffer. Each grain has a Hanning envelope
  * {{{
@@ -1518,21 +1635,26 @@ object TGrains {
  */
 final case class TGrains(numChannels: Int, trig: GE, buf: GE, speed: GE, centerPos: GE, dur: GE, pan: GE, amp: GE, interp: GE) extends UGenSource.MultiOut("TGrains") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(trig.expand, buf.expand, speed.expand, centerPos.expand, dur.expand, pan.expand, amp.expand, interp.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
 }
+
 object ScopeOut {
    def ar(buf: GE, in: GE) = apply(audio, buf, in)
+   
    def kr(buf: GE, in: GE) = apply(control, buf, in)
 }
+
 final case class ScopeOut(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("ScopeOut") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand).++(in.expand.outputs))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * A Karplus-Strong UGen.
  */
 object Pluck {
-   
    /**
     * @param in              An excitation signal.
     * @param trig            Upon a negative to positive transition, the excitation signal will be fed into the delay line.
@@ -1544,6 +1666,7 @@ object Pluck {
     */
    def ar(in: GE, trig: GE = 1.0f, maxDelayTime: GE = 0.2f, delayTime: GE = 0.2f, decayTime: GE = 1.0f, coef: GE = 0.5f) = apply(in, trig, maxDelayTime, delayTime, decayTime, coef)
 }
+
 /**
  * A Karplus-Strong UGen.
  * 
@@ -1557,15 +1680,16 @@ object Pluck {
  */
 final case class Pluck(in: GE, trig: GE, maxDelayTime: GE, delayTime: GE, decayTime: GE, coef: GE) extends UGenSource.SingleOut("Pluck") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, trig.expand, maxDelayTime.expand, delayTime.expand, decayTime.expand, coef.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, audio, _args)
 }
+
 /**
  * Write to a buffer for a `DelTapRd` UGen
  * 
  * @see [[de.sciss.synth.ugen.DelTapRd]]
  */
 object DelTapWr {
-   
    /**
     * @param buf             The buffer to write signal into. Max delay time is based on buffer size.
     *                        @return phase - `DelTapWr outputs its current sample value for use in the phase`
@@ -1573,6 +1697,7 @@ object DelTapWr {
     * @param in              The input signal.
     */
    def ar(buf: GE, in: GE) = apply(audio, buf, in)
+   
    /**
     * @param buf             The buffer to write signal into. Max delay time is based on buffer size.
     *                        @return phase - `DelTapWr outputs its current sample value for use in the phase`
@@ -1581,6 +1706,7 @@ object DelTapWr {
     */
    def kr(buf: GE, in: GE) = apply(control, buf, in)
 }
+
 /**
  * Write to a buffer for a `DelTapRd` UGen
  * 
@@ -1593,15 +1719,16 @@ object DelTapWr {
  */
 final case class DelTapWr(rate: Rate, buf: GE, in: GE) extends UGenSource.SingleOut("DelTapWr") with WritesBuffer {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, true, true)
 }
+
 /**
  * Tap a delay line from a `DelTapWr` UGen.
  * 
  * @see [[de.sciss.synth.ugen.DelTapWr]]
  */
 object DelTapRd {
-   
    /**
     * @param buf             Buffer where DelTapWr has written signal. Max delay time is based on buffer size.
     * @param phase           the current phase of the DelTapWr UGen. This is the output of DelTapWr.
@@ -1609,6 +1736,7 @@ object DelTapRd {
     * @param interp          The kind of interpolation to be used. 1 is none, 2 is linear, 4 is cubic..
     */
    def ar(buf: GE, phase: GE, delayTime: GE, interp: GE = 1.0f) = apply(audio, buf, phase, delayTime, interp)
+   
    /**
     * @param buf             Buffer where DelTapWr has written signal. Max delay time is based on buffer size.
     * @param phase           the current phase of the DelTapWr UGen. This is the output of DelTapWr.
@@ -1617,6 +1745,7 @@ object DelTapRd {
     */
    def kr(buf: GE, phase: GE, delayTime: GE, interp: GE = 1.0f) = apply(control, buf, phase, delayTime, interp)
 }
+
 /**
  * Tap a delay line from a `DelTapWr` UGen.
  * 
@@ -1629,5 +1758,6 @@ object DelTapRd {
  */
 final case class DelTapRd(rate: Rate, buf: GE, phase: GE, delayTime: GE, interp: GE) extends UGenSource.SingleOut("DelTapRd") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, phase.expand, delayTime.expand, interp.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }

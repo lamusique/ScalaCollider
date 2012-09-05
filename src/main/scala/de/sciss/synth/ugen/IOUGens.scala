@@ -3,102 +3,118 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.UGenHelper
 import aux.UGenHelper._
 
 object OffsetOut {
    def ar(bus: GE, in: GE) = apply(bus, in)
 }
+
 final case class OffsetOut(bus: GE, in: GE) extends UGenSource.ZeroOut("OffsetOut") with AudioRated with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
-      val _args1 = if( rate == audio ) _args.head +: UGenHelper.replaceZeroesWithSilence( _args.tail ) else _args
-      new UGen.ZeroOut(name, audio, _args1, true)
-   }
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args, true)
 }
+
 object LocalIn {
    def kr: LocalIn = kr()
+   
    def kr(numChannels: Int = 1) = apply(control, numChannels)
+   
    def ar: LocalIn = ar()
+   
    def ar(numChannels: Int = 1) = apply(audio, numChannels)
 }
+
 final case class LocalIn(rate: Rate, numChannels: Int) extends UGenSource.MultiOut("LocalIn") {
    protected def makeUGens: UGenInLike = makeUGen(IIdxSeq.empty)
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
+
 /**
  * '''Warning''': The argument order is different from its sclang counterpart.
  */
 object XOut {
    def ar(bus: GE, in: GE, xfade: GE) = apply(audio, bus, in, xfade)
+   
    def kr(bus: GE, in: GE, xfade: GE) = apply(control, bus, in, xfade)
 }
+
 /**
  * '''Warning''': The argument order is different from its sclang counterpart.
  */
 final case class XOut(rate: Rate, bus: GE, in: GE, xfade: GE) extends UGenSource.ZeroOut("XOut") with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand, xfade.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
-      val _args1 = if( rate == audio ) _args.take( 2 ) ++ UGenHelper.replaceZeroesWithSilence( _args.drop( 2 )) else _args
-      new UGen.ZeroOut(name, rate, _args1, true)
-   }
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args, true)
 }
+
 object ReplaceOut {
    def ar(bus: GE, in: GE) = apply(bus, in)
 }
+
 final case class ReplaceOut(bus: GE, in: GE) extends UGenSource.ZeroOut("ReplaceOut") with AudioRated with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
-      val _args1 = if( rate == audio ) _args.head +: UGenHelper.replaceZeroesWithSilence( _args.tail ) else _args
-      new UGen.ZeroOut(name, audio, _args1, true)
-   }
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, audio, _args, true)
 }
+
 object Out {
    def ar(bus: GE, in: GE) = apply(audio, bus, in)
+   
    def kr(bus: GE, in: GE) = apply(control, bus, in)
+   
    def ir(bus: GE, in: GE) = apply(scalar, bus, in)
 }
+
 final case class Out(rate: Rate, bus: GE, in: GE) extends UGenSource.ZeroOut("Out") with WritesBus {
    protected def makeUGens: Unit = unwrap(IIdxSeq(bus.expand).++(in.expand.outputs))
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
-      val _args1 = if( rate == audio ) _args.head +: UGenHelper.replaceZeroesWithSilence( _args.tail ) else _args
-      new UGen.ZeroOut(name, rate, _args1, true)
-   }
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args, true)
 }
+
 object LocalOut {
    def kr(in: GE) = apply(control, in)
+   
    def ar(in: GE) = apply(audio, in)
 }
+
 final case class LocalOut(rate: Rate, in: GE) extends UGenSource.ZeroOut("LocalOut") {
    protected def makeUGens: Unit = unwrap(in.expand.outputs)
-   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = {
-      val _args1 = if( rate == audio ) UGenHelper.replaceZeroesWithSilence( _args ) else _args
-      new UGen.ZeroOut(name, rate, _args1)
-   }
+   
+   protected def makeUGen(_args: IIdxSeq[UGenIn]): Unit = new UGen.ZeroOut(name, rate, _args)
 }
+
 object In {
    def ir(bus: GE, numChannels: Int = 1) = apply(scalar, bus, numChannels)
+   
    def kr(bus: GE, numChannels: Int = 1) = apply(control, bus, numChannels)
+   
    def ar(bus: GE, numChannels: Int = 1) = apply(audio, bus, numChannels)
 }
+
 final case class In(rate: Rate, bus: GE, numChannels: Int) extends UGenSource.MultiOut("In") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
+
 object LagIn {
    def kr(bus: GE, numChannels: Int = 1, lag: GE = 0.1f) = apply(control, bus, numChannels, lag)
 }
+
 final case class LagIn(rate: Rate, bus: GE, numChannels: Int, lag: GE) extends UGenSource.MultiOut("LagIn") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand, lag.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, rate, IIdxSeq.fill(numChannels)(rate), _args)
 }
+
 /**
  * A UGen which reads a signal from an audio bus with a current or one cycle old timestamp
  * 
@@ -124,7 +140,6 @@ final case class LagIn(rate: Rate, bus: GE, numChannels: Int, lag: GE) extends U
  * @see [[de.sciss.synth.ugen.ControlDur]]
  */
 object InFeedback {
-   
    /**
     * @param bus             the index of the audio bus to read in from.
     * @param numChannels     the number of channels (i.e. adjacent buses) to read in. Since
@@ -133,6 +148,7 @@ object InFeedback {
     */
    def ar(bus: GE, numChannels: Int = 1) = apply(bus, numChannels)
 }
+
 /**
  * A UGen which reads a signal from an audio bus with a current or one cycle old timestamp
  * 
@@ -164,8 +180,10 @@ object InFeedback {
  */
 final case class InFeedback(bus: GE, numChannels: Int) extends UGenSource.MultiOut("InFeedback") with AudioRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, audio, IIdxSeq.fill(numChannels)(audio), _args)
 }
+
 /**
  * A UGen which generates a trigger anytime a control bus is set.
  * 
@@ -178,7 +196,6 @@ final case class InFeedback(bus: GE, numChannels: Int) extends UGenSource.MultiO
  * @see [[de.sciss.synth.ugen.In]]
  */
 object InTrig {
-   
    /**
     * @param bus             the index of the control bus to read in from.
     * @param numChannels     the number of channels (i.e. adjacent buses) to read in. Since
@@ -187,6 +204,7 @@ object InTrig {
     */
    def kr(bus: GE, numChannels: Int = 1) = apply(bus, numChannels)
 }
+
 /**
  * A UGen which generates a trigger anytime a control bus is set.
  * 
@@ -205,5 +223,6 @@ object InTrig {
  */
 final case class InTrig(bus: GE, numChannels: Int) extends UGenSource.MultiOut("InTrig") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numChannels)(control), _args)
 }

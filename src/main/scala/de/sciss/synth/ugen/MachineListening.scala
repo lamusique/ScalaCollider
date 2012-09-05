@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+
 /**
  * An autocorrelation based beat tracker UGen.
  * 
@@ -31,7 +31,6 @@ import aux.UGenHelper._
  * '''Warning''': This UGen only works properly at 44.1 or 48.0 kHz.
  */
 object BeatTrack {
-   
    /**
     * @param chain           the output (buffer) of an FFT UGen which transforms the audio input to track.
     *                        The expected size of FFT is 1024 for 44100 and 48000 sampling rate, and 2048 for double those.
@@ -42,6 +41,7 @@ object BeatTrack {
     */
    def kr(chain: GE, lock: GE = 0.0f) = apply(chain, lock)
 }
+
 /**
  * An autocorrelation based beat tracker UGen.
  * 
@@ -70,8 +70,10 @@ object BeatTrack {
  */
 final case class BeatTrack(chain: GE, lock: GE) extends UGenSource.SingleOut("BeatTrack") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, lock.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
+
 /**
  * A UGen for the extraction of instantaneous loudness.
  * A perceptual loudness function which outputs loudness in sones; this is a variant of an MP3 perceptual model,
@@ -84,7 +86,6 @@ final case class BeatTrack(chain: GE, lock: GE) extends UGenSource.SingleOut("Be
  * or (at control block size 64) every 8 control blocks.
  */
 object Loudness {
-   
    /**
     * @param chain           the output (buffer) of an FFT UGen which transforms the audio input to track.
     *                        The FFT size should be 1024 for 44.1 and 48 kHz sampling rate, and 2048 for 88.2 and 96 kHz sampling rate.
@@ -95,6 +96,7 @@ object Loudness {
     */
    def kr(chain: GE, smask: GE = 0.25f, tmask: GE = 1.0f) = apply(chain, smask, tmask)
 }
+
 /**
  * A UGen for the extraction of instantaneous loudness.
  * A perceptual loudness function which outputs loudness in sones; this is a variant of an MP3 perceptual model,
@@ -115,8 +117,10 @@ object Loudness {
  */
 final case class Loudness(chain: GE, smask: GE, tmask: GE) extends UGenSource.SingleOut("Loudness") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, smask.expand, tmask.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
+
 /**
  * A (12TET major/minor) key tracker UGen.
  * It is based on a pitch class profile of energy across FFT bins and matching this to templates for major and
@@ -124,7 +128,6 @@ final case class Loudness(chain: GE, smask: GE, tmask: GE) extends UGenSource.Si
  * 12-23 C minor to B minor.
  */
 object KeyTrack {
-   
    /**
     * @param chain           the output (buffer) of an FFT UGen which transforms the audio input to track.
     *                        For the FFT chain, with a standard hop of half FFT size, the FFT size should be
@@ -136,6 +139,7 @@ object KeyTrack {
     */
    def kr(chain: GE, keyDecay: GE = 2.0f, chromaLeak: GE = 0.5f) = apply(chain, keyDecay, chromaLeak)
 }
+
 /**
  * A (12TET major/minor) key tracker UGen.
  * It is based on a pitch class profile of energy across FFT bins and matching this to templates for major and
@@ -152,8 +156,10 @@ object KeyTrack {
  */
 final case class KeyTrack(chain: GE, keyDecay: GE, chromaLeak: GE) extends UGenSource.SingleOut("KeyTrack") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, keyDecay.expand, chromaLeak.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
+
 /**
  * A UGen for extracting mel frequency cepstral coefficients.
  * It generates a set of MFCCs; these are obtained from a band-based frequency representation (using the Mel scale
@@ -172,7 +178,6 @@ final case class KeyTrack(chain: GE, keyDecay: GE, chromaLeak: GE) extends UGenS
  * or (at control block size 64) every 8 control blocks.
  */
 object MFCC {
-   
    /**
     * @param chain           the output (buffer) of an FFT UGen which transforms the audio input to track.
     *                        For the FFT chain, with a standard hop of half FFT size, the FFT size should be
@@ -182,6 +187,7 @@ object MFCC {
     */
    def kr(chain: GE, numCoeffs: Int = 13) = apply(chain, numCoeffs)
 }
+
 /**
  * A UGen for extracting mel frequency cepstral coefficients.
  * It generates a set of MFCCs; these are obtained from a band-based frequency representation (using the Mel scale
@@ -207,8 +213,10 @@ object MFCC {
  */
 final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut("MFCC") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, Constant(numCoeffs)))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(numCoeffs)(control), _args)
 }
+
 /**
  * An onset detecting UGen for musical audio signals.
  * It detects the beginning of notes/drumbeats/etc. Outputs a control-rate trigger signal which is 1
@@ -234,7 +242,6 @@ final case class MFCC(chain: GE, numCoeffs: Int) extends UGenSource.MultiOut("MF
  * at a similar quality level.
  */
 object Onsets {
-   
    /**
     * @param chain           the output (buffer) of an FFT UGen which transforms the audio input to track.
     *                        For the FFT chain, you should typically use a frame size of 512 or 1024 (at 44.1 kHz sampling rate)
@@ -260,6 +267,7 @@ object Onsets {
     */
    def kr(chain: GE, thresh: GE = 0.5f, fun: GE = 3.0f, decay: GE = 1.0f, noiseFloor: GE = 0.1f, minGap: GE = 10.0f, medianSpan: GE = 11.0f, whType: GE = 1.0f, raw: GE = 0.0f) = apply(chain, thresh, fun, decay, noiseFloor, minGap, medianSpan, whType, raw)
 }
+
 /**
  * An onset detecting UGen for musical audio signals.
  * It detects the beginning of notes/drumbeats/etc. Outputs a control-rate trigger signal which is 1
@@ -308,8 +316,10 @@ object Onsets {
  */
 final case class Onsets(chain: GE, thresh: GE, fun: GE, decay: GE, noiseFloor: GE, minGap: GE, medianSpan: GE, whType: GE, raw: GE) extends UGenSource.SingleOut("Onsets") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand, fun.expand, decay.expand, noiseFloor.expand, minGap.expand, medianSpan.expand, whType.expand, raw.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
+
 /**
  * A template matching beat tracker UGen.
  * This beat tracker is based on exhaustively testing particular template patterns against feature streams;
@@ -331,7 +341,6 @@ final case class Onsets(chain: GE, thresh: GE, fun: GE, decay: GE, noiseFloor: G
  * argument!
  */
 object BeatTrack2 {
-   
    /**
     * @param bus             index of a control bus to read from. the number of channels of that bus are expected
     *                        to match the `numChannels` argument. To track a particular audio signal, analyse it first
@@ -354,6 +363,7 @@ object BeatTrack2 {
     */
    def kr(bus: GE, numChannels: GE, winSize: GE = 2.0f, phaseSpacing: GE = 0.02f, lock: GE = 0.0f, weighting: GE = -2.1f) = apply(bus, numChannels, winSize, phaseSpacing, lock, weighting)
 }
+
 /**
  * A template matching beat tracker UGen.
  * This beat tracker is based on exhaustively testing particular template patterns against feature streams;
@@ -395,8 +405,10 @@ object BeatTrack2 {
  */
 final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing: GE, lock: GE, weighting: GE) extends UGenSource.MultiOut("BeatTrack2") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(bus.expand, numChannels.expand, winSize.expand, phaseSpacing.expand, lock.expand, weighting.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.MultiOut(name, control, IIdxSeq.fill(6)(control), _args)
 }
+
 /**
  * A UGen to measure spectral flatness.
  * Given an FFT chain this calculates the Spectral Flatness measure, defined as a power spectrum's geometric
@@ -414,12 +426,12 @@ final case class BeatTrack2(bus: GE, numChannels: GE, winSize: GE, phaseSpacing:
  * @see [[de.sciss.synth.ugen.CheckBadValues]]
  */
 object SpecFlatness {
-   
    /**
     * @param chain           the fft signal (buffer) to analyze
     */
    def kr(chain: GE) = apply(chain)
 }
+
 /**
  * A UGen to measure spectral flatness.
  * Given an FFT chain this calculates the Spectral Flatness measure, defined as a power spectrum's geometric
@@ -440,8 +452,10 @@ object SpecFlatness {
  */
 final case class SpecFlatness(chain: GE) extends UGenSource.SingleOut("SpecFlatness") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
+
 /**
  * A UGen to find the percentile of a signal's magnitude spectrum.
  * Given an FFT chain this calculates the cumulative distribution of the frequency spectrum, and outputs
@@ -455,7 +469,6 @@ final case class SpecFlatness(chain: GE) extends UGenSource.SingleOut("SpecFlatn
  * or (at control block size 64) every 8 control blocks.
  */
 object SpecPcile {
-   
    /**
     * @param chain           the fft signal (buffer) to analyze
     * @param percent         the percentage between 0.0 (0%) and 1.0 (100%)
@@ -464,6 +477,7 @@ object SpecPcile {
     */
    def kr(chain: GE, percent: GE = 0.5f, interp: GE = 0.0f) = apply(chain, percent, interp)
 }
+
 /**
  * A UGen to find the percentile of a signal's magnitude spectrum.
  * Given an FFT chain this calculates the cumulative distribution of the frequency spectrum, and outputs
@@ -483,8 +497,10 @@ object SpecPcile {
  */
 final case class SpecPcile(chain: GE, percent: GE, interp: GE) extends UGenSource.SingleOut("SpecPcile") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, percent.expand, interp.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }
+
 /**
  * A UGen to measure the spectral centroid.
  * Given an FFT chain, this measures the spectral centroid, which is the weighted mean frequency, or
@@ -502,12 +518,12 @@ final case class SpecPcile(chain: GE, percent: GE, interp: GE) extends UGenSourc
  * @see [[de.sciss.synth.ugen.SpecPcile]]
  */
 object SpecCentroid {
-   
    /**
     * @param chain           the fft signal (buffer) to analyze
     */
    def kr(chain: GE) = apply(chain)
 }
+
 /**
  * A UGen to measure the spectral centroid.
  * Given an FFT chain, this measures the spectral centroid, which is the weighted mean frequency, or
@@ -528,5 +544,6 @@ object SpecCentroid {
  */
 final case class SpecCentroid(chain: GE) extends UGenSource.SingleOut("SpecCentroid") with ControlRated {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args)
 }

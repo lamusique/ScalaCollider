@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+
 /**
  * A UGen to test for infinity, not-a-number (NaN), and denormals.
  * Its output is as follows: 0 = a normal float, 1 = NaN, 2 = infinity, and 3 = a denormal.
@@ -18,7 +18,6 @@ import aux.UGenHelper._
  * with a given identifier.
  */
 object CheckBadValues {
-   
    /**
     * @param in              the signal to be tested
     * @param id              an identifier showing up with the values in the console
@@ -26,6 +25,7 @@ object CheckBadValues {
     *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
     */
    def ir(in: GE, id: GE = 0.0f, post: GE = 2.0f) = apply(scalar, in, id, post)
+   
    /**
     * @param in              the signal to be tested
     * @param id              an identifier showing up with the values in the console
@@ -33,6 +33,7 @@ object CheckBadValues {
     *                        2 = post a line only when the floating-point classification changes (e.g., normal -> NaN and vice versa)
     */
    def kr(in: GE, id: GE = 0.0f, post: GE = 2.0f) = apply(control, in, id, post)
+   
    /**
     * @param in              the signal to be tested
     * @param id              an identifier showing up with the values in the console
@@ -41,6 +42,7 @@ object CheckBadValues {
     */
    def ar(in: GE, id: GE = 0.0f, post: GE = 2.0f) = apply(audio, in, id, post)
 }
+
 /**
  * A UGen to test for infinity, not-a-number (NaN), and denormals.
  * Its output is as follows: 0 = a normal float, 1 = NaN, 2 = infinity, and 3 = a denormal.
@@ -54,5 +56,6 @@ object CheckBadValues {
  */
 final case class CheckBadValues(rate: Rate, in: GE, id: GE, post: GE) extends UGenSource.SingleOut("CheckBadValues") with HasSideEffect {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, id.expand, post.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }

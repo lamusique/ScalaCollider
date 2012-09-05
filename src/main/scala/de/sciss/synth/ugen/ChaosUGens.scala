@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -21,6 +21,7 @@ import aux.UGenHelper._
  */
 object CuspN {
    def ar: CuspN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -29,6 +30,7 @@ object CuspN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 1.9f, xi: GE = 0.0f) = apply(audio, freq, a, b, xi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -44,8 +46,10 @@ object CuspN {
  */
 final case class CuspN(rate: Rate, freq: GE, a: GE, b: GE, xi: GE) extends UGenSource.SingleOut("CuspN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -56,6 +60,7 @@ final case class CuspN(rate: Rate, freq: GE, a: GE, b: GE, xi: GE) extends UGenS
  */
 object CuspL {
    def ar: CuspL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -64,6 +69,7 @@ object CuspL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 1.9f, xi: GE = 0.0f) = apply(audio, freq, a, b, xi)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -79,8 +85,10 @@ object CuspL {
  */
 final case class CuspL(rate: Rate, freq: GE, a: GE, b: GE, xi: GE) extends UGenSource.SingleOut("CuspL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -94,6 +102,7 @@ final case class CuspL(rate: Rate, freq: GE, a: GE, b: GE, xi: GE) extends UGenS
  */
 object FBSineN {
    def ar: FBSineN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param im              Index multiplier amount
@@ -105,6 +114,7 @@ object FBSineN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, im: GE = 1.0f, fb: GE = 0.1f, a: GE = 1.1f, c: GE = 0.5f, xi: GE = 0.1f, yi: GE = 0.1f) = apply(audio, freq, im, fb, a, c, xi, yi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -126,8 +136,10 @@ object FBSineN {
  */
 final case class FBSineN(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("FBSineN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, im.expand, fb.expand, a.expand, c.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -141,6 +153,7 @@ final case class FBSineN(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi:
  */
 object FBSineL {
    def ar: FBSineL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param im              Index multiplier amount
@@ -152,6 +165,7 @@ object FBSineL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, im: GE = 1.0f, fb: GE = 0.1f, a: GE = 1.1f, c: GE = 0.5f, xi: GE = 0.1f, yi: GE = 0.1f) = apply(audio, freq, im, fb, a, c, xi, yi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -173,8 +187,10 @@ object FBSineL {
  */
 final case class FBSineL(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("FBSineL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, im.expand, fb.expand, a.expand, c.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -188,6 +204,7 @@ final case class FBSineL(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi:
  */
 object FBSineC {
    def ar: FBSineC = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param im              Index multiplier amount
@@ -199,6 +216,7 @@ object FBSineC {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, im: GE = 1.0f, fb: GE = 0.1f, a: GE = 1.1f, c: GE = 0.5f, xi: GE = 0.1f, yi: GE = 0.1f) = apply(audio, freq, im, fb, a, c, xi, yi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -220,8 +238,10 @@ object FBSineC {
  */
 final case class FBSineC(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("FBSineC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, im.expand, fb.expand, a.expand, c.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -235,12 +255,14 @@ final case class FBSineC(rate: Rate, freq: GE, im: GE, fb: GE, a: GE, c: GE, xi:
  */
 object GbmanN {
    def ar: GbmanN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param yi              Initial value of y
     */
    def ar(freq: GE = SampleRate.ir * 0.5, xi: GE = 1.2f, yi: GE = 2.1f) = apply(audio, freq, xi, yi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -257,8 +279,10 @@ object GbmanN {
  */
 final case class GbmanN(rate: Rate, freq: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("GbmanN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equations:
  * {{{
@@ -272,12 +296,14 @@ final case class GbmanN(rate: Rate, freq: GE, xi: GE, yi: GE) extends UGenSource
  */
 object GbmanL {
    def ar: GbmanL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param yi              Initial value of y
     */
    def ar(freq: GE = SampleRate.ir * 0.5, xi: GE = 1.2f, yi: GE = 2.1f) = apply(audio, freq, xi, yi)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equations:
  * {{{
@@ -294,8 +320,10 @@ object GbmanL {
  */
 final case class GbmanL(rate: Rate, freq: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("GbmanL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -308,6 +336,7 @@ final case class GbmanL(rate: Rate, freq: GE, xi: GE, yi: GE) extends UGenSource
  */
 object HenonN {
    def ar: HenonN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -317,6 +346,7 @@ object HenonN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.4f, b: GE = 0.3f, x0: GE = 0.0f, x1: GE = 0.0f) = apply(audio, freq, a, b, x0, x1)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -335,8 +365,10 @@ object HenonN {
  */
 final case class HenonN(rate: Rate, freq: GE, a: GE, b: GE, x0: GE, x1: GE) extends UGenSource.SingleOut("HenonN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, x0.expand, x1.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -349,6 +381,7 @@ final case class HenonN(rate: Rate, freq: GE, a: GE, b: GE, x0: GE, x1: GE) exte
  */
 object HenonL {
    def ar: HenonL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -358,6 +391,7 @@ object HenonL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.4f, b: GE = 0.3f, x0: GE = 0.0f, x1: GE = 0.0f) = apply(audio, freq, a, b, x0, x1)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -376,8 +410,10 @@ object HenonL {
  */
 final case class HenonL(rate: Rate, freq: GE, a: GE, b: GE, x0: GE, x1: GE) extends UGenSource.SingleOut("HenonL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, x0.expand, x1.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A cubic-interpolating sound generator based on the difference equation:
  * {{{
@@ -390,6 +426,7 @@ final case class HenonL(rate: Rate, freq: GE, a: GE, b: GE, x0: GE, x1: GE) exte
  */
 object HenonC {
    def ar: HenonC = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -399,6 +436,7 @@ object HenonC {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.4f, b: GE = 0.3f, x0: GE = 0.0f, x1: GE = 0.0f) = apply(audio, freq, a, b, x0, x1)
 }
+
 /**
  * A cubic-interpolating sound generator based on the difference equation:
  * {{{
@@ -417,8 +455,10 @@ object HenonC {
  */
 final case class HenonC(rate: Rate, freq: GE, a: GE, b: GE, x0: GE, x1: GE) extends UGenSource.SingleOut("HenonC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, x0.expand, x1.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on a function given in Clifford Pickover's book Chaos In
  * Wonderland, pg 26. The function is:
@@ -433,6 +473,7 @@ final case class HenonC(rate: Rate, freq: GE, a: GE, b: GE, x0: GE, x1: GE) exte
  */
 object LatoocarfianN {
    def ar: LatoocarfianN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz.
     * @param a               Equation variable
@@ -444,6 +485,7 @@ object LatoocarfianN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 3.0f, c: GE = 0.5f, d: GE = 0.5f, xi: GE = 0.5f, yi: GE = 0.5f) = apply(audio, freq, a, b, c, d, xi, yi)
 }
+
 /**
  * A non-interpolating sound generator based on a function given in Clifford Pickover's book Chaos In
  * Wonderland, pg 26. The function is:
@@ -466,8 +508,10 @@ object LatoocarfianN {
  */
 final case class LatoocarfianN(rate: Rate, freq: GE, a: GE, b: GE, c: GE, d: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("LatoocarfianN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, c.expand, d.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on a function given in Clifford Pickover's book Chaos
  * In Wonderland, pg 26. The function is:
@@ -482,6 +526,7 @@ final case class LatoocarfianN(rate: Rate, freq: GE, a: GE, b: GE, c: GE, d: GE,
  */
 object LatoocarfianL {
    def ar: LatoocarfianL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -493,6 +538,7 @@ object LatoocarfianL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 3.0f, c: GE = 0.5f, d: GE = 0.5f, xi: GE = 0.5f, yi: GE = 0.5f) = apply(audio, freq, a, b, c, d, xi, yi)
 }
+
 /**
  * A linear-interpolating sound generator based on a function given in Clifford Pickover's book Chaos
  * In Wonderland, pg 26. The function is:
@@ -515,8 +561,10 @@ object LatoocarfianL {
  */
 final case class LatoocarfianL(rate: Rate, freq: GE, a: GE, b: GE, c: GE, d: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("LatoocarfianL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, c.expand, d.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A cubic-interpolating sound generator based on a function given in Clifford Pickover's book Chaos In
  * Wonderland, pg 26. The function is:
@@ -531,6 +579,7 @@ final case class LatoocarfianL(rate: Rate, freq: GE, a: GE, b: GE, c: GE, d: GE,
  */
 object LatoocarfianC {
    def ar: LatoocarfianC = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz.
     * @param a               Equation variable
@@ -542,6 +591,7 @@ object LatoocarfianC {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = 3.0f, c: GE = 0.5f, d: GE = 0.5f, xi: GE = 0.5f, yi: GE = 0.5f) = apply(audio, freq, a, b, c, d, xi, yi)
 }
+
 /**
  * A cubic-interpolating sound generator based on a function given in Clifford Pickover's book Chaos In
  * Wonderland, pg 26. The function is:
@@ -564,8 +614,10 @@ object LatoocarfianC {
  */
 final case class LatoocarfianC(rate: Rate, freq: GE, a: GE, b: GE, c: GE, d: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("LatoocarfianC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, c.expand, d.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -578,6 +630,7 @@ final case class LatoocarfianC(rate: Rate, freq: GE, a: GE, b: GE, c: GE, d: GE,
  */
 object LinCongN {
    def ar: LinCongN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Multiplier amount
@@ -587,6 +640,7 @@ object LinCongN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.1f, c: GE = 0.13f, m: GE = 1.0f, xi: GE = 0.0f) = apply(audio, freq, a, c, m, xi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -605,8 +659,10 @@ object LinCongN {
  */
 final case class LinCongN(rate: Rate, freq: GE, a: GE, c: GE, m: GE, xi: GE) extends UGenSource.SingleOut("LinCongN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, c.expand, m.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -619,6 +675,7 @@ final case class LinCongN(rate: Rate, freq: GE, a: GE, c: GE, m: GE, xi: GE) ext
  */
 object LinCongL {
    def ar: LinCongL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Multiplier amount
@@ -628,6 +685,7 @@ object LinCongL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.1f, c: GE = 0.13f, m: GE = 1.0f, xi: GE = 0.0f) = apply(audio, freq, a, c, m, xi)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -646,8 +704,10 @@ object LinCongL {
  */
 final case class LinCongL(rate: Rate, freq: GE, a: GE, c: GE, m: GE, xi: GE) extends UGenSource.SingleOut("LinCongL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, c.expand, m.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A cubic-interpolating sound generator based on the difference equation:
  * {{{
@@ -660,6 +720,7 @@ final case class LinCongL(rate: Rate, freq: GE, a: GE, c: GE, m: GE, xi: GE) ext
  */
 object LinCongC {
    def ar: LinCongC = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Multiplier amount
@@ -669,6 +730,7 @@ object LinCongC {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.1f, c: GE = 0.13f, m: GE = 1.0f, xi: GE = 0.0f) = apply(audio, freq, a, c, m, xi)
 }
+
 /**
  * A cubic-interpolating sound generator based on the difference equation:
  * {{{
@@ -687,8 +749,10 @@ object LinCongC {
  */
 final case class LinCongC(rate: Rate, freq: GE, a: GE, c: GE, m: GE, xi: GE) extends UGenSource.SingleOut("LinCongC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, c.expand, m.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A strange attractor discovered by Edward N. Lorenz while studying mathematical models of the
  * atmosphere. The system is composed of three ordinary differential equations:
@@ -702,6 +766,7 @@ final case class LinCongC(rate: Rate, freq: GE, a: GE, c: GE, m: GE, xi: GE) ext
  */
 object LorenzL {
    def ar: LorenzL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param s               Equation variable
@@ -714,6 +779,7 @@ object LorenzL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, s: GE = 10.0f, r: GE = 28.0f, b: GE = 2.667f, h: GE = 0.05f, xi: GE = 0.1f, yi: GE = 0.0f, zi: GE = 0.0f) = apply(audio, freq, s, r, b, h, xi, yi, zi)
 }
+
 /**
  * A strange attractor discovered by Edward N. Lorenz while studying mathematical models of the
  * atmosphere. The system is composed of three ordinary differential equations:
@@ -736,8 +802,10 @@ object LorenzL {
  */
 final case class LorenzL(rate: Rate, freq: GE, s: GE, r: GE, b: GE, h: GE, xi: GE, yi: GE, zi: GE) extends UGenSource.SingleOut("LorenzL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, s.expand, r.expand, b.expand, h.expand, xi.expand, yi.expand, zi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -749,6 +817,7 @@ final case class LorenzL(rate: Rate, freq: GE, s: GE, r: GE, b: GE, h: GE, xi: G
  */
 object QuadN {
    def ar: QuadN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -758,6 +827,7 @@ object QuadN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = -1.0f, c: GE = -0.75f, xi: GE = 0.0f) = apply(audio, freq, a, b, c, xi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equation:
  * {{{
@@ -775,8 +845,10 @@ object QuadN {
  */
 final case class QuadN(rate: Rate, freq: GE, a: GE, b: GE, c: GE, xi: GE) extends UGenSource.SingleOut("QuadN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, c.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -788,6 +860,7 @@ final case class QuadN(rate: Rate, freq: GE, a: GE, b: GE, c: GE, xi: GE) extend
  */
 object QuadL {
    def ar: QuadL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -797,6 +870,7 @@ object QuadL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = -1.0f, c: GE = -0.75f, xi: GE = 0.0f) = apply(audio, freq, a, b, c, xi)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equation:
  * {{{
@@ -814,8 +888,10 @@ object QuadL {
  */
 final case class QuadL(rate: Rate, freq: GE, a: GE, b: GE, c: GE, xi: GE) extends UGenSource.SingleOut("QuadL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, c.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A cubic-interpolating sound generator based on the difference equation:
  * {{{
@@ -827,6 +903,7 @@ final case class QuadL(rate: Rate, freq: GE, a: GE, b: GE, c: GE, xi: GE) extend
  */
 object QuadC {
    def ar: QuadC = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param a               Equation variable
@@ -836,6 +913,7 @@ object QuadC {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, a: GE = 1.0f, b: GE = -1.0f, c: GE = -0.75f, xi: GE = 0.0f) = apply(audio, freq, a, b, c, xi)
 }
+
 /**
  * A cubic-interpolating sound generator based on the difference equation:
  * {{{
@@ -853,8 +931,10 @@ object QuadC {
  */
 final case class QuadC(rate: Rate, freq: GE, a: GE, b: GE, c: GE, xi: GE) extends UGenSource.SingleOut("QuadC") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, a.expand, b.expand, c.expand, xi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -868,6 +948,7 @@ final case class QuadC(rate: Rate, freq: GE, a: GE, b: GE, c: GE, xi: GE) extend
  */
 object StandardN {
    def ar: StandardN = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param k               Perturbation amount
@@ -876,6 +957,7 @@ object StandardN {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, k: GE = 1.0f, xi: GE = 0.5f, yi: GE = 0.0f) = apply(audio, freq, k, xi, yi)
 }
+
 /**
  * A non-interpolating sound generator based on the difference equations:
  * {{{
@@ -894,8 +976,10 @@ object StandardN {
  */
 final case class StandardN(rate: Rate, freq: GE, k: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("StandardN") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, k.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equations:
  * {{{
@@ -909,6 +993,7 @@ final case class StandardN(rate: Rate, freq: GE, k: GE, xi: GE, yi: GE) extends 
  */
 object StandardL {
    def ar: StandardL = ar()
+   
    /**
     * @param freq            Iteration frequency in Hertz
     * @param k               Perturbation amount
@@ -917,6 +1002,7 @@ object StandardL {
     */
    def ar(freq: GE = SampleRate.ir * 0.5, k: GE = 1.0f, xi: GE = 0.5f, yi: GE = 0.0f) = apply(audio, freq, k, xi, yi)
 }
+
 /**
  * A linear-interpolating sound generator based on the difference equations:
  * {{{
@@ -935,5 +1021,6 @@ object StandardL {
  */
 final case class StandardL(rate: Rate, freq: GE, k: GE, xi: GE, yi: GE) extends UGenSource.SingleOut("StandardL") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(freq.expand, k.expand, xi.expand, yi.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }

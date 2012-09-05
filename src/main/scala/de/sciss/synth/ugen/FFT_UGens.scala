@@ -3,14 +3,14 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * Created: Tue Dec 06 20:51:57 GMT 2011
- * ScalaCollider-UGens version: 0.14-SNAPSHOT
+ * ScalaCollider-UGens version: 1.0.0
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import aux.UGenHelper._
+
 /**
  * A UGen performing short-time forward fourier transformations. In order to properly link
  * the spectral ugens (`PV_...`), you should begin by using the output of each UGen
@@ -46,17 +46,24 @@ import aux.UGenHelper._
  */
 final case class FFT(buf: GE, in: GE, hop: GE = 0.5f, winType: GE = 0.0f, active: GE = 1.0f, winSize: GE = 0.0f) extends UGenSource.SingleOut("FFT") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, in.expand, hop.expand, winType.expand, active.expand, winSize.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 object IFFT {
    def kr(chain: GE, winType: GE = 0.0f, winSize: GE = 0.0f) = apply(control, chain, winType, winSize)
+   
    def apply(chain: GE, winType: GE = 0.0f, winSize: GE = 0.0f): IFFT = apply(audio, chain, winType, winSize)
+   
    def ar(chain: GE, winType: GE = 0.0f, winSize: GE = 0.0f) = apply(audio, chain, winType, winSize)
 }
+
 final case class IFFT(rate: Rate, chain: GE, winType: GE, winSize: GE) extends UGenSource.SingleOut("IFFT") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, winType.expand, winSize.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
+
 /**
  * A phase vocoder UGen that takes a buffer and prepares it to be used in FFT chains,
  * without doing an actual FFT on a signal. This is useful if you want to provide
@@ -69,8 +76,10 @@ final case class IFFT(rate: Rate, chain: GE, winType: GE, winSize: GE) extends U
  */
 final case class FFTTrigger(buf: GE, hop: GE = 0.5f, polar: GE = 0.0f) extends UGenSource.SingleOut("FFTTrigger") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(buf.expand, hop.expand, polar.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that passes only those bins whose magnitudes are above a given threshold.
  * 
@@ -79,8 +88,10 @@ final case class FFTTrigger(buf: GE, hop: GE = 0.5f, polar: GE = 0.0f) extends U
  */
 final case class PV_MagAbove(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut("PV_MagAbove") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that passes only those bins whose magnitudes are below a given threshold.
  * 
@@ -89,8 +100,10 @@ final case class PV_MagAbove(chain: GE, thresh: GE = 0.0f) extends UGenSource.Si
  */
 final case class PV_MagBelow(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut("PV_MagBelow") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that limits (clips) the magnitude of the bins to a given threshold.
  * 
@@ -100,8 +113,10 @@ final case class PV_MagBelow(chain: GE, thresh: GE = 0.0f) extends UGenSource.Si
  */
 final case class PV_MagClip(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut("PV_MagClip") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that multiplies the magnitudes of two inputs and keeps the
  * phases of the first input.
@@ -112,8 +127,10 @@ final case class PV_MagClip(chain: GE, thresh: GE = 0.0f) extends UGenSource.Sin
  */
 final case class PV_MagMul(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_MagMul") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that divides magnitudes of two inputs and keeps the
  * phases of the first input.
@@ -128,8 +145,10 @@ final case class PV_MagMul(chainA: GE, chainB: GE) extends UGenSource.SingleOut(
  */
 final case class PV_MagDiv(chainA: GE, chainB: GE, zeroes: GE = 1.0E-4f) extends UGenSource.SingleOut("PV_MagDiv") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, zeroes.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that squares the magnitudes and re-normalizes to previous peak.
  * This makes weak bins weaker.
@@ -138,8 +157,10 @@ final case class PV_MagDiv(chainA: GE, chainB: GE, zeroes: GE = 1.0E-4f) extends
  */
 final case class PV_MagSquared(chain: GE) extends UGenSource.SingleOut("PV_MagSquared") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that multiplies the magnitudes by random noise.
  * 
@@ -147,8 +168,10 @@ final case class PV_MagSquared(chain: GE) extends UGenSource.SingleOut("PV_MagSq
  */
 final case class PV_MagNoise(chain: GE) extends UGenSource.SingleOut("PV_MagNoise") with ControlRated with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that copies the spectral frames from chainA
  * to chainB. This allows for parallel processing of spectral data without the
@@ -163,8 +186,10 @@ final case class PV_MagNoise(chain: GE) extends UGenSource.SingleOut("PV_MagNois
  */
 final case class PV_Copy(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_Copy") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that combines the magnitudes of first input and phases of the second input.
  * phases of the first input.
@@ -175,8 +200,10 @@ final case class PV_Copy(chainA: GE, chainB: GE) extends UGenSource.SingleOut("P
  */
 final case class PV_CopyPhase(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_CopyPhase") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that shifts the phase of each bins by a given amount.
  * 
@@ -185,8 +212,10 @@ final case class PV_CopyPhase(chainA: GE, chainB: GE) extends UGenSource.SingleO
  */
 final case class PV_PhaseShift(chain: GE, shift: GE) extends UGenSource.SingleOut("PV_PhaseShift") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, shift.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that shift the phase of all bins by 90 degrees.
  * 
@@ -194,8 +223,10 @@ final case class PV_PhaseShift(chain: GE, shift: GE) extends UGenSource.SingleOu
  */
 final case class PV_PhaseShift90(chain: GE) extends UGenSource.SingleOut("PV_PhaseShift90") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that shift the phase of all bins by 270 (or -90) degrees.
  * 
@@ -203,8 +234,10 @@ final case class PV_PhaseShift90(chain: GE) extends UGenSource.SingleOut("PV_Pha
  */
 final case class PV_PhaseShift270(chain: GE) extends UGenSource.SingleOut("PV_PhaseShift270") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that outputs the bins with the minimum magnitude
  * of the two inputs.
@@ -215,8 +248,10 @@ final case class PV_PhaseShift270(chain: GE) extends UGenSource.SingleOut("PV_Ph
  */
 final case class PV_Min(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_Min") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that outputs the bins with the maximum magnitude
  * of the two inputs.
@@ -227,8 +262,10 @@ final case class PV_Min(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV
  */
 final case class PV_Max(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_Max") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that performs a complex multiplication of the
  * two inputs. The formula
@@ -240,8 +277,10 @@ final case class PV_Max(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV
  */
 final case class PV_Mul(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_Mul") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that performs a complex division of the
  * two inputs. Be careful that `chainB`, the divisor, does not
@@ -253,8 +292,10 @@ final case class PV_Mul(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV
  */
 final case class PV_Div(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_Div") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that performs a complex addition of the
  * two inputs. The formula
@@ -266,8 +307,10 @@ final case class PV_Div(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV
  */
 final case class PV_Add(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV_Add") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that makes a series of gaps in a spectrum.
  * This is done by multiplying the spectrum with a kind of
@@ -294,8 +337,10 @@ final case class PV_Add(chainA: GE, chainB: GE) extends UGenSource.SingleOut("PV
  */
 final case class PV_RectComb(chain: GE, numTeeth: GE = 1.0f, phase: GE = 0.0f, width: GE = 0.5f) extends UGenSource.SingleOut("PV_RectComb") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, numTeeth.expand, phase.expand, width.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that switches between two input spectra
  * according to a rectangle wave.
@@ -325,8 +370,10 @@ final case class PV_RectComb(chain: GE, numTeeth: GE = 1.0f, phase: GE = 0.0f, w
  */
 final case class PV_RectComb2(chainA: GE, chainB: GE, numTeeth: GE = 1.0f, phase: GE = 0.0f, width: GE = 0.5f) extends UGenSource.SingleOut("PV_RectComb2") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, numTeeth.expand, phase.expand, width.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that clears bins above or below a cutoff point.
  * 
@@ -338,8 +385,10 @@ final case class PV_RectComb2(chainA: GE, chainB: GE, numTeeth: GE = 1.0f, phase
  */
 final case class PV_BrickWall(chain: GE, wipe: GE) extends UGenSource.SingleOut("PV_BrickWall") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, wipe.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that combine low and high bins from two inputs.
  * It does so by copiying low bins from one input and the high bins of the other,
@@ -356,8 +405,10 @@ final case class PV_BrickWall(chain: GE, wipe: GE) extends UGenSource.SingleOut(
  */
 final case class PV_BinWipe(chainA: GE, chainB: GE, wipe: GE) extends UGenSource.SingleOut("PV_BinWipe") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, wipe.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that passes only those bins whose magnitudes constitute local maxima.
  * Additionally, the given threshold is also used to filter out bins whose magnitude
@@ -369,8 +420,10 @@ final case class PV_BinWipe(chainA: GE, chainB: GE, wipe: GE) extends UGenSource
  */
 final case class PV_LocalMax(chain: GE, thresh: GE = 0.0f) extends UGenSource.SingleOut("PV_LocalMax") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, thresh.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that converts the bins into their
  * complex conjugate counterparts. The complex conjugate
@@ -380,8 +433,10 @@ final case class PV_LocalMax(chain: GE, thresh: GE = 0.0f) extends UGenSource.Si
  */
 final case class PV_Conj(chain: GE) extends UGenSource.SingleOut("PV_Conj") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that randomizes the order of the bins.
  * The trigger will select a new random ordering.
@@ -395,8 +450,10 @@ final case class PV_Conj(chain: GE) extends UGenSource.SingleOut("PV_Conj") with
  */
 final case class PV_BinScramble(chain: GE, wipe: GE = 0.5f, width: GE = 0.2f, trig: GE = 1.0f) extends UGenSource.SingleOut("PV_BinScramble") with ControlRated with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, wipe.expand, width.expand, trig.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that averages each bin's magnitude with its neighbors.
  * 
@@ -405,8 +462,10 @@ final case class PV_BinScramble(chain: GE, wipe: GE = 0.5f, width: GE = 0.2f, tr
  */
 final case class PV_MagSmear(chain: GE, bins: GE = 1.0f) extends UGenSource.SingleOut("PV_MagSmear") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, bins.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that stretches and shifts the magnitudes of the spectrum.
  * This is live `PV_BinShift` but instead of scaling and shifting the whole complex
@@ -419,8 +478,10 @@ final case class PV_MagSmear(chain: GE, bins: GE = 1.0f) extends UGenSource.Sing
  */
 final case class PV_MagShift(chain: GE, stretch: GE = 1.0f, shift: GE = 0.0f) extends UGenSource.SingleOut("PV_MagShift") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, stretch.expand, shift.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that stretches and shifts the spectrum.
  * It takes each bin, first stretches (scales) its position (bin number)
@@ -434,8 +495,10 @@ final case class PV_MagShift(chain: GE, stretch: GE = 1.0f, shift: GE = 0.0f) ex
  */
 final case class PV_BinShift(chain: GE, stretch: GE = 1.0f, shift: GE = 0.0f) extends UGenSource.SingleOut("PV_BinShift") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, stretch.expand, shift.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that crossfades between two input spectra
  * by taking bins randomly from them according to a given probability.
@@ -456,8 +519,10 @@ final case class PV_BinShift(chain: GE, stretch: GE = 1.0f, shift: GE = 0.0f) ex
  */
 final case class PV_RandWipe(chainA: GE, chainB: GE, wipe: GE, trig: GE) extends UGenSource.SingleOut("PV_RandWipe") with ControlRated with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chainA.expand, chainB.expand, wipe.expand, trig.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that adds a different constant random phase shift to each bin.
  * The trigger will select a new set of random phases.
@@ -468,8 +533,10 @@ final case class PV_RandWipe(chainA: GE, chainB: GE, wipe: GE, trig: GE) extends
  */
 final case class PV_Diffuser(chain: GE, trig: GE = 1.0f) extends UGenSource.SingleOut("PV_Diffuser") with ControlRated with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, trig.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that randomly clears out bins of the signal.
  * Which bins are wiped out is subject to a random choice (only the amount is
@@ -484,8 +551,10 @@ final case class PV_Diffuser(chain: GE, trig: GE = 1.0f) extends UGenSource.Sing
  */
 final case class PV_RandComb(chain: GE, wipe: GE = 0.5f, trig: GE = 1.0f) extends UGenSource.SingleOut("PV_RandComb") with ControlRated with WritesFFT with UsesRandSeed {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, wipe.expand, trig.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 /**
  * A phase vocoder UGen that freezes the magnitudes at current levels.
  * Freezing happens when the freeze input has a value of > 0.
@@ -495,12 +564,16 @@ final case class PV_RandComb(chain: GE, wipe: GE = 0.5f, trig: GE = 1.0f) extend
  */
 final case class PV_MagFreeze(chain: GE, freeze: GE = 1.0f) extends UGenSource.SingleOut("PV_MagFreeze") with ControlRated with WritesFFT {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(chain.expand, freeze.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, control, _args, true, true)
 }
+
 object PartConv {
    def ar(in: GE, fftSize: GE, buf: GE) = apply(audio, in, fftSize, buf)
 }
+
 final case class PartConv(rate: Rate, in: GE, fftSize: GE, buf: GE) extends UGenSource.SingleOut("PartConv") {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(in.expand, fftSize.expand, buf.expand))
+   
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args)
 }
