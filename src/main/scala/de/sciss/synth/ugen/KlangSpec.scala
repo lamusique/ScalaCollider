@@ -2,7 +2,6 @@ package de.sciss.synth
 package ugen
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.UGenHelper._
 
 object KlangSpec {
    def fill( n: Int )( thunk: => (GE, GE, GE) ) : Seq = {

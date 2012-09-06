@@ -26,7 +26,7 @@
 package de.sciss.synth
 
 object Group {
-    def play: Group = {
+    def play(): Group = {
 		head( Server.default.defaultGroup )
 	}
 
@@ -60,32 +60,32 @@ object Group {
       group
 	}
 
-   def apply( server: Server ) : Group = apply( server, server.nodes.nextID )
+   def apply( server: Server ) : Group = apply( server, server.nodes.nextID() )
    def apply() : Group = apply( Server.default )
 }
 
 final case class Group( server: Server, id: Int )
 extends Node {
-	def this( server: Server ) = this( server, server.nodes.nextID )
+	def this( server: Server ) = this( server, server.nodes.nextID() )
 	def this() = this( Server.default )
 
 	def newMsg( target: Node, addAction: AddAction ) =
 		osc.GroupNewMessage( osc.GroupNewInfo( id, addAction.id, target.id ))
 
-   def dumpTree: Unit = dumpTree( false )
-	def dumpTree( postControls: Boolean ) {
+//   def dumpTree: Unit = dumpTree( false )
+	def dumpTree( postControls: Boolean = false ) {
 		server ! dumpTreeMsg( postControls )
 	}
 
-   def dumpTreeMsg : osc.GroupDumpTreeMessage = dumpTreeMsg( false )
+   def dumpTreeMsg : osc.GroupDumpTreeMessage = dumpTreeMsg( postControls = false )
    def dumpTreeMsg( postControls: Boolean ) = osc.GroupDumpTreeMessage( id -> postControls )
 
    def queryTreeMsg( postControls: Boolean ) = osc.GroupQueryTreeMessage( id -> postControls )
 
-   def freeAll { server ! freeAllMsg }
+   def freeAll() { server ! freeAllMsg }
 	def freeAllMsg = osc.GroupFreeAllMessage( id )
   
-   def deepFree { server ! deepFreeMsg }
+   def deepFree() { server ! deepFreeMsg }
 	def deepFreeMsg = osc.GroupDeepFreeMessage( id )
 
 	def moveNodeToHeadMsg( node: Node ) = osc.GroupHeadMessage( id -> node.id )

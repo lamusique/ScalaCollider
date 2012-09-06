@@ -24,7 +24,6 @@
  */
 
 package de.sciss.synth
-package aux
 
 import ugen.WrapOut
 import de.sciss.osc.{Bundle, Message}
@@ -41,15 +40,15 @@ object GraphFunction {
    }
 
    object Result {
-      implicit val out = Out
+//      implicit val out = Out
       implicit def in[ T ]( implicit view: T => GE ) = In( view )
-      case object Out extends Result[ UGenSource.ZeroOut ]
+      implicit case object Out extends Result[ UGenSource.ZeroOut ]
       final case class In[ T ]( view: T => GE ) extends Result[ T ]
    }
    sealed trait Result[ -T ]
 }
 
-final class GraphFunction[ T ]( thunk: => T )( implicit res: GraphFunction.Result[ T ]) {
+private[synth] final class GraphFunction[ T ]( thunk: => T )( implicit res: GraphFunction.Result[ T ]) {
    import GraphFunction._
    
    def play : Synth = play()

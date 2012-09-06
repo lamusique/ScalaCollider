@@ -28,7 +28,6 @@ package ugen
 
 import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.{UGenHelper, Optional}
 
 final case class Flatten( elem: GE ) extends GE.Lazy {
    def rate = elem.rate
@@ -205,7 +204,7 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
             case Some( fdt ) =>
                val env  = makeFadeEnv( fdt )
                val ins2 = ins.map( BinaryOp.Times.make1( _, env ))
-               if( rate == audio ) UGenHelper.replaceZeroesWithSilence( ins2 ) else ins2
+               if( rate == audio ) replaceZeroesWithSilence( ins2 ) else ins2
             case None => ins
          }
          val cOut = new Control.UGen( control, 1, UGenGraph.builder.addControl( IIdxSeq( 0 ), Some( "out" ))).outputs( 0 )

@@ -25,7 +25,6 @@
 
 package de.sciss.synth
 
-import aux.Optional
 import scala.{Seq => SSeq}
 import collection.breakOut
 import collection.immutable.{ IndexedSeq => IIdxSeq }
@@ -37,8 +36,6 @@ import ugen.{ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, Una
  *    Graph elements are ordinary UGens, UGen proxies, Control proxies,
  *    Constants, and collections of UGen inputs which result from
  *    multichannel expansion (UGenInSeq). 
- *
- *    @version 0.11, 26-Aug-10
  */
 object GE {
    // XXX is the ever in effect?

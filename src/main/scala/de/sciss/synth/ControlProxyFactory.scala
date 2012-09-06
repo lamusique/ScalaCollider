@@ -26,7 +26,7 @@
 package de.sciss.synth
 
 import collection.breakOut
-import collection.immutable.{ IndexedSeq => IIdxSeq, Seq => ISeq }
+import collection.immutable.{IndexedSeq => IIdxSeq}
 import ugen.{ControlFactory, AudioControlProxy, ControlProxy, TrigControlProxy}
 
 object ControlProxyFactory {

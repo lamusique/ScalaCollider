@@ -25,14 +25,13 @@
 
 package de.sciss.synth
 
-import aux.AllocatorExhaustedException
 import sys.error
 
 object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
 		val id = server.busses.allocControl( numChannels )
 		if( id == -1 ) {
-            throw new AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
+            throw AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
 				+ numChannels + " channels on " + server.name + ")" )
 		}
 		ControlBus( server, id, numChannels )
@@ -41,7 +40,7 @@ object Bus {
 	def audio( server: Server = Server.default, numChannels: Int = 1 ) = {
 		val id = server.busses.allocAudio( numChannels )
 		if( id == -1 ) {
-            throw new AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
+            throw AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
 				+ numChannels + " channels on " + server.name + ")" )
 		}
 		AudioBus( server, id, numChannels )
@@ -53,7 +52,7 @@ sealed trait Bus {
    def index: Int
    def numChannels: Int
    def server: Server
-   def free: Unit
+   def free(): Unit
 }
 
 final case class ControlBus( server: Server, index: Int, numChannels: Int )
@@ -62,7 +61,7 @@ extends Bus {
 
    def rate : Rate = control
 
-	def free {
+	def free() {
 	   if( released ) error( this.toString + " : has already been freed" )
 		server.busses.freeControl( index )
 	   released = true
@@ -127,7 +126,7 @@ extends Bus {
 
    def rate : Rate = audio
 
-   def free {
+   def free() {
       if( released ) error( this.toString + " : has already been freed" )
       server.busses.freeAudio( index )
       released = true

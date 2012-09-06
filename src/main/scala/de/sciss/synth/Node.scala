@@ -33,7 +33,7 @@ package de.sciss.synth
  * @see  [[de.sciss.synth.Synth]]
  * @see  [[de.sciss.synth.Group]]
  */
-sealed abstract class AddAction( val id: Int )
+sealed abstract class AddAction( final val id: Int )
 
 /**
  * AddAction with id 0, indicating that a node should be add to the head of
@@ -61,9 +61,6 @@ case object addAfter    extends AddAction( 3 )
  */
 case object addReplace  extends AddAction( 4 )
 
-/**
- *    @version    0.14, 01-Jul-10
- */
 abstract class Node extends Model {
    import Model._
 
@@ -76,13 +73,13 @@ abstract class Node extends Model {
 //	var isRunning  = false
 
 //	def register: Unit = register( false )
-	def register {
+	def register() {
 //  	NodeWatcher.register( this, assumePlaying )
        server.nodeMgr.register( this )
   	}
 
    def onGo( thunk: => Unit ) {
-      register
+      register()
       lazy val l: Listener = {
          case NodeManager.NodeGo( _, _ ) => {
             removeListener( l )
@@ -93,7 +90,7 @@ abstract class Node extends Model {
    }
 
    def onEnd( thunk: => Unit ) {
-      register
+      register()
       lazy val l: Listener = {
          case NodeManager.NodeEnd( _, _ ) => {
             removeListener( l )
@@ -110,7 +107,7 @@ abstract class Node extends Model {
 
 //	def free : Node = free( true )
 
-	def free {
+	def free() {
   		server ! freeMsg
 //  		group = null
 //  		isPlaying = false
@@ -123,14 +120,14 @@ abstract class Node extends Model {
   
   	def freeMsg = osc.NodeFreeMessage( id )
 
-  	def run : Unit = run( true )
+//  	def run : Unit = run( true )
   
-  	def run( flag: Boolean ) {
+  	def run( flag: Boolean = true ) {
   		server ! runMsg( flag )
   		this
   	}
 	
-  	def runMsg : osc.NodeRunMessage = runMsg( true )
+  	def runMsg : osc.NodeRunMessage = runMsg( flag = true )
   	def runMsg( flag: Boolean ) = osc.NodeRunMessage( id -> flag )
   
   	def set( pairs: ControlSetMap* ) {
@@ -147,13 +144,13 @@ abstract class Node extends Model {
   	def setnMsg( pairs: ControlSetMap* ) =
   		osc.NodeSetnMessage( id, pairs: _* )
 
-  	def trace {
+  	def trace() {
   		server ! traceMsg
   	}
 
    def traceMsg = osc.NodeTraceMessage( id )
 
-  	def release : Unit = release( None )
+  	def release() { release( None )}
    def release( releaseTime: Float ) {  release( Some( releaseTime ))}
    def release( releaseTime: Double ) { release( Some( releaseTime.toFloat ))}
 

@@ -25,7 +25,7 @@
 
 package de.sciss.synth
 
-import scala.collection.immutable.{ Queue }
+import collection.immutable.Queue
 
 /**
  *    A Model implements the publish-subscribe pattern for
@@ -40,7 +40,7 @@ object Model {
    type Listener = PartialFunction[ AnyRef, Unit ]
    object EmptyListener extends Listener {
       def isDefinedAt( v: AnyRef ) = false
-      def apply( v: AnyRef ) = throw new MatchError( v ) 
+      def apply( v: AnyRef ) { throw new MatchError( v )}
    }
 }
 trait Model {
@@ -55,7 +55,7 @@ trait Model {
          try {
             if( l.isDefinedAt( change )) l( change )
          } catch {
-            case e => e.printStackTrace() // catch, but print
+            case e: Throwable => e.printStackTrace() // catch, but print
          } finally {
 val t2 = System.currentTimeMillis
 if( (t2 - t1) > 2000 ) println( "" + new java.util.Date() + " WOW listener took long (" + (t2-t1) + ") : " +

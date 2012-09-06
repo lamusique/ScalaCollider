@@ -204,7 +204,8 @@ sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ 
 }
 
 object UGenInGroup {
-   def empty : UGenInGroup = new Impl( IIdxSeq.empty )
+   private final val emptyVal = new Impl( IIdxSeq.empty )
+   def empty : UGenInGroup = emptyVal
    def apply( xs: IIdxSeq[ UGenInLike ]) : UGenInGroup = new Impl( xs )
 
    private final class Impl( xs: IIdxSeq[ UGenInLike ]) extends UGenInGroup {

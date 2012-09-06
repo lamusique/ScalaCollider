@@ -3,13 +3,12 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * ScalaCollider-UGens version: 1.0.0
+ * ScalaCollider-UGens version: 1.0.1
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.UGenHelper._
 
 object Pan2 {
    def kr(in: GE, pos: GE = 0.0f, level: GE = 1.0f) = apply(control, in, pos, level)

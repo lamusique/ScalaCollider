@@ -94,8 +94,8 @@ case object UndefinedRate extends MaybeRate {
  *    The calculation rate of a UGen or a UGen output.
  */
 sealed abstract class Rate extends MaybeRate with Ordered[ Rate ] {
-   val id: Int
-   val methodName: String
+   def id: Int
+   def methodName: String
    final val toOption: Option[ Rate ] = Some( this )
    final val toIndexedSeq: IIdxSeq[ Rate ] = IIdxSeq( this )
    def ?|( r: => Rate ) : Rate = this
@@ -122,23 +122,23 @@ sealed abstract class Rate extends MaybeRate with Ordered[ Rate ] {
 //}
 
 case object scalar  extends Rate {
-   val id = 0
-   val methodName = "ir"
+   final val id = 0
+   final val methodName = "ir"
 //   trait Rated  { def rate: Rate = scalar }
 }
 case object control extends Rate {
-   val id = 1
-   val methodName = "kr"
+   final val id = 1
+   final val methodName = "kr"
 //   trait Rated { def rate: Rate = control }
 }
 case object audio   extends Rate {
-   val id = 2
-   val methodName = "ar"
+   final val id = 2
+   final val methodName = "ar"
 //   trait Rated   { def rate: Rate = audio }
 }
 case object demand  extends Rate {
-   val id = 3
-   val methodName = "dr"
+   final val id = 3
+   final val methodName = "dr"
 //   trait Rated  { def rate: Rate = demand }
 }
 

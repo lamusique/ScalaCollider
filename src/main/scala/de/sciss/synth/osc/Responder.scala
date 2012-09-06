@@ -53,7 +53,7 @@ object Responder {
          val handled = handler.isDefinedAt( msg )
          if( handled ) try {
             handler( msg )
-         } catch { case e => e.printStackTrace() }
+         } catch { case e: Throwable => e.printStackTrace() }
          once
       }
 

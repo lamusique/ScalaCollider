@@ -30,7 +30,6 @@ import java.io.{BufferedReader, File, InputStreamReader, IOException}
 import java.util.{Timer, TimerTask}
 import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
 import concurrent.SyncVar
-import aux.{FutureActor, RevocableFuture, NodeIDAllocator, ContiguousBlockAllocator}
 import sys.error
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
@@ -43,7 +42,7 @@ object Server {
 
    /**
     * The default file path to `scsynth`. If the runtime (system) property `"SC_HOME"` is provided,
-    * this specifies the directory of `scsynth. Otherwise, an environment (shell) variable named
+    * this specifies the directory of `scsynth`. Otherwise, an environment (shell) variable named
     * `"SC_HOME"` is checked. If neither exists, this returns `scsynth` in the current working directory.
     */
    def defaultProgramPath = new File( sys.props.getOrElse( "SC_HOME", sys.env.getOrElse( "SC_HOME", "" )),
@@ -735,17 +734,17 @@ object Server {
       }
       Runtime.getRuntime.addShutdownHook( new Thread { override def run() { sync.synchronized {
          if( s != null ) {
-            if( s.condition != Server.Offline ) s.quit
+            if( s.condition != Server.Offline ) s.quit()
          } else sc.abort
       }}})
       sc.start()
    }
 
-   @throws( classOf[ IOException ])
-   def dummy: Server = dummy()
+//   @throws( classOf[ IOException ])
+//   def dummy: Server = dummy()
 
    /**
-    * Creates an unconnected server proxy. This may be usefull for creating NRT command files.
+    * Creates an unconnected server proxy. This may be useful for creating NRT command files.
     * Any attempt to try to send messages to the server will fail.
     */
    @throws( classOf[ IOException ])
@@ -887,7 +886,7 @@ object Server {
                         tnotify = System.currentTimeMillis + 500
 //println( ">>> NOT" )
 //try {
-                        c ! osc.ServerNotifyMessage( true )
+                        c ! osc.ServerNotifyMessage( onOff = true )
 //} catch {
 //   case n: PortUnreachableException => println( "caught : " + n )
 //}
@@ -982,7 +981,7 @@ object Server {
          try {
             if( l.isDefinedAt( change )) l( change )
          } catch {
-            case e => e.printStackTrace() // catch, but print
+            case e: Throwable => e.printStackTrace() // catch, but print
          }
       }
 
@@ -1085,7 +1084,7 @@ if( line.startsWith( "Super" ) && line.contains( " ready" )) isBooting = false
                      }
                   }
                } catch {
-                  case e => isOpen = false
+                  case e: Throwable => isOpen = false
                }
                actor ! (if( isOpen ) Ready else Abort)
                while( isOpen ) {
@@ -1179,7 +1178,7 @@ extends ServerLike {
    object nodes {
       private val allocator = new NodeIDAllocator( clientConfig.clientID, clientConfig.nodeIDOffset )
 
-      def nextID = allocator.alloc
+      def nextID() = allocator.alloc()
    }
 
    object busses {
@@ -1309,9 +1308,9 @@ extends ServerLike {
 
    def sampleRate = counts.sampleRate
   
-   def dumpTree { dumpTree( false )}
+//   def dumpTree { dumpTree( false )}
 
-   def dumpTree( controls: Boolean ) {
+   def dumpTree( controls: Boolean = false ) {
       rootNode.dumpTree( controls )
    }
   
@@ -1389,10 +1388,10 @@ extends ServerLike {
       }
    }
 
-   def quit {
+   def quit() {
       this ! quitMsg
 //      cleanUpAfterQuit()
-      dispose
+      dispose()
    }
 
    def quitMsg = osc.ServerQuitMessage
@@ -1420,7 +1419,7 @@ extends ServerLike {
       server ! defaultGroup.newMsg( rootNode, addToHead )
    }
 
-   def dispose {
+   def dispose() {
       condSync.synchronized {
          serverOffline()
          remove( this )
@@ -1567,7 +1566,7 @@ extends ServerLike {
       try {
          code
       } catch {
-         case e => println( "" + new java.util.Date() + " OOOPS : msg " + msg + " produced " + e )
+         case e: Throwable => println( "" + new java.util.Date() + " OOOPS : msg " + msg + " produced " + e )
       }
       val t2 = System.currentTimeMillis
       if( (t2 - t1) > 2000 ) println( "" + new java.util.Date() + " WOW this took long (" + (t2-t1) + "): " + msg )
@@ -1582,7 +1581,7 @@ extends ServerLike {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
          if( handled ) try {
             ch ! fun.apply( msg )
-         } catch { case e => e.printStackTrace() }
+         } catch { case e: Throwable => e.printStackTrace() }
          handled
       }
       def removed() {}
@@ -1595,14 +1594,14 @@ extends ServerLike {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )
          if( handled ) try {
             ch ! fun.apply( msg )
-         } catch { case e => e.printStackTrace() }
+         } catch { case e: Throwable => e.printStackTrace() }
          handled
       }
       def removed() {}
       def timedOut() {
          if( fun.isDefinedAt( TIMEOUT )) try {
             fun.apply( TIMEOUT )
-         } catch { case e => e.printStackTrace() }
+         } catch { case e: Throwable => e.printStackTrace() }
       }
    }
 }

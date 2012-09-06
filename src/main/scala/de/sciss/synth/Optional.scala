@@ -1,4 +1,4 @@
-package de.sciss.synth.aux
+package de.sciss.synth
 
 object Optional {
   implicit def some[ @specialized A ]( a: A ) = Optional( Some( a ))

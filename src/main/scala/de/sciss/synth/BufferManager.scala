@@ -25,7 +25,7 @@
 
 package de.sciss.synth
 
-import scala.collection.immutable.IntMap
+import collection.immutable.IntMap
 
 object BufferManager {
    case class BufferInfo( buffer: Buffer, info: osc.BufferInfo )

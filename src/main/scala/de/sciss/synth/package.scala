@@ -26,8 +26,6 @@
 package de.sciss
 
 import osc.Packet
-import synth._
-import aux.GraphFunction
 
 package synth {
    abstract private[synth] sealed class LowPriorityImplicits {

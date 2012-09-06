@@ -23,9 +23,9 @@
  *  contact@sciss.de
  */
 
-package de.sciss.synth.aux
+package de.sciss.synth
 
-final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /* extends BlockAllocator */ {
+private[synth] final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /* extends BlockAllocator */ {
    private val array = new Array[ Block ]( size )
    private var freed = Map[ Int, Set[ Block ]]()
    private var top   = pos
@@ -170,10 +170,10 @@ final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /* extends Block
       }
 
       if( b.start < address) {
-         b = split( b, address - b.start, false )._2
+         b = split( b, address - b.start, used = false )._2
       }
 
-      split( b, size, true )._1
+      split( b, size, used = true )._1
    }
 
    private def split( availBlock: Block, n: Int, used: Boolean ) : (Block, Block) = {

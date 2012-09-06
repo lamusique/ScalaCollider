@@ -3,13 +3,12 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * ScalaCollider-UGens version: 1.0.0
+ * ScalaCollider-UGens version: 1.0.1
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.UGenHelper._
 
 object WhiteNoise {
    def kr: WhiteNoise = kr()

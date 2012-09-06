@@ -45,10 +45,9 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 
    def freeMsg = osc.SynthDefFreeMessage( name )
 
-   def recv { recv() }
+//   def recv { recv() }
    def recv( server: Server = Server.default, completion: Completion = NoCompletion ) {
       sendWithAction( server, recvMsg( _ ), completion, "recv" )
-      this
    }
 
    private def sendWithAction( server: Server, msgFun: Option[ Packet ] => Message, completion: Completion,
@@ -98,12 +97,11 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
       graph.write( dos )
    }
 
-   def load { load() }
+//   def load { load() }
    def load( server: Server = Server.default, dir: String = defaultDir,
              completion: Completion = NoCompletion ) {
       write( dir )
       sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
-      this
    }
   
    def loadMsg : osc.SynthDefLoadMessage = loadMsg()
@@ -111,7 +109,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
    def loadMsg( dir: String = defaultDir, completion: Option[ Packet ] = None ) =
 	   osc.SynthDefLoadMessage( dir + sep + name + ".scsyndef", completion )
 
-   def play: Synth = play()
+//   def play: Synth = play()
    def play( target: Node = Server.default, args: Seq[ ControlSetMap ] = Nil, addAction: AddAction = addToHead ) : Synth = {
       val synth   = new Synth( target.server )
 		val newMsg  = synth.newMsg( name, target, args, addAction )
@@ -119,7 +117,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 		synth
    }
     
-   def write { write() }
+//   def write { write() }
    def write( dir: String = defaultDir, overwrite: Boolean = true ) {
       val file = new File( dir, name + ".scsyndef" )
       val exists = file.exists
@@ -170,8 +168,8 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 }
 
 object SynthDef {
-   type Completion   = Comp[ SynthDef ]
-   val NoCompletion  = Comp[ SynthDef ]( None, None )
+   type Completion         = Comp[ SynthDef ]
+   final val NoCompletion  = Comp[ SynthDef ]( None, None )
 
    var defaultDir    = System.getProperty( "java.io.tmpdir" )
 

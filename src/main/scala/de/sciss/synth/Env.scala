@@ -28,43 +28,37 @@ package de.sciss.synth
 import scala.math._
 import collection.immutable.{ IndexedSeq => IIdxSeq }
 
-/**
-*    @version 0.10, 23-Apr-10
-*/
-//object EnvShape {
-//   type Any = EnvShape[ _ <: Rate, _ <: Rate ]
-//}
-
 case object stepShape extends Env.ConstShape {
-   val id = 0
+   final val id = 0
    def levelAt( pos: Float, y1: Float, y2: Float ) =
       if( pos < 1f ) y1 else y2
 }
 case object linShape extends Env.ConstShape {
-   val id = 1
+   final val id = 1
    def levelAt( pos: Float, y1: Float, y2: Float ) =
       pos * (y2 - y1) + y1
 }
 case object expShape extends Env.ConstShape {
-   val id = 2
+   final val id = 2
    def levelAt( pos: Float, y1: Float, y2: Float ) = {
       val y1Lim = max( 0.0001f, y1 )
       (y1Lim * pow( y2 / y1Lim, pos )).toFloat
    }
 }
 case object sinShape extends Env.ConstShape {
-   val id = 3
+   final val id = 3
    def levelAt( pos: Float, y1: Float, y2: Float ) =
       (y1 + (y2 - y1) * (-cos( Pi * pos ) * 0.5 + 0.5)).toFloat
 }
 case object welchShape extends Env.ConstShape {
-   val id = 4
+   final val id = 4
    def levelAt( pos: Float, y1: Float, y2: Float ) = if( y1 < y2 ) {
       (y1 + (y2 - y1) * sin( Pi * 0.5 * pos )).toFloat
    } else {
       (y2 - (y2 - y1) * sin( Pi * 0.5 * (1 - pos) )).toFloat
    }
 }
+object curveShape { final val id = 5 }
 final case class curveShape( override val curvature: Float ) extends Env.ConstShape {
    val id = 5
    def levelAt( pos: Float, y1: Float, y2: Float ) = if( abs( curvature ) < 0.0001f ) {
@@ -76,7 +70,7 @@ final case class curveShape( override val curvature: Float ) extends Env.ConstSh
    }
 }
 case object sqrShape extends Env.ConstShape {
-   val id = 6
+   final val id = 6
    def levelAt( pos: Float, y1: Float, y2: Float ) = {
       val y1Pow2	= sqrt( y1 )
       val y2Pow2	= sqrt( y2 )
@@ -85,7 +79,7 @@ case object sqrShape extends Env.ConstShape {
    }
 }
 case object cubShape extends Env.ConstShape {
-   val id = 7
+   final val id = 7
    def levelAt( pos: Float, y1: Float, y2: Float ) = {
       val y1Pow3	= math.pow( y1, 0.3333333 )
       val y2Pow3	= math.pow( y2, 0.3333333 )
@@ -145,10 +139,10 @@ object Env extends EnvFactory[ Env ] {
    final case class Seg( dur: GE, targetLevel: GE, shape: Shape = linShape )
 
    sealed abstract class ConstShape extends Shape /*[ scalar, scalar ]*/ {
-      val id: Int
-      val curvature: Float = 0f
+      def id: Int
+      def curvature: Float = 0f
       def idGE: GE = id
-      val curvatureGE: GE = curvature
+      def curvatureGE: GE = curvature
 
       def levelAt( pos: Float, y1: Float, y2: Float ) : Float
    }
@@ -213,8 +207,8 @@ object EnvLike {
 }
 
 sealed trait EnvLike {
-   val startLevel: GE
-   val segments: Seq[ Env.Seg ]
+   def startLevel: GE
+   def segments: Seq[ Env.Seg ]
    def isSustained : Boolean
 // note: we do not define toSeq because the format is
 // significantly different so there is little sense in doing so

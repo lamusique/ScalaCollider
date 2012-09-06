@@ -226,11 +226,11 @@ object UGenGraph {
 
   // ---- rich ugen ----
 
-   case class RichUGen( ugen: UGen, inputSpecs: Traversable[ (Int, Int) ])
+   final case class RichUGen( ugen: UGen, inputSpecs: Traversable[ (Int, Int) ])
 
    // ---- graph builder ----
 
-   private val builders    = new ThreadLocal[ UGenGraphBuilder ] {
+   private final val builders = new ThreadLocal[ UGenGraphBuilder ] {
       override protected def initialValue = BuilderDummy
    }
    def builder: UGenGraphBuilder = builders.get
@@ -260,7 +260,7 @@ object UGenGraph {
       private var controlNames   = IIdxSeq.empty[ (String, Int) ]
       private val sourceMap      = MMap.empty[ AnyRef, Any ]
 
-      def build = {
+      def build : UGenGraph = {
 //         graph.sources.foreach( _.force( builder ))
          var g                = graph
          var controlProxies   = MBuffer.empty[ ControlProxyLike[ _ ]]
@@ -325,7 +325,7 @@ object UGenGraph {
                   new RichUGenProxyBuilder( iui, off + outputIndex )
 
             })( breakOut )
-            if( iu.effective ) iu.richInputs.foreach( numIneff -= _.makeEffective )
+            if( iu.effective ) iu.richInputs.foreach( numIneff -= _.makeEffective() )
          }
          val filtered: MBuffer[ IndexedUGen ] = if( numIneff == 0 ) indexedUGens else indexedUGens.collect {
             case iu if iu.effective =>
@@ -431,32 +431,32 @@ object UGenGraph {
       }
 
       // ---- IndexedUGen ----
-      private class IndexedUGen( val ugen: UGen, var index: Int, var effective: Boolean ) {
+      private final class IndexedUGen( val ugen: UGen, var index: Int, var effective: Boolean ) {
          val parents    = MBuffer.empty[ IndexedUGen ]
          var children   = MBuffer.empty[ IndexedUGen ]
-         var richInputs : List[ RichUGenInBuilder ] = null
+         var richInputs : List[ RichUGenInBuilder ] = Nil // null
 
          override def toString = "IndexedUGen(" + ugen + ", " + index + ", " + effective + ") : richInputs = " + richInputs
       }
 
       private trait RichUGenInBuilder {
          def create : (Int, Int)
-         def makeEffective : Int
+         def makeEffective() : Int
       }
 
-      private class RichConstant( constIdx: Int ) extends RichUGenInBuilder {
+      private final class RichConstant( constIdx: Int ) extends RichUGenInBuilder {
          def create = (-1, constIdx)
-         def makeEffective = 0
+         def makeEffective() = 0
          override def toString = "RichConstant(" + constIdx + ")"
       }
 
-      private class RichUGenProxyBuilder( iu: IndexedUGen, outIdx: Int ) extends RichUGenInBuilder {
+      private final class RichUGenProxyBuilder( iu: IndexedUGen, outIdx: Int ) extends RichUGenInBuilder {
          def create = (iu.index, outIdx)
-         def makeEffective = {
+         def makeEffective() = {
             if( !iu.effective ) {
                iu.effective = true
                var numEff = 1
-               iu.richInputs.foreach( numEff += _.makeEffective )
+               iu.richInputs.foreach( numEff += _.makeEffective() )
                numEff
             } else 0
          }

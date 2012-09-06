@@ -29,7 +29,6 @@ import de.sciss.synth.{ Completion => Comp, play => scplay }
 import de.sciss.osc.{Bundle, Packet}
 import Model._
 import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
-import aux.AllocatorExhaustedException
 import sys.error
 
 object Buffer {
@@ -75,12 +74,12 @@ object Buffer {
    private def allocID( server: Server ) : Int = {
       val id = server.buffers.alloc( 1 )
       if( id == -1 ) {
-            throw new AllocatorExhaustedException( "Buffer: failed to get a buffer allocated (on " + server.name + ")" )
+            throw AllocatorExhaustedException( "Buffer: failed to get a buffer allocated (on " + server.name + ")" )
       }
       id
    }
 
-   private def isPowerOfTwo( i: Int ) = (i & (i-1)) == 0
+//   private def isPowerOfTwo( i: Int ) = (i & (i-1)) == 0
 }
 
 final case class Buffer( server: Server, id: Int ) extends Model {
@@ -102,7 +101,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    def numChannels = numChannelsVar
    def sampleRate  = sampleRateVar
 
-   def register {
+   def register() {
        server.bufMgr.register( this )
    }
 
@@ -116,13 +115,13 @@ final case class Buffer( server: Server, id: Int ) extends Model {
 
    def queryMsg = osc.BufferQueryMessage( id )
 
-   def free { server ! freeMsg }
+//   def free { server ! freeMsg }
 
 	def free( completion: Option[ Packet ] = None ) {
-		server ! freeMsg( completion, true )
+		server ! freeMsg( completion, release = true )
 	}
 
-   def freeMsg: osc.BufferFreeMessage = freeMsg( None, true )
+   def freeMsg: osc.BufferFreeMessage = freeMsg( None, release = true )
 
    /**
     *    @param   release  whether the buffer id should be immediately returned to the id-allocator or not.
@@ -132,7 +131,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     *                      method
     */
 	def freeMsg( completion: Option[ Packet ] = None, release: Boolean = true ) = {
-      if( release ) this.release
+      if( release ) this.release()
       osc.BufferFreeMessage( id, completion )
 	}
 
@@ -140,15 +139,15 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     *    Releases the buffer id to the id-allocator pool, without sending any
     *    OSCMessage. Use with great care.
     */
-   def release {
+   def release() {
       if( released ) error( this.toString + " : has already been freed" )
       server.buffers.free( id )
       released = true
    }
 
-   def close { server ! closeMsg }
+//   def close { server ! closeMsg }
 
-   def close( completion: Option[ Packet ]) {
+   def close( completion: Option[ Packet ] = None ) {
       server ! closeMsg( completion )
    }
 
@@ -175,7 +174,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    def allocRead( path: String, startFrame: Int = 0, numFrames: Int = -1,
                   completion: Completion = NoCompletion ) {
 //      path = argpath;
-      server ! allocReadMsg( path, startFrame, numFrames, makePacket( completion, true ))
+      server ! allocReadMsg( path, startFrame, numFrames, makePacket( completion, forceQuery = true ))
    }
 
    def allocReadMsg( path: String, startFrame: Int = 0, numFrames: Int = -1,
@@ -188,7 +187,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    def allocReadChannel( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
                          completion: Completion = NoCompletion ) {
 //      path = argpath;
-      server ! allocReadChannelMsg( path, startFrame, numFrames, channels, makePacket( completion, true ))
+      server ! allocReadChannelMsg( path, startFrame, numFrames, channels, makePacket( completion, forceQuery = true ))
    }
 
    def allocReadChannelMsg( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
@@ -199,7 +198,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    def cueMsg( path: String, startFrame: Int = 0, completion: Completion = NoCompletion ) =
-      osc.BufferReadMessage( id, path, startFrame, numFrames, 0, true, makePacket( completion ))
+      osc.BufferReadMessage( id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
 
    def read( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
              leaveOpen: Boolean = false, completion: Completion = NoCompletion ) {
@@ -262,7 +261,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     *
     * @param   pairs a list of modifications to the buffer contents, each element
     *          being a sample offset and a chunk of values. The data is channel-interleaved,
-    *          e.g. for a stereo-buffer,, the offset for the right channel's fifth frame
+    *          e.g. for a stereo-buffer, the offset for the right channel's fifth frame
     *          is `(5-1) * 2 + 1 = 9`. Accordingly, values in the float-sequences are
     *          considered channel-interleaved, i.e. for a stereo buffer and an even offset,
     *          the first element of the sequence refers to frame `offset / 2` of the
@@ -292,9 +291,9 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       osc.BufferSetnMessage( id, ipairs: _* )
    }
    
-   def zero { server ! zeroMsg }
+//   def zero { server ! zeroMsg }
 
-   def zero( completion: Option[ Packet ]) {
+   def zero( completion: Option[ Packet ] = None ) {
       server ! zeroMsg( completion )
    }
 
@@ -329,7 +328,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ Packet ] = {
       val a = completion.action
       if( forceQuery || a.isDefined ) {
-         register
+         register()
          a.foreach( action => {
             lazy val l: Listener = {
                case BufferManager.BufferInfo( _, _ ) => {

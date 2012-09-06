@@ -23,7 +23,7 @@
  *  contact@sciss.de
  */
 
-package de.sciss.synth.aux
+package de.sciss.synth
 
 final class NodeIDAllocator( user: Int, initTemp: Int ) {
    private var temp  = initTemp
@@ -36,13 +36,13 @@ final class NodeIDAllocator( user: Int, initTemp: Int ) {
    private def wrap( x: Int, min: Int, max: Int ) : Int = {
       val width  = max - min
       val widthp = width + 1
-      val maxp   = max + 1
+//      val maxp   = max + 1
       val off	  = x - min
       val add    = (width - off) / widthp * widthp
       (off + add) % widthp + min
    }
 
-   def alloc : Int = {
+   def alloc() : Int = {
       sync.synchronized {
          val x = temp
          temp = wrap( x + 1, initTemp, 0x03FFFFFF )

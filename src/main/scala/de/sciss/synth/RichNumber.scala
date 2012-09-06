@@ -464,7 +464,7 @@ object RichFloat {
       // avoid the divide if possible
       if( in >= hi ) {
          val range   = hi - lo
-         val in2     = in - range;
+         val in2     = in - range
          if( in2 < hi ) in2 else if( hi == lo ) lo else {
             in2 - range * math.floor( (in2 - lo) / range ).toFloat
          }
@@ -670,7 +670,7 @@ object RichDouble {
       // avoid the divide if possible
       if( in >= hi ) {
          val range   = hi - lo
-         val in2     = in - range;
+         val in2     = in - range
          if( in2 < hi ) in2 else if( hi == lo ) lo else {
             in2 - range * math.floor( (in2 - lo) / range )
          }

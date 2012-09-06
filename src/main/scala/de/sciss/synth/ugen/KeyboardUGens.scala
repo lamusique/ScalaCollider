@@ -3,13 +3,12 @@
  * (ScalaCollider-UGens)
  *
  * This is a synthetically generated file.
- * ScalaCollider-UGens version: 1.0.0
+ * ScalaCollider-UGens version: 1.0.1
  */
 
 package de.sciss.synth
 package ugen
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import aux.UGenHelper._
 
 object KeyState {
    def kr(keyCode: GE, lo: GE = 0.0f, hi: GE = 1.0f, lag: GE = 0.2f) = apply(keyCode, lo, hi, lag)
