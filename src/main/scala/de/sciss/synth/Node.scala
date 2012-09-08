@@ -61,12 +61,20 @@ case object addAfter    extends AddAction( 3 )
  */
 case object addReplace  extends AddAction( 4 )
 
+/**
+ * A representation for a node on the server's tree. A `Node` is either a `Synth` or a `Group`.
+ *
+ * '''Note''' that if the node is a group, all messages send to the node which are not specific to a
+ * `Synth` or `Group`, i.e. all messages found in this class, will affect all child nodes of the group.
+ * For example, if `release()` is called on a `Group`, the underlying `setMsg` is propagated to all
+ * `Synth`s in the tree whose root is this group.
+ */
 abstract class Node extends Model {
    import Model._
 
    // ---- abstract ----
-   val server: Server
-   val id: Int
+   def server: Server
+   def id: Int
 
 //	var group : Group = null
 //	var isPlaying	= false
@@ -122,12 +130,30 @@ abstract class Node extends Model {
 
 //  	def run : Unit = run( true )
   
+   /**
+    * Pauses or resumes the node.
+    *
+    * @param flag if `true` the node is resumed, if `false` it is paused.
+    */
   	def run( flag: Boolean = true ) {
   		server ! runMsg( flag )
   		this
   	}
-	
+
+   /**
+    * Returns an OSC message to resume the node if it was paused.
+    *
+    * @see [[de.sciss.synth.osc.NodeRunMessage]]
+    */
   	def runMsg : osc.NodeRunMessage = runMsg( flag = true )
+
+   /**
+    * Returns an OSC message to resume the node if it was paused.
+    *
+    * @param flag if `true` the node is resumed, if `false` it is paused.
+    *
+    * @see [[de.sciss.synth.osc.NodeRunMessage]]
+    */
   	def runMsg( flag: Boolean ) = osc.NodeRunMessage( id -> flag )
   
   	def set( pairs: ControlSetMap* ) {
@@ -161,7 +187,18 @@ abstract class Node extends Model {
   	def releaseMsg : osc.NodeSetMessage = releaseMsg( None )
    def releaseMsg( releaseTime: Float ) : osc.NodeSetMessage = releaseMsg( Some( releaseTime ))
 
-  	// assumes a control called 'gate' in the synth
+   /**
+    * A utility method which calls `setMsg` assuming a control named `gate`. The release time
+    * argument is modified to correspond with the interpretation of the `gate` argument in
+    * an `EnvGen` UGen. This is the case for synths created with the package method `play`.
+    *
+    * @param   releaseTime the optional release time in seconds within which the synth should fade out,
+    *                      or `None` if the envelope should be released at its nominal release time. If the `EnvGen`
+    *                      has a `doneAction` of `freeSelf`, the synth will be freed after the release phase.
+    *
+    * @see  [[de.sciss.synth.ugen.EnvGen]]
+    * @see  [[de.sciss.synth.osc.NodeSetMessage]]
+    */
   	def releaseMsg( releaseTime: Option[ Float ]) = {
   		val value = releaseTime.map( -1.0f - _ ).getOrElse( 0.0f )
   		setMsg( "gate" -> value )
@@ -181,17 +218,53 @@ abstract class Node extends Model {
   	def mapnMsg( mappings: ControlKBusMap* ) =
   		osc.NodeMapnMessage( id, mappings: _* )
 
+   /**
+    * Creates a mapping from a mono-channel audio bus to one of the node's controls.
+    *
+    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+    *
+    * @see  [[de.sciss.synth.ugen.InFeedback]]
+    */
    def mapa( pairs: ControlABusMap.Single* ) {
       server ! mapaMsg( pairs: _* )
    }
 
+   /**
+    * Returns an OSC message to map from an mono-channel audio bus to one of the node's controls.
+    *
+    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+    *
+    * @see  [[de.sciss.synth.ugen.InFeedback]]
+    */
    def mapaMsg( pairs: ControlABusMap.Single* ) =
       osc.NodeMapaMessage( id, pairs: _* )
 
+   /**
+    * Creates a mapping from a mono- or multi-channel audio bus to one of the node's controls.
+    *
+    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+    *
+    * @see  [[de.sciss.synth.ugen.InFeedback]]
+    */
   	def mapan( mappings: ControlABusMap* ) {
   		server ! mapanMsg( mappings: _* )
   	}
 
+   /**
+    * Returns an OSC message to map from an mono- or multi-channel audio bus to one of the node's controls.
+    *
+    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+    *
+    * @see  [[de.sciss.synth.ugen.InFeedback]]
+    */
   	def mapanMsg( mappings: ControlABusMap* ) =
   		osc.NodeMapanMessage( id, mappings: _* )
 

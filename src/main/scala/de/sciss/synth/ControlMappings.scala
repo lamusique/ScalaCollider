@@ -67,6 +67,9 @@ object ControlKBusMap {
       implicit def intIntControlKBus( tup: (Int, Int) )                 = Single( tup._1, tup._2 )
       implicit def stringIntControlKBus( tup: (String, Int) )           = Single( tup._1, tup._2 )
 //   }
+   /**
+    * A mapping from an mono-channel control-rate bus to a synth control.
+    */
    final case class Single( key: Any, index: Int )
    extends ControlKBusMap {
       def toMapSeq: IIdxSeq[ Any ]  = IIdxSeq( key, index )
@@ -77,12 +80,18 @@ object ControlKBusMap {
       implicit def intKBusControlKBus( tup: (Int, ControlBus) )         = Multi( tup._1, tup._2.index, tup._2.numChannels )
       implicit def stringKBusControlKBus( tup: (String, ControlBus) )   = Multi( tup._1, tup._2.index, tup._2.numChannels )
 //   }
+   /**
+    * A mapping from an mono- or multi-channel control-rate bus to a synth control.
+    */
    final case class Multi( key: Any, index: Int, numChannels: Int )
    extends ControlKBusMap {
       def toMapnSeq: IIdxSeq[ Any ] = IIdxSeq( key, index, numChannels )
    }
 
 }
+/**
+ * A mapping from a control-rate bus to a synth control.
+ */
 sealed trait ControlKBusMap {
 //   def toMapSeq: IIdxSeq[ Any ]
    def toMapnSeq: IIdxSeq[ Any ]
@@ -93,6 +102,9 @@ object ControlABusMap {
       implicit def intIntControlABus( tup: (Int, Int) )                 = Single( tup._1, tup._2 )
       implicit def stringIntControlABus( tup: (String, Int) )           = Single( tup._1, tup._2 )
 //   }
+   /**
+    * A mapping from an mono-channel audio bus to a synth control.
+    */
    final case class Single( key: Any, index: Int )
    extends ControlABusMap {
       def toMapaSeq: IIdxSeq[ Any ]  = IIdxSeq( key, index )
@@ -103,11 +115,23 @@ object ControlABusMap {
       implicit def intABusControlABus( tup: (Int, AudioBus) )           = Multi( tup._1, tup._2.index, tup._2.numChannels )
       implicit def stringABusControlABus( tup: (String, AudioBus) )     = Multi( tup._1, tup._2.index, tup._2.numChannels )
 //   }
+   /**
+    * A mapping from an mono- or multi-channel audio bus to a synth control.
+    */
    final case class Multi( key: Any, index: Int, numChannels: Int )
    extends ControlABusMap {
       def toMapanSeq: IIdxSeq[ Any ] = IIdxSeq( key, index, numChannels )
    }
 }
+/**
+ * A mapping from an audio bus to a synth control.
+ *
+ * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+ * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+ * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+ *
+ * @see  [[de.sciss.synth.ugen.InFeedback]]
+ */
 sealed trait ControlABusMap {
    def toMapanSeq: IIdxSeq[ Any ]
 }
