@@ -32,7 +32,7 @@ import collection.mutable.{Map => MMap, Buffer => MBuffer, Stack => MStack}
 import collection.immutable.{IndexedSeq => IIdxSeq, Set => ISet}
 import UGenGraph.RichUGen
 
-private[synth] final class DefaultUGenGraphBuilder( graph: SynthGraph ) extends UGenGraphBuilderLike {
+private[synth] final class DefaultUGenGraphBuilder( graph: SynthGraph ) extends BasicUGenGraphBuilder {
    builder =>
 
    override def toString = "UGenGraph.Builder@" + hashCode.toHexString
@@ -87,6 +87,13 @@ object UGenGraphBuilderLike {
    }
 }
 
+trait BasicUGenGraphBuilder extends UGenGraphBuilderLike {
+   protected var ugens          = IIdxSeq.empty[ UGen ]
+   protected var controlValues  = IIdxSeq.empty[ Float ]
+   protected var controlNames   = IIdxSeq.empty[ (String, Int) ]
+   protected var sourceMap      = Map.empty[ AnyRef, Any ]
+}
+
 /**
  * Complete implementation of a ugen graph builder, except for the actual code that
  * calls `force` on the sources of a `SynthGraph`. Implementations should call
@@ -98,11 +105,14 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
    import UGenGraphBuilderLike._
 
    // updated during build
-   private val ugens          = MBuffer.empty[ UGen ]
-//      private val ugenSet        = MSet.empty[ AnyRef ]
-   private var controlValues  = IIdxSeq.empty[ Float ]
-   private var controlNames   = IIdxSeq.empty[ (String, Int) ]
-   private val sourceMap      = MMap.empty[ AnyRef, Any ]
+   protected def ugens: IIdxSeq[ UGen ]
+   protected def ugens_=( seq: IIdxSeq[ UGen ]) : Unit
+   protected def controlValues: IIdxSeq[ Float ]
+   protected def controlValues_=( seq: IIdxSeq[ Float ]) : Unit
+   protected def controlNames: IIdxSeq[ (String, Int) ]
+   protected def controlNames_=( seq: IIdxSeq[ (String, Int) ]) : Unit
+   protected def sourceMap: Map[ AnyRef, Any ]
+   protected def sourceMap_=( map: Map[ AnyRef, Any ]) : Unit
 
    /**
     * Finalizes the build process. It is assumed that the graph elements have been expanded at this
@@ -124,7 +134,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
    }
 
    private def indexUGens( ctrlProxyMap: Map[ ControlProxyLike[ _ ], (UGen, Int)]) :
-      (MBuffer[ IndexedUGen ], IIdxSeq[ Float ]) = {
+      (IIdxSeq[ IndexedUGen ], IIdxSeq[ Float ]) = {
 
       val constantMap   = MMap.empty[ Float, RichConstant ]
       var constants     = IIdxSeq.empty[ Float ]
@@ -170,7 +180,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
          })( breakOut )
          if( iu.effective ) iu.richInputs.foreach( numIneff -= _.makeEffective() )
       }
-      val filtered: MBuffer[ IndexedUGen ] = if( numIneff == 0 ) indexedUGens else indexedUGens.collect {
+      val filtered: IIdxSeq[ IndexedUGen ] = if( numIneff == 0 ) indexedUGens else indexedUGens.collect {
          case iu if iu.effective =>
             iu.children = iu.children.filter( _.effective )
             iu
@@ -188,10 +198,11 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     *    mNumWireBufs might be different, so it's a space not a
     *    time issue.
     */
-   private def sortUGens( indexedUGens: MBuffer[ IndexedUGen ]) : Array[ IndexedUGen ] = {
+   private def sortUGens( indexedUGens: IIdxSeq[ IndexedUGen ]) : Array[ IndexedUGen ] = {
       indexedUGens.foreach( iu => iu.children = iu.children.sortWith( (a, b) => a.index > b.index ))
       val sorted  = new Array[ IndexedUGen ]( indexedUGens.size )
-      val avail   = MStack( indexedUGens.filter( _.parents.isEmpty ) : _* )
+//      val avail   = MStack( indexedUGens.filter( _.parents.isEmpty ) : _* )
+      val avail: MStack[ IndexedUGen ] = indexedUGens.collect({ case iu if iu.parents.isEmpty => iu })( breakOut )
       var cnt     = 0
       while( avail.nonEmpty ) {
          val iu   = avail.pop()
@@ -215,7 +226,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
    }
 
-   final def addUGen( ugen: UGen ) { ugens += ugen }
+   final def addUGen( ugen: UGen ) { ugens :+= ugen }
 
    final def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = {
       val specialIndex = controlValues.size

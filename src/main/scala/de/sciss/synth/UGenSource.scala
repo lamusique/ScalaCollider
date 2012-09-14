@@ -29,11 +29,11 @@ import collection.immutable.{IndexedSeq => IIdxSeq}
 
 object UGenSource {
    abstract class ZeroOut( val name: String ) extends UGenSource[ Unit ] {
-      protected def makeUGens : Unit
+//      protected def makeUGens : Unit
 
       final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) {
          var i = 0; while( i < exp ) {
-            unwrap( args.map( a => a.unwrap( i )))
+            unwrap( args.map( _.unwrap( i )))
             i += 1
          }
       }
@@ -48,7 +48,7 @@ object UGenSource {
 //      protected def makeUGens : UGenInLike
 
       final protected def rewrap( args: IIdxSeq[ UGenInLike ], exp: Int ) : UGenInLike =
-         UGenInGroup( IIdxSeq.tabulate( exp )( i => unwrap( args.map( a => a.unwrap( i )))))
+         UGenInGroup( IIdxSeq.tabulate( exp )( i => unwrap( args.map( _.unwrap( i )))))
    }
 }
 sealed trait UGenSource[ U ] extends Lazy.Expander[ U ] {
