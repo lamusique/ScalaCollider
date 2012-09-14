@@ -27,9 +27,8 @@ package de.sciss.synth
 
 import de.sciss.synth.{ Completion => Comp, play => scplay }
 import de.sciss.osc.{Bundle, Packet}
-import Model._
+import Model.Listener
 import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
-import sys.error
 
 object Buffer {
 //   sealed abstract class Completion {
@@ -140,7 +139,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     *    OSCMessage. Use with great care.
     */
    def release() {
-      if( released ) error( this.toString + " : has already been freed" )
+      if( released ) sys.error( this.toString + " : has already been freed" )
       server.buffers.free( id )
       released = true
    }

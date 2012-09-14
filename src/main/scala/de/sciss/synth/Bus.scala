@@ -25,8 +25,6 @@
 
 package de.sciss.synth
 
-import sys.error
-
 object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
 		val id = server.busses.allocControl( numChannels )
@@ -62,7 +60,7 @@ extends Bus {
    def rate : Rate = control
 
 	def free() {
-	   if( released ) error( this.toString + " : has already been freed" )
+	   if( released ) sys.error( this.toString + " : has already been freed" )
 		server.busses.freeControl( index )
 	   released = true
 	}
@@ -127,7 +125,7 @@ extends Bus {
    def rate : Rate = audio
 
    def free() {
-      if( released ) error( this.toString + " : has already been freed" )
+      if( released ) sys.error( this.toString + " : has already been freed" )
       server.busses.freeAudio( index )
       released = true
    }

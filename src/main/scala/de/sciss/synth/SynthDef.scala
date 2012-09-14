@@ -31,7 +31,6 @@ import de.sciss.synth.{ Completion => Comp }
 import File.{ separator => sep }
 import actors.TIMEOUT
 import de.sciss.osc.{Bundle, Message, Packet}
-import sys.error
 
 /**
  *    @todo    should add load and loadDir to companion object
@@ -144,7 +143,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
          var j = 0
          ru.inputSpecs.foreach( spec => {
             if( (spec._1 >= 0) && (spec._1 <= i) ) {
-               error( "Test failed : ugen " + i + " = " + ru.ugen + " -> input " + j + " = " + spec )
+               sys.error( "Test failed : ugen " + i + " = " + ru.ugen + " -> input " + j + " = " + spec )
             }
             j += 1
          })

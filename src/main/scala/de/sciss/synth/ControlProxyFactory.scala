@@ -85,11 +85,11 @@ final class ControlProxyFactory( name: String ) {
 
 sealed trait ControlFactoryLike[ T ] {
    type Proxy = T // don't ask me what this is doing. some vital variance correction...
-   def build( b: UGenGraphBuilder, proxies: Proxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ]
+   def build( b: UGenGraph.Builder, proxies: Proxy* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ]
 }
 
 abstract class AbstractControlFactory[ T <: AbstractControlProxy[ T ]] extends ControlFactoryLike[ T ] with Serializable {
-   def build( b: UGenGraphBuilder, proxies: T* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
+   def build( b: UGenGraph.Builder, proxies: T* ) : Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
       var numChannels   = 0
       val specialIndex  = proxies.map( p => {
          numChannels += p.values.size

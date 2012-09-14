@@ -30,7 +30,6 @@ import java.io.{BufferedReader, File, InputStreamReader, IOException}
 import java.util.{Timer, TimerTask}
 import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
 import concurrent.SyncVar
-import sys.error
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 import collection.mutable.ListBuffer
@@ -784,7 +783,7 @@ object Server {
                ds.close()
             }
          }
-         case x => error( "Unsupported transport : " + x.name )
+         case x => sys.error( "Unsupported transport : " + x.name )
       }
    }
 
