@@ -29,16 +29,18 @@ package impl
 
 import collection.breakOut
 import collection.mutable.{Map => MMap, Buffer => MBuffer, Stack => MStack}
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => IIdxSeq, Set => ISet}
 import UGenGraph.RichUGen
 
 private[synth] final class DefaultUGenGraphBuilder( graph: SynthGraph ) extends UGenGraphBuilderLike {
    builder =>
 
+   override def toString = "UGenGraph.Builder@" + hashCode.toHexString
+
    def build : UGenGraph = {
 //         graph.sources.foreach( _.force( builder ))
       var g                = graph
-      var controlProxies   = IIdxSeq.empty[ ControlProxyLike[ _ ]]
+      var controlProxies   = ISet.empty[ ControlProxyLike[ _ ]]
       while( g.nonEmpty ) {
          // XXX these two lines could be more efficient eventually -- using a 'clearable' SynthGraph
          controlProxies ++= g.controlProxies
@@ -111,7 +113,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     *
     * @return  the completed `UGenGraph` build
     */
-   final protected def build( controlProxies: IIdxSeq[ ControlProxyLike[ _ ]]) : UGenGraph = {
+   final protected def build( controlProxies: Iterable[ ControlProxyLike[ _ ]]) : UGenGraph = {
 //         val ctrlProxyMap        = buildControls( graph.controlProxies )
       val ctrlProxyMap        = buildControls( controlProxies )
       val (igens, constants)  = indexUGens( ctrlProxyMap )
@@ -213,11 +215,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
    }
 
-   final def addUGen( ugen: UGen ) {
-//         if( ugenSet.add( ugen )) ugens += ugen
-      // OOO
-      /* if( ugenSet.add( ugen.ref )) */ ugens += ugen
-   }
+   final def addUGen( ugen: UGen ) { ugens += ugen }
 
    final def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = {
       val specialIndex = controlValues.size
@@ -226,15 +224,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       specialIndex
    }
 
-//      def addControlProxy( proxy: ControlProxyLike[ _, _ ]) {
-//         controlProxies += proxy
-//      }
-
-   /*
-    *    Manita, how simple things can get as soon as you
-    *    clean up the sclang mess...
-    */
-   private def buildControls( p: Traversable[ ControlProxyLike[ _ ]]): Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
+   private def buildControls( p: Iterable[ ControlProxyLike[ _ ]]): Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
       p.groupBy( _.factory ).flatMap( tuple => {
          val (factory, proxies) = tuple
          factory.build( builder, proxies.toSeq.asInstanceOf[ Seq[ factory.Proxy /* XXX horrible */]]: _* )

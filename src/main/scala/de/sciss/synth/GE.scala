@@ -107,10 +107,27 @@ def numOutputs = elems.size
 //   }
 //   sealed trait Seq[ R <: Rate ] extends GE[ R ]
 
+   /**
+    * Simply a trait composed of `Lazy.Expander[UGenInLike]` and `GE`
+    */
    trait Lazy extends Lazy.Expander[ UGenInLike ] with GE
 }
 //private[synth] sealed trait GEIn
 //private[synth] final case class GEMultiple( elem: GE ) extends GEIn
+/**
+ * The main trait used in synthesis graph, a graph element, abbreviated as `GE`.
+ *
+ * Graph elements are characterized by having a calculation rate (possibly unknown),
+ * and they embody future UGens, which are created by invoking the `expand` method.
+ * For each ugen in SuperCollider, there is a corresponding graph element defined
+ * in the `ugen` package, and these elements take again graph elements as arguments.
+ * Multi-channel expansion is thus deferred to the transition from `SynthGraph` to `UGenGraph`.
+ *
+ * Currently, also a lot of unary and binary operations are directly defined on the `GE` trait,
+ * although they might go into a separate `GEOps` implicit class in future versions.
+ *
+ * @see [[de.sciss.synth.SynthGraph]]
+ */
 trait GE /* extends GEIn */ {
    ge =>
 

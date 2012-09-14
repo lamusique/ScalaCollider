@@ -148,6 +148,8 @@ object SynthGraph {
       private val lazies         = MBuffer.empty[ Lazy ]
       private var controlProxies = MSet.empty[ ControlProxyLike[ _ ]]
 
+      override def toString = "SynthGraph.Builder@" + hashCode.toHexString
+
       def build = SynthGraph( lazies.toIndexedSeq, controlProxies.toSet )
       def addLazy( g: Lazy ) {
          lazies += g
