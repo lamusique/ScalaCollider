@@ -134,6 +134,9 @@ final case class LagIn(rate: Rate, bus: GE, numChannels: Int, lag: GE) extends U
  * a '''delay''' of one block size, which by default is 64 sample frames (equal to about 1.45 ms
  * at 44.1 kHz sample rate).
  * 
+ * '''Note''' that no delay occurs when the bus contains a signal which has been written already
+ * in the current cycle. The delay is only introduced when no present signal exists.
+ * 
  * @see [[de.sciss.synth.ugen.In]]
  * @see [[de.sciss.synth.ugen.LocalIn]]
  * @see [[de.sciss.synth.ugen.ControlDur]]
@@ -167,6 +170,9 @@ object InFeedback {
  * This can be achieved with `InFeedback`. It reads from the previous cycle, and hence introduces
  * a '''delay''' of one block size, which by default is 64 sample frames (equal to about 1.45 ms
  * at 44.1 kHz sample rate).
+ * 
+ * '''Note''' that no delay occurs when the bus contains a signal which has been written already
+ * in the current cycle. The delay is only introduced when no present signal exists.
  * 
  * @param bus             the index of the audio bus to read in from.
  * @param numChannels     the number of channels (i.e. adjacent buses) to read in. Since

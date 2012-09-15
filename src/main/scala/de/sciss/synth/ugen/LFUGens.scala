@@ -365,16 +365,56 @@ final case class Line(rate: Rate, start: GE, end: GE, dur: GE, doneAction: GE) e
    protected def makeUGen(_args: IIdxSeq[UGenIn]): UGenInLike = new UGen.SingleOut(name, rate, _args, false, true)
 }
 
+/**
+ * A exponential curve generator UGen that moves from a start value to the end value in a given duration.
+ * 
+ * At a given point in time `0 <= t <= dur`, the output value is `start * (stop/start).pow(t/dur)`.
+ * 
+ * '''Warning''': It must be ensured that the both `start` is not zero and `start` and `end` have the
+ * same sign (e.g. a `start` of `-1` and an end of `-0.001` are valid),
+ * otherwise the UGen will output a `NaN`! While in the case of `end` being zero the UGen will also
+ * output zero, it is recommended to treat this case as pathological as well.
+ */
 object XLine {
    def ar: XLine = ar()
    
+   /**
+    * @param start           Starting value. Note that this is read only once at initialization
+    * @param end             Ending value. Note that this is read only once at initialization
+    * @param dur             Duration in seconds. Note that this is read only once at initialization
+    * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
+    *                        given duration
+    */
    def ar(start: GE = 1.0f, end: GE = 2.0f, dur: GE = 1.0f, doneAction: GE = doNothing) = apply(audio, start, end, dur, doneAction)
    
    def kr: XLine = kr()
    
+   /**
+    * @param start           Starting value. Note that this is read only once at initialization
+    * @param end             Ending value. Note that this is read only once at initialization
+    * @param dur             Duration in seconds. Note that this is read only once at initialization
+    * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
+    *                        given duration
+    */
    def kr(start: GE = 1.0f, end: GE = 2.0f, dur: GE = 1.0f, doneAction: GE = doNothing) = apply(control, start, end, dur, doneAction)
 }
 
+/**
+ * A exponential curve generator UGen that moves from a start value to the end value in a given duration.
+ * 
+ * At a given point in time `0 <= t <= dur`, the output value is `start * (stop/start).pow(t/dur)`.
+ * 
+ * '''Warning''': It must be ensured that the both `start` is not zero and `start` and `end` have the
+ * same sign (e.g. a `start` of `-1` and an end of `-0.001` are valid),
+ * otherwise the UGen will output a `NaN`! While in the case of `end` being zero the UGen will also
+ * output zero, it is recommended to treat this case as pathological as well.
+ * 
+ * @param start           Starting value. Note that this is read only once at initialization
+ * @param end             Ending value. Note that this is read only once at initialization
+ * @param dur             Duration in seconds. Note that this is read only once at initialization
+ * @param doneAction      A done-action that is evaluated when the Line has reached the end value after the
+ *                        given duration
+ */
 final case class XLine(rate: Rate, start: GE, end: GE, dur: GE, doneAction: GE) extends UGenSource.SingleOut("XLine") with HasSideEffect with HasDoneFlag {
    protected def makeUGens: UGenInLike = unwrap(IIdxSeq(start.expand, end.expand, dur.expand, doneAction.expand))
    
