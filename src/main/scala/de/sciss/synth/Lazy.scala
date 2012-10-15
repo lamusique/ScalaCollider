@@ -43,7 +43,7 @@ object Lazy {
 //      private lazy val cache = new Cache( this )
 
       // this acts now as a fast unique reference
-      private[synth] lazy val ref = new AnyRef
+      @transient private[synth] lazy val ref = new AnyRef
 
       // ---- constructor ----
       SynthGraph.builder.addLazy( this )
