@@ -123,7 +123,7 @@ private[synth] final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /
     	   if( (entry._1 >= n) && !entry._2.isEmpty ) return entry._2.head
       })
 
-      if( (top + n > size) && array( top ).used ) return null
+      if( (top + n > size) || array( top ).used ) return null
       array( top )
    }
 
