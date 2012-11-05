@@ -1021,6 +1021,7 @@ object Server {
 
       def start() {
          actor.start()
+         actor ! ConnectionImplLike.Ready
       }
 
       override def toString = "connect<" + name + ">"
