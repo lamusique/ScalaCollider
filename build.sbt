@@ -1,6 +1,6 @@
-name := "scalacollider"
+name := "ScalaCollider"
 
-version := "1.1.1-SNAPSHOT"
+version := "1.1.1"
 
 organization := "de.sciss"
 
