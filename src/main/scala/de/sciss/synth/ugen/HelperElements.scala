@@ -28,6 +28,7 @@ package ugen
 
 import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import Predef.{any2stringadd => _}
 
 final case class Flatten( elem: GE ) extends GE.Lazy {
    def rate = elem.rate
@@ -198,7 +199,7 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
 
    protected def makeUGen( ins: IIdxSeq[ UGenIn ]) {
       if( ins.isEmpty ) return
-      val rate = ins.map( _.rate ).max
+      val rate    = ins.map( _.rate ).max
       if( (rate == audio) || (rate == control) ) {
          val ins3 = fadeTime.option match {
             case Some( fdt ) =>

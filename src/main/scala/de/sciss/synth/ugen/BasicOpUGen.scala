@@ -78,10 +78,15 @@ object UnaryOp {
    import RichFloat._
 
    sealed abstract class Op( val id: Int ) extends Serializable {
-      def make( a: GE ) = UnaryOp( /* a.rate, */ this, a )
-      protected[synth] def make1( a: UGenIn ) : UGenIn = a match {
+      op =>
+
+      final def make( a: GE ) : GE = a match {
          case c(f)   => c( make1( f ))
-         case _      => new UnaryOpUGen( /* a.rate, */ this, a ) // unop.apply( a.rate, this, a )
+         case _      => UnaryOp( /* a.rate, */ op, a )
+      }
+      final protected[synth] def make1( a: UGenIn ) : UGenIn = a match {
+         case c(f)   => c( make1( f ))
+         case _      => new UnaryOpUGen( /* a.rate, */ op, a ) // unop.apply( a.rate, this, a )
       }
 
       protected def make1( a: Float ) : Float
@@ -265,10 +270,14 @@ object BinaryOp {
       op =>
 
 //      def make( rate: R, a: GE[ UGenIn[ R ]]) = UnaryOp[ R ]( rate, this, a )
-      def make( a: GE, b: GE ) : GE = BinaryOp( this, a, b )
+      def make( a: GE, b: GE ) : GE = (a, b) match {
+         case (c(af), c(bf))  => c( make1( af, bf ))
+         case _               => BinaryOp( op, a, b )
+      }
+
       protected[synth] def make1( a: UGenIn, b: UGenIn ) : UGenIn = (a, b) match {
-         case (c(af), c(bf)) => c( make1( af, bf ))
-         case _ => new BinaryOpUGen( op, a, b)
+         case (c(af), c(bf))  => c( make1( af, bf ))
+         case _               => new BinaryOpUGen( op, a, b)
       }
 
       protected def make1( a: Float, b: Float ) : Float

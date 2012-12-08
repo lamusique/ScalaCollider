@@ -90,6 +90,9 @@ case object UndefinedRate extends MaybeRate {
    def ?|( r: => Rate ) : Rate = r
 }
 
+object Rate {
+   implicit val ordering = Ordering.ordered[ Rate ]
+}
 /**
  *    The calculation rate of a UGen or a UGen output.
  */

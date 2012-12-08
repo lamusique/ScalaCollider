@@ -1,6 +1,7 @@
 package de.sciss.synth
 
 import org.scalatest.FunSpec
+import Predef.{any2stringadd => _}
 
 /**
  * To run only this test:

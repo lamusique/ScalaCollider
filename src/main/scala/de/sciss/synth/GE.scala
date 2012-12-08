@@ -38,22 +38,6 @@ import ugen.{ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, Una
  *    multichannel expansion (UGenInSeq). 
  */
 object GE {
-   // XXX is the ever in effect?
-//   implicit def bubbleGen[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
-//   implicit def bubble[ G <: AnyGE ]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
-
-//   implicit def bubble[ G <: AnyGE, T <% G ]( g: T ) : Multi[ /* R, */ G ] = Multi.Joint( g )
-
-//   implicit def bubbleGE[ R <: Rate, G <: GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
-
-//   implicit def fromAnySeq( x: Seq[ AnyGE ]) : GE[ Rate ] = {
-//      x match {
-//         case Seq( single ) => single // Multi.Joint( single )
-////         case _ => GESeq[ R, U ]( x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-//         case _ => GESeqGaga( /* rate, */ x.toIndexedSeq ) // Multi.Group( x.toIndexedSeq ) // new RatedUGenInSeq( Rate.highest( x.map( _.rate ): _* ), x )
-//      }
-//   }
-
    // XXX don't we expect Multi[ GE[ R ]] ?
    implicit def fromSeq( xs: SSeq[ GE ]) : GE = xs match {
       case SSeq( x ) => x
@@ -111,9 +95,207 @@ def numOutputs = elems.size
     * Simply a trait composed of `Lazy.Expander[UGenInLike]` and `GE`
     */
    trait Lazy extends Lazy.Expander[ UGenInLike ] with GE
+   
+   implicit def ops( g: GE ) : Ops = new Ops( g )
+   
+   final class Ops( g: GE ) {
+      def `\\`( index: Int ) = ChannelProxy( g, index )
+   
+      def madd( mul: GE, add: GE ) = MulAdd( g, mul, add )
+   
+      def flatten = Flatten( g )
+   
+      def poll: Poll = poll()
+   
+      /**
+       * Polls the output values of this graph element, and prints the result to the console.
+       * This is a convenient method for wrapping this graph element in a `Poll` UGen.
+       *
+       * @param   trig     a signal to trigger the printing. If this is a constant, it is
+       *    interpreted as a frequency value and an `Impulse` generator of that frequency
+       *    is used instead.
+       * @param   label    a string to print along with the values, in order to identify
+       *    different polls. Using the special label `"#auto"` (default) will generated
+       *    automatic useful labels using information from the polled graph element
+       * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
+       *    (similar to `SendTrig`)
+       *
+       * @see  [[de.sciss.synth.ugen.Poll]]
+       */
+      def poll( trig: GE = 10, label: Optional[ String ] = None, trigID: GE = -1 ) : Poll = {
+         val trig1 = trig match {
+            case Constant( freq ) => Impulse( (g.rate ?| audio) max control, freq, 0 )  // XXX good? or throw an error? should have a maxRate?
+            case other => other
+         }
+         Poll( trig1.rate, trig1, g, label.getOrElse( g.displayName ), trigID  )
+      }
+   
+      import UnaryOp._
+   
+      // unary ops
+      def unary_- : GE   = Neg.make( g )
+   // def bitNot : GE	         = BitNot.make( g )
+      def abs : GE       = Abs.make( g )
+   // def toFloat : GE	         = UnOp.make( 'asFloat, this )
+   // def toInteger : GE	      = UnOp.make( 'asInteger, this )
+      def ceil : GE      = Ceil.make( g )
+      def floor : GE     = Floor.make( g )
+      def frac : GE      = Frac.make( g )
+      def signum : GE    = Signum.make( g )
+      def squared : GE   = Squared.make( g )
+      def cubed : GE     = Cubed.make( g )
+      def sqrt : GE      = Sqrt.make( g )
+      def exp : GE       = Exp.make( g )
+      def reciprocal : GE= Reciprocal.make( g )
+      def midicps : GE   = Midicps.make( g )
+      def cpsmidi : GE   = Cpsmidi.make( g )
+      def midiratio : GE = Midiratio.make( g )
+      def ratiomidi : GE = Ratiomidi.make( g )
+      def dbamp : GE     = Dbamp.make( g )
+      def ampdb : GE     = Ampdb.make( g )
+      def octcps : GE    = Octcps.make( g )
+      def cpsoct : GE    = Cpsoct.make( g )
+      def log : GE       = Log.make( g )
+      def log2 : GE      = Log2.make( g )
+      def log10 : GE     = Log10.make( g )
+      def sin : GE       = Sin.make( g )
+      def cos : GE       = Cos.make( g )
+      def tan : GE       = Tan.make( g )
+      def asin : GE      = Asin.make( g )
+      def acos : GE      = Acos.make( g )
+      def atan : GE      = Atan.make( g )
+      def sinh : GE      = Sinh.make( g )
+      def cosh : GE      = Cosh.make( g )
+      def tanh : GE      = Tanh.make( g )
+   // def rand : GE              = UnOp.make( 'rand, this )
+   // def rand2 : GE             = UnOp.make( 'rand2, this )
+   // def linrand : GE           = UnOp.make( 'linrand, this )
+   // def bilinrand : GE         = UnOp.make( 'bilinrand, this )
+   // def sum3rand : GE          = UnOp.make( 'sum3rand, this )
+      def distort : GE   = Distort.make( g )
+      def softclip : GE  = Softclip.make( g )
+   // def coin : GE              = UnOp.make( 'coin, this )
+   // def even : GE              = UnOp.make( 'even, this )
+   // def odd : GE               = UnOp.make( 'odd, this )
+   // def rectWindow : GE        = UnOp.make( 'rectWindow, this )
+   // def hanWindow : GE         = UnOp.make( 'hanWindow, this )
+   // def welWindow : GE         = UnOp.make( 'sum3rand, this )
+   // def triWindow : GE         = UnOp.make( 'triWindow, this )
+      def ramp : GE      = Ramp.make( g )
+      def scurve : GE    = Scurve.make( g )
+   // def isPositive : GE        = UnOp.make( 'isPositive, this )
+   // def isNegative : GE        = UnOp.make( 'isNegative, this )
+   // def isStrictlyPositive : GE= UnOp.make( 'isStrictlyPositive, this )
+   // def rho : GE               = UnOp.make( 'rho, this )
+   // def theta : GE             = UnOp.make( 'theta, this )
+   
+      import BinaryOp._
+   
+      // binary ops
+      private def binOp( op: BinaryOp.Op, b: GE ) : GE =
+         op.make( /* r.getOrElse( this.rate, b.rate ), */ g, b )
+   
+      def +( b: GE) = binOp( Plus, b )
+   //      Plus.make /*[ R, S, T ]*/( r.getOrElse( this.rate, b.rate ), this, b )
+      
+      def -( b: GE) = binOp( Minus, b )
+   
+      def *( b: GE) = binOp( Times, b )
+   
+   // def div( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE      = IDiv.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   
+      def / ( b: GE) = binOp( Div, b )
+   
+      def % ( b: GE) = binOp( Mod, b )
+   
+      def === ( b: GE) = binOp( Eq, b )
+   
+      def !== ( b: GE) = binOp( Neq, b )
+   
+      def < ( b: GE) = binOp( Lt, b )
+   
+      def > ( b: GE) = binOp( Gt, b )
+   
+      def <= ( b: GE) = binOp( Leq, b )
+   
+      def >= ( b: GE) = binOp( Geq, b )
+   
+      def min ( b: GE) = binOp( Min, b )
+   
+      def max( b: GE) = binOp( Max, b )
+   
+      def & ( b: GE) = binOp( BitAnd, b )
+   
+      def | ( b: GE) = binOp( BitOr, b )
+   
+      def ^ ( b: GE) = binOp( BitXor, b )
+   
+   // def Lcm( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE      = Lcm.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   // def Gcd( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE      = Gcd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   
+      def round ( b: GE) = binOp( Round, b )
+   
+      def roundup ( b: GE) = binOp( Roundup, b )
+   
+      def trunc ( b: GE) = binOp( Trunc, b )
+   
+      def atan2 ( b: GE) = binOp( Atan2, b )
+   
+      def hypot ( b: GE) = binOp( Hypot, b )
+   
+      def hypotx ( b: GE) = binOp( Hypotx, b )
+   
+      def pow ( b: GE) = binOp( Pow, b )
+   
+   // def <<( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE       = <<.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   // def >>( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE       = >>.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   // def unsgnRghtShift( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE = UnsgnRghtShift.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   // def fill( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE     = Fill.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   
+      def ring1 ( b: GE) = binOp( Ring1, b )
+   
+      def ring2 ( b: GE) = binOp( Ring2, b )
+   
+      def ring3 ( b: GE) = binOp( Ring3, b )
+   
+      def ring4 ( b: GE) = binOp( Ring4, b )
+   
+      def difsqr ( b: GE) = binOp( Difsqr, b )
+   
+      def sumsqr ( b: GE) = binOp( Sumsqr, b )
+   
+      def sqrsum ( b: GE) = binOp( Sqrsum, b )
+   
+      def sqrdif ( b: GE) = binOp( Sqrdif, b )
+   
+      def absdif ( b: GE) = binOp( Absdif, b )
+   
+      def thresh ( b: GE) = binOp( Thresh, b )
+   
+      def amclip ( b: GE) = binOp( Amclip, b )
+   
+      def scaleneg ( b: GE) = binOp( Scaleneg, b )
+   
+      def clip2 ( b: GE) = binOp( Clip2, b )
+   
+      def excess ( b: GE) = binOp( Excess, b )
+   
+      def fold2 ( b: GE) = binOp( Fold2, b )
+   
+      def wrap2 ( b: GE) = binOp( Wrap2, b )
+   
+      def firstarg ( b: GE) = binOp( Firstarg, b )
+   
+   // def rrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE    = Rrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   // def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
+   
+      def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
+         LinLin( /* rate, */ g, srcLo, srcHi, dstLo, dstHi )
+   
+      def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
+         LinExp( g.rate, g, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
+   }
 }
-//private[synth] sealed trait GEIn
-//private[synth] final case class GEMultiple( elem: GE ) extends GEIn
 /**
  * The main trait used in synthesis graph, a graph element, abbreviated as `GE`.
  *
@@ -128,247 +310,8 @@ def numOutputs = elems.size
  *
  * @see [[de.sciss.synth.SynthGraph]]
  */
-trait GE /* extends GEIn */ {
-   ge =>
-
-//   type Rate = R
-
+trait GE {
    def rate: MaybeRate
-
-//   private[synth] def multiple: GEIn = GEMultiple( this )
-
-//   def expand: IIdxSeq[ UGenIn ]
-//   def mexpand: IIdxSeq[ GE[ R ]]
-
    def expand: UGenInLike
-
-//   final def mexpand = IIdxSeq( ge )
-
    def displayName: String
-
-//   def displayName = {
-//      val cn = getClass.getName
-//      cn.substring( cn.lastIndexOf( '.' ) + 1 )
-//   }
-
-   /**
-    * Decomposes the graph element into its distinct outputs. For a single-output UGen
-    * or a Constant,  this will just return that UGen or Constant (wrapped in a Vector),
-    * for multi-channel UGens this will return the corresponding output proxies. For
-    * sequences wrapped into a UGenInSeq, this will return the underlying elements.
-    *
-    * @return  the sequence containing the output elements of the graph element. When
-    *          being certain about the number of elements returned, pattern matching can
-    *          be used to extract the different channels, e.g.
-    *          `val Seq( left, right ) = Pan.ar( ... ).outputs`
-    */
-//   def outputs : IIdxSeq[ GE ]
-
-   /**
-    * The number of outputs produced when calling `expand`. Do not
-    * confuse this with the number of `UGenIn` instances produced
-    * which can be higher due to multichannel expansion.
-    */
-//   def numOutputs : Int // = outputs.size
-
-   def `\\`( index: Int ) = ChannelProxy( this, index )
-
-//   private[synth] def ops = new GEOps( this )
-
-   def madd( mul: GE, add: GE ) = MulAdd( this, mul, add )
-
-   def flatten = Flatten( this )
-
-   def poll: Poll = poll()
-
-   /**
-    * Polls the output values of this graph element, and prints the result to the console.
-    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
-    *
-    * @param   trig     a signal to trigger the printing. If this is a constant, it is
-    *    interpreted as a frequency value and an `Impulse` generator of that frequency
-    *    is used instead.
-    * @param   label    a string to print along with the values, in order to identify
-    *    different polls. Using the special label `"#auto"` (default) will generated
-    *    automatic useful labels using information from the polled graph element
-    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
-    *    (similar to `SendTrig`)
-    *
-    * @see  [[de.sciss.synth.ugen.Poll]]
-    */
-//   def poll( trig: Constant = 10, label: String = "#auto", trigID: AnyGE = -1 ) : Poll[ R ] =
-//      poll( Impulse( trig.rate max freq ), label, trigID )
-
-   def poll( trig: GE = 10, label: Optional[ String ] = None, trigID: GE = -1 ) : Poll = {
-      val trig1 = trig match {
-         case Constant( freq ) => Impulse( (ge.rate ?| audio) max control, freq, 0 )  // XXX good? or throw an error? should have a maxRate?
-         case x => x
-      }
-      Poll( trig1.rate, trig1, ge, label.getOrElse( ge.displayName ), trigID  )
-   }
-
-   import UnaryOp._
-
-   // unary ops
-   def unary_- : GE   = Neg.make( this )
-// def bitNot : GE	         = BitNot.make( this )
-   def abs : GE       = Abs.make( this )
-// def toFloat : GE	         = UnOp.make( 'asFloat, this )
-// def toInteger : GE	      = UnOp.make( 'asInteger, this )
-   def ceil : GE      = Ceil.make( this )
-   def floor : GE     = Floor.make( this )
-   def frac : GE      = Frac.make( this )
-   def signum : GE    = Signum.make( this )
-   def squared : GE   = Squared.make( this )
-   def cubed : GE     = Cubed.make( this )
-   def sqrt : GE      = Sqrt.make( this )
-   def exp : GE       = Exp.make( this )
-   def reciprocal : GE= Reciprocal.make( this )
-   def midicps : GE   = Midicps.make( this )
-   def cpsmidi : GE   = Cpsmidi.make( this )
-   def midiratio : GE = Midiratio.make( this )
-   def ratiomidi : GE = Ratiomidi.make( this )
-   def dbamp : GE     = Dbamp.make( this )
-   def ampdb : GE     = Ampdb.make( this )
-   def octcps : GE    = Octcps.make( this )
-   def cpsoct : GE    = Cpsoct.make( this )
-   def log : GE       = Log.make( this )
-   def log2 : GE      = Log2.make( this )
-   def log10 : GE     = Log10.make( this )
-   def sin : GE       = Sin.make( this )
-   def cos : GE       = Cos.make( this )
-   def tan : GE       = Tan.make( this )
-   def asin : GE      = Asin.make( this )
-   def acos : GE      = Acos.make( this )
-   def atan : GE      = Atan.make( this )
-   def sinh : GE      = Sinh.make( this )
-   def cosh : GE      = Cosh.make( this )
-   def tanh : GE      = Tanh.make( this )
-// def rand : GE              = UnOp.make( 'rand, this )
-// def rand2 : GE             = UnOp.make( 'rand2, this )
-// def linrand : GE           = UnOp.make( 'linrand, this )
-// def bilinrand : GE         = UnOp.make( 'bilinrand, this )
-// def sum3rand : GE          = UnOp.make( 'sum3rand, this )
-   def distort : GE   = Distort.make( this )
-   def softclip : GE  = Softclip.make( this )
-// def coin : GE              = UnOp.make( 'coin, this )
-// def even : GE              = UnOp.make( 'even, this )
-// def odd : GE               = UnOp.make( 'odd, this )
-// def rectWindow : GE        = UnOp.make( 'rectWindow, this )
-// def hanWindow : GE         = UnOp.make( 'hanWindow, this )
-// def welWindow : GE         = UnOp.make( 'sum3rand, this )
-// def triWindow : GE         = UnOp.make( 'triWindow, this )
-   def ramp : GE      = Ramp.make( this )
-   def scurve : GE    = Scurve.make( this )
-// def isPositive : GE        = UnOp.make( 'isPositive, this )
-// def isNegative : GE        = UnOp.make( 'isNegative, this )
-// def isStrictlyPositive : GE= UnOp.make( 'isStrictlyPositive, this )
-// def rho : GE               = UnOp.make( 'rho, this )
-// def theta : GE             = UnOp.make( 'theta, this )
-
-   import BinaryOp._
-
-   // binary ops
-   private def binOp( op: BinaryOp.Op, b: GE ) : GE =
-      op.make( /* r.getOrElse( this.rate, b.rate ), */ this, b )
-
-   def +( b: GE) = binOp( Plus, b )
-//      Plus.make /*[ R, S, T ]*/( r.getOrElse( this.rate, b.rate ), this, b )
-   
-   def -( b: GE) = binOp( Minus, b )
-
-   def *( b: GE) = binOp( Times, b )
-
-// def div( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE      = IDiv.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-
-   def / ( b: GE) = binOp( Div, b )
-
-   def % ( b: GE) = binOp( Mod, b )
-
-   def === ( b: GE) = binOp( Eq, b )
-
-   def !== ( b: GE) = binOp( Neq, b )
-
-   def < ( b: GE) = binOp( Lt, b )
-
-   def > ( b: GE) = binOp( Gt, b )
-
-   def <= ( b: GE) = binOp( Leq, b )
-
-   def >= ( b: GE) = binOp( Geq, b )
-
-   def min ( b: GE) = binOp( Min, b )
-
-   def max( b: GE) = binOp( Max, b )
-
-   def & ( b: GE) = binOp( BitAnd, b )
-
-   def | ( b: GE) = binOp( BitOr, b )
-
-   def ^ ( b: GE) = binOp( BitXor, b )
-
-// def Lcm( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE      = Lcm.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-// def Gcd( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE      = Gcd.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-
-   def round ( b: GE) = binOp( Round, b )
-
-   def roundup ( b: GE) = binOp( Roundup, b )
-
-   def trunc ( b: GE) = binOp( Trunc, b )
-
-   def atan2 ( b: GE) = binOp( Atan2, b )
-
-   def hypot ( b: GE) = binOp( Hypot, b )
-
-   def hypotx ( b: GE) = binOp( Hypotx, b )
-
-   def pow ( b: GE) = binOp( Pow, b )
-
-// def <<( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE       = <<.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-// def >>( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE       = >>.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-// def unsgnRghtShift( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE = UnsgnRghtShift.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-// def fill( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE     = Fill.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-
-   def ring1 ( b: GE) = binOp( Ring1, b )
-
-   def ring2 ( b: GE) = binOp( Ring2, b )
-
-   def ring3 ( b: GE) = binOp( Ring3, b )
-
-   def ring4 ( b: GE) = binOp( Ring4, b )
-
-   def difsqr ( b: GE) = binOp( Difsqr, b )
-
-   def sumsqr ( b: GE) = binOp( Sumsqr, b )
-
-   def sqrsum ( b: GE) = binOp( Sqrsum, b )
-
-   def sqrdif ( b: GE) = binOp( Sqrdif, b )
-
-   def absdif ( b: GE) = binOp( Absdif, b )
-
-   def thresh ( b: GE) = binOp( Thresh, b )
-
-   def amclip ( b: GE) = binOp( Amclip, b )
-
-   def scaleneg ( b: GE) = binOp( Scaleneg, b )
-
-   def clip2 ( b: GE) = binOp( Clip2, b )
-
-   def excess ( b: GE) = binOp( Excess, b )
-
-   def fold2 ( b: GE) = binOp( Fold2, b )
-
-   def wrap2 ( b: GE) = binOp( Wrap2, b )
-
-   def firstarg ( b: GE) = binOp( Firstarg, b )
-
-// def rrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE    = Rrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-// def exprrand( b: GE[ /*S,*/ UGenIn /*[ S ]*/])/**/ = : GE = Exprrand.make /*[ R, S, T ]*/( /* r.out,*/ this, b )
-
-   def linlin( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
-      LinLin( /* rate, */ this, srcLo, srcHi, dstLo, dstHi )
-
-   def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
-      LinExp( rate, this, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
 }
