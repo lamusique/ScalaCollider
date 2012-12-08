@@ -186,8 +186,6 @@ sealed trait UGenInLike extends GE {
  *    An element that can be used as an input to a UGen.
  *    This is after multi-channel-expansion, hence implementing
  *    classes are SingleOutUGen, UGenOutProxy, ControlOutProxy, and Constant.
- *
- *    @version 0.12, 28-Dec-10
  */
 sealed trait UGenIn extends UGenInLike { // [ R <: Rate ] extends /* RatedGE */ GE[ R, UGenIn[ R ]] {
    def rate : Rate

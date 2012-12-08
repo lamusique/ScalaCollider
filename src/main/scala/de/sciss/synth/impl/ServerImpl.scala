@@ -11,11 +11,15 @@ import actors.{OutputChannel, TIMEOUT, DaemonActor, Actor, Channel}
 
 private[synth] object ServerImpl {
    def add( s: Server ) {
-      sys.error( "TODO" )
+      this.synchronized {
+         if( Server.default == null ) Server.default = s
+      }
    }
 
    def remove( s: Server ) {
-      sys.error( "TODO" )
+      this.synchronized {
+         if( Server.default == s ) Server.default = null
+      }
    }
 }
 private[synth] final class ServerImpl( val name: String, c: OSCClient, val addr: InetSocketAddress,

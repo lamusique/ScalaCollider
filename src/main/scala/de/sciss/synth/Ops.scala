@@ -4,7 +4,8 @@ import de.sciss.osc.Packet
 
 object Ops {
    implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
-   implicit def groupOps( g: Group ) : GroupOps = new GroupOps( g )
+   // this allows conversions to Group so that something like Server.default.freeAll becomes possible
+   implicit def groupOps[ G <% Group ]( g: G ) : GroupOps = new GroupOps( g )
    implicit def bufferOps( b: Buffer ) : BufferOps = new BufferOps( b )
    implicit def controlBusOps( b: ControlBus ) : ControlBusOps = new ControlBusOps( b )
 
