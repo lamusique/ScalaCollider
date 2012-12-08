@@ -60,13 +60,13 @@ object Group {
       group
 	}
 
-   def apply( server: Server ) : Group = apply( server, server.nodes.nextID() )
+   def apply( server: Server ) : Group = apply( server, server.nextNodeID() )
    def apply() : Group = apply( Server.default )
 }
 
 final case class Group( server: Server, id: Int )
 extends Node {
-	def this( server: Server ) = this( server, server.nodes.nextID() )
+	def this( server: Server ) = this( server, server.nextNodeID() )
 	def this() = this( Server.default )
 
 	def newMsg( target: Node, addAction: AddAction ) =

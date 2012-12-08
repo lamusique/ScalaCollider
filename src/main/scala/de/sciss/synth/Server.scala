@@ -27,16 +27,12 @@ package de.sciss.synth
 
 import io.{AudioFileType, SampleFormat}
 import java.io.{File, IOException}
-import java.util.{Timer, TimerTask}
-import actors.{Actor, Channel, DaemonActor, Future, OutputChannel, TIMEOUT}
-import concurrent.SyncVar
+import actors.Future
 import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
-import collection.mutable.ListBuffer
+import collection.mutable
 
 object Server {
-   private val allSync  = new AnyRef
-//   private var allVar   = Set.empty[ Server ]
    var default: Server  = null
 
    /**
@@ -168,11 +164,6 @@ object Server {
        * accessing parts of the harddisk which they shouldn't.
        */
       def restrictedPath:        Option[ String ]
-//      def memoryLocking:         Boolean
-
-//   // client only
-//   def clientID:              Int
-//   def nodeIDOffset:          Int
 
       // ---- realtime only ----
 
@@ -313,148 +304,145 @@ object Server {
       implicit def build( cb: ConfigBuilder ) : Config = cb.build
 
       private[Server] def toNonRealtimeArgs( o: ConfigLike ): List[ String ] = {
-       val result = new ListBuffer[ String ]()
+         val b = List.newBuilder[ String ]
 
-       // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
-       result += o.programPath
-       result += "-N"
-       result += o.nrtCommandPath
-       result += o.nrtInputPath.getOrElse( "_" )
-       result += o.nrtOutputPath
-       result += o.sampleRate.toString
-       result += o.nrtHeaderFormat.id
-       result += o.nrtSampleFormat.id
+         // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
+         b += o.programPath
+         b += "-N"
+         b += o.nrtCommandPath
+         b += o.nrtInputPath.getOrElse( "_" )
+         b += o.nrtOutputPath
+         b += o.sampleRate.toString
+         b += o.nrtHeaderFormat.id
+         b += o.nrtSampleFormat.id
 
-       addCommonArgs( o, result )
-       result.toList
-    }
+         addCommonArgs( o, b )
+         b.result()
+      }
 
       private[Server] def toRealtimeArgs( o: ConfigLike ): List[ String ] = {
-       val result = new ListBuffer[ String ]()
+         val b = List.newBuilder[ String ]
 
-       result += o.programPath
-       o.transport match {
-          case TCP =>
-             result += "-t"
-             result += o.port.toString
-          case UDP =>
-             result += "-u"
-             result += o.port.toString
-       }
+         b += o.programPath
+         o.transport match {
+            case TCP =>
+               b += "-t"
+               b += o.port.toString
+            case UDP =>
+               b += "-u"
+               b += o.port.toString
+         }
 
-       addCommonArgs( o, result )
+         addCommonArgs( o, b )
 
-       if( o.hardwareBlockSize != 0 ) {
-           result += "-Z"
-           result += o.hardwareBlockSize.toString
-       }
-       if( o.sampleRate != 0 ) {
-          result += "-S"
-          result += o.sampleRate.toString
-       }
-       if( o.maxLogins != 64 ) {
-          result += "-l"
-          result += o.maxLogins.toString
-       }
-       o.sessionPassword.foreach { pwd =>
-          result += "-p"
-          result += pwd
-       }
-       o.inputStreamsEnabled.foreach { stream =>
-          result += "-I"
-          result += stream
-       }
-       o.outputStreamsEnabled.foreach { stream =>
-          result += "-O"
-          result += stream
-       }
-       if( !o.zeroConf ) {
-          result += "-R"
-          result += "0"
-       }
-       o.deviceNames.foreach { case (inDev, outDev) =>
-          result += "-H"
-          result += inDev
-          result += outDev
-       }
-       o.deviceName.foreach { n =>
-          result += "-H"
-          result += n
-       }
-       o.restrictedPath.foreach { path =>
-          result += "-P"
-          result += path
-       }
+         if( o.hardwareBlockSize != 0 ) {
+            b += "-Z"
+            b += o.hardwareBlockSize.toString
+         }
+         if( o.sampleRate != 0 ) {
+            b += "-S"
+            b += o.sampleRate.toString
+         }
+         if( o.maxLogins != 64 ) {
+            b += "-l"
+            b += o.maxLogins.toString
+         }
+         o.sessionPassword.foreach { pwd =>
+            b += "-p"
+            b += pwd
+         }
+         o.inputStreamsEnabled.foreach { stream =>
+            b += "-I"
+            b += stream
+         }
+         o.outputStreamsEnabled.foreach { stream =>
+            b += "-O"
+            b += stream
+         }
+         if( !o.zeroConf ) {
+            b += "-R"
+            b += "0"
+         }
+         o.deviceNames.foreach { case (inDev, outDev) =>
+            b += "-H"
+            b += inDev
+            b += outDev
+         }
+         o.deviceName.foreach { n =>
+            b += "-H"
+            b += n
+         }
+         o.restrictedPath.foreach { path =>
+            b += "-P"
+            b += path
+         }
 
-       result.toList
-    }
+         b.result()
+      }
 
-      private[Server] def addCommonArgs( o: ConfigLike, result: ListBuffer[ String ]) = {
-       if( o.controlBusChannels != 4096 ) {
-          result += "-c"
-          result += o.controlBusChannels.toString
-       }
-       if( o.audioBusChannels != 128 ) {
-          result += "-a"
-          result += o.audioBusChannels.toString
-       }
-       if( o.inputBusChannels != 8 ) {
-          result += "-i"
-          result += o.inputBusChannels.toString
-       }
-       if( o.outputBusChannels != 8 ) {
-          result += "-o"
-          result += o.outputBusChannels.toString
-       }
-       if( o.blockSize != 64 ) {
-           result += "-z"
-           result += o.blockSize.toString
-       }
-       if( o.audioBuffers != 1024 ) {
-          result += "-b"
-          result += o.audioBuffers.toString
-       }
-       if( o.maxNodes != 1024 ) {
-          result += "-n"
-          result += o.maxNodes.toString
-       }
-       if( o.maxSynthDefs != 1024 ) {
-          result += "-d"
-          result += o.maxSynthDefs.toString
-       }
-       if( o.memorySize != 8192 ) {
-          result += "-m"
-          result += o.memorySize.toString
-       }
-       if( o.wireBuffers != 64 ) {
-          result += "-w"
-          result += o.wireBuffers.toString
-       }
-       if( o.randomSeeds != 64 ) {
-          result += "-r"
-          result += o.randomSeeds.toString
-       }
-       if( !o.loadSynthDefs ) {
-          result += "-D"
-          result += "0"
-       }
-       o.machPortName.foreach { case (send, reply) =>
-          result += "-M"
-          result += send
-          result += reply
-       }
-       if( o.verbosity != 0 ) {
-          result += "-v"
-          result += o.verbosity.toString
-       }
-       if( o.plugInsPaths.nonEmpty ) {
-          result += "-U"
-          result += o.plugInsPaths.mkString( ":" )
-       }
-//       if( o.memoryLocking ) {
-//          result += "-L"
-//       }
-    }
+      private[Server] def addCommonArgs( o: ConfigLike, b: mutable.Builder[ String, _ ]) {
+         if( o.controlBusChannels != 4096 ) {
+            b += "-c"
+            b += o.controlBusChannels.toString
+         }
+         if( o.audioBusChannels != 128 ) {
+            b += "-a"
+            b += o.audioBusChannels.toString
+         }
+         if( o.inputBusChannels != 8 ) {
+            b += "-i"
+            b += o.inputBusChannels.toString
+         }
+         if( o.outputBusChannels != 8 ) {
+            b += "-o"
+            b += o.outputBusChannels.toString
+         }
+         if( o.blockSize != 64 ) {
+            b += "-z"
+            b += o.blockSize.toString
+         }
+         if( o.audioBuffers != 1024 ) {
+            b += "-b"
+            b += o.audioBuffers.toString
+         }
+         if( o.maxNodes != 1024 ) {
+            b += "-n"
+            b += o.maxNodes.toString
+         }
+         if( o.maxSynthDefs != 1024 ) {
+            b += "-d"
+            b += o.maxSynthDefs.toString
+         }
+         if( o.memorySize != 8192 ) {
+            b += "-m"
+            b += o.memorySize.toString
+         }
+         if( o.wireBuffers != 64 ) {
+            b += "-w"
+            b += o.wireBuffers.toString
+         }
+         if( o.randomSeeds != 64 ) {
+            b += "-r"
+            b += o.randomSeeds.toString
+         }
+         if( !o.loadSynthDefs ) {
+            b += "-D"
+            b += "0"
+         }
+         o.machPortName.foreach { case (send, reply) =>
+            b += "-M"
+            b += send
+            b += reply
+         }
+         if( o.verbosity != 0 ) {
+            b += "-v"
+            b += o.verbosity.toString
+         }
+         if( o.plugInsPaths.nonEmpty ) {
+            b += "-U"
+            b += o.plugInsPaths.mkString( ":" )
+         }
+      }
    }
 
    /**
@@ -750,7 +738,7 @@ object Server {
    def dummy( name: String = "dummy", config: Config = Config().build,
                 clientConfig: Client.Config = Client.Config().build ) : Server = {
       val (addr, c) = prepareConnection( config, clientConfig )
-      new Server( name, c, addr, config, clientConfig )
+      new impl.ServerImpl( name, c, addr, config, clientConfig )
    }
 
    @throws( classOf[ IOException ])
@@ -787,20 +775,6 @@ object Server {
       }
    }
 
-   private def add( s: Server ) {
-      allSync.synchronized {
-//         allVar += s
-         if( default == null ) default = s
-      }
-   }
-
-   private def remove( s: Server ) {
-      allSync.synchronized {
-//         allVar -= s
-         if( default == s ) default = null
-      }
-   }
-
    def printError( name: String, t: Throwable ) {
       println( name + " : " )
       t.printStackTrace()
@@ -810,10 +784,8 @@ object Server {
 
    abstract sealed class Condition
    case object Running extends Condition
-//   case object Booting extends Condition
    case object Offline extends Condition
-//   private case object Terminating extends Condition
-   private case object NoPending extends Condition
+   private[synth] case object NoPending extends Condition
 
    case class Counts( c: osc.StatusReplyMessage )
 
@@ -848,87 +820,44 @@ sealed trait ServerLike extends Model {
 
 object ServerConnection {
    sealed abstract class Condition
-//   case object Connecting extends Condition
    case class Preparing( server: Server ) extends Condition
    case class Running( server: Server ) extends Condition
    case object Aborted extends Condition
 }
 trait ServerConnection extends ServerLike {
-//   def start : Unit
    def server : Future[ Server ]
    def abort : Future[ Unit ]
 }
 
-//abstract class Server extends Model {}
-final class Server private[synth]( val name: String, c: OSCClient, val addr: InetSocketAddress, val config: Server.Config,
-                      val clientConfig: Client.Config )
-extends ServerLike {
+trait Server extends ServerLike {
    server =>
 
    import Server._
 
-   private var aliveThread: Option[StatusWatcher]	= None
-//   private var bootThread: Option[BootThread]		= None
-   private var countsVar							      = new osc.StatusReplyMessage( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
-//   private var collBootCompletion					   = Queue.empty[ (Server) => Unit ]
-   private val condSync                            = new AnyRef
-   private var conditionVar: Condition 			   = Running // Offline
-   private var pendingCondition: Condition      	= NoPending
-//   private var bufferAllocatorVar: ContiguousBlockAllocator = null
-//   private val host                                = InetAddress.getByName( config.host.value )
+   def clientConfig: Client.Config
 
-//   val addr                                        = new InetSocketAddress( host, config.port.value )
-   val rootNode                                    = new Group( this, 0 )
-   val defaultGroup                                = new Group( this, 1 )
-   val nodeMgr                                     = new NodeManager( this )
-   val bufMgr                                      = new BufferManager( this )
-//   var latency                                     = 0.2f
+   def rootNode : Group
+   def defaultGroup : Group
+   def nodeManager : NodeManager
+   def bufManager : BufferManager
 
-   // ---- constructor ----
-   OSCReceiverActor.start()
-   c.action = OSCReceiverActor.messageReceived
-   add( server )
+   def isLocal : Boolean
+   def isConnected : Boolean
+   def isRunning : Boolean
+   def isOffline : Boolean
 
-   def isLocal : Boolean = {
-      val host = addr.getAddress
-      host.isLoopbackAddress || host.isSiteLocalAddress
-   }
-   
-   def isConnected = c.isConnected
-   def isRunning = condSync.synchronized { conditionVar == Running }
-//   def isBooting = condSync.synchronized { conditionVar == Booting }
-   def isOffline = condSync.synchronized { conditionVar == Offline }
-//   def bufferAllocator = bufferAllocatorVar
+   def nextNodeID(): Int
+   def nextSyncID() : Int
 
-   object nodes {
-      private val allocator = new NodeIDAllocator( clientConfig.clientID, clientConfig.nodeIDOffset )
+   def allocControlBus( numChannels: Int ) : Int
+   def allocAudioBus( numChannels: Int ) : Int
+   def freeControlBus( index: Int ) : Unit
+   def freeAudioBus( index: Int ) : Unit
 
-      def nextID() = allocator.alloc()
-   }
+   def allocBuffer( numChannels: Int ) : Int
+   def freeBuffer( index: Int ) : Unit
 
-   object busses {
-      private val controlAllocator = new ContiguousBlockAllocator( config.controlBusChannels )
-      private val audioAllocator = new ContiguousBlockAllocator( config.audioBusChannels, config.internalBusIndex )
-
-      def allocControl( numChannels: Int ) = controlAllocator.alloc( numChannels )
-      def allocAudio( numChannels: Int ) = audioAllocator.alloc( numChannels )
-      def freeControl( index: Int ) { controlAllocator.free( index )}
-      def freeAudio( index: Int ) { audioAllocator.free( index )}
-   }
-
-   object buffers {
-      private val allocator = new ContiguousBlockAllocator( config.audioBuffers )
-
-      def alloc( numChannels: Int ) = allocator.alloc( numChannels )
-      def free( index: Int ) { allocator.free( index )}
-   }
-
-   private object uniqueID {
-      private var id = 0
-      def nextID = this.synchronized { val res = id; id += 1; res }
-   }
-
-   def !( p: Packet ) { c ! p }
+   def !( p: Packet ) : Unit
 
    /**
     * Sends out an OSC packet that generates some kind of reply, and
@@ -958,35 +887,7 @@ extends ServerLike {
     *
     * @see  [[scala.actors.Futures]]
     */
-   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ] = {
-      val c    = new Channel[ A ]( Actor.self )
-      val a = new FutureActor[ A ]( c ) {
-         val sync    = new AnyRef
-         var revoked = false
-         var oh: Option[ osc.Handler ] = None
-
-         def body( res: SyncVar[ A ]) {
-            val futCh   = new Channel[ A ]( Actor.self )
-            sync.synchronized { if( !revoked ) {
-               val h = new OSCInfHandler( handler, futCh )
-               oh = Some( h )
-               OSCReceiverActor.addHandler( h )
-               server ! p // only after addHandler!
-            }}
-            futCh.react { case r => res.set( r )}
-         }
-         def revoke() { sync.synchronized {
-            revoked = true
-            oh.foreach( OSCReceiverActor.removeHandler( _ ))
-            oh = None
-         }}
-      }
-      a.start()
-// NOTE: race condition, addHandler might take longer than
-// the /done, notify!
-//      this ! p
-      a
-   }
+   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ]
 
    /**
     * Sends out an OSC packet that generates some kind of reply, and
@@ -1005,326 +906,35 @@ extends ServerLike {
     *
     * @see  [[scala.actors.TIMEOUT]]
     */
-   def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) {
-      val a = new DaemonActor {
-         def act() {
-            val futCh   = new Channel[ Any ]( Actor.self )
-            val oh      = new OSCTimeOutHandler( handler, futCh )
-            OSCReceiverActor.addHandler( oh )
-            server ! p // only after addHandler!
-            futCh.reactWithin( timeOut ) {
-               case TIMEOUT   => OSCReceiverActor.timeOutHandler( oh )
-               case r         =>
-            }
-         }
-      }
-      a.start()
-// NOTE: race condition, addHandler might take longer than
-// the /done, notify!
-//      this ! p
-      a
-   }
+   def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) : Unit
 
-   def counts = countsVar
-   private[synth] def counts_=( newCounts: osc.StatusReplyMessage ) {
-      countsVar = newCounts
-      dispatch( Counts( newCounts ))
-   }
+   def counts : osc.StatusReplyMessage
 
-   def sampleRate = counts.sampleRate
+   def sampleRate : Double
   
-   def dumpTree( controls: Boolean = false ) {
-      rootNode.dumpTree( controls )
-   }
+   def dumpTree( controls: Boolean = false ) : Unit
   
-   def condition = condSync.synchronized { conditionVar }
-   private[synth] def condition_=( newCondition: Condition ) {
-      condSync.synchronized {
-         if( newCondition != conditionVar ) {
-            conditionVar = newCondition
-            if( newCondition == Offline ) {
-               pendingCondition = NoPending
-               serverLost()
-            }
-//            else if( newCondition == Running ) {
-//               if( pendingCondition == Booting ) {
-//                  pendingCondition = NoPending
-//                  collBootCompletion.foreach( action => try {
-//                        action.apply( this )
-//                     }
-//                     catch { case e => e.printStackTrace() }
-//                  )
-//                  collBootCompletion = Queue.empty
-//               }
-//            }
-            dispatch( newCondition )
-         }
-      }
-   }
+   def condition : Condition
 
-   def startAliveThread( delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25 ) {
-      condSync.synchronized {
-         if( aliveThread.isEmpty ) {
-            val statusWatcher = new StatusWatcher( delay, period, deathBounces )
-            aliveThread = Some( statusWatcher )
-            statusWatcher.start()
-         }
-      }
-   }
+   def startAliveThread( delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25 ) : Unit
 
-   def stopAliveThread() {
-      condSync.synchronized {
-         aliveThread.foreach( _.stop() )
-         aliveThread = None
-      }
-  }
+   def stopAliveThread() : Unit
 
-   def queryCounts() {
-      this ! osc.StatusMessage
-   }
+   def queryCounts() : Unit
 
-   def syncMsg : osc.SyncMessage = syncMsg()
-   def syncMsg( id: Int = uniqueID.nextID ) = osc.SyncMessage( id )
+   final def syncMsg : osc.SyncMessage = syncMsg()
+   final def syncMsg( id: Int = nextSyncID() ) = osc.SyncMessage( id )
 
-   def dumpOSC( mode: Dump = Dump.Text ) {
-      c.dumpIn( mode, filter = {
-         case m: osc.StatusReplyMessage => false
-         case _ => true
-      })
-      c.dumpOut( mode, filter = {
-         case osc.StatusMessage => false
-         case _ => true
-      })
-   }
+   def dumpOSC( mode: Dump = Dump.Text ) : Unit
 
-   private def serverLost() {
-      nodeMgr.clear()
-      bufMgr.clear()
-      OSCReceiverActor.clear()
-   }
+   def quit() : Unit
 
-   private[synth] def serverOffline() {
-      condSync.synchronized {
-//         bootThread = None
-         stopAliveThread()
-         condition = Offline
-      }
-   }
+   final def quitMsg = osc.ServerQuitMessage
 
-   def quit() {
-      this ! quitMsg
-//      cleanUpAfterQuit()
-      dispose()
-   }
+   def dispose() : Unit
 
-   def quitMsg = osc.ServerQuitMessage
-
-//   private def cleanUpAfterQuit() {
-//      try {
-//         condSync.synchronized {
-//            stopAliveThread()
-//            pendingCondition = Terminating
-//         }
-//      }
-//      catch { case e: IOException => printError( "Server.cleanUpAfterQuit", e )}
-//   }
-
-   private[synth] def addResponder( resp: osc.Responder ) {
-      OSCReceiverActor.addHandler( resp )
-   }
-
-   private[synth] def removeResponder( resp: osc.Responder ) {
-      OSCReceiverActor.removeHandler( resp )
-   }
-
-   private[synth] def initTree() {
-      nodeMgr.register( defaultGroup )
-      server ! defaultGroup.newMsg( rootNode, addToHead )
-   }
-
-   def dispose() {
-      condSync.synchronized {
-         serverOffline()
-         remove( this )
-//         c.dispose // = (msg: Message, sender: SocketAddress, time: Long) => ()
-         c.close()
-         OSCReceiverActor.dispose()
-//         c.dispose
-      }
-   }
+   private[synth] def addResponder( resp: osc.Responder ) : Unit
+   private[synth] def removeResponder( resp: osc.Responder ) : Unit
 
    override def toString = "<" + name + ">"
-
-   // -------- internal class StatusWatcher --------
-
-   private class StatusWatcher( delay: Float, period: Float, deathBounces: Int )
-   extends Runnable {
-      watcher =>
-
-      private var	alive			   = deathBounces
-      private val	delayMillis		= (delay * 1000).toInt
-      private val	periodMillis	= (period * 1000).toInt
-//      private val	timer			   = new SwingTimer( periodMillis, this )
-      private var timer: Option[ Timer ] = None
-      private var callServerContacted  = true
-      private val sync           = new AnyRef
-
-//      // ---- constructor ----
-//      timer.setInitialDelay( delayMillis )
-
-      def start() {
-         stop()
-         timer = {
-            val t = new Timer( "StatusWatcher", true )
-            t.schedule( new TimerTask {
-               def run() { watcher.run() } // invokeOnMainThread( watcher )
-            }, delayMillis, periodMillis )
-            Some( t )
-         }
-      }
-
-      def stop() {
-//         timer.stop
-         timer.foreach( t => {
-            t.cancel()
-            timer = None
-         })
-      }
-
-      def run() {
-         sync.synchronized {
-            alive -= 1
-            if( alive < 0 ) {
-               callServerContacted = true
-               condition = Offline
-            }
-         }
-         try {
-            queryCounts()
-         }
-         catch { case e: IOException => printError( "Server.status", e )}
-      }
-
-      def statusReply( msg: osc.StatusReplyMessage ) {
-         sync.synchronized {
-            alive = deathBounces
-            // note: put the counts before running
-            // because that way e.g. the sampleRate
-            // is instantly available
-            counts = msg
-            if( !isRunning && callServerContacted ) {
-               callServerContacted = false
-//               serverContacted
-               condition = Running
-            }
-         }
-      }
-   }
-
-   private object OSCReceiverActor extends DaemonActor {
-      private case object Clear
-      private case object Dispose
-//      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
-      private case class  AddHandler( h: osc.Handler )
-      private case class  RemoveHandler( h: osc.Handler )
-      private case class  TimeOutHandler( h: OSCTimeOutHandler )
-
-      def clear() {
-         this ! Clear
-      }
-
-      def dispose() {
-         clear()
-         this ! Dispose
-      }
-
-      def addHandler( handler: osc.Handler ) {
-         this ! AddHandler( handler )
-      }
-
-      def removeHandler( handler: osc.Handler ) {
-         this ! RemoveHandler( handler )
-      }
-
-      def timeOutHandler( handler: OSCTimeOutHandler ) {
-         this ! TimeOutHandler( handler )
-      }
-
-      // ------------ OSCListener interface ------------
-
-      def messageReceived( p: Packet ) {
-//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : ! : " + msg )
-         this ! p
-      }
-
-      def act() {
-         var running    = true
-         var handlers   = Set.empty[ osc.Handler ]
-//         while( running )( receive { })
-         loopWhile( running )( react {
-            case msg: Message => debug( msg ) {
-//            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
-//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
-               msg match {
-                  case nodeMsg:        osc.NodeChange           => nodeMgr.nodeChange( nodeMsg )
-                  case bufInfoMsg:     osc.BufferInfoMessage    => bufMgr.bufferInfo( bufInfoMsg )
-                  case statusReplyMsg: osc.StatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
-                  case _ =>
-               }
-//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : handlers" )
-               handlers.foreach( h => if( h.handle( msg )) handlers -= h )
-            }
-            case AddHandler( h )    => handlers += h
-            case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed() }
-            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut() }
-            case Clear              => handlers.foreach( _.removed() ); handlers = Set.empty
-            case Dispose            => running = false
-            case m                  => println( "Received illegal message " + m )
-         })
-      }
-   }
-
-   private def debug( msg: AnyRef )( code: => Unit ) {
-      val t1 = System.currentTimeMillis
-      try {
-         code
-      } catch {
-         case e: Throwable => println( "" + new java.util.Date() + " OOOPS : msg " + msg + " produced " + e )
-      }
-      val t2 = System.currentTimeMillis
-      if( (t2 - t1) > 2000 ) println( "" + new java.util.Date() + " WOW this took long (" + (t2-t1) + "): " + msg )
-   }
-
-   // -------- internal osc.Handler implementations --------
-
-   private class OSCInfHandler[ A ]( fun: PartialFunction[ Message, A ], ch: OutputChannel[ A ])
-   extends osc.Handler {
-      def handle( msg: Message ) : Boolean = {
-         val handled = fun.isDefinedAt( msg )
-//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
-         if( handled ) try {
-            ch ! fun.apply( msg )
-         } catch { case e: Throwable => e.printStackTrace() }
-         handled
-      }
-      def removed() {}
-   }
-
-   private class OSCTimeOutHandler( fun: PartialFunction[ Any, Unit ], ch: OutputChannel[ Any ])
-   extends osc.Handler {
-      def handle( msg: Message ) : Boolean = {
-         val handled = fun.isDefinedAt( msg )
-//if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )
-         if( handled ) try {
-            ch ! fun.apply( msg )
-         } catch { case e: Throwable => e.printStackTrace() }
-         handled
-      }
-      def removed() {}
-      def timedOut() {
-         if( fun.isDefinedAt( TIMEOUT )) try {
-            fun.apply( TIMEOUT )
-         } catch { case e: Throwable => e.printStackTrace() }
-      }
-   }
 }

@@ -71,9 +71,9 @@ object Buffer {
    }
 
    private def allocID( server: Server ) : Int = {
-      val id = server.buffers.alloc( 1 )
+      val id = server.allocBuffer( 1 )
       if( id == -1 ) {
-            throw AllocatorExhaustedException( "Buffer: failed to get a buffer allocated (on " + server.name + ")" )
+         throw AllocatorExhaustedException( "Buffer: failed to get a buffer allocated (on " + server.name + ")" )
       }
       id
    }
@@ -101,7 +101,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    def sampleRate  = sampleRateVar
 
    def register() {
-       server.bufMgr.register( this )
+       server.bufManager.register( this )
    }
 
    protected[synth] def updated( change: BufferManager.BufferInfo ) {
@@ -140,7 +140,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     */
    def release() {
       if( released ) sys.error( this.toString + " : has already been freed" )
-      server.buffers.free( id )
+      server.freeBuffer( id )
       released = true
    }
 

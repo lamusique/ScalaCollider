@@ -27,19 +27,19 @@ package de.sciss.synth
 
 object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val id = server.busses.allocControl( numChannels )
+		val id = server.allocControlBus( numChannels )
 		if( id == -1 ) {
-            throw AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
-				+ numChannels + " channels on " + server.name + ")" )
+         throw AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
+            numChannels + " channels on " + server.name + ")" )
 		}
 		ControlBus( server, id, numChannels )
 	}
   
 	def audio( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val id = server.busses.allocAudio( numChannels )
+		val id = server.allocAudioBus( numChannels )
 		if( id == -1 ) {
-            throw AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
-				+ numChannels + " channels on " + server.name + ")" )
+         throw AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
+            numChannels + " channels on " + server.name + ")" )
 		}
 		AudioBus( server, id, numChannels )
 	}
@@ -61,7 +61,7 @@ extends Bus {
 
 	def free() {
 	   if( released ) sys.error( this.toString + " : has already been freed" )
-		server.busses.freeControl( index )
+		server.freeControlBus( index )
 	   released = true
 	}
 
@@ -126,7 +126,7 @@ extends Bus {
 
    def free() {
       if( released ) sys.error( this.toString + " : has already been freed" )
-      server.busses.freeAudio( index )
+      server.freeAudioBus( index )
       released = true
    }
 }

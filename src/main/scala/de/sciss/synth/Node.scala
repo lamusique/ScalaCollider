@@ -83,16 +83,15 @@ abstract class Node extends Model {
 //	def register: Unit = register( false )
 	def register() {
 //  	NodeWatcher.register( this, assumePlaying )
-       server.nodeMgr.register( this )
+       server.nodeManager.register( this )
   	}
 
    def onGo( thunk: => Unit ) {
       register()
       lazy val l: Listener = {
-         case NodeManager.NodeGo( _, _ ) => {
+         case NodeManager.NodeGo( _, _ ) =>
             removeListener( l )
             thunk
-         }
       }
       addListener( l )
    }
@@ -100,10 +99,9 @@ abstract class Node extends Model {
    def onEnd( thunk: => Unit ) {
       register()
       lazy val l: Listener = {
-         case NodeManager.NodeEnd( _, _ ) => {
+         case NodeManager.NodeEnd( _, _ ) =>
             removeListener( l )
             thunk
-         }
       }
       addListener( l )
    }
@@ -321,5 +319,3 @@ abstract class Node extends Model {
    def moveToTail( group: Group ) { server ! moveToTailMsg( group )}
   	def moveToTailMsg( group: Group ) : osc.GroupTailMessage = group.moveNodeToTailMsg( this )
 }
-
-//class NodeRef( val server: Server, val id: Int ) extends Node

@@ -29,7 +29,7 @@ final case class Synth( server: Server, id: Int )
 extends Node {
    private var defNameVar = ""
 
-	def this( server: Server ) = this( server, server.nodes.nextID() )
+	def this( server: Server ) = this( server, server.nextNodeID() )
    def this() = this( Server.default )
 
 	def newMsg( defName: String, target: Node = server.defaultGroup, args: Seq[ ControlSetMap ] = Nil,
@@ -68,6 +68,6 @@ object Synth {
 	def replace( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
       play( defName, args, target, addReplace )
 
-   def apply( server: Server ) : Synth = apply( server, server.nodes.nextID() )
+   def apply( server: Server ) : Synth = apply( server, server.nextNodeID() )
    def apply() : Synth = apply( Server.default )
 }

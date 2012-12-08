@@ -49,7 +49,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                            case RemoveListener( l )=> actRemoveList( l )
                            case Abort              => abortHandler( None )
                            case cnt: osc.StatusReplyMessage =>
-                              val s    = new Server( name, c, addr, config, clientConfig )
+                              val s    = new ServerImpl( name, c, addr, config, clientConfig )
                               s.counts = cnt
                               dispatch( Preparing( s ))
                               s.initTree()
@@ -81,7 +81,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
          }
       }}
 
-      private def abortHandler( server: Option[ Server ]) {
+      private def abortHandler( server: Option[ ServerImpl ]) {
          handleAbort()
          val from = sender
          loop { react {
