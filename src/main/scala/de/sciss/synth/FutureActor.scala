@@ -3,7 +3,7 @@ package de.sciss.synth
 import concurrent.SyncVar
 import actors.{ Channel, DaemonActor, Future, InputChannel }
 
-trait RevocableFuture[ T ] extends Future[ T ] {
+private[synth] trait RevocableFuture[ T ] extends Future[ T ] {
    def revoke() : Unit
 }
 

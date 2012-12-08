@@ -3,7 +3,6 @@ package impl
 
 import java.net.InetSocketAddress
 import de.sciss.osc.{Client => OSCClient, Dump, Message, Packet}
-import concurrent.SyncVar
 import java.util.{TimerTask, Timer}
 import java.io.IOException
 import scala.Some
@@ -72,63 +71,63 @@ extends Server {
 
    def !( p: Packet ) { c ! p }
 
-   /**
-    * Sends out an OSC packet that generates some kind of reply, and
-    * returns immediately a `RevocableFuture` representing the parsed reply.
-    * This parsing is done by a handler which is registered.
-    * The handler is tested for each incoming OSC message (using its
-    * `isDefinedAt` method) and invoked and removed in case of a
-    * match. Note that the caller is responsible for timing out
-    * the handler after a reasonable time. To do this, the
-    * method `revoke` on the returned future must be called, which
-    * will silently unregister the handler.
-    *
-    * '''Warning''': It is crucial that the Future is awaited
-    * only within a dedicated actor thread. In particular you must
-    * be careful and aware of the fact that the handler is executed
-    * on the OSC receiver actor's body, and that you must not
-    * try to await the future from ''any'' handler function
-    * registered with OSC reception, because it would not be
-    * possible to pull the reply message of the OSC receiver's
-    * mailbox while the actor body blocks.
-    *
-    * @param   p        the packet to send out
-    * @param   handler  the handler to match against incoming messages
-    *    or timeout
-    * @return  the future representing the parsed reply, and providing
-    *    a `revoke` method to issue a timeout.
-    *
-    * @see  [[scala.actors.Futures]]
-    */
-   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ] = {
-      val c    = new Channel[ A ]( Actor.self )
-      val a = new FutureActor[ A ]( c ) {
-         val sync    = new AnyRef
-         var revoked = false
-         var oh: Option[ osc.Handler ] = None
-
-         def body( res: SyncVar[ A ]) {
-            val futCh   = new Channel[ A ]( Actor.self )
-            sync.synchronized { if( !revoked ) {
-               val h = new OSCInfHandler( handler, futCh )
-               oh = Some( h )
-               OSCReceiverActor.addHandler( h )
-               server ! p // only after addHandler!
-            }}
-            futCh.react { case r => res.set( r )}
-         }
-         def revoke() { sync.synchronized {
-            revoked = true
-            oh.foreach( OSCReceiverActor.removeHandler( _ ))
-            oh = None
-         }}
-      }
-      a.start()
-// NOTE: race condition, addHandler might take longer than
-// the /done, notify!
-//      this ! p
-      a
-   }
+//   /**
+//    * Sends out an OSC packet that generates some kind of reply, and
+//    * returns immediately a `RevocableFuture` representing the parsed reply.
+//    * This parsing is done by a handler which is registered.
+//    * The handler is tested for each incoming OSC message (using its
+//    * `isDefinedAt` method) and invoked and removed in case of a
+//    * match. Note that the caller is responsible for timing out
+//    * the handler after a reasonable time. To do this, the
+//    * method `revoke` on the returned future must be called, which
+//    * will silently unregister the handler.
+//    *
+//    * '''Warning''': It is crucial that the Future is awaited
+//    * only within a dedicated actor thread. In particular you must
+//    * be careful and aware of the fact that the handler is executed
+//    * on the OSC receiver actor's body, and that you must not
+//    * try to await the future from ''any'' handler function
+//    * registered with OSC reception, because it would not be
+//    * possible to pull the reply message of the OSC receiver's
+//    * mailbox while the actor body blocks.
+//    *
+//    * @param   p        the packet to send out
+//    * @param   handler  the handler to match against incoming messages
+//    *    or timeout
+//    * @return  the future representing the parsed reply, and providing
+//    *    a `revoke` method to issue a timeout.
+//    *
+//    * @see  [[scala.actors.Futures]]
+//    */
+//   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ] = {
+//      val c    = new Channel[ A ]( Actor.self )
+//      val a = new FutureActor[ A ]( c ) {
+//         val sync    = new AnyRef
+//         var revoked = false
+//         var oh: Option[ osc.Handler ] = None
+//
+//         def body( res: SyncVar[ A ]) {
+//            val futCh   = new Channel[ A ]( Actor.self )
+//            sync.synchronized { if( !revoked ) {
+//               val h = new OSCInfHandler( handler, futCh )
+//               oh = Some( h )
+//               OSCReceiverActor.addHandler( h )
+//               server ! p // only after addHandler!
+//            }}
+//            futCh.react { case r => res.set( r )}
+//         }
+//         def revoke() { sync.synchronized {
+//            revoked = true
+//            oh.foreach( OSCReceiverActor.removeHandler( _ ))
+//            oh = None
+//         }}
+//      }
+//      a.start()
+//// NOTE: race condition, addHandler might take longer than
+//// the /done, notify!
+////      this ! p
+//      a
+//   }
 
    /**
     * Sends out an OSC packet that generates some kind of reply, and

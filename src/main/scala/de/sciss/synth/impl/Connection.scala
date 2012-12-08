@@ -121,8 +121,9 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
       l
    }
 
-   lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
-   lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
+//   lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
+//   lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
+   def abort() { actor ! Abort }
 
    def handleAbort() : Unit
    def connectionAlive : Boolean

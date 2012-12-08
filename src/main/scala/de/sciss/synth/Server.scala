@@ -27,8 +27,7 @@ package de.sciss.synth
 
 import io.{AudioFileType, SampleFormat}
 import java.io.{File, IOException}
-import actors.Future
-import de.sciss.osc.{Dump, Client => OSCClient, Message, Packet, Transport, TCP, UDP}
+import de.sciss.osc.{Dump, Client => OSCClient, Packet, Transport, TCP, UDP}
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 import collection.mutable
 
@@ -722,7 +721,7 @@ object Server {
       Runtime.getRuntime.addShutdownHook( new Thread { override def run() { sync.synchronized {
          if( s != null ) {
             if( s.condition != Server.Offline ) s.quit()
-         } else sc.abort
+         } else sc.abort()
       }}})
       sc.start()
    }
@@ -825,8 +824,8 @@ object ServerConnection {
    case object Aborted extends Condition
 }
 trait ServerConnection extends ServerLike {
-   def server : Future[ Server ]
-   def abort : Future[ Unit ]
+//   def server : Future[ Server ]
+   def abort() : Unit // : Future[ Unit ]
 }
 
 trait Server extends ServerLike {
@@ -859,35 +858,35 @@ trait Server extends ServerLike {
 
    def !( p: Packet ) : Unit
 
-   /**
-    * Sends out an OSC packet that generates some kind of reply, and
-    * returns immediately a `RevocableFuture` representing the parsed reply.
-    * This parsing is done by a handler which is registered.
-    * The handler is tested for each incoming OSC message (using its
-    * `isDefinedAt` method) and invoked and removed in case of a
-    * match. Note that the caller is responsible for timing out
-    * the handler after a reasonable time. To do this, the
-    * method `revoke` on the returned future must be called, which
-    * will silently unregister the handler.
-    *
-    * '''Warning''': It is crucial that the Future is awaited
-    * only within a dedicated actor thread. In particular you must
-    * be careful and aware of the fact that the handler is executed
-    * on the OSC receiver actor's body, and that you must not
-    * try to await the future from ''any'' handler function
-    * registered with OSC reception, because it would not be
-    * possible to pull the reply message of the OSC receiver's
-    * mailbox while the actor body blocks. 
-    *
-    * @param   p        the packet to send out
-    * @param   handler  the handler to match against incoming messages
-    *    or timeout
-    * @return  the future representing the parsed reply, and providing
-    *    a `revoke` method to issue a timeout.
-    *
-    * @see  [[scala.actors.Futures]]
-    */
-   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ]
+//   /**
+//    * Sends out an OSC packet that generates some kind of reply, and
+//    * returns immediately a `RevocableFuture` representing the parsed reply.
+//    * This parsing is done by a handler which is registered.
+//    * The handler is tested for each incoming OSC message (using its
+//    * `isDefinedAt` method) and invoked and removed in case of a
+//    * match. Note that the caller is responsible for timing out
+//    * the handler after a reasonable time. To do this, the
+//    * method `revoke` on the returned future must be called, which
+//    * will silently unregister the handler.
+//    *
+//    * '''Warning''': It is crucial that the Future is awaited
+//    * only within a dedicated actor thread. In particular you must
+//    * be careful and aware of the fact that the handler is executed
+//    * on the OSC receiver actor's body, and that you must not
+//    * try to await the future from ''any'' handler function
+//    * registered with OSC reception, because it would not be
+//    * possible to pull the reply message of the OSC receiver's
+//    * mailbox while the actor body blocks.
+//    *
+//    * @param   p        the packet to send out
+//    * @param   handler  the handler to match against incoming messages
+//    *    or timeout
+//    * @return  the future representing the parsed reply, and providing
+//    *    a `revoke` method to issue a timeout.
+//    *
+//    * @see  [[scala.actors.Futures]]
+//    */
+//   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ]
 
    /**
     * Sends out an OSC packet that generates some kind of reply, and
