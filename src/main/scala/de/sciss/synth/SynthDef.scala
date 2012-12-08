@@ -139,30 +139,31 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 
    def testTopoSort() {
       var i = 0
-      graph.ugens.foreach( ru => {
+      graph.ugens.foreach { ru =>
          var j = 0
-         ru.inputSpecs.foreach( spec => {
+         ru.inputSpecs.foreach { spec =>
             if( (spec._1 >= 0) && (spec._1 <= i) ) {
                sys.error( "Test failed : ugen " + i + " = " + ru.ugen + " -> input " + j + " = " + spec )
             }
             j += 1
-         })
+         }
          i += 1
-      })
+      }
       println( "Test succeeded." )
    }
 
    def debugDump() {
       var i = 0
-      graph.ugens.foreach( ru => {
+      graph.ugens.foreach { ru =>
          println( "#" + i + " : " + ru.ugen.name +
             (if( ru.ugen.specialIndex != 0 ) "-" + ru.ugen.specialIndex else "") + ru.inputSpecs.map({
                case (-1, idx)    => graph.constants( idx ).toString
-               case (uidx, oidx) => { val ru = graph.ugens( uidx ); "#" + uidx + " : " + ru.ugen.name +
-                  (if( oidx > 0 ) "@" + oidx else "") }
+               case (uidx, oidx) =>
+                  val ru = graph.ugens( uidx ); "#" + uidx + " : " + ru.ugen.name +
+                     (if( oidx > 0 ) "@" + oidx else "")
             }).mkString( "( ", ", ", " )" ))
          i += 1
-      })
+      }
    }
 }
 

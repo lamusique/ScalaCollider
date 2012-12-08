@@ -45,28 +45,6 @@ private[synth] final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /
       }
    }
 
-//   def reserve( address : Int, size : Int = 1 ) : Block = {
-//      val b = if( array( address ) != null ) {
-//         array( address )
-//      } else {
-//         findNext( address )
-//      }
-//
-//      if( (b != null) && b.used && (address + size > b.start) ) {
-//         error( "The block at (" + address + ", " + size + ") is already in use and cannot be reserved." )
-//      }
-//
-//      if( b.start == address ) {
-//         reserve( address, size, b, null )
-//      } else {
-//         val b2 = findPrevious( address )
-//         if( (b2 != null) && b2.used && (b2.start + b2.size > address) ) {
-//            error( "The block at (" + address + ", " + size + ") is already in use and cannot be reserved." )
-//         }
-//         reserve( address, size, null, b2 )
-//      }
-//   }
-
    def free( address: Int ) {
       sync.synchronized {
          var b = array( address )
@@ -119,9 +97,9 @@ private[synth] final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /
 
    private def findAvailable( n: Int ) : Block = {
       freed.get( n ).foreach( set => if( !set.isEmpty ) return set.head )
-      freed.foreach( entry => {
+      freed.foreach { entry =>
     	   if( (entry._1 >= n) && !entry._2.isEmpty ) return entry._2.head
-      })
+      }
 
       if( (top + n > size) || array( top ).used ) return null
       array( top )
@@ -133,14 +111,14 @@ private[synth] final class ContiguousBlockAllocator( size: Int, pos: Int = 0 ) /
    }
   
    private def removeFromFreed( b: Block ) {
-      freed.get( b.size ).foreach( set => {
+      freed.get( b.size ).foreach { set =>
          val newSet = set - b
          if( newSet.isEmpty ) {
             freed -= b.size
          } else {
             freed += (b.size -> newSet)
          }
-      })
+      }
    }
 
    private def findPrevious( address: Int ) : Block = {

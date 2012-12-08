@@ -755,23 +755,23 @@ object Server {
    
    def allocPort( transport: Transport ) : Int = {
       transport match {
-         case TCP => {
+         case TCP =>
             val ss = new ServerSocket( 0 )
             try {
                ss.getLocalPort
             } finally {
                ss.close()
             }
-         }
-         case UDP => {
+
+         case UDP =>
             val ds = new DatagramSocket()
             try {
                ds.getLocalPort
             } finally {
                ds.close()
             }
-         }
-         case x => sys.error( "Unsupported transport : " + x.name )
+
+         case other => sys.error( "Unsupported transport : " + other.name )
       }
    }
 

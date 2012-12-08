@@ -302,10 +302,10 @@ extends Server {
 
       def stop() {
 //         timer.stop
-         timer.foreach( t => {
+         timer.foreach { t =>
             t.cancel()
             timer = None
-         })
+         }
       }
 
       def run() {

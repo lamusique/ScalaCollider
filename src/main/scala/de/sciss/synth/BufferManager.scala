@@ -42,8 +42,8 @@ final class BufferManager( server: Server ) extends Model {
 
    def bufferInfo( msg: osc.BufferInfoMessage ) {
       sync.synchronized {
-         msg.infos.foreach( info => {
-            buffers.get( info.bufID ).foreach( buf => {
+         msg.infos.foreach { info =>
+            buffers.get( info.bufID ).foreach { buf =>
                // this is the only safe way: automatically unregister,
                // since unlike nodes whose id is steadily increasing
                // and which fire identifiable n_end messages, we
@@ -55,8 +55,8 @@ final class BufferManager( server: Server ) extends Model {
                val change = BufferInfo( buf, info )
                dispatch( change )
                buf.updated( change )
-            })
-         })
+            }
+         }
       }
    }
 

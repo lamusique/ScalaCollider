@@ -36,7 +36,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                      case AddListener( l )   => actAddList( l )
                      case RemoveListener( l )=> actRemoveList( l )
                      case Abort              => abortHandler( None )
-                     case Message( "/done", "/notify" ) => {
+                     case Message( "/done", "/notify" ) =>
                         var tstatus = 0L
                         def sstatus() {
                            tstatus = System.currentTimeMillis + 500
@@ -60,7 +60,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                                  case AddListener( l )   => actAddList( l ); actDispatch( l, SCRunning( s ))
                                  case RemoveListener( l )=> actRemoveList( l )
                                  case Abort              => abortHandler( Some( s ))
-                                 case ServerConnection.Aborted => {
+                                 case ServerConnection.Aborted =>
                                     s.serverOffline()
                                     dispatch( Aborted )
                                     loop { react {
@@ -69,10 +69,8 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                                        case Abort              => reply ()
                                        case QueryServer        => reply( s )
                                     }}
-                                 }
                               }}
                         }}
-                     }
                   }}
             } else loop { react {
                case Abort  => reply ()
@@ -85,11 +83,11 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
          handleAbort()
          val from = sender
          loop { react {
-            case ServerConnection.Aborted => {
+            case ServerConnection.Aborted =>
                server.foreach( _.serverOffline() )
                dispatch( ServerConnection.Aborted )
                from ! ()
-            }
+
             case AddListener( l )   => actAddList( l )
             case RemoveListener( l )=> actRemoveList( l )
             case _                  => // XXX ?

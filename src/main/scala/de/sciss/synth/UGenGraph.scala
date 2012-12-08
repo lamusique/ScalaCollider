@@ -119,14 +119,14 @@ final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[
 
       dos.writeShort( controlNames.size )
       var count = 0
-      controlNames.foreach( name => {
+      controlNames.foreach { name =>
          writePascalString( dos, name._1 )
          dos.writeShort( name._2 )
          count += 1
-      })
+      }
 
       dos.writeShort( ugens.size )
-      ugens.foreach( ru => {
+      ugens.foreach { ru =>
          val ugen = ru.ugen
          writePascalString( dos, ugen.name )
 
@@ -135,12 +135,12 @@ final case class UGenGraph( constants: IIdxSeq[ Float ], controlValues: IIdxSeq[
          dos.writeShort( ugen.numOutputs )
          dos.writeShort( ugen.specialIndex )
 
-         ru.inputSpecs.foreach( spec => {
+         ru.inputSpecs.foreach { spec =>
             dos.writeShort( spec._1 )
             dos.writeShort( spec._2 )
-         })
+         }
          ugen.outputRates.foreach( r => dos.writeByte( r.id ))
-      })
+      }
 
       dos.writeShort( 0 ) // variants not supported
    }

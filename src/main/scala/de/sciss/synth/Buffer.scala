@@ -328,15 +328,14 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       val a = completion.action
       if( forceQuery || a.isDefined ) {
          register()
-         a.foreach( action => {
+         a.foreach { action =>
             lazy val l: Listener = {
-               case BufferManager.BufferInfo( _, _ ) => {
+               case BufferManager.BufferInfo( _, _ ) =>
                   removeListener( l )
                   action( b )
-               }
             }
             addListener( l )
-         })
+         }
       }
       (completion.message, a) match {
          case (None, None)                => if( forceQuery ) Some( queryMsg ) else None

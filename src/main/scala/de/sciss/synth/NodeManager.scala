@@ -53,7 +53,7 @@ final class NodeManager( server: Server ) extends Model {
 //      }
 
 	def nodeChange( e: osc.NodeChange ) { e match {
-      case osc.NodeGoMessage( nodeID, info ) => {
+      case osc.NodeGoMessage( nodeID, info ) =>
          val node = nodes.get( nodeID ) getOrElse {
             if( /* autoAdd && */ nodes.contains( info.parentID )) {
                val created = info match {
@@ -65,28 +65,28 @@ final class NodeManager( server: Server ) extends Model {
             } else return
          }
          dispatchBoth( NodeGo( node, info ))
-      }
-      case osc.NodeEndMessage( nodeID, info ) => {
-         nodes.get( nodeID ).foreach( node => {
+
+      case osc.NodeEndMessage( nodeID, info ) =>
+         nodes.get( nodeID ).foreach { node =>
             unregister( node )
             dispatchBoth( NodeEnd( node, info ))
-         })
-      }
-      case osc.NodeOffMessage( nodeID, info ) => {
-         nodes.get( e.nodeID ).foreach( node => {
+         }
+
+      case osc.NodeOffMessage( nodeID, info ) =>
+         nodes.get( e.nodeID ).foreach { node =>
             dispatchBoth( NodeOff( node, info ))
-         })
-      }
-      case osc.NodeOnMessage( nodeID, info ) => {
-         nodes.get( e.nodeID ).foreach( node => {
+         }
+
+      case osc.NodeOnMessage( nodeID, info ) =>
+         nodes.get( e.nodeID ).foreach { node =>
             dispatchBoth( NodeOn( node, info ))
-         })
-      }
-      case osc.NodeMoveMessage( nodeID, info ) => {
-         nodes.get( e.nodeID ).foreach( node => {
+         }
+
+      case osc.NodeMoveMessage( nodeID, info ) =>
+         nodes.get( e.nodeID ).foreach { node =>
             dispatchBoth( NodeMove( node, info ))
-         })
-      }
+         }
+
       case _ =>
 	}}
 
