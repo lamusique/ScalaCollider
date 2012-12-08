@@ -28,7 +28,7 @@ package ugen
 
 import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import Predef.{any2stringadd => _}
+//import Predef.{any2stringadd => _}
 
 final case class Flatten( elem: GE ) extends GE.Lazy {
    def rate = elem.rate

@@ -96,7 +96,7 @@ def numOutputs = elems.size
     */
    trait Lazy extends Lazy.Expander[ UGenInLike ] with GE
    
-   implicit def ops( g: GE ) : Ops = new Ops( g )
+//   implicit def ops( g: GE ) : Ops = new Ops( g )
    
    final class Ops( g: GE ) {
       def `\\`( index: Int ) = ChannelProxy( g, index )

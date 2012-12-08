@@ -3,7 +3,7 @@ package impl
 
 import java.io.{InputStreamReader, BufferedReader, File, IOException}
 import java.net.InetSocketAddress
-import actors.{Future, TIMEOUT, DaemonActor}
+import actors.{TIMEOUT, DaemonActor}
 import de.sciss.osc.{Message, Client => OSCClient}
 
 private[synth] object ConnectionLike {

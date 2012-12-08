@@ -95,6 +95,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
    implicit def doubleWrapper( d: Double ) : RichDouble = new RichDouble( d )
 
 //   implicit def geOps( ge: GE ) = ge.ops
+   implicit def geOps( g: GE ) : GE.Ops = new GE.Ops( g )
 
    // problem with automatic application: http://lampsvn.epfl.ch/trac/scala/ticket/3152
 //   implicit def mce( x: Seq[ AnyGE ]) : GE[ /* R, */ UGenIn /*[ R ] */] = {

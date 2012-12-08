@@ -36,18 +36,18 @@ trait Handler {
 
 object Responder {
    def add( handler: PartialFunction[ Message, Unit ], server: Server = Server.default ) : Responder =
-      new Impl( server, handler, false ).add
+      new Impl( server, handler, false ).add()
 
    def once( handler: PartialFunction[ Message, Unit ], server: Server = Server.default ) : Responder =
-      new Impl( server, handler, true ).add
+      new Impl( server, handler, true ).add()
 
    def apply( handler: PartialFunction[ Message, Unit ], server: Server = Server.default ): Responder =
       new Impl( server, handler, false )
 
    private final class Impl( val server: Server, handler: PartialFunction[ Message, Unit ], once: Boolean )
    extends Responder {
-      def add     = { server.addResponder( this ); this }
-      def remove  = { server.removeResponder( this ); this }
+      def add()      = { server.addResponder( this ); this }
+      def remove()   = { server.removeResponder( this ); this }
 
       private[synth] def handle( msg: Message ) : Boolean = {
          val handled = handler.isDefinedAt( msg )
@@ -64,6 +64,6 @@ object Responder {
 
 trait Responder extends Handler {
    def server: Server
-   def add : Responder
-   def remove : Responder
+   def add() : Responder
+   def remove() : Responder
 }
