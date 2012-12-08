@@ -25,6 +25,32 @@
 
 package de.sciss.synth
 
+object Synth {
+   def play( defName: String, args: Seq[ ControlSetMap ] = Nil, target: Node = Server.default.defaultGroup,
+             addAction: AddAction = addToHead ) = {
+      val synth = new Synth( target.server )
+      synth.server ! synth.newMsg( defName, target, args, addAction )
+      synth
+   }
+
+   def after( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
+      play( defName, args, target, addAfter )
+
+   def before( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
+      play( defName, args, target, addBefore )
+
+	def head( target: Group, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
+      play( defName, args, target, addToHead )
+
+	def tail( target: Group, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
+      play( defName, args, target, addToTail )
+
+	def replace( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
+      play( defName, args, target, addReplace )
+
+   def apply( server: Server ) : Synth = apply( server, server.nextNodeID() )
+   def apply() : Synth = apply( Server.default )
+}
 final case class Synth( server: Server, id: Int )
 extends Node {
    private var defNameVar = ""
@@ -42,32 +68,4 @@ extends Node {
 
    override def toString = "Synth(" + server + "," + id +
       (if( defNameVar != "" ) ") : <" + defNameVar + ">" else ")")
-}
-
-// factory
-object Synth {
-   def play( defName: String, args: Seq[ ControlSetMap ] = Nil, target: Node = Server.default.defaultGroup,
-             addAction: AddAction = addToHead ) = {
-      val synth = new Synth( target.server )
-      synth.server ! synth.newMsg( defName, target, args, addAction )
-      synth
-   }
-
-   def after( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addAfter )
- 
-   def before( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addBefore )
-
-	def head( target: Group, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addToHead )
-
-	def tail( target: Group, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addToTail )
-
-	def replace( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addReplace )
-
-   def apply( server: Server ) : Synth = apply( server, server.nextNodeID() )
-   def apply() : Synth = apply( Server.default )
 }

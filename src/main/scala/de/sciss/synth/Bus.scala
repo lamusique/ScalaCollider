@@ -65,22 +65,6 @@ extends Bus {
 	   released = true
 	}
 
-   def set( v: Float ) {
-      server ! setMsg( v )
-   }
-
-   def set( pairs: (Int, Float)* ) {
-      server ! setMsg( pairs: _* )
-   }
-
-   def setn( v: IndexedSeq[ Float ]) {
-      server ! setnMsg( v )
-   }
-
-   def setn( pairs: (Int, IndexedSeq[ Float ])* ) {
-      server ! setnMsg( pairs: _* )
-   }
-
    def setMsg( v: Float ) = {
       require( numChannels == 1 )
       osc.ControlBusSetMessage( (index, v) )

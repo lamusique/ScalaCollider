@@ -25,10 +25,8 @@
 
 package de.sciss.synth
 
-import de.sciss.synth.{ Completion => Comp, play => scplay }
+import de.sciss.synth.{ Completion => Comp }
 import de.sciss.osc.{Bundle, Packet}
-import Model.Listener
-import ugen.{FreeSelfWhenDone, BufRateScale, PlayBuf}
 
 object Buffer {
 //   sealed abstract class Completion {
@@ -41,6 +39,7 @@ object Buffer {
    def alloc( server: Server = Server.default, numFrames: Int, numChannels: Int = 1,
               completion: Completion = NoCompletion ) : Buffer = {
       val b = apply( server )
+      import Ops._
       b.alloc( numFrames, numChannels, completion )
       b
    }
@@ -48,6 +47,7 @@ object Buffer {
    def read( server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
              completion: Completion = NoCompletion ) : Buffer = {
       val b = apply( server )
+      import Ops._
       b.allocRead( path, startFrame, numFrames, completion )
       b
    }
@@ -55,6 +55,7 @@ object Buffer {
    def cue( server: Server = Server.default, path: String, startFrame: Int = 0, numChannels: Int = 1,
             bufFrames: Int = 32768, completion: Completion = NoCompletion ) : Buffer = {
       val b = apply( server )
+      import Ops._
       b.alloc( bufFrames, numChannels, b.cueMsg( path, startFrame, completion ))
       b
    }
@@ -62,6 +63,7 @@ object Buffer {
    def readChannel( server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
                     channels: Seq[ Int ], completion: Completion = NoCompletion ) : Buffer = {
       val b = apply( server )
+      import Ops._
       b.allocReadChannel( path, startFrame, numFrames, channels, completion )
       b
    }
@@ -77,8 +79,6 @@ object Buffer {
       }
       id
    }
-
-//   private def isPowerOfTwo( i: Int ) = (i & (i-1)) == 0
 }
 
 final case class Buffer( server: Server, id: Int ) extends Model {
@@ -104,7 +104,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
        server.bufManager.register( this )
    }
 
-   protected[synth] def updated( change: BufferManager.BufferInfo ) {
+   private[synth] def updated( change: BufferManager.BufferInfo ) {
       val info       = change.info
       numFramesVar   = info.numFrames
       numChannelsVar = info.numChannels
@@ -116,10 +116,6 @@ final case class Buffer( server: Server, id: Int ) extends Model {
 
 //   def free { server ! freeMsg }
 
-	def free( completion: Option[ Packet ] = None ) {
-		server ! freeMsg( completion, release = true )
-	}
-
    def freeMsg: osc.BufferFreeMessage = freeMsg( None, release = true )
 
    /**
@@ -129,7 +125,7 @@ final case class Buffer( server: Server, id: Int ) extends Model {
     *                      <code>false</code> here, and manually release the id, using the <code>release</code>
     *                      method
     */
-	def freeMsg( completion: Option[ Packet ] = None, release: Boolean = true ) = {
+	def freeMsg( completion: Optional[ Packet ] = None, release: Boolean = true ) = {
       if( release ) this.release()
       osc.BufferFreeMessage( id, completion )
 	}
@@ -144,24 +140,10 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       released = true
    }
 
-//   def close { server ! closeMsg }
-
-   def close( completion: Option[ Packet ] = None ) {
-      server ! closeMsg( completion )
-   }
-
 	def closeMsg: osc.BufferCloseMessage = closeMsg( None )
 
 	def closeMsg( completion: Option[ Packet ] = None ) =
       osc.BufferCloseMessage( id, completion )
-
-//	def alloc { server ! allocMsg }
-
-	def alloc( numFrames: Int, numChannels: Int = 1, completion: Completion = NoCompletion ) {
-		server ! allocMsg( numFrames, numChannels, makePacket( completion ))
-	}
-
-//	def allocMsg: osc.BufferAllocMessage = allocMsg( None )
 
 	def allocMsg( numFrames: Int, numChannels: Int = 1, completion: Option[ Packet ] = None ) = {
       numFramesVar   = numFrames
@@ -170,23 +152,11 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       osc.BufferAllocMessage( id, numFrames, numChannels, completion )
    }
 
-   def allocRead( path: String, startFrame: Int = 0, numFrames: Int = -1,
-                  completion: Completion = NoCompletion ) {
-//      path = argpath;
-      server ! allocReadMsg( path, startFrame, numFrames, makePacket( completion, forceQuery = true ))
-   }
-
    def allocReadMsg( path: String, startFrame: Int = 0, numFrames: Int = -1,
                      completion: Option[ Packet ] = None ) = {
 //      this.cache;
 //      path = argpath;
       osc.BufferAllocReadMessage( id, path, startFrame, numFrames, completion )
-   }
-
-   def allocReadChannel( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
-                         completion: Completion = NoCompletion ) {
-//      path = argpath;
-      server ! allocReadChannelMsg( path, startFrame, numFrames, channels, makePacket( completion, forceQuery = true ))
    }
 
    def allocReadChannelMsg( path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[ Int ],
@@ -197,79 +167,17 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    def cueMsg( path: String, startFrame: Int = 0, completion: Completion = NoCompletion ) =
-      osc.BufferReadMessage( id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
-
-   def read( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
-             leaveOpen: Boolean = false, completion: Completion = NoCompletion ) {
-      server ! readMsg( path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, makePacket( completion ))
-   }
+      osc.BufferReadMessage( id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket( completion ))
 
    def readMsg( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                 leaveOpen: Boolean = false, completion: Option[ Packet ] = None ) =
       osc.BufferReadMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, completion )
-
-   def readChannel( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
-             leaveOpen: Boolean = false, channels: Seq[ Int ],
-             completion: Completion = NoCompletion ) {
-      server ! readChannelMsg( path, fileStartFrame, numFrames, bufStartFrame, leaveOpen,
-         channels, makePacket( completion ))
-   }
 
    def readChannelMsg( path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                 leaveOpen: Boolean = false, channels: Seq[ Int ],
                 completion: Option[ Packet ] = None ) =
       osc.BufferReadChannelMessage( id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
          completion )
-
-   /**
-    * Sets the contents of the buffer by replacing
-    * individual sample values. An error is thrown if any of the given
-    * offsets is out of range.
-    *
-    * @param   pairs a list of modifications to the buffer contents, each element
-    *          being a sample offset and the sample value. The sample offset ranges
-    *          from zero to the number of samples in the buffer (exclusive), i.e.
-    *          `numChannels * numFrames`. For instance, in a stereo-buffer, the offset
-    *          for the right channel's fifth frame is `(5-1) * 2 + 1 = 9`.
-    */
-   def set( pairs: (Int, Float)* ) {
-      server ! setMsg( pairs: _* )
-   }
-
-   /**
-    * Sets the entire contents of the buffer.
-    * An error is thrown if the number of given values does not match the number
-    * of samples in the buffer.
-    *
-    * @param   v  the new content of the buffer. the size of the sequence must be
-    *          exactly the number of samples in the buffer, i.e.
-    *          `numChannels * numFrames`. Values are channel-interleaved, that is
-    *          for a stereo-buffer the first element specifies the value of the
-    *          first frame of the left channel, the second element specifies the value
-    *          of the first frame of the right channel, followed by the second frame
-    *          of the left channel, etc.
-    */
-   def setn( v: IndexedSeq[ Float ]) {
-      server ! setnMsg( v )
-   }
-
-   /**
-    * Sets the contents of the buffer by replacing
-    * individual contiguous chunks of data. An error is thrown if any of the given
-    * ranges lies outside the valid range of the entire buffer.
-    *
-    * @param   pairs a list of modifications to the buffer contents, each element
-    *          being a sample offset and a chunk of values. The data is channel-interleaved,
-    *          e.g. for a stereo-buffer, the offset for the right channel's fifth frame
-    *          is `(5-1) * 2 + 1 = 9`. Accordingly, values in the float-sequences are
-    *          considered channel-interleaved, i.e. for a stereo buffer and an even offset,
-    *          the first element of the sequence refers to frame `offset / 2` of the
-    *          left channel, the second element to frame `offset / 2` of the right channel,
-    *          followed by frame `offset / 2 + 1` of the left channel, and so on. 
-    */
-   def setn( pairs: (Int, IndexedSeq[ Float ])* ) {
-      server ! setnMsg( pairs: _* )
-   }
 
    def setMsg( pairs: (Int, Float)* ) = {
       val numSmp = numChannels * numFrames
@@ -290,23 +198,10 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       osc.BufferSetnMessage( id, ipairs: _* )
    }
    
-//   def zero { server ! zeroMsg }
-
-   def zero( completion: Option[ Packet ] = None ) {
-      server ! zeroMsg( completion )
-   }
-
 	def zeroMsg: osc.BufferZeroMessage = zeroMsg( None )
 
 	def zeroMsg( completion: Option[ Packet ]) =
       osc.BufferZeroMessage( id, completion )
-
-   def write( path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
-              sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
-              leaveOpen: Boolean = false, completion: Completion = NoCompletion) {
-//         path = path ?? { thisProcess.platform.recordingsDir +/+ "SC_" ++ Date.localtime.stamp ++ "." ++ headerFormat };
-         server ! writeMsg( path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, makePacket( completion ))
-      }
 
    def writeMsg( path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
                  sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
@@ -315,21 +210,12 @@ final case class Buffer( server: Server, id: Int ) extends Model {
       osc.BufferWriteMessage( id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion )
    }
 
-   // ---- utility methods ----
-   def play : Synth = play()
-   def play( loop: Boolean = false, amp: Float = 1f, out: Int = 0 ) : Synth =
-      scplay( server, out ) { // working around nasty compiler bug
-         val ply = PlayBuf.ar( numChannels, id, BufRateScale.kr( id ), loop = if( loop ) 1 else 0 )
-         if( !loop ) FreeSelfWhenDone.kr( ply )
-         ply * "amp".kr( amp )
-      }
-
-   private def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ Packet ] = {
+   def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ Packet ] = {
       val a = completion.action
       if( forceQuery || a.isDefined ) {
          register()
          a.foreach { action =>
-            lazy val l: Listener = {
+            lazy val l: Model.Listener = {
                case BufferManager.BufferInfo( _, _ ) =>
                   removeListener( l )
                   action( b )

@@ -172,6 +172,7 @@ extends Server {
    def sampleRate = counts.sampleRate
 
    def dumpTree( controls: Boolean = false ) {
+      import Ops._
       rootNode.dumpTree( controls )
    }
 

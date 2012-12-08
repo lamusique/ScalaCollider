@@ -76,11 +76,6 @@ abstract class Node extends Model {
    def server: Server
    def id: Int
 
-//	var group : Group = null
-//	var isPlaying	= false
-//	var isRunning  = false
-
-//	def register: Unit = register( false )
 	def register() {
 //  	NodeWatcher.register( this, assumePlaying )
        server.nodeManager.register( this )
@@ -111,32 +106,7 @@ abstract class Node extends Model {
       dispatch( change )
    }
 
-//	def free : Node = free( true )
-
-	def free() {
-  		server ! freeMsg
-//  		group = null
-//  		isPlaying = false
-//  		isRunning = false
-//  		this
-  	}
-  
-//  private def asArray( o: Object ) : Array[Object] = Seq( o ).toArray
-//  private def asArray( o: Int ) : Array[Object] = Seq( o.asInstanceOf[AnyRef] ).toArray
-  
   	def freeMsg = osc.NodeFreeMessage( id )
-
-//  	def run : Unit = run( true )
-  
-   /**
-    * Pauses or resumes the node.
-    *
-    * @param flag if `true` the node is resumed, if `false` it is paused.
-    */
-  	def run( flag: Boolean = true ) {
-  		server ! runMsg( flag )
-  		this
-  	}
 
    /**
     * Returns an OSC message to resume the node if it was paused.
@@ -154,10 +124,6 @@ abstract class Node extends Model {
     */
   	def runMsg( flag: Boolean ) = osc.NodeRunMessage( id -> flag )
   
-  	def set( pairs: ControlSetMap* ) {
-  		server ! setMsg( pairs: _* )
-  	}
-	
   	def setMsg( pairs: ControlSetMap* ) =
   		osc.NodeSetMessage( id, pairs: _* )
 
@@ -168,22 +134,9 @@ abstract class Node extends Model {
   	def setnMsg( pairs: ControlSetMap* ) =
   		osc.NodeSetnMessage( id, pairs: _* )
 
-  	def trace() {
-  		server ! traceMsg
-  	}
-
    def traceMsg = osc.NodeTraceMessage( id )
 
-  	def release() { release( None )}
-   def release( releaseTime: Float ) {  release( Some( releaseTime ))}
-   def release( releaseTime: Double ) { release( Some( releaseTime.toFloat ))}
-
-  	def release( releaseTime: Option[ Float ]) {
-  		server ! releaseMsg( releaseTime )
-  	}
-
   	def releaseMsg : osc.NodeSetMessage = releaseMsg( None )
-   def releaseMsg( releaseTime: Float ) : osc.NodeSetMessage = releaseMsg( Some( releaseTime ))
 
    /**
     * A utility method which calls `setMsg` assuming a control named `gate`. The release time
@@ -197,14 +150,10 @@ abstract class Node extends Model {
     * @see  [[de.sciss.synth.ugen.EnvGen]]
     * @see  [[de.sciss.synth.osc.NodeSetMessage]]
     */
-  	def releaseMsg( releaseTime: Option[ Float ]) = {
-  		val value = releaseTime.map( -1.0f - _ ).getOrElse( 0.0f )
+  	def releaseMsg( releaseTime: Optional[ Double ]) = {
+  		val value = releaseTime.map( -1.0 - _ ).getOrElse( 0.0 )
   		setMsg( "gate" -> value )
 	}
-
-   def map( pairs: ControlKBusMap.Single* ) {
-      server ! mapMsg( pairs: _* )
-   }
 
    def mapMsg( pairs: ControlKBusMap.Single* ) =
       osc.NodeMapMessage( id, pairs: _* )
@@ -215,19 +164,6 @@ abstract class Node extends Model {
   	
   	def mapnMsg( mappings: ControlKBusMap* ) =
   		osc.NodeMapnMessage( id, mappings: _* )
-
-   /**
-    * Creates a mapping from a mono-channel audio bus to one of the node's controls.
-    *
-    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
-    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
-    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
-    *
-    * @see  [[de.sciss.synth.ugen.InFeedback]]
-    */
-   def mapa( pairs: ControlABusMap.Single* ) {
-      server ! mapaMsg( pairs: _* )
-   }
 
    /**
     * Returns an OSC message to map from an mono-channel audio bus to one of the node's controls.
@@ -242,19 +178,6 @@ abstract class Node extends Model {
       osc.NodeMapaMessage( id, pairs: _* )
 
    /**
-    * Creates a mapping from a mono- or multi-channel audio bus to one of the node's controls.
-    *
-    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
-    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
-    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
-    *
-    * @see  [[de.sciss.synth.ugen.InFeedback]]
-    */
-  	def mapan( mappings: ControlABusMap* ) {
-  		server ! mapanMsg( mappings: _* )
-  	}
-
-   /**
     * Returns an OSC message to map from an mono- or multi-channel audio bus to one of the node's controls.
     *
     * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
@@ -266,27 +189,11 @@ abstract class Node extends Model {
   	def mapanMsg( mappings: ControlABusMap* ) =
   		osc.NodeMapanMessage( id, mappings: _* )
 
-   def fill( control: Any, numChannels: Int, value: Float ) {
-      server ! fillMsg( control, numChannels, value )
-   }
-
-  	def fill( fillings: osc.NodeFillInfo* ) {
-  		server ! fillMsg( fillings: _* )
-  	}
-	
    def fillMsg( control: Any, numChannels: Int, value: Float ) =
       osc.NodeFillMessage( id, osc.NodeFillInfo( control, numChannels, value ))
    
   	def fillMsg( fillings: osc.NodeFillInfo* ) = osc.NodeFillMessage( id, fillings: _* )
 
-   /**
-    * Moves this node before another node
-    *
-    * @param   node  the node before which to move this node
-    *
-    * @see  [[de.sciss.synth.osc.osc.NodeBeforeMessage]]
-    */
-   def moveBefore( node: Node ) { server ! moveBeforeMsg( node )}
    /**
     * Creates an osc. message to move this node before another node
     *
@@ -294,16 +201,8 @@ abstract class Node extends Model {
     *
     * @see  [[de.sciss.synth.osc.osc.NodeBeforeMessage]]
     */
-   def moveBeforeMsg( node: Node )  = osc.NodeBeforeMessage( id -> node.id )
+   def moveBeforeMsg( node: Node ) = osc.NodeBeforeMessage( id -> node.id )
 
-   /**
-    * Moves this node after another node
-    *
-    * @param   node  the node after which to move this node
-    *
-    * @see  [[de.sciss.synth.osc.osc.NodeAfterMessage]]
-    */
-   def moveAfter( node: Node ) { server ! moveAfterMsg( node )}
    /**
     * Creates an osc. message to move this node after another node
     *
@@ -311,11 +210,9 @@ abstract class Node extends Model {
     *
     * @see  [[de.sciss.synth.osc.osc.NodeAfterMessage]]
     */
-   def moveAfterMsg( node: Node )   = osc.NodeAfterMessage( id -> node.id )
+   def moveAfterMsg( node: Node ) = osc.NodeAfterMessage( id -> node.id )
 
-   def moveToHead( group: Group ) { server ! moveToHeadMsg( group )}
   	def moveToHeadMsg( group: Group ) : osc.GroupHeadMessage = group.moveNodeToHeadMsg( this )
 
-   def moveToTail( group: Group ) { server ! moveToTailMsg( group )}
   	def moveToTailMsg( group: Group ) : osc.GroupTailMessage = group.moveNodeToTailMsg( this )
 }
