@@ -29,19 +29,20 @@ package osc
 import de.sciss.osc.Message
 
 trait Handler {
+   // returns `true` if the handler wishes to be removed
    private[synth] def handle( msg: Message ) : Boolean
    private[synth] def removed() : Unit
 //   private[synth] def timedOut : Unit
 }
 
 object Responder {
-   def add( handler: PartialFunction[ Message, Unit ], server: Server = Server.default ) : Responder =
+   def add( server: Server = Server.default )( handler: PartialFunction[ Message, Unit ]) : Responder =
       new Impl( server, handler, false ).add()
 
-   def once( handler: PartialFunction[ Message, Unit ], server: Server = Server.default ) : Responder =
+   def once( server: Server = Server.default )( handler: PartialFunction[ Message, Unit ]) : Responder =
       new Impl( server, handler, true ).add()
 
-   def apply( handler: PartialFunction[ Message, Unit ], server: Server = Server.default ): Responder =
+   def apply( server: Server = Server.default )( handler: PartialFunction[ Message, Unit ]): Responder =
       new Impl( server, handler, false )
 
    private final class Impl( val server: Server, handler: PartialFunction[ Message, Unit ], once: Boolean )
@@ -54,11 +55,13 @@ object Responder {
          if( handled ) try {
             handler( msg )
          } catch { case e: Throwable => e.printStackTrace() }
-         once
+         once && handled
       }
 
       private[synth] def removed() {}
 //      private[synth] def timedOut {}
+
+      override def toString = "Responder(" + server + (if( once ) ", once = true" else "") + ")@" + hashCode().toHexString
    }
 }
 
