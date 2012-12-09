@@ -15,7 +15,7 @@ licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
 resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/groups/public"
 
 libraryDependencies ++= Seq(
-   "de.sciss" %% "scalaosc" % "1.0.+",
+   "de.sciss" %% "scalaosc" % "1.1.+",
    "de.sciss" %% "scalaaudiofile" % "1.0.+"
 )
 
