@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.2.0-SNAPSHOT"
+version := "1.2.0"
 
 organization := "de.sciss"
 
@@ -16,7 +16,7 @@ resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/groups
 
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "1.1.+",
-   "de.sciss" %% "scalaaudiofile" % "1.0.+"
+   "de.sciss" %% "scalaaudiofile" % "1.1.+"
 )
 
 libraryDependencies <++= scalaVersion { sv =>
@@ -26,14 +26,13 @@ libraryDependencies <++= scalaVersion { sv =>
    }
 }
 
-libraryDependencies <+= scalaVersion { sv =>
-   val org = "org.scalatest"
+libraryDependencies in ThisBuild <+= scalaVersion { sv =>
    val v = sv match {
-      case "2.10.0-M7"  => org % "scalatest_2.10.0-M6" % "1.9-2.10.0-M6-B2"
-      case "2.10.0-RC3" => org % "scalatest_2.10.0-RC3" % "1.8-B1"
-      case _ =>            org %% "scalatest" % "1.8"
+      case "2.10.0-RC3" => "1.8-B1"
+      case "2.10.0-RC5" => "1.8-B1"
+      case _            => "1.8"
    }
-   v % "test"
+   "org.scalatest" %% "scalatest" % v % "test"
 }
 
 retrieveManaged := true

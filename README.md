@@ -18,7 +18,7 @@ Targets for sbt:
 
 To link to ScalaCollider:
 
-    libraryDependencies += "de.sciss" %% "scalacollider" % "1.1.+"
+    libraryDependencies += "de.sciss" %% "scalacollider" % "1.2.+"
 
 ### starting a SuperCollider server
 
