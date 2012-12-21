@@ -1,10 +1,12 @@
 name := "ScalaCollider"
 
-version := "1.2.0"
+version := "1.3.0"
 
 organization := "de.sciss"
 
-scalaVersion := "2.9.2"
+scalaVersion := "2.10.0"
+
+crossScalaVersions in ThisBuild := Seq( "2.10.0", "2.9.2" )
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -16,7 +18,8 @@ resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/groups
 
 libraryDependencies ++= Seq(
    "de.sciss" %% "scalaosc" % "1.1.+",
-   "de.sciss" %% "scalaaudiofile" % "1.1.+"
+   "de.sciss" %% "scalaaudiofile" % "1.2.+",
+   ("org.scalatest" % "scalatest" % "1.8" cross CrossVersion.full) % "test"
 )
 
 libraryDependencies <++= scalaVersion { sv =>
@@ -24,15 +27,6 @@ libraryDependencies <++= scalaVersion { sv =>
       case "2.9.2" => Seq.empty
       case _ => Seq( "org.scala-lang" % "scala-actors" % sv )
    }
-}
-
-libraryDependencies in ThisBuild <+= scalaVersion { sv =>
-   val v = sv match {
-      case "2.10.0-RC3" => "1.8-B1"
-      case "2.10.0-RC5" => "1.8-B1"
-      case _            => "1.8"
-   }
-   "org.scalatest" %% "scalatest" % v % "test"
 }
 
 retrieveManaged := true

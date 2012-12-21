@@ -214,7 +214,6 @@ final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends 
    }
 }
 
-
 object SplayAz {
    def ar( numChannels: Int, in: GE, spread: GE = 1f, center: GE = 0f, level: GE = 1f, width: GE = 2f, orient: GE = 0f ) =
       apply( audio, numChannels, in, spread, center, level, width, orient )

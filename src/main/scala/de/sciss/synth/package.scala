@@ -158,6 +158,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
    // explicit methods
 
    def play[ T : GraphFunction.Result ]( thunk: => T ) : Synth = play()( thunk )
+   // XXX TODO: fadeTime should be Optional[ Double ] not Option[ Float ]
    def play[ T : GraphFunction.Result ]( target: Node = Server.default, outBus: Int = 0,
              fadeTime: Option[ Float ] = Some( 0.02f ),
              addAction: AddAction = addToHead )( thunk: => T ) : Synth = {

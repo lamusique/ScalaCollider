@@ -6,7 +6,7 @@ import de.sciss.osc.{Client => OSCClient, Dump, Message, Packet}
 import java.util.{TimerTask, Timer}
 import java.io.IOException
 import scala.Some
-import actors.{OutputChannel, TIMEOUT, DaemonActor, Actor, Channel}
+import actors.{OutputChannel, DaemonActor, Actor, Channel}
 
 private[synth] object ServerImpl {
    def add( s: Server ) {
@@ -144,7 +144,7 @@ extends Server {
     * @param   handler  the handler to match against incoming messages
     *    or timeout
     *
-    * @see  [[scala.actors.TIMEOUT]]
+    * @see  [[de.sciss.synth.osc.TIMEOUT]]
     */
    def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) {
       val a = new DaemonActor {
@@ -154,8 +154,8 @@ extends Server {
             OSCReceiverActor.addHandler( oh )
             server ! p // only after addHandler!
             futCh.reactWithin( timeOut ) {
-               case TIMEOUT   => OSCReceiverActor.timeOutHandler( oh )
-               case r         =>
+               case actors.TIMEOUT  => OSCReceiverActor.timeOutHandler( oh )
+               case r               =>
             }
          }
       }
@@ -163,7 +163,6 @@ extends Server {
 // NOTE: race condition, addHandler might take longer than
 // the /done, notify!
 //      this ! p
-      a
    }
 
    def counts = countsVar
@@ -443,8 +442,8 @@ extends Server {
       }
       def removed() {}
       def timedOut() {
-         if( fun.isDefinedAt( TIMEOUT )) try {
-            fun.apply( TIMEOUT )
+         if( fun.isDefinedAt( osc.TIMEOUT )) try {
+            fun.apply( osc.TIMEOUT )
          } catch { case e: Throwable => e.printStackTrace() }
       }
    }

@@ -903,7 +903,7 @@ trait Server extends ServerLike {
     * @param   handler  the handler to match against incoming messages
     *    or timeout 
     *
-    * @see  [[scala.actors.TIMEOUT]]
+    * @see  [[de.sciss.synth.osc.TIMEOUT]]
     */
    def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) : Unit
 
@@ -921,7 +921,7 @@ trait Server extends ServerLike {
 
    def queryCounts() : Unit
 
-   final def syncMsg : osc.SyncMessage = syncMsg()
+   final def syncMsg : osc.SyncMessage = syncMsg() // XXX TODO : should be removed
    final def syncMsg( id: Int = nextSyncID() ) = osc.SyncMessage( id )
 
    def dumpOSC( mode: Dump = Dump.Text ) : Unit

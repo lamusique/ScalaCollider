@@ -3,7 +3,7 @@ package impl
 
 import java.io.{InputStreamReader, BufferedReader, File, IOException}
 import java.net.InetSocketAddress
-import actors.{TIMEOUT, DaemonActor}
+import actors.DaemonActor
 import de.sciss.osc.{Message, Client => OSCClient}
 
 private[synth] object ConnectionLike {
@@ -32,7 +32,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                   }
                   snotify()
                   loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
-                     case TIMEOUT            => snotify() // loop is retried
+                     case actors.TIMEOUT     => snotify() // loop is retried
                      case AddListener( l )   => actAddList( l )
                      case RemoveListener( l )=> actRemoveList( l )
                      case Abort              => abortHandler( None )
@@ -44,7 +44,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                         }
                         sstatus()
                         loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
-                           case TIMEOUT            => sstatus() // loop is retried
+                           case actors.TIMEOUT     => sstatus() // loop is retried
                            case AddListener( l )   => actAddList( l )
                            case RemoveListener( l )=> actRemoveList( l )
                            case Abort              => abortHandler( None )

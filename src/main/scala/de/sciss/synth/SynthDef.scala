@@ -29,7 +29,6 @@ import java.io.{ ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, 
 import java.nio.ByteBuffer
 import de.sciss.synth.{ Completion => Comp }
 import File.{ separator => sep }
-import actors.TIMEOUT
 import de.sciss.osc.{Bundle, Message, Packet}
 
 /**
@@ -60,7 +59,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
          }
          server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
             case osc.SyncedMessage( `syncID` ) => action( syndef )
-            case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
+            case osc.TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
          })
       } getOrElse {
          server ! msgFun( completion.message.map( _.apply( syndef )))
@@ -70,7 +69,7 @@ final case class SynthDef( name: String, graph: UGenGraph ) {
 //   private def sendWithAction( msg: Message, syncID: Int, action: SynthDef => Unit, name: String ) {
 //      server !? (6000L, msg, {
 //         case osc.SyncedMessage( syncID ) => action( syndef )
-//         case TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
+//         case osc.TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
 //      })
 //   }
   
