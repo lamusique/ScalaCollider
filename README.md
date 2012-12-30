@@ -2,7 +2,7 @@
 
 ### statement
 
-ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2012 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
+ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2013 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
 ### requirements / installation
 
