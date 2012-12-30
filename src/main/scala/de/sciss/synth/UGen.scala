@@ -234,7 +234,7 @@ sealed trait UGenProxy extends UGenIn {
  *    These constants are stored in a separate table of
  *    the synth graph.
  */
-final case class Constant( value: Float ) extends /* GE with */ UGenIn {
+@SerialVersionUID(3402358769036617020L) final case class Constant( value: Float ) extends /* GE with */ UGenIn {
    override def toString = value.toString
    def displayName = value.toString
    def rate: Rate = scalar

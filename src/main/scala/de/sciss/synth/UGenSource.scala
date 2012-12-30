@@ -39,9 +39,7 @@ object UGenSource {
       }
    }
 
-   abstract class SingleOut( val name: String ) extends SomeOut {
-//final def numOutputs = 1
-   }
+   @SerialVersionUID(5726777539636001639L) abstract class SingleOut( val name: String ) extends SomeOut
    abstract class MultiOut( val name: String /*, val numOutputs: Int */) extends SomeOut // , UGen.MultiOut ]
 
    protected sealed trait SomeOut extends UGenSource[ UGenInLike ] with GE.Lazy {

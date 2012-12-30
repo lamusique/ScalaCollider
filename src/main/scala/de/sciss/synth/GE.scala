@@ -68,7 +68,7 @@ object GE {
 //      }
 //   }
 
-   private final case class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
+   @SerialVersionUID(-5589376755121907882L) private final case class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
 def numOutputs = elems.size
       def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
       def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
