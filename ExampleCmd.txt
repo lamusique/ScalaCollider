@@ -18,7 +18,7 @@ val x = play {
     CombN.ar(SinOsc.ar(f)*0.04, 0.2, 0.2, 4) // echoing sine wave
 }
 
-x.free
+x.free()
 
 val df = SynthDef("AnalogBubbles") {
     val f1 = "freq1".kr(0.4)
@@ -33,7 +33,7 @@ x.set( "freq1" -> 0.1 )
 x.set( "freq2" -> 222.2 )
 x.set( "detune" -> 0.44 )
 
-s.freeAll
+s.freeAll()
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -380,9 +380,9 @@ val x = play {
 // press mouse button to 'stop the record', you can scrub while it is stopped.
 
 // stop the synth
-x.release
+x.release()
 // free the Buffer
-buf.free
+buf.free()
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -406,11 +406,11 @@ x.set("trig" -> 1, "freq" -> 880)
 val x = play {
     SendTrig.kr( MouseButton.kr( lag = 0 ), MouseX.kr( lag = 0 )) // warning: different arg order!
 }
-val r = sosc.Responder.add {
+val r = sosc.Responder.add() {
     case osc.Message( "/tr", x.id, _, mouseX ) => println( "Dang! " + mouseX )
 }
-r.remove
-x.free
+r.remove()
+x.free()
 
 // using SendReply
 
@@ -421,7 +421,7 @@ val x = play {
     // infos, we can use Flatten( _ )
     SendReply.kr( Impulse.kr( 10 ), Pitch.kr( In.ar( NumOutputBuses.ir, 2 )).flatten )
 }
-val resp = sosc.Responder.add {
+val resp = sosc.Responder.add() {
     case osc.Message( "/reply", x.id, _, freqL: Float, hasFreqL: Float, freqR: Float, hasFreqR: Float ) =>
         if( hasFreqL > 0 || hasFreqR > 0 )
         println( "GOT : " + (if( hasFreqL > 0 ) freqL.cpsmidi else "?") + " / " +
@@ -429,7 +429,7 @@ val resp = sosc.Responder.add {
 }
 x.onEnd { resp.remove }
 
-x.free
+x.free()
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -475,7 +475,7 @@ val df = SynthDef( "mag-above" ) {
 }
 df.recv( s )
 val x = Synth.play( "mag-above", Seq( "buf" -> b.id ))
-x.free; b.free
+x.free(); b.free()
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -538,9 +538,9 @@ SynthDef.recv( "multi-con" ) {
 }
 
 val x = Synth.play( "multi-con", Seq( "harm" -> Vector( 1f, 3.3f, 4.5f, 7.8f )))
-x.free
+x.free()
 val x = Synth.play( "multi-con", Seq( "harm" -> Vector( 2f, 3f, 4f, 5f )))
-x.free
+x.free()
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -556,8 +556,8 @@ val x = play {
    )
 }
 
-x release 10
-lim release 10
+x.free()
+lim.free()
 
 // ambient by tim walters (added a LeakDC)
 val x = play {

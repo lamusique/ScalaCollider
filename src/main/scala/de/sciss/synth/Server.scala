@@ -782,6 +782,8 @@ object Server {
 
    implicit def defaultGroup(s: Server) = s.defaultGroup
 
+  type Listener = Model.Listener[Update]
+
   sealed trait Update
   sealed trait Condition extends Update
   case object Running extends Condition
