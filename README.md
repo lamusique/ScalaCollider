@@ -6,7 +6,7 @@ ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyrigh
 
 ### requirements / installation
 
-ScalaCollider currently builds with sbt 0.12 against Scala 2.10 (default) and 2.9.2. It requires Java 1.6 and SuperCollider 3.5 or higher. It depends on [ScalaOSC](http://github.com/Sciss/ScalaOSC) and [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile).
+ScalaCollider currently builds with sbt 0.12 against Scala 2.10. It requires Java 1.6 and SuperCollider 3.5 or higher. It depends on [ScalaOSC](http://github.com/Sciss/ScalaOSC), [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile), and [ScalaColliderUGens](http://github.com/Sciss/ScalaColliderUGens).
 
 Targets for sbt:
 
@@ -18,7 +18,7 @@ Targets for sbt:
 
 To link to ScalaCollider:
 
-    libraryDependencies += "de.sciss" %% "scalacollider" % "1.3.+"
+    libraryDependencies += "de.sciss" %% "scalacollider" % "1.4.+"
 
 ### starting a SuperCollider server
 

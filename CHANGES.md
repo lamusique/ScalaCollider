@@ -1,5 +1,10 @@
 ### changes
 
+#### changes in v1.4.0
+
+* UGens have been externalised as a library dependency to ScalaColliderUGens project
+* requires Scala 2.10 now
+
 #### changes in v0.34
 
 * SynthGraph is serializable
