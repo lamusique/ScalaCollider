@@ -25,7 +25,8 @@
 
 package de.sciss.synth
 
-import collection.immutable.{ IndexedSeq => IIdxSeq }
+import collection.immutable.{IndexedSeq => IIdxSeq}
+import language.implicitConversions
 
 object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMapImplicits {
    object Single extends SingleControlSetMapImplicits

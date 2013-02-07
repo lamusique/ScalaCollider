@@ -26,37 +26,39 @@
 package de.sciss.synth
 
 import java.net.InetSocketAddress
+import language.implicitConversions
 
 object Client {
-   sealed trait ConfigLike {
-      def clientID:     Int
-      def nodeIDOffset: Int
-      def addr:         Option[ InetSocketAddress ]
-   }
+  sealed trait ConfigLike {
+    def clientID: Int
+    def nodeIDOffset: Int
+    def addr: Option[InetSocketAddress]
+  }
 
-   object Config {
-      /**
-       * Creates a new configuration builder with default settings
-       */
-      def apply() : ConfigBuilder = new ConfigBuilder()
+  object Config {
+    /**
+     * Creates a new configuration builder with default settings
+     */
+    def apply(): ConfigBuilder = new ConfigBuilder()
 
-      /**
-       * Implicit conversion which allows you to use a `ConfigBuilder`
-       * wherever a `Config` is required.
-       */
-      implicit def build( cb: ConfigBuilder ) : Config = cb.build
-   }
+    /**
+     * Implicit conversion which allows you to use a `ConfigBuilder`
+     * wherever a `Config` is required.
+     */
+    implicit def build(cb: ConfigBuilder): Config = cb.build
+  }
 
-   final class Config private[Client]( val clientID: Int, val nodeIDOffset: Int, val addr: Option[ InetSocketAddress ])
-   extends ConfigLike {
-      override def toString = "ClientOptions"
-   }
+  final class Config private[Client](val clientID: Int, val nodeIDOffset: Int, val addr: Option[InetSocketAddress])
+    extends ConfigLike {
+    override def toString = "ClientOptions"
+  }
 
-   final class ConfigBuilder private[Client] () extends ConfigLike {
-      var clientID:     Int                        = 0
-      var nodeIDOffset: Int                        = 1000
-      var addr:         Option[ InetSocketAddress ]= None
+  final class ConfigBuilder private[Client]() extends ConfigLike {
+    var clientID: Int = 0
+    var nodeIDOffset: Int = 1000
+    var addr: Option[InetSocketAddress] = None
 
-      def build : Config = new Config( clientID, nodeIDOffset, addr )
-   }
+    def build: Config = new Config(clientID, nodeIDOffset, addr)
+  }
+
 }

@@ -69,7 +69,10 @@ case object addReplace  extends AddAction( 4 )
  * For example, if `release()` is called on a `Group`, the underlying `setMsg` is propagated to all
  * `Synth`s in the tree whose root is this group.
  */
-abstract class Node extends Model {
+object Node {
+  type Listener = Model.Listener[NodeManager.NodeChange]
+}
+abstract class Node extends Model[NodeManager.NodeChange] {
    import Model._
 
    // ---- abstract ----
@@ -81,30 +84,30 @@ abstract class Node extends Model {
        server.nodeManager.register( this )
   	}
 
-   def onGo( thunk: => Unit ) {
-      register()
-      lazy val l: Listener = {
-         case NodeManager.NodeGo( _, _ ) =>
-            removeListener( l )
-            thunk
-      }
-      addListener( l )
-   }
+  def onGo(thunk: => Unit) {
+    register()
+    lazy val l: Node.Listener = {
+      case NodeManager.NodeGo(_, _) =>
+        removeListener(l)
+        thunk
+    }
+    addListener(l)
+  }
 
-   def onEnd( thunk: => Unit ) {
-      register()
-      lazy val l: Listener = {
-         case NodeManager.NodeEnd( _, _ ) =>
-            removeListener( l )
-            thunk
-      }
-      addListener( l )
-   }
+  def onEnd(thunk: => Unit) {
+    register()
+    lazy val l: Node.Listener = {
+      case NodeManager.NodeEnd(_, _) =>
+        removeListener(l)
+        thunk
+    }
+    addListener(l)
+  }
 
-   protected[synth] def updated( change: NodeManager.NodeChange ) {
-      // XXX need to update isPlaying, isRunning etc.
-      dispatch( change )
-   }
+  protected[synth] def updated(change: NodeManager.NodeChange) {
+    // XXX need to update isPlaying, isRunning etc.
+    dispatch(change)
+  }
 
   	def freeMsg = osc.NodeFreeMessage( id )
 

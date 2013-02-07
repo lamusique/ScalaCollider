@@ -2,6 +2,7 @@ package de.sciss.synth
 
 import org.scalatest.FunSpec
 import ugen.BinaryOp
+import language.implicitConversions
 
 /**
  * To run only this test:

@@ -33,6 +33,8 @@ object Buffer {
 //      private[Buffer] val message: Option[ Buffer => OSCMessage ]
 //      private[Buffer] val action:  Option[ Buffer => Unit ]
 //   }
+  type Listener = Model.Listener[BufferManager.BufferInfo]
+
    type Completion = Comp[ Buffer ]
    val NoCompletion = Comp[ Buffer ]( None, None )
 
@@ -81,7 +83,7 @@ object Buffer {
    }
 }
 
-final case class Buffer( server: Server, id: Int ) extends Model {
+final case class Buffer(server: Server, id: Int) extends Model[BufferManager.BufferInfo] {
    b =>
 
    def this( server: Server = Server.default ) = this( server, Buffer.allocID( server ))
@@ -211,23 +213,23 @@ final case class Buffer( server: Server, id: Int ) extends Model {
    }
 
    def makePacket( completion: Completion, forceQuery: Boolean = false ) : Option[ Packet ] = {
-      val a = completion.action
-      if( forceQuery || a.isDefined ) {
-         register()
-         a.foreach { action =>
-            lazy val l: Model.Listener = {
-               case BufferManager.BufferInfo( _, _ ) =>
-                  removeListener( l )
-                  action( b )
-            }
-            addListener( l )
+     val a = completion.action
+     if (forceQuery || a.isDefined) {
+       register()
+       a.foreach { action =>
+         lazy val l: Buffer.Listener = {
+           case BufferManager.BufferInfo(_, _) =>
+             removeListener(l)
+             action(b)
          }
-      }
-      (completion.message, a) match {
-         case (None, None)                => if( forceQuery ) Some( queryMsg ) else None
-         case (Some( msg ), None)         => Some( if( forceQuery ) Bundle.now( msg.apply( b ), queryMsg ) else msg.apply( b ))
-         case (None, Some( act ))         => Some( queryMsg )
-         case (Some( msg ), Some( act ))  => Some( Bundle.now( msg.apply( b ), queryMsg ))
+         addListener(l)
+       }
+     }
+     (completion.message, a) match {
+       case (None, None)            => if (forceQuery) Some(queryMsg) else None
+       case (Some(msg), None)       => Some(if (forceQuery) Bundle.now(msg(b), queryMsg) else msg(b))
+       case (None, Some(act))       => Some(queryMsg)
+       case (Some(msg), Some(act))  => Some(Bundle.now(msg(b), queryMsg))
       }
    }
 }

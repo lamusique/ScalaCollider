@@ -1,37 +1,31 @@
 name := "ScalaCollider"
 
-version := "1.3.1"
+version := "1.4.0-SNAPSHOT"
 
 organization := "de.sciss"
 
 scalaVersion := "2.10.0"
 
-crossScalaVersions in ThisBuild := Seq( "2.10.0", "2.9.2" )
-
 description := "A sound synthesis library for the SuperCollider server"
 
-homepage := Some( url( "https://github.com/Sciss/ScalaCollider" ))
+homepage <<= name { n => Some(url("https://github.com/Sciss/" + n)) }
 
-licenses := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
-
-resolvers += "Sonatype OSS Releases" at "https://oss.sonatype.org/content/groups/public"
+licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
 libraryDependencies ++= Seq(
-   "de.sciss" %% "scalaosc" % "1.1.+",
-   "de.sciss" %% "scalaaudiofile" % "1.2.+",
-   ("org.scalatest" % "scalatest" % "1.8" cross CrossVersion.full) % "test"
+  "de.sciss" %% "scalaosc" % "1.1.+",
+  "de.sciss" %% "scalaaudiofile" % "1.2.+",
+  "de.sciss" %% "scalacolliderugens-core" % "1.4.0-SNAPSHOT",
+  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 
-libraryDependencies <++= scalaVersion { sv =>
-   sv match {
-      case "2.9.2" => Seq.empty
-      case _ => Seq( "org.scala-lang" % "scala-actors" % sv )
-   }
+libraryDependencies <+= scalaVersion { sv =>
+  "org.scala-lang" % "scala-actors" % sv
 }
 
 retrieveManaged := true
 
-scalacOptions ++= Seq( "-deprecation", "-unchecked" )
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 // ---- console ----
 
@@ -43,9 +37,9 @@ buildInfoSettings
 
 sourceGenerators in Compile <+= buildInfo
 
-buildInfoKeys := Seq( name, organization, version, scalaVersion, description,
-   BuildInfoKey.map( homepage ) { case (k, opt) => k -> opt.get },
-   BuildInfoKey.map( licenses ) { case (_, Seq( (lic, _) )) => "license" -> lic }
+buildInfoKeys := Seq(name, organization, version, scalaVersion, description,
+   BuildInfoKey.map(homepage ) { case (k, opt) => k -> opt.get },
+   BuildInfoKey.map(licenses ) { case (_, Seq( (lic, _) )) => "license" -> lic }
 )
 
 buildInfoPackage := "de.sciss.synth"
@@ -55,7 +49,7 @@ buildInfoPackage := "de.sciss.synth"
 publishMavenStyle := true
 
 publishTo <<= version { (v: String) =>
-   Some( if( v.endsWith( "-SNAPSHOT" ))
+   Some(if (v.endsWith("-SNAPSHOT"))
       "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
    else
       "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
@@ -66,10 +60,10 @@ publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
 
-pomExtra :=
+pomExtra <<= name { n =>
 <scm>
-  <url>git@github.com:Sciss/ScalaCollider.git</url>
-  <connection>scm:git:git@github.com:Sciss/ScalaCollider.git</connection>
+  <url>git@github.com:Sciss/{n}.git</url>
+  <connection>scm:git:git@github.com:Sciss/{n}.git</connection>
 </scm>
 <developers>
    <developer>
@@ -78,6 +72,7 @@ pomExtra :=
       <url>http://www.sciss.de</url>
    </developer>
 </developers>
+}
 
 // ---- disable scaladoc generation during development phase ----
 
@@ -85,13 +80,13 @@ pomExtra :=
 
 // ---- ls.implicit.ly ----
 
-seq( lsSettings :_* )
+seq(lsSettings :_*)
 
-(LsKeys.tags in LsKeys.lsync) := Seq( "sound-synthesis", "sound", "music", "supercollider" )
+(LsKeys.tags in LsKeys.lsync) := Seq("sound-synthesis", "sound", "music", "supercollider")
 
-(LsKeys.ghUser in LsKeys.lsync) := Some( "Sciss" )
+(LsKeys.ghUser in LsKeys.lsync) := Some("Sciss")
 
-(LsKeys.ghRepo in LsKeys.lsync) := Some( "ScalaCollider" )
+(LsKeys.ghRepo in LsKeys.lsync) <<= name(Some(_))
 
 // bug in ls -- doesn't find the licenses from global scope
-(licenses in LsKeys.lsync) := Seq( "GPL v2+" -> url( "http://www.gnu.org/licenses/gpl-2.0.txt" ))
+(licenses in LsKeys.lsync) := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))

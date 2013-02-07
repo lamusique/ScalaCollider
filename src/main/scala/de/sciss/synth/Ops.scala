@@ -26,15 +26,17 @@
 package de.sciss.synth
 
 import de.sciss.osc.Packet
+import language.implicitConversions
 
 object Ops {
-   implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
+//   implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
+
    // this allows conversions to Group so that something like Server.default.freeAll becomes possible
    implicit def groupOps[ G <% Group ]( g: G ) : GroupOps = new GroupOps( g )
-   implicit def bufferOps( b: Buffer ) : BufferOps = new BufferOps( b )
-   implicit def controlBusOps( b: ControlBus ) : ControlBusOps = new ControlBusOps( b )
+//   implicit def bufferOps( b: Buffer ) : BufferOps = new BufferOps( b )
+//   implicit def controlBusOps( b: ControlBus ) : ControlBusOps = new ControlBusOps( b )
 
-   final class NodeOps( n: Node ) {
+   final implicit class NodeOps(val n: Node ) extends AnyVal {
       import n._
 
       def free() {
@@ -131,7 +133,7 @@ object Ops {
       }
    }
 
-   final class GroupOps( g: Group ) {
+   final class GroupOps(val g: Group) extends AnyVal {
       import g._
 
       def freeAll() {
@@ -147,7 +149,7 @@ object Ops {
      	}
    }
 
-   final class BufferOps( b: Buffer ) {
+   implicit final class BufferOps(val b: Buffer ) extends AnyVal {
       import b._
 
       def alloc( numFrames: Int, numChannels: Int = 1, completion: Buffer.Completion = Buffer.NoCompletion ) {
@@ -260,7 +262,7 @@ object Ops {
       }
    }
 
-   final class ControlBusOps( b: ControlBus ) {
+   implicit final class ControlBusOps(val b: ControlBus ) extends AnyVal {
       import b._
 
       def set( v: Float ) {

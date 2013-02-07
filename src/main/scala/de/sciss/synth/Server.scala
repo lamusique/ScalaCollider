@@ -30,6 +30,7 @@ import java.io.{File, IOException}
 import de.sciss.osc.{Dump, Client => OSCClient, Packet, Transport, TCP, UDP}
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 import collection.mutable
+import language.implicitConversions
 
 object Server {
    var default: Server  = null
@@ -675,7 +676,7 @@ object Server {
    @throws( classOf[ IOException ])
    def boot( name: String = "localhost", config: Config = Config().build,
              clientConfig: Client.Config = Client.Config().build )
-           ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
+           ( listener: ServerConnection.Listener = Model.EmptyListener ) : ServerConnection = {
       val sc = initBoot( name, config, clientConfig )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
       sc.start()
@@ -695,7 +696,7 @@ object Server {
    @throws( classOf[ IOException ])
    def connect( name: String = "localhost", config: Config = Config().build,
                 clientConfig: Client.Config = Client.Config().build )
-              ( listener: Model.Listener = Model.EmptyListener ) : ServerConnection = {
+              ( listener: ServerConnection.Listener = Model.EmptyListener ) : ServerConnection = {
       val (addr, c) = prepareConnection( config, clientConfig )
       val sc = new impl.Connection( name, c, addr, config, clientConfig, true )
       if( !(listener eq Model.EmptyListener) ) sc.addListener( listener )
@@ -779,16 +780,17 @@ object Server {
       t.printStackTrace()
    }
 
-   implicit def defaultGroup( s: Server ) = s.defaultGroup
+   implicit def defaultGroup(s: Server) = s.defaultGroup
 
-   abstract sealed class Condition
-   case object Running extends Condition
-   case object Offline extends Condition
-   private[synth] case object NoPending extends Condition
+  sealed trait Update
+  sealed trait Condition extends Update
+  case object Running extends Condition
+  case object Offline extends Condition
+  private[synth] case object NoPending extends Condition
 
-   case class Counts( c: osc.StatusReplyMessage )
+  final case class Counts(c: osc.StatusReplyMessage) extends Update
 
-   private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
+  private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
                              clientAddr: InetSocketAddress ) : OSCClient = {
 //      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, osc.ServerCodec )
 //println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
@@ -811,24 +813,26 @@ object Server {
    }
 }
 
-sealed trait ServerLike extends Model {
-   def name: String
-   def config: Server.Config
-   def addr: InetSocketAddress
+sealed trait ServerLike {
+  def name: String
+  def config: Server.Config
+  def addr: InetSocketAddress
 }
 
 object ServerConnection {
-   sealed abstract class Condition
-   case class Preparing( server: Server ) extends Condition
-   case class Running( server: Server ) extends Condition
-   case object Aborted extends Condition
+  type Listener = Model.Listener[Condition]
+
+  sealed abstract class Condition
+  case class Preparing(server: Server) extends Condition
+  case class Running(server: Server) extends Condition
+  case object Aborted extends Condition
 }
-trait ServerConnection extends ServerLike {
+trait ServerConnection extends ServerLike with Model[ServerConnection.Condition] {
 //   def server : Future[ Server ]
    def abort() : Unit // : Future[ Unit ]
 }
 
-trait Server extends ServerLike {
+trait Server extends ServerLike with Model[Server.Update] {
    server =>
 
    import Server._

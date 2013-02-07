@@ -37,68 +37,68 @@ import ugen.{ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, Una
  *    Constants, and collections of UGen inputs which result from
  *    multichannel expansion (UGenInSeq). 
  */
-object GE {
-   // XXX don't we expect Multi[ GE[ R ]] ?
-   implicit def fromSeq( xs: SSeq[ GE ]) : GE = xs match {
-      case SSeq( x ) => x
-      case _ => SeqImpl( xs.toIndexedSeq )
-   }
-
-   implicit def fromIntSeq( xs: SSeq[ Int ]) : GE = xs match {
-      case SSeq( single ) => single: Constant
-      case _ => SeqImpl( xs.map( i => Constant( i.toFloat ))( breakOut ))
-   }
-
-   implicit def fromFloatSeq( xs: SSeq[ Float ]) : GE = xs match {
-      case SSeq( x ) => x: Constant
-      case _ => SeqImpl( xs.map( f => Constant( f ))( breakOut ))
-   }
-
-   implicit def fromDoubleSeq( xs: SSeq[ Double ]) : GE = xs match {
-      case SSeq( x ) => x: Constant
-      case _ => SeqImpl( xs.map( d => Constant( d.toFloat ))( breakOut ))
-   }
-
-   def fromUGenIns( xs: SSeq[ UGenIn ]) : GE = SeqImpl2( xs.toIndexedSeq )
-
-//   implicit def fromSeq[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R ]) : GE[ R ] = {
-//      x match {
-//         case Seq( single ) => single // Multi.Joint( single )
-//         case _ => GESeq[ R ]( x.map( view )( breakOut ))
-//      }
+//object GE {
+//   // XXX don't we expect Multi[ GE[ R ]] ?
+//   implicit def fromSeq( xs: SSeq[ GE ]) : GE = xs match {
+//      case SSeq( x ) => x
+//      case _ => SeqImpl( xs.toIndexedSeq )
 //   }
-
-   @SerialVersionUID(-5589376755121907882L) private final case class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
-def numOutputs = elems.size
-      def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
-      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
-      override def displayName = "GE.Seq"
-      override def toString = displayName + elems.mkString( "(", ",", ")" )
-   }
-   private final case class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
-def numOutputs = elems.size
-      def expand : UGenInLike = UGenInGroup( elems )
-      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
-      override def displayName = "GE.Seq"
-      override def toString = displayName + elems.mkString( "(", ",", ")" )
-   }
-
-//   object Seq {
-////      implicit def toIndexedSeq[ R <: Rate ]( g: Seq[ R ]) : IIdxSeq[ GE[ R ]] = g.elems
-////      def apply[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]]) : Seq[ R ] = new SeqImpl( elems )
-//      def apply[ R <: Rate ]( xs: GE[ R ]* ) : Seq[ R ] = new SeqImpl( xs.toIndexedSeq )
-//      def apply( xs: UGenIn* ) : Seq[ Rate ] = new SeqImpl2( xs.toIndexedSeq )
+//
+//   implicit def fromIntSeq( xs: SSeq[ Int ]) : GE = xs match {
+//      case SSeq( single ) => single: Constant
+//      case _ => SeqImpl( xs.map( i => Constant( i.toFloat ))( breakOut ))
 //   }
-//   sealed trait Seq[ R <: Rate ] extends GE[ R ]
-
-   /**
-    * Simply a trait composed of `Lazy.Expander[UGenInLike]` and `GE`
-    */
-   trait Lazy extends Lazy.Expander[ UGenInLike ] with GE
-   
-//   implicit def ops( g: GE ) : Ops = new Ops( g )
-   
-   final class Ops( g: GE ) {
+//
+//   implicit def fromFloatSeq( xs: SSeq[ Float ]) : GE = xs match {
+//      case SSeq( x ) => x: Constant
+//      case _ => SeqImpl( xs.map( f => Constant( f ))( breakOut ))
+//   }
+//
+//   implicit def fromDoubleSeq( xs: SSeq[ Double ]) : GE = xs match {
+//      case SSeq( x ) => x: Constant
+//      case _ => SeqImpl( xs.map( d => Constant( d.toFloat ))( breakOut ))
+//   }
+//
+//   def fromUGenIns( xs: SSeq[ UGenIn ]) : GE = SeqImpl2( xs.toIndexedSeq )
+//
+////   implicit def fromSeq[ R <: Rate, G ]( x: Seq[ G ])( implicit view: G => GE[ R ]) : GE[ R ] = {
+////      x match {
+////         case Seq( single ) => single // Multi.Joint( single )
+////         case _ => GESeq[ R ]( x.map( view )( breakOut ))
+////      }
+////   }
+//
+//   @SerialVersionUID(-5589376755121907882L) private final case class SeqImpl( elems: IIdxSeq[ GE ]) extends GE {
+//def numOutputs = elems.size
+//      def expand : UGenInLike = UGenInGroup( elems.map( _.expand ))
+//      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+//      override def displayName = "GE.Seq"
+//      override def toString = displayName + elems.mkString( "(", ",", ")" )
+//   }
+//   private final case class SeqImpl2( elems: IIdxSeq[ UGenIn ]) extends GE {
+//def numOutputs = elems.size
+//      def expand : UGenInLike = UGenInGroup( elems )
+//      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+//      override def displayName = "GE.Seq"
+//      override def toString = displayName + elems.mkString( "(", ",", ")" )
+//   }
+//
+////   object Seq {
+//////      implicit def toIndexedSeq[ R <: Rate ]( g: Seq[ R ]) : IIdxSeq[ GE[ R ]] = g.elems
+//////      def apply[ R <: Rate ]( elems: IIdxSeq[ GE[ R ]]) : Seq[ R ] = new SeqImpl( elems )
+////      def apply[ R <: Rate ]( xs: GE[ R ]* ) : Seq[ R ] = new SeqImpl( xs.toIndexedSeq )
+////      def apply( xs: UGenIn* ) : Seq[ Rate ] = new SeqImpl2( xs.toIndexedSeq )
+////   }
+////   sealed trait Seq[ R <: Rate ] extends GE[ R ]
+//
+//   /**
+//    * Simply a trait composed of `Lazy.Expander[UGenInLike]` and `GE`
+//    */
+//   trait Lazy extends Lazy.Expander[ UGenInLike ] with GE
+//
+////   implicit def ops( g: GE ) : Ops = new Ops( g )
+//
+final class GEOps(val g: GE ) extends AnyVal {
       def `\\`( index: Int ) = ChannelProxy( g, index )
    
       def madd( mul: GE, add: GE ) = MulAdd( g, mul, add )
@@ -127,7 +127,16 @@ def numOutputs = elems.size
             case Constant( freq ) => Impulse( (g.rate ?| audio) max control, freq, 0 )  // XXX good? or throw an error? should have a maxRate?
             case other => other
          }
-         Poll( trig1.rate, trig1, g, label.getOrElse( g.displayName ), trigID  )
+         Poll( trig1.rate, trig1, g, label.getOrElse {
+           val str  = g.toString
+           val i    = str.indexOf('(')
+           if (i >= 0) str.substring(0, i)
+           else {
+             val j  = str.indexOf('@')
+             if (j >= 0) str.substring(0, j)
+             else str
+           }
+         }, trigID  )
       }
    
       import UnaryOp._
@@ -295,23 +304,23 @@ def numOutputs = elems.size
       def linexp( srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE ) : GE =
          LinExp( g.rate, g, srcLo, srcHi, dstLo, dstHi ) // should be highest rate of all inputs? XXX
    }
-}
-/**
- * The main trait used in synthesis graph, a graph element, abbreviated as `GE`.
- *
- * Graph elements are characterized by having a calculation rate (possibly unknown),
- * and they embody future UGens, which are created by invoking the `expand` method.
- * For each ugen in SuperCollider, there is a corresponding graph element defined
- * in the `ugen` package, and these elements take again graph elements as arguments.
- * Multi-channel expansion is thus deferred to the transition from `SynthGraph` to `UGenGraph`.
- *
- * Currently, also a lot of unary and binary operations are directly defined on the `GE` trait,
- * although they might go into a separate `GEOps` implicit class in future versions.
- *
- * @see [[de.sciss.synth.SynthGraph]]
- */
-trait GE {
-   def rate: MaybeRate
-   def expand: UGenInLike
-   def displayName: String
-}
+//}
+///**
+// * The main trait used in synthesis graph, a graph element, abbreviated as `GE`.
+// *
+// * Graph elements are characterized by having a calculation rate (possibly unknown),
+// * and they embody future UGens, which are created by invoking the `expand` method.
+// * For each ugen in SuperCollider, there is a corresponding graph element defined
+// * in the `ugen` package, and these elements take again graph elements as arguments.
+// * Multi-channel expansion is thus deferred to the transition from `SynthGraph` to `UGenGraph`.
+// *
+// * Currently, also a lot of unary and binary operations are directly defined on the `GE` trait,
+// * although they might go into a separate `GEOps` implicit class in future versions.
+// *
+// * @see [[de.sciss.synth.SynthGraph]]
+// */
+//trait GE {
+//   def rate: MaybeRate
+//   def expand: UGenInLike
+//   def displayName: String
+//}

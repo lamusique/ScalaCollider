@@ -26,25 +26,26 @@
 package de.sciss
 
 import osc.Packet
+import language.implicitConversions
 
-package synth {
-   abstract private[synth] sealed class LowPriorityImplicits {
-      /**
-       * This conversion is needed because while generally we
-       * can rely on the numeric-widening of Int -> Float, this
-       * widening is not taken into consideration when using
-       * view bounds, e.g. `implicit def[ T <% GE ]( ... )`
-       * will not work on Ints.
-       */
-      implicit def intToGE( i: Int ) : Constant       = Constant( i.toFloat )
-      implicit def floatToGE( f: Float ) : Constant   = Constant( f )
-      implicit def doubleToGE( d: Double ) : Constant = Constant( d.toFloat )
-   }
-
-//   abstract private[synth] sealed class MedPriorityImplicits extends LowPriorityImplicits {
-//      implicit def floatToDouble( f: Float ) : RichDouble = new RichDouble( f.toDouble )
+//package synth {
+//   abstract private[synth] sealed class LowPriorityImplicits {
+//      /**
+//       * This conversion is needed because while generally we
+//       * can rely on the numeric-widening of Int -> Float, this
+//       * widening is not taken into consideration when using
+//       * view bounds, e.g. `implicit def[ T <% GE ]( ... )`
+//       * will not work on Ints.
+//       */
+//      implicit def intToGE( i: Int ) : Constant       = new Constant( i.toFloat )
+//      implicit def floatToGE( f: Float ) : Constant   = new Constant( f )
+//      implicit def doubleToGE( d: Double ) : Constant = new Constant( d.toFloat )
 //   }
-}
+//
+////   abstract private[synth] sealed class MedPriorityImplicits extends LowPriorityImplicits {
+////      implicit def floatToDouble( f: Float ) : RichDouble = new RichDouble( f.toDouble )
+////   }
+//}
 
 /**
  * Pay good attention to this preamble: Read this thread:
@@ -56,9 +57,9 @@ package synth {
  * a while to the god of implicit magic (even if magic doesn't exist, since
  * "it's all the in spec"), it might help!
  */
-package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.sciss.synth.RateRelations */ {
+package object synth /* extends de.sciss.synth.LowPriorityImplicits */ /* with de.sciss.synth.RateRelations */ {
 
-   val inf = Float.PositiveInfinity
+   final val inf = Float.PositiveInfinity
 
    // GEs
 
@@ -95,7 +96,8 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
    implicit def doubleWrapper( d: Double ) : RichDouble = new RichDouble( d )
 
 //   implicit def geOps( ge: GE ) = ge.ops
-   implicit def geOps( g: GE ) : GE.Ops = new GE.Ops( g )
+
+   implicit def geOps( g: GE ) : GEOps = new GEOps( g )
 
    // problem with automatic application: http://lampsvn.epfl.ch/trac/scala/ticket/3152
 //   implicit def mce( x: Seq[ AnyGE ]) : GE[ /* R, */ UGenIn /*[ R ] */] = {
@@ -140,7 +142,7 @@ package object synth extends de.sciss.synth.LowPriorityImplicits /* with de.scis
 //   implicit def bubbleGE[ R <: Rate, G <% GE[ R ]]( g: G ) : Multi[ /* R, */ G ] = Multi.Joint( g )
 
    // pimping
-   implicit def stringToControlProxyFactory( name: String ) : ControlProxyFactory = new ControlProxyFactory( name )
+   implicit def stringToControlProxyFactory( name: String ) : ugen.ControlProxyFactory = new ugen.ControlProxyFactory( name )
 //   implicit def thunkToGraphFunction[ R <: Rate, /* S <: Rate,*/ T ]( thunk: => T )
 //      ( implicit view: T => Multi[ GE[ R ]] /*, r: RateOrder[ control, R, S ] */) = new GraphFunction[ R ]( thunk )
 

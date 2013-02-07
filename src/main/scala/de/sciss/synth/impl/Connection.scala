@@ -30,13 +30,14 @@ import java.io.{InputStreamReader, BufferedReader, File, IOException}
 import java.net.InetSocketAddress
 import actors.DaemonActor
 import de.sciss.osc.{Message, Client => OSCClient}
+import util.control.NonFatal
 
 private[synth] object ConnectionLike {
    case object Ready
    case object Abort
    case object QueryServer
-   final case class AddListener( l: Model.Listener )
-   final case class RemoveListener( l: Model.Listener )
+   final case class AddListener( l: ServerConnection.Listener )
+   final case class RemoveListener( l: ServerConnection.Listener )
 }
 
 private[synth] sealed trait ConnectionLike extends ServerConnection {
@@ -120,33 +121,33 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
       }
    }
 
-   private def actDispatch( l: Model.Listener, change: AnyRef ) {
-      try {
-         if( l.isDefinedAt( change )) l( change )
-      } catch {
-         case e: Throwable => e.printStackTrace() // catch, but print
-      }
-   }
+  private def actDispatch(l: ServerConnection.Listener, change: ServerConnection.Condition) {
+    try {
+      if (l isDefinedAt change) l(change)
+    } catch {
+      case NonFatal(e) => e.printStackTrace() // catch, but print
+    }
+  }
 
-   private def actAddList( l: Model.Listener ) {
-      super.addListener( l )
-   }
+  private def actAddList(l: ServerConnection.Listener) {
+    super.addListener(l)
+  }
 
-   private def actRemoveList( l: Model.Listener ) {
-      super.removeListener( l )
-   }
+  private def actRemoveList(l: ServerConnection.Listener) {
+    super.removeListener(l)
+  }
 
-   override def addListener( l: Model.Listener ) : Model.Listener = {
-      actor ! AddListener( l )
-      l
-   }
+  override def addListener(l: ServerConnection.Listener): ServerConnection.Listener = {
+    actor ! AddListener(l)
+    l
+  }
 
-   override def removeListener( l: Model.Listener ) : Model.Listener = {
-      actor ! RemoveListener( l )
-      l
-   }
+  override def removeListener(l: ServerConnection.Listener): ServerConnection.Listener = {
+    actor ! RemoveListener(l)
+    l
+  }
 
-//   lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
+  //   lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
 //   lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
    def abort() { actor ! Abort }
 

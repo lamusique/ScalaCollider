@@ -28,20 +28,23 @@ package de.sciss.synth
 import collection.immutable.IntMap
 
 object NodeManager {
-   abstract sealed class NodeChange { def node: Node; def info: osc.NodeInfo }
+  type Listener = Model.Listener[NodeManager.Update]
+
+  sealed trait Update
+   abstract sealed class NodeChange extends Update { def node: Node; def info: osc.NodeInfo }
    final case class NodeGo(   node: Node, info: osc.NodeInfo ) extends NodeChange
    final case class NodeEnd(  node: Node, info: osc.NodeInfo ) extends NodeChange
    final case class NodeOn(   node: Node, info: osc.NodeInfo ) extends NodeChange
    final case class NodeOff(  node: Node, info: osc.NodeInfo ) extends NodeChange
    final case class NodeMove( node: Node, info: osc.NodeInfo ) extends NodeChange
-   case object Cleared
+   case object Cleared extends Update
 }
 
-final class NodeManager( server: Server ) extends Model {
+final class NodeManager( server: Server ) extends Model[NodeManager.Update] {
 
    import NodeManager._
     
-	private var nodes: IntMap[ Node ] = _
+	private var nodes: Map[Int, Node] = _
 //	private var autoAdd  = true
    private val sync     = new AnyRef
 	

@@ -27,7 +27,7 @@ package de.sciss.synth
 
 import scala.math._
 import collection.immutable.{ IndexedSeq => IIdxSeq }
-//import Predef.{any2stringadd => _}
+import language.implicitConversions
 
 case object stepShape extends Env.ConstShape {
    final val id = 0

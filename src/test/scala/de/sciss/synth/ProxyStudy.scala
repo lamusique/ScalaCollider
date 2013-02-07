@@ -1,6 +1,7 @@
 package de.sciss.synth
 
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import language.implicitConversions
 
 object ProxyStudy2 extends App {
    trait ControlBuilder[ Proxy ] {

@@ -31,10 +31,10 @@ object BufferManager {
    case class BufferInfo( buffer: Buffer, info: osc.BufferInfo )
 }
 
-final class BufferManager( server: Server ) extends Model {
+final class BufferManager( server: Server ) extends Model[BufferManager.BufferInfo] {
    import BufferManager._
 
-   private var buffers: IntMap[ Buffer ] = _
+   private var buffers: Map[Int, Buffer] = _
    private val sync = new AnyRef
 
    // ---- constructor ----
