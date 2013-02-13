@@ -115,17 +115,18 @@ def numOutputs = 1
  * Mix( Pan2.ar( SinOsc.ar( 440 :: 660 :: Nil ))) --> [ left( 440 ) + left( 660 ), right( 440 ) + right( 660 )]
  * }}}
 */
-final case class Mix( elem: GE )
-extends UGenSource.SingleOut( "Mix" ) { // GE.Lazy
-   def rate = elem.rate
+final case class Mix(elem: GE)
+  extends UGenSource.SingleOut {  // XXX TODO: should not be UGenSource
 
-   protected def makeUGens : UGenInLike = unwrap( elem.expand.outputs )
+  def rate = elem.rate
 
-   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
-      if( args.nonEmpty ) {
-         args.reduceLeft( BinaryOp.Plus.make1( _, _ ))
-      } else UGenInGroup.empty
-   }
+  protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
+
+  protected def makeUGen(args: IIdxSeq[UGenIn]): UGenInLike = {
+    if (args.nonEmpty) {
+      args.reduceLeft(BinaryOp.Plus.make1(_, _))
+    } else UGenInGroup.empty
+  }
 }
 
 final case class Zip( elems: GE* ) extends GE.Lazy {
@@ -160,7 +161,7 @@ object Reduce {
    def ^( elem: GE )    = apply( elem, BinaryOp.BitXor )
 }
 final case class Reduce( elem: GE, op: BinaryOp.Op )
-extends UGenSource.SingleOut( "Reduce." + op.name ) {
+extends UGenSource.SingleOut {  // XXX TODO: should not be UGenSource
    def rate = elem.rate
 
    protected def makeUGens : UGenInLike = unwrap( elem.expand.outputs )
@@ -173,45 +174,48 @@ extends UGenSource.SingleOut( "Reduce." + op.name ) {
 }
 
 object WrapOut {
-   private def makeFadeEnv( fadeTime: Float ) : UGenIn = {
-      val cFadeTime  = new Control.UGen( control, 1, UGenGraph.builder.addControl( IIdxSeq( fadeTime ), Some( "fadeTime" ))).outputs( 0 )
-      val cGate      = new Control.UGen( control, 1, UGenGraph.builder.addControl( IIdxSeq( 1 ), Some( "gate" ))).outputs( 0 )
-      val startVal   = BinaryOp.Leq.make1( cFadeTime, 0 )
+  private def makeFadeEnv(fadeTime: Float): UGenIn = {
+    val cFadeTime = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(fadeTime), Some("fadeTime"))).outputs(0)
+    val cGate     = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(1), Some("gate"))).outputs(0)
+    val startVal  = BinaryOp.Leq.make1(cFadeTime, 0)
 
-      // Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 )
-      val env        = IIdxSeq[ UGenIn ]( startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0 )
+    // Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 )
+    val env = IIdxSeq[UGenIn](startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0)
 
-      // this is slightly more costly than what sclang does
-      // (using non-linear shape plus an extra unary op),
-      // but it fadeout is much smoother this way...
-      //EnvGen.kr( env, gate, timeScale = dt, doneAction = freeSelf ).squared
+    // this is slightly more costly than what sclang does
+    // (using non-linear shape plus an extra unary op),
+    // but it fadeout is much smoother this way...
+    //EnvGen.kr( env, gate, timeScale = dt, doneAction = freeSelf ).squared
 
-      new UGen.SingleOut( "EnvGen", control, IIdxSeq[ UGenIn ]( cGate, 1, 0, cFadeTime, freeSelf ) ++ env )
-   }
+    new UGen.SingleOut("EnvGen", control, IIdxSeq[UGenIn](cGate, 1, 0, cFadeTime, freeSelf) ++ env)
+  }
 }
 
 /**
  * XXX TODO: This should not be a UGenSource.ZeroOut but just a LazyExpander !
  */
-final case class WrapOut( in: GE, fadeTime: Optional[ Float ] = 0.02f ) extends UGenSource.ZeroOut( "WrapOut" ) with WritesBus {
-   import WrapOut._
-   protected def makeUGens { unwrap( in.expand.outputs )}
+final case class WrapOut(in: GE, fadeTime: Optional[Float] = 0.02f) extends UGenSource.ZeroOut with WritesBus {
+  import WrapOut._
 
-   protected def makeUGen( ins: IIdxSeq[ UGenIn ]) {
-      if( ins.isEmpty ) return
-      val rate    = ins.map( _.rate ).max
-      if( (rate == audio) || (rate == control) ) {
-         val ins3 = fadeTime.option match {
-            case Some( fdt ) =>
-               val env  = makeFadeEnv( fdt )
-               val ins2 = ins.map( BinaryOp.Times.make1( _, env ))
-               if( rate == audio ) replaceZeroesWithSilence( ins2 ) else ins2
-            case None => ins
-         }
-         val cOut = new Control.UGen( control, 1, UGenGraph.builder.addControl( IIdxSeq( 0 ), Some( "out" ))).outputs( 0 )
-         new UGen.ZeroOut( "Out", rate, cOut +: ins3 ) // with WritesBus {}
+  protected def makeUGens {
+    unwrap(in.expand.outputs)
+  }
+
+  protected def makeUGen(ins: IIdxSeq[UGenIn]) {
+    if (ins.isEmpty) return
+    val rate = ins.map(_.rate).max
+    if ((rate == audio) || (rate == control)) {
+      val ins3 = fadeTime.option match {
+        case Some(fdt) =>
+          val env = makeFadeEnv(fdt)
+          val ins2 = ins.map(BinaryOp.Times.make1(_, env))
+          if (rate == audio) replaceZeroesWithSilence(ins2) else ins2
+        case None => ins
       }
-   }
+      val cOut = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(0), Some("out"))).outputs(0)
+      new UGen.ZeroOut("Out", rate, cOut +: ins3) // with WritesBus {}
+    }
+  }
 }
 
 object SplayAz {
@@ -328,7 +332,7 @@ final case class PhysicalIn( indices: GE, numChannels: Seq[ Int ]) extends GE.La
    def displayName = "PhyiscalIn"
 
    protected def makeUGens: UGenInLike = {
-      val offset        = NumOutputBuses.ir
+      val offset        = NumOutputBuses() // .ir
       val _indices      = indices.expand.outputs
       val iNumCh        = numChannels.toIndexedSeq
       val _numChannels  = if( _indices.size <= iNumCh.size ) iNumCh else {
@@ -364,8 +368,8 @@ object PhysicalOut {
     */
    def ar( indices: GE = 0, in: GE ) : PhysicalOut = apply( indices, in )
 }
-final case class PhysicalOut( indices: GE, in: GE ) extends UGenSource.ZeroOut( "PhyiscalOut" ) with AudioRated {
-//   def displayName = "PhyiscalOut"
+final case class PhysicalOut( indices: GE, in: GE ) extends UGenSource.ZeroOut with AudioRated {
+    // XXX TODO: should not be UGenSource
 
    protected def makeUGens {
       val _in        = in.expand.outputs

@@ -792,27 +792,24 @@ object Server {
 
   final case class Counts(c: osc.StatusReplyMessage) extends Update
 
-  private def createClient( transport: Transport.Net, serverAddr: InetSocketAddress,
-                             clientAddr: InetSocketAddress ) : OSCClient = {
-//      val client        = OSCClient( transport, 0, addr.getAddress.isLoopbackAddress, osc.ServerCodec )
-//println( "transport = " + transport + " ; server = " + serverAddr + " ; client = " + clientAddr )
-      val client        = transport match {
-         case UDP =>
-            val cfg                 = UDP.Config()
-            cfg.localSocketAddress  = clientAddr
-            cfg.codec               = osc.ServerCodec
-            cfg.bufferSize          = 0x10000
-            UDP.Client( serverAddr, cfg )
-         case TCP =>
-            val cfg                 = TCP.Config()
-            cfg.codec               = osc.ServerCodec
-            cfg.localSocketAddress  = clientAddr
-            cfg.bufferSize          = 0x10000
-            TCP.Client( serverAddr, cfg )
-      }
-//      client.connect()
-      client
-   }
+  private def createClient(transport: Transport.Net, serverAddr: InetSocketAddress,
+                           clientAddr: InetSocketAddress): OSCClient = {
+    val client = transport match {
+      case UDP =>
+        val cfg = UDP.Config()
+        cfg.localSocketAddress = clientAddr
+        cfg.codec = osc.ServerCodec
+        cfg.bufferSize = 0x10000
+        UDP.Client(serverAddr, cfg)
+      case TCP =>
+        val cfg = TCP.Config()
+        cfg.codec = osc.ServerCodec
+        cfg.localSocketAddress = clientAddr
+        cfg.bufferSize = 0x10000
+        TCP.Client(serverAddr, cfg)
+    }
+    client
+  }
 }
 
 sealed trait ServerLike {
