@@ -332,7 +332,7 @@ final case class PhysicalIn( indices: GE, numChannels: Seq[ Int ]) extends GE.La
    def displayName = "PhyiscalIn"
 
    protected def makeUGens: UGenInLike = {
-      val offset        = NumOutputBuses() // .ir
+      val offset        = NumOutputBuses.ir
       val _indices      = indices.expand.outputs
       val iNumCh        = numChannels.toIndexedSeq
       val _numChannels  = if( _indices.size <= iNumCh.size ) iNumCh else {

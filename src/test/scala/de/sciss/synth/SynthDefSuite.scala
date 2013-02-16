@@ -193,7 +193,7 @@ class SynthDefSuite extends FunSpec {
             val in   = WhiteNoise.ar( 0.2 )
             val fft  = FFT( "buf".kr, in )
             val flt  = PV_MagAbove( fft, MouseX.kr( 0, 10 ))
-            val ifft = IFFT( flt ) * Seq( 0.5, 0.5 )
+            val ifft = IFFT.ar( flt ) * Seq( 0.5, 0.5 )
             Out.ar( "out".kr( 0 ), ifft )
          }
 

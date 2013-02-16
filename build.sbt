@@ -1,10 +1,10 @@
 name := "ScalaCollider"
 
-version := "1.4.0-SNAPSHOT"
+version := "1.4.0"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.10.0"  // do _not_ use 2.10.+, will draw in actors 2.10.1-RC1. sssssssssuckers
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -15,7 +15,7 @@ licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 libraryDependencies ++= Seq(
   "de.sciss" %% "scalaosc" % "1.1.+",
   "de.sciss" %% "scalaaudiofile" % "1.2.+",
-  "de.sciss" %% "scalacolliderugens-core" % "1.4.0-SNAPSHOT",
+  "de.sciss" %% "scalacolliderugens-core" % "1.4.0",
   "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 
