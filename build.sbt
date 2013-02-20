@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.4.0"
+version := "1.4.1"
 
 organization := "de.sciss"
 
@@ -15,7 +15,7 @@ licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 libraryDependencies ++= Seq(
   "de.sciss" %% "scalaosc" % "1.1.+",
   "de.sciss" %% "scalaaudiofile" % "1.2.+",
-  "de.sciss" %% "scalacolliderugens-core" % "1.4.0",
+  "de.sciss" %% "scalacolliderugens-core" % "1.4.+",
   "org.scalatest" %% "scalatest" % "1.9.1" % "test"
 )
 
