@@ -41,7 +41,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
 
   override def toString = "SynthDef(" + name + ")"
 
-  def freeMsg = osc.SynthDefFreeMessage(name)
+  def freeMsg = message.SynthDefFree(name)
 
   def recv(server: Server = Server.default, completion: Completion = NoCompletion) {
     sendWithAction(server, recvMsg(_), completion, "recv")
@@ -58,17 +58,17 @@ final case class SynthDef(name: String, graph: UGenGraph) {
       }
       server.!?(msgFun(Some(compPacket))) {
         // XXX timeout kind of arbitrary
-        case osc.SyncedMessage(`syncID`) => action(syndef)
-        case osc.TIMEOUT => println("ERROR: " + syndef + "." + name + " : timeout!")
+        case message.Synced(`syncID`) => action(syndef)
+        case message.TIMEOUT => println("ERROR: " + syndef + "." + name + " : timeout!")
       }
     } getOrElse {
       server ! msgFun(completion.message.map(_.apply(syndef)))
     }
   }
 
-  def recvMsg: osc.SynthDefRecvMessage = recvMsg(None)
+  def recvMsg: message.SynthDefRecv = recvMsg(None)
 
-  def recvMsg(completion: Option[Packet]) = osc.SynthDefRecvMessage(toBytes, completion)
+  def recvMsg(completion: Option[Packet]) = message.SynthDefRecv(toBytes, completion)
 
   def toBytes: ByteBuffer = {
     val baos  = new ByteArrayOutputStream
@@ -95,10 +95,10 @@ final case class SynthDef(name: String, graph: UGenGraph) {
     sendWithAction(server, loadMsg(dir, _), completion, "load")
   }
 
-  def loadMsg: osc.SynthDefLoadMessage = loadMsg()
+  def loadMsg: message.SynthDefLoad = loadMsg()
 
   def loadMsg(dir: String = defaultDir, completion: Option[Packet] = None) =
-    osc.SynthDefLoadMessage(dir + sep + name + ".scsyndef", completion)
+    message.SynthDefLoad(dir + sep + name + ".scsyndef", completion)
 
   def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
     val synth   = new Synth(target.server)

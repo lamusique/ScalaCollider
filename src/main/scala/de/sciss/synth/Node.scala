@@ -73,18 +73,17 @@ object Node {
   type Listener = Model.Listener[NodeManager.NodeChange]
 }
 abstract class Node extends Model[NodeManager.NodeChange] {
-   import Model._
 
-   // ---- abstract ----
-   def server: Server
-   def id: Int
+  // ---- abstract ----
+  def server: Server
 
-	def register() {
-//  	NodeWatcher.register( this, assumePlaying )
-       server.nodeManager.register( this )
-  	}
+  def id: Int
 
-  def onGo(thunk: => Unit) {
+  final def register() {
+    server.nodeManager.register(this)
+  }
+
+  final def onGo(thunk: => Unit) {
     register()
     lazy val l: Node.Listener = {
       case NodeManager.NodeGo(_, _) =>
@@ -94,7 +93,7 @@ abstract class Node extends Model[NodeManager.NodeChange] {
     addListener(l)
   }
 
-  def onEnd(thunk: => Unit) {
+  final def onEnd(thunk: => Unit) {
     register()
     lazy val l: Node.Listener = {
       case NodeManager.NodeEnd(_, _) =>
@@ -104,118 +103,110 @@ abstract class Node extends Model[NodeManager.NodeChange] {
     addListener(l)
   }
 
-  protected[synth] def updated(change: NodeManager.NodeChange) {
+  final protected[synth] def updated(change: NodeManager.NodeChange) {
     // XXX need to update isPlaying, isRunning etc.
     dispatch(change)
   }
 
-  	def freeMsg = osc.NodeFreeMessage( id )
+  def freeMsg = message.NodeFree(id)
 
-   /**
-    * Returns an OSC message to resume the node if it was paused.
-    *
-    * @see [[de.sciss.synth.osc.NodeRunMessage]]
-    */
-  	def runMsg : osc.NodeRunMessage = runMsg( flag = true )
+  /**
+   * Returns an OSC message to resume the node if it was paused.
+   *
+   * @see [[de.sciss.synth.message.NodeRun]]
+   */
+  def runMsg: message.NodeRun = runMsg(flag = true)
 
-   /**
+  /**
     * Returns an OSC message to resume the node if it was paused.
     *
     * @param flag if `true` the node is resumed, if `false` it is paused.
     *
-    * @see [[de.sciss.synth.osc.NodeRunMessage]]
+    * @see [[de.sciss.synth.message.NodeRun]]
     */
-  	def runMsg( flag: Boolean ) = osc.NodeRunMessage( id -> flag )
-  
-  	def setMsg( pairs: ControlSetMap* ) =
-  		osc.NodeSetMessage( id, pairs: _* )
+  def runMsg(flag: Boolean) = message.NodeRun(id -> flag)
 
-  	def setn( pairs: ControlSetMap* ) {
-  		server ! setnMsg( pairs: _* )
-  	}
-	
-  	def setnMsg( pairs: ControlSetMap* ) =
-  		osc.NodeSetnMessage( id, pairs: _* )
+  def setMsg(pairs: ControlSetMap*) =
+    message.NodeSet(id, pairs: _*)
 
-   def traceMsg = osc.NodeTraceMessage( id )
+  def setnMsg(pairs: ControlSetMap*) =
+    message.NodeSetn(id, pairs: _*)
 
-  	def releaseMsg : osc.NodeSetMessage = releaseMsg( None )
+  def traceMsg = message.NodeTrace(id)
 
-   /**
-    * A utility method which calls `setMsg` assuming a control named `gate`. The release time
-    * argument is modified to correspond with the interpretation of the `gate` argument in
-    * an `EnvGen` UGen. This is the case for synths created with the package method `play`.
-    *
-    * @param   releaseTime the optional release time in seconds within which the synth should fade out,
-    *                      or `None` if the envelope should be released at its nominal release time. If the `EnvGen`
-    *                      has a `doneAction` of `freeSelf`, the synth will be freed after the release phase.
-    *
-    * @see  [[de.sciss.synth.ugen.EnvGen]]
-    * @see  [[de.sciss.synth.osc.NodeSetMessage]]
-    */
-  	def releaseMsg( releaseTime: Optional[ Double ]) = {
-  		val value = releaseTime.map( -1.0 - _ ).getOrElse( 0.0 )
-  		setMsg( "gate" -> value )
-	}
+  def releaseMsg: message.NodeSet = releaseMsg(None)
 
-   def mapMsg( pairs: ControlKBusMap.Single* ) =
-      osc.NodeMapMessage( id, pairs: _* )
-   
-  	def mapn( mappings: ControlKBusMap* ) {
-  		server ! mapnMsg( mappings: _* )
-  	}
-  	
-  	def mapnMsg( mappings: ControlKBusMap* ) =
-  		osc.NodeMapnMessage( id, mappings: _* )
+  /**
+   * A utility method which calls `setMsg` assuming a control named `gate`. The release time
+   * argument is modified to correspond with the interpretation of the `gate` argument in
+   * an `EnvGen` UGen. This is the case for synths created with the package method `play`.
+   *
+   * @param   releaseTime the optional release time in seconds within which the synth should fade out,
+   *                      or `None` if the envelope should be released at its nominal release time. If the `EnvGen`
+   *                      has a `doneAction` of `freeSelf`, the synth will be freed after the release phase.
+   *
+   * @see  [[de.sciss.synth.ugen.EnvGen]]
+   * @see  [[de.sciss.synth.message.NodeSet]]
+   */
+  def releaseMsg(releaseTime: Optional[Double]) = {
+    val value = releaseTime.map(-1.0 - _).getOrElse(0.0)
+    setMsg("gate" -> value)
+  }
 
-   /**
-    * Returns an OSC message to map from an mono-channel audio bus to one of the node's controls.
-    *
-    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
-    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
-    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
-    *
-    * @see  [[de.sciss.synth.ugen.InFeedback]]
-    */
-   def mapaMsg( pairs: ControlABusMap.Single* ) =
-      osc.NodeMapaMessage( id, pairs: _* )
+  def mapMsg(pairs: ControlKBusMap.Single*) =
+    message.NodeMap(id, pairs: _*)
 
-   /**
-    * Returns an OSC message to map from an mono- or multi-channel audio bus to one of the node's controls.
-    *
-    * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
-    * whether the audio bus was written before the execution of the synth whose control is mapped or not.
-    * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
-    *
-    * @see  [[de.sciss.synth.ugen.InFeedback]]
-    */
-  	def mapanMsg( mappings: ControlABusMap* ) =
-  		osc.NodeMapanMessage( id, mappings: _* )
+  def mapnMsg(mappings: ControlKBusMap*) =
+    message.NodeMapn(id, mappings: _*)
 
-   def fillMsg( control: Any, numChannels: Int, value: Float ) =
-      osc.NodeFillMessage( id, osc.NodeFillInfo( control, numChannels, value ))
-   
-  	def fillMsg( fillings: osc.NodeFillInfo* ) = osc.NodeFillMessage( id, fillings: _* )
+  /**
+   * Returns an OSC message to map from an mono-channel audio bus to one of the node's controls.
+   *
+   * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+   * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+   * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+   *
+   * @see  [[de.sciss.synth.ugen.InFeedback]]
+   */
+  def mapaMsg(pairs: ControlABusMap.Single*) =
+    message.NodeMapa(id, pairs: _*)
 
-   /**
-    * Creates an osc. message to move this node before another node
-    *
-    * @param   node  the node before which to move this node
-    *
-    * @see  [[de.sciss.synth.osc.osc.NodeBeforeMessage]]
-    */
-   def moveBeforeMsg( node: Node ) = osc.NodeBeforeMessage( id -> node.id )
+  /**
+   * Returns an OSC message to map from an mono- or multi-channel audio bus to one of the node's controls.
+   *
+   * Note that a mapped control acts similar to an `InFeedback` UGen in that it does not matter
+   * whether the audio bus was written before the execution of the synth whose control is mapped or not.
+   * If it was written before, no delay is introduced, otherwise a delay of one control block is introduced.
+   *
+   * @see  [[de.sciss.synth.ugen.InFeedback]]
+   */
+  def mapanMsg(mappings: ControlABusMap*) =
+    message.NodeMapan(id, mappings: _*)
 
-   /**
-    * Creates an osc. message to move this node after another node
-    *
-    * @param   node  the node after which to move this node
-    *
-    * @see  [[de.sciss.synth.osc.osc.NodeAfterMessage]]
-    */
-   def moveAfterMsg( node: Node ) = osc.NodeAfterMessage( id -> node.id )
+  def fillMsg(control: Any, numChannels: Int, value: Float) =
+    message.NodeFill(id, message.NodeFill.Info(control, numChannels, value))
 
-  	def moveToHeadMsg( group: Group ) : osc.GroupHeadMessage = group.moveNodeToHeadMsg( this )
+  def fillMsg(fillings: message.NodeFill.Info*) = message.NodeFill(id, fillings: _*)
 
-  	def moveToTailMsg( group: Group ) : osc.GroupTailMessage = group.moveNodeToTailMsg( this )
+  /**
+   * Creates an osc. message to move this node before another node
+   *
+   * @param   node  the node before which to move this node
+   *
+   * @see  [[de.sciss.synth.message.NodeBefore]]
+   */
+  def moveBeforeMsg(node: Node) = message.NodeBefore(id -> node.id)
+
+  /**
+   * Creates an osc. message to move this node after another node
+   *
+   * @param   node  the node after which to move this node
+   *
+   * @see  [[de.sciss.synth.message.NodeAfter]]
+   */
+  def moveAfterMsg(node: Node) = message.NodeAfter(id -> node.id)
+
+  def moveToHeadMsg(group: Group): message.GroupHead = group.moveNodeToHeadMsg(this)
+
+  def moveToTailMsg(group: Group): message.GroupTail = group.moveNodeToTailMsg(this)
 }

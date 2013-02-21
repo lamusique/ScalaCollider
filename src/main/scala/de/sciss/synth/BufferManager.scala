@@ -28,7 +28,7 @@ package de.sciss.synth
 import collection.immutable.IntMap
 
 object BufferManager {
-   case class BufferInfo( buffer: Buffer, info: osc.BufferInfo )
+   case class BufferInfo( buffer: Buffer, info: message.BufferInfo.Data )
 }
 
 final class BufferManager( server: Server ) extends Model[BufferManager.BufferInfo] {
@@ -40,7 +40,7 @@ final class BufferManager( server: Server ) extends Model[BufferManager.BufferIn
    // ---- constructor ----
    clear()
 
-   def bufferInfo( msg: osc.BufferInfoMessage ) {
+   def bufferInfo( msg: message.BufferInfo ) {
       sync.synchronized {
          msg.infos.foreach { info =>
             buffers.get( info.bufID ).foreach { buf =>

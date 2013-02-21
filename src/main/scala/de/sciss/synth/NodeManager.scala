@@ -31,95 +31,101 @@ object NodeManager {
   type Listener = Model.Listener[NodeManager.Update]
 
   sealed trait Update
-   abstract sealed class NodeChange extends Update { def node: Node; def info: osc.NodeInfo }
-   final case class NodeGo(   node: Node, info: osc.NodeInfo ) extends NodeChange
-   final case class NodeEnd(  node: Node, info: osc.NodeInfo ) extends NodeChange
-   final case class NodeOn(   node: Node, info: osc.NodeInfo ) extends NodeChange
-   final case class NodeOff(  node: Node, info: osc.NodeInfo ) extends NodeChange
-   final case class NodeMove( node: Node, info: osc.NodeInfo ) extends NodeChange
-   case object Cleared extends Update
+
+  abstract sealed class NodeChange extends Update {
+    def node: Node
+    def info: message.NodeInfo.Data
+  }
+
+  final case class NodeGo   (node: Node, info: message.NodeInfo.Data) extends NodeChange
+  final case class NodeEnd  (node: Node, info: message.NodeInfo.Data) extends NodeChange
+  final case class NodeOn   (node: Node, info: message.NodeInfo.Data) extends NodeChange
+  final case class NodeOff  (node: Node, info: message.NodeInfo.Data) extends NodeChange
+  final case class NodeMove (node: Node, info: message.NodeInfo.Data) extends NodeChange
+
+  case object Cleared extends Update
 }
 
-final class NodeManager( server: Server ) extends Model[NodeManager.Update] {
+final class NodeManager(val server: Server) extends Model[NodeManager.Update] {
+  import NodeManager._
 
-   import NodeManager._
-    
-	private var nodes: Map[Int, Node] = _
-//	private var autoAdd  = true
-   private val sync     = new AnyRef
+  private var nodes: Map[Int, Node] = _
+  private val sync     = new AnyRef
 	
 	// ---- constructor ----
-   clear()
+  clear()
 //      if( server.isRunning ) {
 //         val defaultGroup = server.defaultGroup
 //         nodes += defaultGroup.id -> defaultGroup
 //      }
 
-	def nodeChange( e: osc.NodeChange ) { e match {
-      case osc.NodeGoMessage( nodeID, info ) =>
-         val node = nodes.get( nodeID ) getOrElse {
-            if( /* autoAdd && */ nodes.contains( info.parentID )) {
-               val created = info match {
-                  case ee: osc.SynthInfo => new Synth( server, nodeID )
-                  case ee: osc.GroupInfo => new Group( server, nodeID )
-               }
-               register( created )
-               created
-            } else return
-         }
-         dispatchBoth( NodeGo( node, info ))
+  def nodeChange(e: message.NodeChange) {
+    e match {
+      case message.NodeGo(nodeID, info) =>
+        val node = nodes.get(nodeID) getOrElse {
+          if ( /* autoAdd && */ nodes.contains(info.parentID)) {
+            val created = info match {
+              case ee: message.NodeInfo.SynthData => new Synth(server, nodeID)
+              case ee: message.NodeInfo.GroupData => new Group(server, nodeID)
+            }
+            register(created)
+            created
+          } else return
+        }
+        dispatchBoth(NodeGo(node, info))
 
-      case osc.NodeEndMessage( nodeID, info ) =>
-         nodes.get( nodeID ).foreach { node =>
-            unregister( node )
-            dispatchBoth( NodeEnd( node, info ))
-         }
+      case message.NodeEnd(nodeID, info) =>
+        nodes.get(nodeID).foreach { node =>
+          unregister(node)
+          dispatchBoth(NodeEnd(node, info))
+        }
 
-      case osc.NodeOffMessage( nodeID, info ) =>
-         nodes.get( e.nodeID ).foreach { node =>
-            dispatchBoth( NodeOff( node, info ))
-         }
+      case message.NodeOff(nodeID, info) =>
+        nodes.get(e.nodeID).foreach { node =>
+          dispatchBoth(NodeOff(node, info))
+        }
 
-      case osc.NodeOnMessage( nodeID, info ) =>
-         nodes.get( e.nodeID ).foreach { node =>
-            dispatchBoth( NodeOn( node, info ))
-         }
+      case message.NodeOn(nodeID, info) =>
+        nodes.get(e.nodeID).foreach { node =>
+          dispatchBoth(NodeOn(node, info))
+        }
 
-      case osc.NodeMoveMessage( nodeID, info ) =>
-         nodes.get( e.nodeID ).foreach { node =>
-            dispatchBoth( NodeMove( node, info ))
-         }
+      case message.NodeMove(nodeID, info) =>
+        nodes.get(e.nodeID).foreach { node =>
+          dispatchBoth(NodeMove(node, info))
+        }
 
       case _ =>
 	}}
 
-   private def dispatchBoth( change: NodeChange ) {
-      dispatch( change )
-      change.node.updated( change )
-   }
-	
-	// eventually this should be done automatically
-	// by the message dispatch management
-	def register( node: Node ) {
-      sync.synchronized {
-   		nodes += node.id -> node
-      }
-	}
-	
-	def unregister( node: Node ) {
-      sync.synchronized {
-   		nodes -= node.id
-      }
-	}
+  private def dispatchBoth(change: NodeChange) {
+    dispatch(change)
+    change.node.updated(change)
+  }
 
-   def getNode( id: Int ) : Option[ Node ] = sync.synchronized { nodes.get( id )}
-//   def getAll : Iterable[ Node ] = sync.synchronized { nodes }
+  // eventually this should be done automatically
+  // by the message dispatch management
+  def register(node: Node) {
+    sync.synchronized {
+      nodes += node.id -> node
+    }
+  }
 
-   def clear() {
-      val rootNode = server.rootNode // new Group( server, 0 )
-      sync.synchronized {
-         nodes = IntMap( rootNode.id -> rootNode )
-      }
-      dispatch( Cleared )
-   }
+  def unregister(node: Node) {
+    sync.synchronized {
+      nodes -= node.id
+    }
+  }
+
+  def getNode(id: Int): Option[Node] = sync.synchronized {
+    nodes.get(id)
+  }
+
+  def clear() {
+    val rootNode = server.rootNode // new Group( server, 0 )
+    sync.synchronized {
+      nodes = IntMap(rootNode.id -> rootNode)
+    }
+    dispatch(Cleared)
+  }
 }

@@ -54,7 +54,7 @@ extends Server {
    import Server._
 
    private var aliveThread: Option[StatusWatcher]	= None
-   private var countsVar							      = new osc.StatusReplyMessage( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
+   private var countsVar							      = new message.StatusReply( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
    private val condSync                            = new AnyRef
    private var conditionVar: Condition 			   = Running // Offline
    private var pendingCondition: Condition      	= NoPending
@@ -169,7 +169,7 @@ extends Server {
     * @param   handler  the handler to match against incoming messages
     *    or timeout
     *
-    * @see  [[de.sciss.synth.osc.TIMEOUT]]
+    * @see  [[de.sciss.synth.message.TIMEOUT]]
     */
    def !?(p: Packet, timeOut: Long)(handler: PartialFunction[Any, Unit]) {
      val a = new DaemonActor {
@@ -192,7 +192,7 @@ extends Server {
 
   def counts = countsVar
 
-  private[synth] def counts_=(newCounts: osc.StatusReplyMessage) {
+  private[synth] def counts_=(newCounts: message.StatusReply) {
     countsVar = newCounts
     dispatch(Counts(newCounts))
   }
@@ -247,16 +247,16 @@ extends Server {
   }
 
   def queryCounts() {
-    this ! osc.StatusMessage
+    this ! message.Status
   }
 
   def dumpOSC(mode: Dump = Dump.Text) {
     c.dumpIn(mode, filter = {
-      case m: osc.StatusReplyMessage => false
+      case m: message.StatusReply => false
       case _ => true
     })
     c.dumpOut(mode, filter = {
-      case osc.StatusMessage => false
+      case message.Status => false
       case _ => true
     })
   }
@@ -279,11 +279,11 @@ extends Server {
     dispose()
   }
 
-  def addResponder(resp: osc.Responder) {
+  def addResponder(resp: message.Responder) {
     OSCReceiverActor.addHandler(resp)
   }
 
-  def removeResponder(resp: osc.Responder) {
+  def removeResponder(resp: message.Responder) {
     OSCReceiverActor.removeHandler(resp)
   }
 
@@ -351,7 +351,7 @@ extends Server {
          catch { case e: IOException => printError( "Server.status", e )}
       }
 
-      def statusReply( msg: osc.StatusReplyMessage ) {
+      def statusReply( msg: message.StatusReply ) {
          sync.synchronized {
             alive = deathBounces
             // note: put the counts before running
@@ -371,8 +371,8 @@ extends Server {
       private case object Clear
       private case object Dispose
 //      private case class  ReceivedMessage( msg: Message, sender: SocketAddress, time: Long )
-      private case class  AddHandler( h: osc.Handler )
-      private case class  RemoveHandler( h: osc.Handler )
+      private case class  AddHandler( h: message.Handler )
+      private case class  RemoveHandler( h: message.Handler )
       private case class  TimeOutHandler( h: OSCTimeOutHandler )
 
       def clear() {
@@ -384,11 +384,11 @@ extends Server {
          this ! Dispose
       }
 
-      def addHandler( handler: osc.Handler ) {
+      def addHandler( handler: message.Handler ) {
          this ! AddHandler( handler )
       }
 
-      def removeHandler( handler: osc.Handler ) {
+      def removeHandler( handler: message.Handler ) {
          this ! RemoveHandler( handler )
       }
 
@@ -405,16 +405,16 @@ extends Server {
 
       def act() {
          var running    = true
-         var handlers   = Set.empty[ osc.Handler ]
+         var handlers   = Set.empty[ message.Handler ]
 //         while( running )( receive { })
          loopWhile( running )( react {
             case msg: Message => debug( msg ) {
 //            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
                msg match {
-                  case nodeMsg:        osc.NodeChange           => nodeManager.nodeChange( nodeMsg )
-                  case bufInfoMsg:     osc.BufferInfoMessage    => bufManager.bufferInfo( bufInfoMsg )
-                  case statusReplyMsg: osc.StatusReplyMessage   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
+                  case nodeMsg:        message.NodeChange           => nodeManager.nodeChange( nodeMsg )
+                  case bufInfoMsg:     message.BufferInfo    => bufManager.bufferInfo( bufInfoMsg )
+                  case statusReplyMsg: message.StatusReply   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
                   case _ =>
                }
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : handlers" )
@@ -444,7 +444,7 @@ extends Server {
    // -------- internal osc.Handler implementations --------
 
    private class OSCInfHandler[ A ]( fun: PartialFunction[ Message, A ], ch: OutputChannel[ A ])
-   extends osc.Handler {
+   extends message.Handler {
       def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
@@ -457,7 +457,7 @@ extends Server {
    }
 
    private class OSCTimeOutHandler( fun: PartialFunction[ Any, Unit ], ch: OutputChannel[ Any ])
-   extends osc.Handler {
+   extends message.Handler {
       def handle( msg: Message ) : Boolean = {
          val handled = fun.isDefinedAt( msg )
 //if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : to handled : " + msg + " ? " + handled )
@@ -468,8 +468,8 @@ extends Server {
       }
       def removed() {}
       def timedOut() {
-         if( fun.isDefinedAt( osc.TIMEOUT )) try {
-            fun.apply( osc.TIMEOUT )
+         if( fun.isDefinedAt( message.TIMEOUT )) try {
+            fun.apply( message.TIMEOUT )
          } catch { case e: Throwable => e.printStackTrace() }
       }
    }

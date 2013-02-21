@@ -53,8 +53,8 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                   c.action = p => this ! p
                   var tnotify = 0L
                   def snotify() {
-                     tnotify = System.currentTimeMillis + 500
-                     c ! osc.ServerNotifyMessage( onOff = true )
+                    tnotify = System.currentTimeMillis + 500
+                    c ! message.ServerNotify(onOff = true)
                   }
                   snotify()
                   loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
@@ -66,7 +66,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                         var tstatus = 0L
                         def sstatus() {
                            tstatus = System.currentTimeMillis + 500
-                           c ! osc.StatusMessage
+                           c ! message.Status
                         }
                         sstatus()
                         loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
@@ -74,7 +74,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
                            case AddListener( l )   => actAddList( l )
                            case RemoveListener( l )=> actRemoveList( l )
                            case Abort              => abortHandler( None )
-                           case cnt: osc.StatusReplyMessage =>
+                           case cnt: message.StatusReply =>
                               val s    = new ServerImpl( name, c, addr, config, clientConfig )
                               s.counts = cnt
                               dispatch( Preparing( s ))

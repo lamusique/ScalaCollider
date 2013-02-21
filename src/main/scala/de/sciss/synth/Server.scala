@@ -790,7 +790,7 @@ object Server {
   case object Offline extends Condition
   private[synth] case object NoPending extends Condition
 
-  final case class Counts(c: osc.StatusReplyMessage) extends Update
+  final case class Counts(c: message.StatusReply) extends Update
 
   private def createClient(transport: Transport.Net, serverAddr: InetSocketAddress,
                            clientAddr: InetSocketAddress): OSCClient = {
@@ -798,12 +798,12 @@ object Server {
       case UDP =>
         val cfg = UDP.Config()
         cfg.localSocketAddress = clientAddr
-        cfg.codec = osc.ServerCodec
+        cfg.codec = message.ServerCodec
         cfg.bufferSize = 0x10000
         UDP.Client(serverAddr, cfg)
       case TCP =>
         val cfg = TCP.Config()
-        cfg.codec = osc.ServerCodec
+        cfg.codec = message.ServerCodec
         cfg.localSocketAddress = clientAddr
         cfg.bufferSize = 0x10000
         TCP.Client(serverAddr, cfg)
@@ -906,11 +906,11 @@ trait Server extends ServerLike with Model[Server.Update] {
     * @param   handler  the handler to match against incoming messages
     *    or timeout 
     *
-    * @see  [[de.sciss.synth.osc.TIMEOUT]]
+    * @see  [[de.sciss.synth.message.TIMEOUT]]
     */
    def !?(p: Packet, timeOut: Long = 6000L)(handler: PartialFunction[Any, Unit]): Unit
 
-  def counts : osc.StatusReplyMessage
+  def counts : message.StatusReply
 
   def sampleRate: Double
 
@@ -924,21 +924,21 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   def queryCounts(): Unit
 
-  final def syncMsg: osc.SyncMessage = syncMsg()
+  final def syncMsg: message.Sync = syncMsg()
 
   // XXX TODO : should be removed
-  final def syncMsg(id: Int = nextSyncID()) = osc.SyncMessage(id)
+  final def syncMsg(id: Int = nextSyncID()) = message.Sync(id)
 
   def dumpOSC(mode: Dump = Dump.Text): Unit
 
   def quit(): Unit
 
-  final def quitMsg = osc.ServerQuitMessage
+  final def quitMsg = message.ServerQuit
 
   def dispose(): Unit
 
-  private[synth] def addResponder   (resp: osc.Responder): Unit
-  private[synth] def removeResponder(resp: osc.Responder): Unit
+  private[synth] def addResponder   (resp: message.Responder): Unit
+  private[synth] def removeResponder(resp: message.Responder): Unit
 
   override def toString = "<" + name + ">"
 }

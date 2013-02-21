@@ -61,7 +61,7 @@ extends Node {
 	def newMsg( defName: String, target: Node = server.defaultGroup, args: Seq[ ControlSetMap ] = Nil,
                addAction: AddAction = addToHead ) = {
       defNameVar = defName
-      osc.SynthNewMessage( defName, id, addAction.id, target.id, args: _* )
+      message.SynthNew( defName, id, addAction.id, target.id, args: _* )
    }
 
    def defName = defNameVar

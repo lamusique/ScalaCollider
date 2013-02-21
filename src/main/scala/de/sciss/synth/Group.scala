@@ -26,61 +26,65 @@
 package de.sciss.synth
 
 object Group {
-    def play(): Group = {
-		head( Server.default.defaultGroup )
-	}
+  def play(): Group = {
+    head(Server.default.defaultGroup)
+  }
 
-	def after( target: Node ): Group = {
-	  	val group = new Group( target.server )
-	  	group.server ! group.newMsg( target, addAfter )
-	  	group
-	}
- 
-	def before( target: Node ): Group = {
-	  	val group = new Group( target.server )
-	  	group.server ! group.newMsg( target, addBefore )
-      group
-	}
- 
-	def head( target: Group ): Group = {
-		val group = new Group( target.server )
-		group.server ! group.newMsg( target, addToHead )
-      group
-	}
+  def after(target: Node): Group = {
+    val group = new Group(target.server)
+    group.server ! group.newMsg(target, addAfter)
+    group
+  }
 
-	def tail( target: Group ): Group = {
-	  	val group = new Group( target.server )
-	  	group.server ! group.newMsg( target, addToTail )
-      group
-	}
- 
-	def replace( target: Node ): Group = {
-	  	val group = new Group( target.server )
-	  	group.server ! group.newMsg( target, addReplace )
-      group
-	}
+  def before(target: Node): Group = {
+    val group = new Group(target.server)
+    group.server ! group.newMsg(target, addBefore)
+    group
+  }
 
-   def apply( server: Server ) : Group = apply( server, server.nextNodeID() )
-   def apply() : Group = apply( Server.default )
+  def head(target: Group): Group = {
+    val group = new Group(target.server)
+    group.server ! group.newMsg(target, addToHead)
+    group
+  }
+
+  def tail(target: Group): Group = {
+    val group = new Group(target.server)
+    group.server ! group.newMsg(target, addToTail)
+    group
+  }
+
+  def replace(target: Node): Group = {
+    val group = new Group(target.server)
+    group.server ! group.newMsg(target, addReplace)
+    group
+  }
+
+  def apply(server: Server): Group = apply(server, server.nextNodeID())
+
+  def apply(): Group = apply(Server.default)
 }
 
-final case class Group( server: Server, id: Int )
-extends Node {
-	def this( server: Server ) = this( server, server.nextNodeID() )
-	def this() = this( Server.default )
+final case class Group(server: Server, id: Int)
+  extends Node {
+  def this(server: Server) = this(server, server.nextNodeID())
 
-	def newMsg( target: Node, addAction: AddAction ) =
-		osc.GroupNewMessage( osc.GroupNewInfo( id, addAction.id, target.id ))
+  def this() = this(Server.default)
 
-   def dumpTreeMsg : osc.GroupDumpTreeMessage = dumpTreeMsg( postControls = false )
-   def dumpTreeMsg( postControls: Boolean ) = osc.GroupDumpTreeMessage( id -> postControls )
+  def newMsg(target: Node, addAction: AddAction) =
+    message.GroupNew(message.GroupNew.Info(id, addAction.id, target.id))
 
-   def queryTreeMsg( postControls: Boolean ) = osc.GroupQueryTreeMessage( id -> postControls )
+  def dumpTreeMsg: message.GroupDumpTree = dumpTreeMsg(postControls = false)
 
-	def freeAllMsg = osc.GroupFreeAllMessage( id )
-  
-	def deepFreeMsg = osc.GroupDeepFreeMessage( id )
+  def dumpTreeMsg(postControls: Boolean) = message.GroupDumpTree(id -> postControls)
 
-	def moveNodeToHeadMsg( node: Node ) = osc.GroupHeadMessage( id -> node.id )
-  	def moveNodeToTailMsg( node: Node ) = osc.GroupTailMessage( id -> node.id )
+  def queryTreeMsg(postControls: Boolean) = message.GroupQueryTree(id -> postControls)
+
+  def freeAllMsg = message.GroupFreeAll(id)
+
+  def deepFreeMsg = message.GroupDeepFree(id)
+
+  def moveNodeToHeadMsg(node: Node) = message.GroupHead(id -> node.id)
+
+  def moveNodeToTailMsg(node: Node) = message.GroupTail(id -> node.id)
 }

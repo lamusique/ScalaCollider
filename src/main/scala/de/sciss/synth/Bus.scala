@@ -67,38 +67,38 @@ extends Bus {
 
    def setMsg( v: Float ) = {
       require( numChannels == 1 )
-      osc.ControlBusSetMessage( (index, v) )
+      message.ControlBusSet( (index, v) )
    }
 
    def setMsg( pairs: (Int, Float)* ) = {
       require( pairs.forall( tup => (tup._1 >= 0 && tup._1 < numChannels) ))
-      osc.ControlBusSetMessage( pairs.map( tup => (tup._1 + index, tup._2) ): _* )
+      message.ControlBusSet( pairs.map( tup => (tup._1 + index, tup._2) ): _* )
    }
 
    def setnMsg( v: IndexedSeq[ Float ]) = {
       require( v.size == numChannels )
-      osc.ControlBusSetnMessage( (index, v.toIndexedSeq) )
+      message.ControlBusSetn( (index, v.toIndexedSeq) )
    }
 
    def setnMsg( pairs: (Int, IndexedSeq[ Float ])* ) = {
       require( pairs.forall( tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numChannels) ))
       val ipairs = pairs.map( tup => (tup._1 + index, tup._2.toIndexedSeq ))
-      osc.ControlBusSetnMessage( ipairs: _* )
+      message.ControlBusSetn( ipairs: _* )
    }
 
    def getMsg = {
       require( numChannels == 1 )
-      osc.ControlBusGetMessage( index )
+      message.ControlBusGet( index )
    }
 
    def getMsg( offset: Int = 0 ) = {
       require( offset >= 0 && offset < numChannels )
-      osc.ControlBusGetMessage( offset + index )
+      message.ControlBusGet( offset + index )
    }
 
    def getMsg( offsets: Int* ) = {
       require( offsets.forall( o => (o >= 0 && o < numChannels) ))
-      osc.ControlBusGetMessage( offsets.map( _ + index ): _* )
+      message.ControlBusGet( offsets.map( _ + index ): _* )
    }
 }
 
