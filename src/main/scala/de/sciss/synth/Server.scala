@@ -908,35 +908,37 @@ trait Server extends ServerLike with Model[Server.Update] {
     *
     * @see  [[de.sciss.synth.osc.TIMEOUT]]
     */
-   def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) : Unit
+   def !?(p: Packet, timeOut: Long = 6000L)(handler: PartialFunction[Any, Unit]): Unit
 
-   def counts : osc.StatusReplyMessage
+  def counts : osc.StatusReplyMessage
 
-   def sampleRate : Double
-  
-   def dumpTree( controls: Boolean = false ) : Unit
-  
-   def condition : Condition
+  def sampleRate: Double
 
-   def startAliveThread( delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25 ) : Unit
+  def dumpTree(controls: Boolean = false): Unit
 
-   def stopAliveThread() : Unit
+  def condition: Condition
 
-   def queryCounts() : Unit
+  def startAliveThread(delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25): Unit
 
-   final def syncMsg : osc.SyncMessage = syncMsg() // XXX TODO : should be removed
-   final def syncMsg( id: Int = nextSyncID() ) = osc.SyncMessage( id )
+  def stopAliveThread(): Unit
 
-   def dumpOSC( mode: Dump = Dump.Text ) : Unit
+  def queryCounts(): Unit
 
-   def quit() : Unit
+  final def syncMsg: osc.SyncMessage = syncMsg()
 
-   final def quitMsg = osc.ServerQuitMessage
+  // XXX TODO : should be removed
+  final def syncMsg(id: Int = nextSyncID()) = osc.SyncMessage(id)
 
-   def dispose() : Unit
+  def dumpOSC(mode: Dump = Dump.Text): Unit
 
-   private[synth] def addResponder( resp: osc.Responder ) : Unit
-   private[synth] def removeResponder( resp: osc.Responder ) : Unit
+  def quit(): Unit
 
-   override def toString = "<" + name + ">"
+  final def quitMsg = osc.ServerQuitMessage
+
+  def dispose(): Unit
+
+  private[synth] def addResponder   (resp: osc.Responder): Unit
+  private[synth] def removeResponder(resp: osc.Responder): Unit
+
+  override def toString = "<" + name + ">"
 }

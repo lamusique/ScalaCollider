@@ -73,7 +73,7 @@ extends Server {
 
    // ---- constructor ----
    OSCReceiverActor.start()
-   c.action = OSCReceiverActor.!
+   c.action = OSCReceiverActor ! _
    ServerImpl.add( server )
 
    def isLocal : Boolean = {
@@ -171,39 +171,40 @@ extends Server {
     *
     * @see  [[de.sciss.synth.osc.TIMEOUT]]
     */
-   def !?( timeOut: Long, p: Packet, handler: PartialFunction[ Any, Unit ]) {
-      val a = new DaemonActor {
-         def act() {
-            val futCh   = new Channel[ Any ]( Actor.self )
-            val oh      = new OSCTimeOutHandler( handler, futCh )
-            OSCReceiverActor.addHandler( oh )
-            server ! p // only after addHandler!
-            futCh.reactWithin( timeOut ) {
-               case actors.TIMEOUT  => OSCReceiverActor.timeOutHandler( oh )
-               case r               =>
-            }
+   def !?(p: Packet, timeOut: Long)(handler: PartialFunction[Any, Unit]) {
+     val a = new DaemonActor {
+       def act() {
+         val futCh = new Channel[Any](Actor.self)
+         val oh = new OSCTimeOutHandler(handler, futCh)
+         OSCReceiverActor.addHandler(oh)
+         server ! p // only after addHandler!
+         futCh.reactWithin(timeOut) {
+           case actors.TIMEOUT => OSCReceiverActor.timeOutHandler(oh)
+           case r =>
          }
-      }
-      a.start()
-// NOTE: race condition, addHandler might take longer than
-// the /done, notify!
-//      this ! p
+       }
+     }
+     a.start()
+     // NOTE: race condition, addHandler might take longer than
+     // the /done, notify!
+     // this ! p
    }
 
-   def counts = countsVar
-   private[synth] def counts_=( newCounts: osc.StatusReplyMessage ) {
-      countsVar = newCounts
-      dispatch( Counts( newCounts ))
-   }
+  def counts = countsVar
 
-   def sampleRate = counts.sampleRate
+  private[synth] def counts_=(newCounts: osc.StatusReplyMessage) {
+    countsVar = newCounts
+    dispatch(Counts(newCounts))
+  }
 
-   def dumpTree( controls: Boolean = false ) {
-      import Ops._
-      rootNode.dumpTree( controls )
-   }
+  def sampleRate = counts.sampleRate
 
-   def condition = condSync.synchronized { conditionVar }
+  def dumpTree(controls: Boolean = false) {
+    import Ops._
+    rootNode.dumpTree(controls)
+  }
+
+  def condition = condSync.synchronized { conditionVar }
    private[synth] def condition_=( newCondition: Condition ) {
       condSync.synchronized {
          if( newCondition != conditionVar ) {
@@ -228,77 +229,77 @@ extends Server {
       }
    }
 
-   def startAliveThread( delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25 ) {
-      condSync.synchronized {
-         if( aliveThread.isEmpty ) {
-            val statusWatcher = new StatusWatcher( delay, period, deathBounces )
-            aliveThread = Some( statusWatcher )
-            statusWatcher.start()
-         }
+  def startAliveThread(delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25) {
+    condSync.synchronized {
+      if (aliveThread.isEmpty) {
+        val statusWatcher = new StatusWatcher(delay, period, deathBounces)
+        aliveThread = Some(statusWatcher)
+        statusWatcher.start()
       }
-   }
-
-   def stopAliveThread() {
-      condSync.synchronized {
-         aliveThread.foreach( _.stop() )
-         aliveThread = None
-      }
+    }
   }
 
-   def queryCounts() {
-      this ! osc.StatusMessage
-   }
+  def stopAliveThread() {
+    condSync.synchronized {
+      aliveThread.foreach(_.stop())
+      aliveThread = None
+    }
+  }
 
-   def dumpOSC( mode: Dump = Dump.Text ) {
-      c.dumpIn( mode, filter = {
-         case m: osc.StatusReplyMessage => false
-         case _ => true
-      })
-      c.dumpOut( mode, filter = {
-         case osc.StatusMessage => false
-         case _ => true
-      })
-   }
+  def queryCounts() {
+    this ! osc.StatusMessage
+  }
 
-   private def serverLost() {
-      nodeManager.clear()
-      bufManager.clear()
-      OSCReceiverActor.clear()
-   }
+  def dumpOSC(mode: Dump = Dump.Text) {
+    c.dumpIn(mode, filter = {
+      case m: osc.StatusReplyMessage => false
+      case _ => true
+    })
+    c.dumpOut(mode, filter = {
+      case osc.StatusMessage => false
+      case _ => true
+    })
+  }
 
-   def serverOffline() {
-      condSync.synchronized {
-         stopAliveThread()
-         condition = Offline
-      }
-   }
+  private def serverLost() {
+    nodeManager.clear()
+    bufManager.clear()
+    OSCReceiverActor.clear()
+  }
 
-   def quit() {
-      this ! quitMsg
-      dispose()
-   }
+  def serverOffline() {
+    condSync.synchronized {
+      stopAliveThread()
+      condition = Offline
+    }
+  }
 
-   def addResponder( resp: osc.Responder ) {
-      OSCReceiverActor.addHandler( resp )
-   }
+  def quit() {
+    this ! quitMsg
+    dispose()
+  }
 
-   def removeResponder( resp: osc.Responder ) {
-      OSCReceiverActor.removeHandler( resp )
-   }
+  def addResponder(resp: osc.Responder) {
+    OSCReceiverActor.addHandler(resp)
+  }
 
-   def initTree() {
-      nodeManager.register( defaultGroup )
-      server ! defaultGroup.newMsg( rootNode, addToHead )
-   }
+  def removeResponder(resp: osc.Responder) {
+    OSCReceiverActor.removeHandler(resp)
+  }
 
-   def dispose() {
-      condSync.synchronized {
-         serverOffline()
-         ServerImpl.remove( this )
-         c.close()
-         OSCReceiverActor.dispose()
-      }
-   }
+  def initTree() {
+    nodeManager.register(defaultGroup)
+    server ! defaultGroup.newMsg(rootNode, addToHead)
+  }
+
+  def dispose() {
+    condSync.synchronized {
+      serverOffline()
+      ServerImpl.remove(this)
+      c.close()
+      OSCReceiverActor.dispose()
+    }
+  }
 
    // -------- internal class StatusWatcher --------
 

@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.4.1"
+version := "1.5.0-SNAPSHOT"
 
 organization := "de.sciss"
 
@@ -12,12 +12,16 @@ homepage <<= name { n => Some(url("https://github.com/Sciss/" + n)) }
 
 licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-libraryDependencies ++= Seq(
-  "de.sciss" %% "scalaosc" % "1.1.+",
-  "de.sciss" %% "scalaaudiofile" % "1.2.+",
-  "de.sciss" %% "scalacolliderugens-core" % "1.4.+",
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
-)
+libraryDependencies <<= version { v =>
+  val i  = v.lastIndexOf('.') + 1
+  val uv = v.substring(0, i) + "+"
+  Seq(
+    "de.sciss" %% "scalaosc" % "1.1.+",
+    "de.sciss" %% "scalaaudiofile" % "1.2.+",
+    "de.sciss" %% "scalacolliderugens-core" % uv,
+    "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+  )
+}
 
 libraryDependencies <+= scalaVersion { sv =>
   "org.scala-lang" % "scala-actors" % sv

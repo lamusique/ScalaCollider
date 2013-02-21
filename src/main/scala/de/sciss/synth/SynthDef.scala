@@ -25,174 +25,159 @@
 
 package de.sciss.synth
 
-import java.io.{ ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, File, FileOutputStream }
+import java.io.{ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, File, FileOutputStream}
 import java.nio.ByteBuffer
-import de.sciss.synth.{ Completion => Comp }
-import File.{ separator => sep }
+import de.sciss.synth.{Completion => Comp}
+import File.{separator => sep}
 import de.sciss.osc.{Bundle, Message, Packet}
 
 /**
- *    @todo    should add load and loadDir to companion object
+ * @todo    should add load and loadDir to companion object
  */
-final case class SynthDef( name: String, graph: UGenGraph ) {
-   syndef =>
+final case class SynthDef(name: String, graph: UGenGraph) {
+  syndef =>
 
-   import SynthDef._
+  import SynthDef._
 
-   override def toString = "SynthDef(" + name + ")"
+  override def toString = "SynthDef(" + name + ")"
 
-   def freeMsg = osc.SynthDefFreeMessage( name )
+  def freeMsg = osc.SynthDefFreeMessage(name)
 
-//   def recv { recv() }
-   def recv( server: Server = Server.default, completion: Completion = NoCompletion ) {
-      sendWithAction( server, recvMsg( _ ), completion, "recv" )
-   }
+  def recv(server: Server = Server.default, completion: Completion = NoCompletion) {
+    sendWithAction(server, recvMsg(_), completion, "recv")
+  }
 
-   private def sendWithAction( server: Server, msgFun: Option[ Packet ] => Message, completion: Completion,
-                               name: String ) {
-      completion.action map { action =>
-         val syncMsg    = server.syncMsg
-         val syncID     = syncMsg.id
-         val compPacket: Packet = completion.message match {
-            case Some( msgFun2 ) => Bundle.now( msgFun2( syndef ), syncMsg )
-            case None            => syncMsg
-         }
-         server !? (6000L, msgFun( Some( compPacket )), { // XXX timeout kind of arbitrary
-            case osc.SyncedMessage( `syncID` ) => action( syndef )
-            case osc.TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
-         })
-      } getOrElse {
-         server ! msgFun( completion.message.map( _.apply( syndef )))
+  private def sendWithAction(server: Server, msgFun: Option[Packet] => Message, completion: Completion,
+                             name: String) {
+    completion.action map { action =>
+      val syncMsg = server.syncMsg
+      val syncID = syncMsg.id
+      val compPacket: Packet = completion.message match {
+        case Some(msgFun2) => Bundle.now(msgFun2(syndef), syncMsg)
+        case None => syncMsg
       }
-   }
-
-//   private def sendWithAction( msg: Message, syncID: Int, action: SynthDef => Unit, name: String ) {
-//      server !? (6000L, msg, {
-//         case osc.SyncedMessage( syncID ) => action( syndef )
-//         case osc.TIMEOUT => println( "ERROR: " + syndef + "." + name + " : timeout!" )
-//      })
-//   }
-  
-   def recvMsg: osc.SynthDefRecvMessage = recvMsg( None )
-   def recvMsg( completion: Option[ Packet ]) = osc.SynthDefRecvMessage( toBytes, completion )
-  
-  	def toBytes : ByteBuffer = {
-    	val baos	= new ByteArrayOutputStream
-    	val dos	= new DataOutputStream( baos )
-
-    	dos.writeInt( 0x53436766 )	// magic cookie 'SCgf'
-    	dos.writeInt( 1 )			   // version
-    	dos.writeShort( 1 ) 		   // number of defs in file.
-    	write( dos )
-    	dos.flush()
-    	dos.close()
-
-    	ByteBuffer.wrap( baos.toByteArray ).asReadOnlyBuffer()
-   }
-
-   private def write( dos: DataOutputStream ) {
-      writePascalString( dos, name )
-      graph.write( dos )
-   }
-
-//   def load { load() }
-   def load( server: Server = Server.default, dir: String = defaultDir,
-             completion: Completion = NoCompletion ) {
-      write( dir )
-      sendWithAction( server, loadMsg( dir, _ ), completion, "load" )
-   }
-  
-   def loadMsg : osc.SynthDefLoadMessage = loadMsg()
-  
-   def loadMsg( dir: String = defaultDir, completion: Option[ Packet ] = None ) =
-	   osc.SynthDefLoadMessage( dir + sep + name + ".scsyndef", completion )
-
-//   def play: Synth = play()
-   def play( target: Node = Server.default, args: Seq[ ControlSetMap ] = Nil, addAction: AddAction = addToHead ) : Synth = {
-      val synth   = new Synth( target.server )
-		val newMsg  = synth.newMsg( name, target, args, addAction )
-		target.server ! recvMsg( newMsg )
-		synth
-   }
-    
-//   def write { write() }
-   def write( dir: String = defaultDir, overwrite: Boolean = true ) {
-      val file = new File( dir, name + ".scsyndef" )
-      val exists = file.exists
-      if( overwrite ) {
-         if( exists ) file.delete
-         SynthDef.write( file.getAbsolutePath, List( this ))
-      } else if( !exists ) {
-         SynthDef.write( file.getAbsolutePath, List( this ))
+      server.!?(msgFun(Some(compPacket))) {
+        // XXX timeout kind of arbitrary
+        case osc.SyncedMessage(`syncID`) => action(syndef)
+        case osc.TIMEOUT => println("ERROR: " + syndef + "." + name + " : timeout!")
       }
-   }
-  
-   @inline private def writePascalString( dos: DataOutputStream, str: String ) {
-      dos.writeByte( str.size )
-      dos.write( str.getBytes )
-   }
+    } getOrElse {
+      server ! msgFun(completion.message.map(_.apply(syndef)))
+    }
+  }
 
-   def hexDump() {
-      Packet.printHexOn( toBytes, Console.out )
-   }
+  def recvMsg: osc.SynthDefRecvMessage = recvMsg(None)
 
-   def testTopoSort() {
-      var i = 0
-      graph.ugens.foreach { ru =>
-         var j = 0
-         ru.inputSpecs.foreach { spec =>
-            if( (spec._1 >= 0) && (spec._1 <= i) ) {
-               sys.error( "Test failed : ugen " + i + " = " + ru.ugen + " -> input " + j + " = " + spec )
-            }
-            j += 1
-         }
-         i += 1
+  def recvMsg(completion: Option[Packet]) = osc.SynthDefRecvMessage(toBytes, completion)
+
+  def toBytes: ByteBuffer = {
+    val baos  = new ByteArrayOutputStream
+    val dos   = new DataOutputStream(baos)
+
+    dos.writeInt(0x53436766)  // magic cookie 'SCgf'
+    dos.writeInt(1)           // version
+    dos.writeShort(1)         // number of defs in file.
+    write(dos)
+    dos.flush()
+    dos.close()
+
+    ByteBuffer.wrap(baos.toByteArray).asReadOnlyBuffer()
+  }
+
+  private def write(dos: DataOutputStream) {
+    writePascalString(dos, name)
+    graph.write(dos)
+  }
+
+  def load(server: Server = Server.default, dir: String = defaultDir,
+           completion: Completion = NoCompletion) {
+    write(dir)
+    sendWithAction(server, loadMsg(dir, _), completion, "load")
+  }
+
+  def loadMsg: osc.SynthDefLoadMessage = loadMsg()
+
+  def loadMsg(dir: String = defaultDir, completion: Option[Packet] = None) =
+    osc.SynthDefLoadMessage(dir + sep + name + ".scsyndef", completion)
+
+  def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
+    val synth   = new Synth(target.server)
+    val newMsg  = synth.newMsg(name, target, args, addAction)
+    target.server ! recvMsg(newMsg)
+    synth
+  }
+
+  def write(dir: String = defaultDir, overwrite: Boolean = true) {
+    val file = new File(dir, name + ".scsyndef")
+    if (file.exists) {
+      if (overwrite) file.delete() else return
+    }
+    SynthDef.write(file.getAbsolutePath, this :: Nil)
+  }
+
+  @inline private def writePascalString(dos: DataOutputStream, str: String) {
+    dos.writeByte(str.size)
+    dos.write(str.getBytes)
+  }
+
+  def hexDump() {
+    Packet.printHexOn(toBytes, Console.out)
+  }
+
+  def testTopoSort() {
+    graph.ugens.zipWithIndex.foreach { case (ru, i) =>
+      ru.inputSpecs.toList.zipWithIndex.foreach { case ((ref, _), j) =>
+        if ((ref >= 0) && (ref <= i)) {
+          sys.error("Test failed : ugen " + i + " = " + ru.ugen + " -> input " + j + " = " + ref)
+        }
       }
-      println( "Test succeeded." )
-   }
+    }
+    println("Test succeeded.")
+  }
 
-   def debugDump() {
-      var i = 0
-      graph.ugens.foreach { ru =>
-         println( "#" + i + " : " + ru.ugen.name +
-            (if( ru.ugen.specialIndex != 0 ) "-" + ru.ugen.specialIndex else "") + ru.inputSpecs.map({
-               case (-1, idx)    => graph.constants( idx ).toString
-               case (uidx, oidx) =>
-                  val ru = graph.ugens( uidx ); "#" + uidx + " : " + ru.ugen.name +
-                     (if( oidx > 0 ) "@" + oidx else "")
-            }).mkString( "( ", ", ", " )" ))
-         i += 1
-      }
+  def debugDump() {
+     graph.ugens.zipWithIndex.foreach { case (ru, i) =>
+       println("#" + i + " : " + ru.ugen.name +
+         (if (ru.ugen.specialIndex != 0) "-" + ru.ugen.specialIndex else "") + ru.inputSpecs.map({
+         case (-1, idx) => graph.constants(idx).toString
+         case (uidx, oidx) =>
+           val ru = graph.ugens(uidx);
+           "#" + uidx + " : " + ru.ugen.name +
+             (if (oidx > 0) "@" + oidx else "")
+       }).mkString("( ", ", ", " )"))
+     }
    }
 }
 
 object SynthDef {
-   type Completion         = Comp[ SynthDef ]
-   final val NoCompletion  = Comp[ SynthDef ]( None, None )
+  type Completion         = Comp[SynthDef]
+  final val NoCompletion  = Comp[SynthDef](None, None)
 
-   var defaultDir    = System.getProperty( "java.io.tmpdir" )
+  var defaultDir          = sys.props("java.io.tmpdir")
 
-   def apply( name: String )( thunk: => Unit ) : SynthDef = SynthDef( name, SynthGraph( thunk ).expand )
+  def apply(name: String)(thunk: => Unit)
+           (implicit factory: UGenGraph.BuilderFactory = impl.DefaultUGenGraphBuilderFactory): SynthDef =
+    SynthDef(name, SynthGraph(thunk).expand)
 
-   def recv( name: String, server: Server = Server.default, completion: Completion = NoCompletion )
-           ( thunk: => Unit ) : SynthDef = {
-      val d = apply( name )( thunk )
-      d.recv( server, completion )
-      d
-   }
+  def recv(name: String, server: Server = Server.default, completion: Completion = NoCompletion)
+          (thunk: => Unit): SynthDef = {
+    val d = apply(name)(thunk)
+    d.recv(server, completion)
+    d
+  }
 
-   def write( path: String, defs: Seq[ SynthDef ]) {
-      val os	= new FileOutputStream( path )
-	   val dos	= new DataOutputStream( new BufferedOutputStream( os ))
+  def write(path: String, defs: Seq[SynthDef]) {
+    val os  = new FileOutputStream(path)
+    val dos = new DataOutputStream(new BufferedOutputStream(os))
 
-      try {
-         dos.writeInt( 0x53436766 ) 		// magic cookie
-         dos.writeInt( 1 ) 				   // version
-         dos.writeShort( defs.size ) 		// number of defs in file.
-         defs.foreach( _.write( dos ))
-      }
-      finally {
-         dos.close()
-      }
-   }
+    try {
+      dos.writeInt(0x53436766)    // magic cookie
+      dos.writeInt(1)             // version
+      dos.writeShort(defs.size)   // number of defs in file.
+      defs.foreach(_.write(dos))
+    }
+    finally {
+      dos.close()
+    }
+  }
 }
