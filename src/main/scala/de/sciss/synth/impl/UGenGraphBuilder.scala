@@ -34,7 +34,10 @@ import UGenGraph.RichUGen
 import ugen.ControlProxyLike
 
 object DefaultUGenGraphBuilderFactory extends UGenGraph.BuilderFactory {
-  def build(graph: SynthGraph) = new Impl(graph).build
+  def build(graph: SynthGraph) = {
+    val b = new Impl(graph)
+    UGenGraph.use(b)(b.build)
+  }
 
   private final class Impl(graph: SynthGraph) extends BasicUGenGraphBuilder {
     builder =>
@@ -223,31 +226,34 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       sorted
    }
 
-   final def visit[ U ]( ref: AnyRef, init: => U ) : U = {
-      sourceMap.getOrElse( ref, {
-         val exp = init // .asInstanceOf[ U ]
-         sourceMap += ref -> exp
-//            exp.foreach( addUGen( _ ))
-         exp
-      }).asInstanceOf[ U ] // XXX hmmm, not so pretty...
-   }
+  final def visit[U](ref: AnyRef, init: => U): U = {
+    sourceMap.getOrElse(ref, {
+      val exp = init // .asInstanceOf[ U ]
+      sourceMap += ref -> exp
+      // exp.foreach( addUGen( _ ))
+      exp
+    }).asInstanceOf[U] // XXX hmmm, not so pretty...
+  }
 
-   final def addUGen( ugen: UGen ) { ugens :+= ugen }
+  final def addUGen(ugen: UGen) {
+    ugens :+= ugen
+  }
 
-   final def addControl( values: IIdxSeq[ Float ], name: Option[ String ]) : Int = {
-      val specialIndex = controlValues.size
-      controlValues ++= values
-      name.foreach( n => controlNames :+= n -> specialIndex )
-      specialIndex
-   }
+  final def addControl(values: IIdxSeq[Float], name: Option[String]): Int = {
+    val specialIndex = controlValues.size
+    controlValues ++= values
+    name.foreach(n => controlNames :+= n -> specialIndex)
+    specialIndex
+  }
 
-   private def buildControls( p: Iterable[ ControlProxyLike[ _ ]]): Map[ ControlProxyLike[ _ ], (UGen, Int) ] = {
-     import language.existentials // grmpfff...
-     p.groupBy( _.factory ).flatMap( tuple => {
-         val (factory, proxies) = tuple
-         factory.build( builder, proxies.toSeq.asInstanceOf[ Seq[ factory.Proxy /* XXX horrible */]]: _* )
-//            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
-//            res
-      })( breakOut )
-   }
+  private def buildControls(p: Iterable[ControlProxyLike[_]]): Map[ControlProxyLike[_], (UGen, Int)] = {
+    import language.existentials
+    // grmpfff...
+    p.groupBy(_.factory).flatMap(tuple => {
+      val (factory, proxies) = tuple
+      factory.build(builder, proxies.toSeq.asInstanceOf[Seq[factory.Proxy /* XXX horrible */ ]]: _*)
+      //            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
+      //            res
+    })(breakOut)
+  }
 }

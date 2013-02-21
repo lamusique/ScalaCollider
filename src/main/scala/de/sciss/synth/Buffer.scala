@@ -42,7 +42,7 @@ object Buffer {
   private def allocID(server: Server): Int = {
     val id = server.allocBuffer(1)
     if (id == -1) {
-      throw AllocatorExhausted("Buffer: failed to get a buffer allocated (on " + server.name + ")")
+      throw AllocatorExhausted(s"Buffer: failed to get a buffer allocated on ${server.name}")
     }
     id
   }

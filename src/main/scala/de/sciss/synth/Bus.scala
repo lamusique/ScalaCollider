@@ -26,31 +26,32 @@
 package de.sciss.synth
 
 object Bus {
-	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val id = server.allocControlBus( numChannels )
-		if( id == -1 ) {
-         throw AllocatorExhausted( "Bus.control: failed to get a bus allocated (" +
-            numChannels + " channels on " + server.name + ")" )
-		}
-		ControlBus( server, id, numChannels )
-	}
-  
-	def audio( server: Server = Server.default, numChannels: Int = 1 ) = {
-		val id = server.allocAudioBus( numChannels )
-		if( id == -1 ) {
-         throw AllocatorExhausted( "Bus.audio: failed to get a bus allocated (" +
-            numChannels + " channels on " + server.name + ")" )
-		}
-		AudioBus( server, id, numChannels )
-	}
+  def control(server: Server = Server.default, numChannels: Int = 1) = {
+    val id = server.allocControlBus(numChannels)
+    if (id == -1) {
+      throw AllocatorExhausted("Bus.control: failed to get a bus allocated (" +
+        numChannels + " channels on " + server.name + ")")
+    }
+    ControlBus(server, id, numChannels)
+  }
+
+  def audio(server: Server = Server.default, numChannels: Int = 1) = {
+    val id = server.allocAudioBus(numChannels)
+    if (id == -1) {
+      throw AllocatorExhausted("Bus.audio: failed to get a bus allocated (" +
+        numChannels + " channels on " + server.name + ")")
+    }
+    AudioBus(server, id, numChannels)
+  }
 }
 
 sealed trait Bus {
-   def rate: Rate
-   def index: Int
-   def numChannels: Int
-   def server: Server
-   def free(): Unit
+  def rate: Rate
+  def index: Int
+  def numChannels: Int
+  def server: Server
+
+  def free(): Unit
 }
 
 final case class ControlBus( server: Server, index: Int, numChannels: Int )
@@ -102,15 +103,15 @@ extends Bus {
    }
 }
 
-final case class AudioBus( server: Server, index: Int, numChannels: Int )
-extends Bus {
-   private var released = false
+final case class AudioBus(server: Server, index: Int, numChannels: Int)
+  extends Bus {
+  private var released = false
 
-   def rate : Rate = audio
+  def rate: Rate = audio
 
-   def free() {
-      if( released ) sys.error( this.toString + " : has already been freed" )
-      server.freeAudioBus( index )
-      released = true
-   }
+  def free() {
+    if (released) sys.error(this.toString + " : has already been freed")
+    server.freeAudioBus(index)
+    released = true
+  }
 }

@@ -33,7 +33,15 @@ scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
 // ---- console ----
 
-initialCommands in console := """import de.sciss.osc; import de.sciss.synth.{ osc => sosc, _ }; import ugen._; import Predef.{any2stringadd => _}; import Ops._; var s: Server = null; def boot = Server.run( s = _ )"""
+initialCommands in console :=
+"""import de.sciss.osc
+  |import de.sciss.synth._
+  |import ugen._
+  |import Predef.{any2stringadd => _}
+  |import Ops._
+  |var s: Server = null
+  |def boot() { Server.run(s = _) }
+""".stripMargin
 
 // ---- build info ----
 

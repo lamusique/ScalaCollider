@@ -73,6 +73,7 @@ private[synth] final class GraphFunction[T](thunk: => T)(implicit res: GraphFunc
     if (bytes.remaining > (65535 / 4)) {
       // "preliminary fix until full size works" (???)
       if (server.isLocal) {
+        import Ops._
         synthDef.load(server, completion = compl)
       } else {
         println("WARNING: SynthDef may have been too large to send to remote server")

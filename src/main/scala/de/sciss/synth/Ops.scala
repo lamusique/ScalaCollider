@@ -28,6 +28,7 @@ package de.sciss.synth
 import de.sciss.osc.Packet
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import language.implicitConversions
+import de.sciss.osc
 
 object Ops {
 //   implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
@@ -36,6 +37,58 @@ object Ops {
    implicit def groupOps[ G <% Group ]( g: G ) : GroupOps = new GroupOps( g )
 //   implicit def bufferOps( b: Buffer ) : BufferOps = new BufferOps( b )
 //   implicit def controlBusOps( b: ControlBus ) : ControlBusOps = new ControlBusOps( b )
+
+  final implicit class SynthDefConstructors(val d: SynthDef.type) extends AnyVal {
+    import SynthDef._
+    def recv(name: String, server: Server = Server.default, completion: Completion = NoCompletion)
+            (thunk: => Unit): SynthDef = {
+      val d = apply(name)(thunk)
+      d.recv(server, completion)
+      d
+    }
+  }
+
+  // cannot occur inside value class at the moment
+  private[this] def sendSynthDefWithAction(d: SynthDef, server: Server, msgFun: Option[Packet] => osc.Message,
+                                           completion: SynthDef.Completion, name: String) {
+    completion.action map { action =>
+      val syncMsg = server.syncMsg
+      val syncID = syncMsg.id
+      val compPacket: Packet = completion.message match {
+        case Some(msgFun2) => osc.Bundle.now(msgFun2(d), syncMsg)
+        case None => syncMsg
+      }
+      server.!?(msgFun(Some(compPacket))) {
+        // XXX timeout kind of arbitrary
+        case message.Synced(`syncID`) => action(d)
+        case message.TIMEOUT => println("ERROR: " + d + "." + name + " : timeout!")
+      }
+    } getOrElse {
+      server ! msgFun(completion.message.map(_.apply(d)))
+    }
+  }
+
+  final implicit class SynthDefOps(val d: SynthDef) extends AnyVal {
+    import SynthDef.{Completion, NoCompletion, defaultDir}
+    import d._
+
+    def recv(server: Server = Server.default, completion: Completion = NoCompletion) {
+      sendSynthDefWithAction(d, server, recvMsg(_), completion, "recv")
+    }
+
+    def load(server: Server = Server.default, dir: String = defaultDir,
+             completion: Completion = NoCompletion) {
+      write(dir)
+      sendSynthDefWithAction(d, server, loadMsg(dir, _), completion, "load")
+    }
+
+    def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
+      val synth   = Synth(target.server)
+      val newMsg  = synth.newMsg(name, target, args, addAction)
+      target.server ! recvMsg(newMsg)
+      synth
+    }
+  }
 
   final implicit class NodeOps(val n: Node) extends AnyVal {
     import n._

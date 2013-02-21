@@ -303,56 +303,88 @@ final case class ServerNotify(onOff: Boolean)
 
 case object ServerQuit extends Message("/quit") with AsyncSend
 
+sealed trait HasCompletion extends AsyncSend {
+  def completion: Option[Packet]
+  def updateCompletion(completion: Option[Packet]): Message with AsyncSend with HasCompletion
+}
+
 final case class BufferQuery(ids: Int*) extends Message("/b_query", ids: _*) with SyncQuery
 
 final case class BufferFree(id: Int, completion: Option[Packet])
   extends Message("/b_free", (completion.map(m => List(id, m)) getOrElse List(id)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferClose(id: Int, completion: Option[Packet])
   extends Message("/b_close", (completion.map(m => List(id, m)) getOrElse List(id)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferAlloc(id: Int, numFrames: Int, numChannels: Int, completion: Option[Packet])
   extends Message("/b_alloc", (completion.map(m => List(id, numFrames, numChannels, m))
     getOrElse List(id, numFrames, numChannels)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferAllocRead(id: Int, path: String, startFrame: Int, numFrames: Int, completion: Option[Packet])
   extends Message("/b_allocRead", (completion.map(m => List(id, path, startFrame, numFrames, m))
     getOrElse List(id, path, startFrame, numFrames)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferAllocReadChannel(id: Int, path: String, startFrame: Int, numFrames: Int,
                                         channels: List[Int], completion: Option[Packet])
   extends Message("/b_allocReadChannel", (List(id, path, startFrame, numFrames) ::: channels
     ::: completion.map(msg => List(msg)).getOrElse(Nil)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferRead(id: Int, path: String, fileStartFrame: Int, numFrames: Int, bufStartFrame: Int,
                             leaveOpen: Boolean, completion: Option[Packet])
   extends Message("/b_read", (completion.map(
     m => List(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, m))
     getOrElse List(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferReadChannel(id: Int, path: String, fileStartFrame: Int, numFrames: Int,
                                    bufStartFrame: Int, leaveOpen: Boolean, channels: List[Int],
                                    completion: Option[Packet])
   extends Message("/b_readChannel", (List(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen) :::
     channels ::: completion.map(msg => List(msg)).getOrElse(Nil)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferZero(id: Int, completion: Option[Packet])
   extends Message("/b_zero", (completion.map(m => List(id, m)) getOrElse List(id)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferWrite(id: Int, path: String, fileType: io.AudioFileType, sampleFormat: io.SampleFormat,
                              numFrames: Int, startFrame: Int, leaveOpen: Boolean,
                              completion: Option[Packet])
   extends Message("/b_write", (List(id, path, fileType.id, sampleFormat.id, numFrames, startFrame, leaveOpen) :::
     completion.map(msg => List(msg)).getOrElse(Nil)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class BufferSet(id: Int, indicesAndValues: (Int, Float)*)
   extends Message("/b_set", (id +: indicesAndValues.flatMap(iv => List[Any](iv._1, iv._2))): _*)
@@ -516,7 +548,10 @@ final case class NodeAfter(groups: (Int, Int)*)
 
 final case class SynthDefRecv(bytes: ByteBuffer, completion: Option[Packet])
   extends Message("/d_recv", (bytes :: (completion.map(List(_)) getOrElse Nil)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class SynthDefFree(names: String*)
   extends Message("/d_free", names: _*)
@@ -524,8 +559,14 @@ final case class SynthDefFree(names: String*)
 
 final case class SynthDefLoad(path: String, completion: Option[Packet])
   extends Message("/d_load", (path :: (completion.map(List(_)) getOrElse Nil)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}
 
 final case class SynthDefLoadDir(path: String, completion: Option[Packet])
   extends Message("/d_loadDir", (path :: (completion.map(List(_)) getOrElse Nil)): _*)
-  with AsyncSend
+  with HasCompletion {
+
+  def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
+}

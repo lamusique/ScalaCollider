@@ -31,6 +31,32 @@ import de.sciss.synth.{Completion => Comp}
 import File.{separator => sep}
 import de.sciss.osc.{Bundle, Message, Packet}
 
+
+object SynthDef {
+  type Completion         = Comp[SynthDef]
+  final val NoCompletion  = Comp[SynthDef](None, None)
+
+  var defaultDir          = sys.props("java.io.tmpdir")
+
+  def apply(name: String)(thunk: => Unit)
+           (implicit factory: UGenGraph.BuilderFactory = impl.DefaultUGenGraphBuilderFactory): SynthDef =
+    SynthDef(name, SynthGraph(thunk).expand)
+
+  def write(path: String, defs: Seq[SynthDef]) {
+    val os  = new FileOutputStream(path)
+    val dos = new DataOutputStream(new BufferedOutputStream(os))
+
+    try {
+      dos.writeInt(0x53436766)    // magic cookie
+      dos.writeInt(1)             // version
+      dos.writeShort(defs.size)   // number of defs in file.
+      defs.foreach(_.write(dos))
+    }
+    finally {
+      dos.close()
+    }
+  }
+}
 /**
  * @todo    should add load and loadDir to companion object
  */
@@ -42,29 +68,6 @@ final case class SynthDef(name: String, graph: UGenGraph) {
   override def toString = "SynthDef(" + name + ")"
 
   def freeMsg = message.SynthDefFree(name)
-
-  def recv(server: Server = Server.default, completion: Completion = NoCompletion) {
-    sendWithAction(server, recvMsg(_), completion, "recv")
-  }
-
-  private def sendWithAction(server: Server, msgFun: Option[Packet] => Message, completion: Completion,
-                             name: String) {
-    completion.action map { action =>
-      val syncMsg = server.syncMsg
-      val syncID = syncMsg.id
-      val compPacket: Packet = completion.message match {
-        case Some(msgFun2) => Bundle.now(msgFun2(syndef), syncMsg)
-        case None => syncMsg
-      }
-      server.!?(msgFun(Some(compPacket))) {
-        // XXX timeout kind of arbitrary
-        case message.Synced(`syncID`) => action(syndef)
-        case message.TIMEOUT => println("ERROR: " + syndef + "." + name + " : timeout!")
-      }
-    } getOrElse {
-      server ! msgFun(completion.message.map(_.apply(syndef)))
-    }
-  }
 
   def recvMsg: message.SynthDefRecv = recvMsg(None)
 
@@ -89,23 +92,10 @@ final case class SynthDef(name: String, graph: UGenGraph) {
     graph.write(dos)
   }
 
-  def load(server: Server = Server.default, dir: String = defaultDir,
-           completion: Completion = NoCompletion) {
-    write(dir)
-    sendWithAction(server, loadMsg(dir, _), completion, "load")
-  }
-
   def loadMsg: message.SynthDefLoad = loadMsg()
 
   def loadMsg(dir: String = defaultDir, completion: Option[Packet] = None) =
     message.SynthDefLoad(dir + sep + name + ".scsyndef", completion)
-
-  def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
-    val synth   = Synth(target.server)
-    val newMsg  = synth.newMsg(name, target, args, addAction)
-    target.server ! recvMsg(newMsg)
-    synth
-  }
 
   def write(dir: String = defaultDir, overwrite: Boolean = true) {
     val file = new File(dir, name + ".scsyndef")
@@ -147,37 +137,4 @@ final case class SynthDef(name: String, graph: UGenGraph) {
        }).mkString("( ", ", ", " )"))
      }
    }
-}
-
-object SynthDef {
-  type Completion         = Comp[SynthDef]
-  final val NoCompletion  = Comp[SynthDef](None, None)
-
-  var defaultDir          = sys.props("java.io.tmpdir")
-
-  def apply(name: String)(thunk: => Unit)
-           (implicit factory: UGenGraph.BuilderFactory = impl.DefaultUGenGraphBuilderFactory): SynthDef =
-    SynthDef(name, SynthGraph(thunk).expand)
-
-  def recv(name: String, server: Server = Server.default, completion: Completion = NoCompletion)
-          (thunk: => Unit): SynthDef = {
-    val d = apply(name)(thunk)
-    d.recv(server, completion)
-    d
-  }
-
-  def write(path: String, defs: Seq[SynthDef]) {
-    val os  = new FileOutputStream(path)
-    val dos = new DataOutputStream(new BufferedOutputStream(os))
-
-    try {
-      dos.writeInt(0x53436766)    // magic cookie
-      dos.writeInt(1)             // version
-      dos.writeShort(defs.size)   // number of defs in file.
-      defs.foreach(_.write(dos))
-    }
-    finally {
-      dos.close()
-    }
-  }
 }
