@@ -54,15 +54,15 @@ extends Server {
    import Server._
 
    private var aliveThread: Option[StatusWatcher]	= None
-   private var countsVar							      = new message.StatusReply( 0, 0, 0, 0, 0f, 0f, 0.0, 0.0 )
-   private val condSync                            = new AnyRef
-   private var conditionVar: Condition 			   = Running // Offline
+   private var countsVar							            = new message.StatusReply(0, 0, 0, 0, 0f, 0f, 0.0, 0.0)
+   private val condSync                           = new AnyRef
+   private var conditionVar: Condition 			      = Running // Offline
    private var pendingCondition: Condition      	= NoPending
 
-   val rootNode                                    = new Group( this, 0 )
-   val defaultGroup                                = new Group( this, 1 )
-   val nodeManager                                 = new NodeManager( this )
-   val bufManager                                  = new BufferManager( this )
+   val rootNode                                    = Group(this, 0)
+   val defaultGroup                                = Group(this, 1)
+   val nodeManager                                 = new NodeManager(this)
+   val bufManager                                  = new BufferManager(this)
 
    private val nodeAllocator        = new NodeIDAllocator( clientConfig.clientID, clientConfig.nodeIDOffset )
    private val controlBusAllocator  = new ContiguousBlockAllocator( config.controlBusChannels )

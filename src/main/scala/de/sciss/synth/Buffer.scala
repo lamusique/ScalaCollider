@@ -47,10 +47,9 @@ object Buffer {
     id
   }
 }
-
 final case class Buffer(server: Server, id: Int) extends Model[BufferManager.BufferInfo] {
 
-  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
+//  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
 
   import Buffer._
 

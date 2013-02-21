@@ -26,12 +26,11 @@
 package de.sciss.synth
 
 object Synth {
-  def apply(server: Server): Synth = apply(server, server.nextNodeID())
-
-  def apply(): Synth = apply(Server.default)
+  def apply(server: Server = Server.default): Synth = apply(server, server.nextNodeID())
 }
 final case class Synth(server: Server, id: Int)
   extends Node {
+
   private var defNameVar = ""
 
 //  def this(server: Server) = this(server, server.nextNodeID())

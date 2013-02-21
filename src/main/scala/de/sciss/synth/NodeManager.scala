@@ -65,8 +65,8 @@ final class NodeManager(val server: Server) extends Model[NodeManager.Update] {
         val node = nodes.get(nodeID) getOrElse {
           if ( /* autoAdd && */ nodes.contains(info.parentID)) {
             val created = info match {
-              case ee: message.NodeInfo.SynthData => new Synth(server, nodeID)
-              case ee: message.NodeInfo.GroupData => new Group(server, nodeID)
+              case ee: message.NodeInfo.SynthData => Synth(server, nodeID)
+              case ee: message.NodeInfo.GroupData => Group(server, nodeID)
             }
             register(created)
             created
