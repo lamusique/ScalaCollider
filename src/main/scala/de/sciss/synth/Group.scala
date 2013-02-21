@@ -26,40 +26,6 @@
 package de.sciss.synth
 
 object Group {
-  def play(): Group = {
-    head(Server.default.defaultGroup)
-  }
-
-  def after(target: Node): Group = {
-    val group = new Group(target.server)
-    group.server ! group.newMsg(target, addAfter)
-    group
-  }
-
-  def before(target: Node): Group = {
-    val group = new Group(target.server)
-    group.server ! group.newMsg(target, addBefore)
-    group
-  }
-
-  def head(target: Group): Group = {
-    val group = new Group(target.server)
-    group.server ! group.newMsg(target, addToHead)
-    group
-  }
-
-  def tail(target: Group): Group = {
-    val group = new Group(target.server)
-    group.server ! group.newMsg(target, addToTail)
-    group
-  }
-
-  def replace(target: Node): Group = {
-    val group = new Group(target.server)
-    group.server ! group.newMsg(target, addReplace)
-    group
-  }
-
   def apply(server: Server): Group = apply(server, server.nextNodeID())
 
   def apply(): Group = apply(Server.default)
@@ -67,9 +33,10 @@ object Group {
 
 final case class Group(server: Server, id: Int)
   extends Node {
-  def this(server: Server) = this(server, server.nextNodeID())
 
-  def this() = this(Server.default)
+//  def this(server: Server) = this(server, server.nextNodeID())
+//
+//  def this() = this(Server.default)
 
   def newMsg(target: Node, addAction: AddAction) =
     message.GroupNew(message.GroupNew.Info(id, addAction.id, target.id))

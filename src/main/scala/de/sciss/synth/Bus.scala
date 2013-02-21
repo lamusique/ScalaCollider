@@ -29,7 +29,7 @@ object Bus {
 	def control( server: Server = Server.default, numChannels: Int = 1 ) = {
 		val id = server.allocControlBus( numChannels )
 		if( id == -1 ) {
-         throw AllocatorExhaustedException( "Bus.control: failed to get a bus allocated (" +
+         throw AllocatorExhausted( "Bus.control: failed to get a bus allocated (" +
             numChannels + " channels on " + server.name + ")" )
 		}
 		ControlBus( server, id, numChannels )
@@ -38,7 +38,7 @@ object Bus {
 	def audio( server: Server = Server.default, numChannels: Int = 1 ) = {
 		val id = server.allocAudioBus( numChannels )
 		if( id == -1 ) {
-         throw AllocatorExhaustedException( "Bus.audio: failed to get a bus allocated (" +
+         throw AllocatorExhausted( "Bus.audio: failed to get a bus allocated (" +
             numChannels + " channels on " + server.name + ")" )
 		}
 		AudioBus( server, id, numChannels )

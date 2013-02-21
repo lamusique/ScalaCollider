@@ -26,46 +26,26 @@
 package de.sciss.synth
 
 object Synth {
-   def play( defName: String, args: Seq[ ControlSetMap ] = Nil, target: Node = Server.default.defaultGroup,
-             addAction: AddAction = addToHead ) = {
-      val synth = new Synth( target.server )
-      synth.server ! synth.newMsg( defName, target, args, addAction )
-      synth
-   }
+  def apply(server: Server): Synth = apply(server, server.nextNodeID())
 
-   def after( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addAfter )
-
-   def before( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addBefore )
-
-	def head( target: Group, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addToHead )
-
-	def tail( target: Group, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addToTail )
-
-	def replace( target: Node, defName: String, args: Seq[ ControlSetMap ] = Nil ) : Synth =
-      play( defName, args, target, addReplace )
-
-   def apply( server: Server ) : Synth = apply( server, server.nextNodeID() )
-   def apply() : Synth = apply( Server.default )
+  def apply(): Synth = apply(Server.default)
 }
-final case class Synth( server: Server, id: Int )
-extends Node {
-   private var defNameVar = ""
+final case class Synth(server: Server, id: Int)
+  extends Node {
+  private var defNameVar = ""
 
-	def this( server: Server ) = this( server, server.nextNodeID() )
-   def this() = this( Server.default )
+//  def this(server: Server) = this(server, server.nextNodeID())
+//
+//  def this() = this(Server.default)
 
-	def newMsg( defName: String, target: Node = server.defaultGroup, args: Seq[ ControlSetMap ] = Nil,
-               addAction: AddAction = addToHead ) = {
-      defNameVar = defName
-      message.SynthNew( defName, id, addAction.id, target.id, args: _* )
-   }
+  def newMsg(defName: String, target: Node = server.defaultGroup, args: Seq[ControlSetMap] = Nil,
+             addAction: AddAction = addToHead) = {
+    defNameVar = defName
+    message.SynthNew(defName, id, addAction.id, target.id, args: _*)
+  }
 
-   def defName = defNameVar
+  def defName = defNameVar
 
-   override def toString = "Synth(" + server + "," + id +
-      (if( defNameVar != "" ) ") : <" + defNameVar + ">" else ")")
+  override def toString = "Synth(" + server + "," + id +
+    (if (defNameVar != "") ") : <" + defNameVar + ">" else ")")
 }

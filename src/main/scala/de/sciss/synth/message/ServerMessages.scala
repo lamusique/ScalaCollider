@@ -27,7 +27,7 @@ package de.sciss.synth
 package message
 
 import java.nio.ByteBuffer
-import collection.immutable.{ IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => IIdxSeq}
 import collection.mutable.ListBuffer
 import java.io.PrintStream
 import de.sciss.osc.{Bundle, Message, Packet, PacketCodec}

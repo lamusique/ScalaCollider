@@ -35,38 +35,6 @@ object Buffer {
   type Completion = Comp[Buffer]
   val NoCompletion = Comp[Buffer](None, None)
 
-  def alloc(server: Server = Server.default, numFrames: Int, numChannels: Int = 1,
-            completion: Completion = NoCompletion): Buffer = {
-    val b = apply(server)
-    import Ops._
-    b.alloc(numFrames, numChannels, completion)
-    b
-  }
-
-  def read(server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
-           completion: Completion = NoCompletion): Buffer = {
-    val b = apply(server)
-    import Ops._
-    b.allocRead(path, startFrame, numFrames, completion)
-    b
-  }
-
-  def cue(server: Server = Server.default, path: String, startFrame: Int = 0, numChannels: Int = 1,
-          bufFrames: Int = 32768, completion: Completion = NoCompletion): Buffer = {
-    val b = apply(server)
-    import Ops._
-    b.alloc(bufFrames, numChannels, b.cueMsg(path, startFrame, completion))
-    b
-  }
-
-  def readChannel(server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
-                  channels: Seq[Int], completion: Completion = NoCompletion): Buffer = {
-    val b = apply(server)
-    import Ops._
-    b.allocReadChannel(path, startFrame, numFrames, channels, completion)
-    b
-  }
-
   def apply(server: Server = Server.default): Buffer = {
     apply(server, allocID(server))
   }
@@ -74,7 +42,7 @@ object Buffer {
   private def allocID(server: Server): Int = {
     val id = server.allocBuffer(1)
     if (id == -1) {
-      throw AllocatorExhaustedException("Buffer: failed to get a buffer allocated (on " + server.name + ")")
+      throw AllocatorExhausted("Buffer: failed to get a buffer allocated (on " + server.name + ")")
     }
     id
   }

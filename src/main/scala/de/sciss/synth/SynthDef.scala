@@ -101,7 +101,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
     message.SynthDefLoad(dir + sep + name + ".scsyndef", completion)
 
   def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
-    val synth   = new Synth(target.server)
+    val synth   = Synth(target.server)
     val newMsg  = synth.newMsg(name, target, args, addAction)
     target.server ! recvMsg(newMsg)
     synth

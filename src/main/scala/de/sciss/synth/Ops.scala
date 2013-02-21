@@ -142,6 +142,26 @@ object Ops {
     }
   }
 
+  implicit final class GroupConstructors(val g: Group.type) extends AnyVal {
+    import Group._
+
+    def play(): Group = {
+      head(Server.default.defaultGroup)
+    }
+
+    def play(target: Node = Server.default.defaultGroup, addAction: AddAction = addToHead) = {
+      val group = apply(target.server)
+      group.server ! group.newMsg(target, addAction)
+      group
+    }
+
+    def after  (target: Node):  Group = play(target, addAfter)
+    def before (target: Node):  Group = play(target, addBefore)
+    def head   (target: Group): Group = play(target, addToHead)
+    def tail   (target: Group): Group = play(target, addToTail)
+    def replace(target: Node):  Group = play(target, addReplace)
+  }
+
   final class GroupOps(val g: Group) extends AnyVal {
 
     import g._
@@ -156,6 +176,64 @@ object Ops {
 
     def dumpTree(postControls: Boolean = false) {
       server ! dumpTreeMsg(postControls)
+    }
+  }
+
+  implicit final class SynthConstructors(val s: Synth.type) extends AnyVal {
+    import Synth._
+    def play(defName: String, args: Seq[ControlSetMap] = Nil, target: Node = Server.default.defaultGroup,
+             addAction: AddAction = addToHead) = {
+      val synth = apply(target.server)
+      synth.server ! synth.newMsg(defName, target, args, addAction)
+      synth
+    }
+
+    def after(target: Node, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+      play(defName, args, target, addAfter)
+
+    def before(target: Node, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+      play(defName, args, target, addBefore)
+
+    def head(target: Group, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+      play(defName, args, target, addToHead)
+
+    def tail(target: Group, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+      play(defName, args, target, addToTail)
+
+    def replace(target: Node, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+      play(defName, args, target, addReplace)
+
+  }
+
+  implicit final class BufferConstructors(val b: Buffer.type) extends AnyVal {
+    import Buffer._
+
+    def alloc(server: Server = Server.default, numFrames: Int, numChannels: Int = 1,
+              completion: Completion = NoCompletion): Buffer = {
+      val b = apply(server)
+      b.alloc(numFrames, numChannels, completion)
+      b
+    }
+
+    def read(server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
+             completion: Completion = NoCompletion): Buffer = {
+      val b = apply(server)
+      b.allocRead(path, startFrame, numFrames, completion)
+      b
+    }
+
+    def cue(server: Server = Server.default, path: String, startFrame: Int = 0, numChannels: Int = 1,
+            bufFrames: Int = 32768, completion: Completion = NoCompletion): Buffer = {
+      val b = apply(server)
+      b.alloc(bufFrames, numChannels, b.cueMsg(path, startFrame, completion))
+      b
+    }
+
+    def readChannel(server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
+                    channels: Seq[Int], completion: Completion = NoCompletion): Buffer = {
+      val b = apply(server)
+      b.allocReadChannel(path, startFrame, numFrames, channels, completion)
+      b
     }
   }
 
