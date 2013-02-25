@@ -358,9 +358,7 @@ object Ops {
      *             of the first frame of the right channel, followed by the second frame
      *             of the left channel, etc.
      */
-    def setn(v: IIdxSeq[Float]) {
-      server ! setnMsg(v)
-    }
+    def setn(v: IIdxSeq[Float]) { server ! setnMsg(v) }
 
     /**
      * Sets the contents of the buffer by replacing
@@ -376,13 +374,13 @@ object Ops {
      *                left channel, the second element to frame `offset / 2` of the right channel,
      *                followed by frame `offset / 2 + 1` of the left channel, and so on.
      */
-    def setn(pairs: (Int, IIdxSeq[Float])*) {
-      server ! setnMsg(pairs: _*)
-    }
+    def setn(pairs: (Int, IIdxSeq[Float])*) { server ! setnMsg(pairs: _*) }
 
-    def zero(completion: Option[Packet] = None) {
-      server ! zeroMsg(completion)
-    }
+    def fill(index: Int, num: Int, value: Float) { server ! fillMsg(index, num, value) }
+
+    def fill(infos: message.BufferFill.Info*) { server ! fillMsg(infos: _*) }
+
+    def zero(completion: Option[Packet] = None) { server ! zeroMsg(completion) }
 
     def write(path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
               sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,

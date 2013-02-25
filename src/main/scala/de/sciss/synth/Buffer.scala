@@ -143,22 +143,29 @@ final case class Buffer(server: Server, id: Int) extends Model[BufferManager.Buf
       completion)
 
   def setMsg(pairs: (Int, Float)*) = {
-    val numSmp = numChannels * numFrames
-    require(pairs.forall(tup => (tup._1 >= 0 && tup._1 < numSmp)))
+//    val numSmp = numChannels * numFrames
+//    require(pairs.forall(tup => (tup._1 >= 0 && tup._1 < numSmp)))
     message.BufferSet(id, pairs: _*)
   }
 
   def setnMsg(v: IIdxSeq[Float]) = {
-    val numSmp = numChannels * numFrames
-    require(v.size == numSmp)
+//    val numSmp = numChannels * numFrames
+//    require(v.size == numSmp)
     message.BufferSetn(id, (0, v.toIndexedSeq))
   }
 
   def setnMsg(pairs: (Int, IIdxSeq[Float])*) = {
     val numSmp = numChannels * numFrames
-    require(pairs.forall(tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp)))
+//    require(pairs.forall(tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp)))
     val ipairs = pairs.map(tup => (tup._1, tup._2.toIndexedSeq))
     message.BufferSetn(id, ipairs: _*)
+  }
+
+  /** Convenience method for creating a fill message for one given range */
+  def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, message.BufferFill.Info(index, num, value))
+
+  def fillMsg(infos: message.BufferFill.Info*) = {
+    message.BufferFill(id, infos: _*)
   }
 
   def zeroMsg: message.BufferZero = zeroMsg(None)

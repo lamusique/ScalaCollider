@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.5.0"
+version := "1.5.2"
 
 organization := "de.sciss"
 
@@ -39,8 +39,8 @@ initialCommands in console :=
   |import ugen._
   |import Predef.{any2stringadd => _}
   |import Ops._
-  |var s: Server = null
-  |def boot() { Server.run(s = _) }
+  |def s = Server.default
+  |def boot() { Server.run(_ => ()) }
 """.stripMargin
 
 // ---- build info ----
