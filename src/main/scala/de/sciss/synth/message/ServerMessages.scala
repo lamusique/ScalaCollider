@@ -298,8 +298,8 @@ final case class BufferInfo(infos: BufferInfo.Data*)
 
 // ---- messages to the server ----
 
-final case class ServerNotify(onOff: Boolean)
-  extends Message("/notify", onOff)
+final case class ServerNotify(on: Boolean)
+  extends Message("/notify", on)
   with AsyncSend
 
 case object ServerQuit extends Message("/quit") with AsyncSend

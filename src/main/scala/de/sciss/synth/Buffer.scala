@@ -28,6 +28,8 @@ package de.sciss.synth
 import de.sciss.synth.{Completion => Comp}
 import de.sciss.osc.{Bundle, Packet}
 import collection.immutable.{IndexedSeq => IIdxSeq}
+import de.sciss.model.Model
+import de.sciss.model.impl.ModelImpl
 
 object Buffer {
   type Listener = Model.Listener[BufferManager.BufferInfo]
@@ -47,7 +49,7 @@ object Buffer {
     id
   }
 }
-final case class Buffer(server: Server, id: Int) extends Model[BufferManager.BufferInfo] {
+final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager.BufferInfo] {
 
 //  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
 

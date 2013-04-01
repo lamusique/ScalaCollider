@@ -1,10 +1,10 @@
 name := "ScalaCollider"
 
-version := "1.5.2"
+version := "1.6.0-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0"  // do _not_ use 2.10.+, will draw in actors 2.10.1-RC1. sssssssssuckers
+scalaVersion := "2.10.1"
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -13,19 +13,21 @@ homepage <<= name { n => Some(url("https://github.com/Sciss/" + n)) }
 licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
 libraryDependencies <<= version { v =>
-  val i  = v.lastIndexOf('.') + 1
-  val uv = v.substring(0, i) + "+"
+//  val i  = v.lastIndexOf('.') + 1
+//  val uv = v.substring(0, i) + "+"
+  val uv = "1.5.+"
   Seq(
     "de.sciss" %% "scalaosc" % "1.1.+",
-    "de.sciss" %% "scalaaudiofile" % "1.2.+",
+    "de.sciss" %% "scalaaudiofile" % "1.4.+",
+    "de.sciss" %% "processor" % "0.1.+",
     "de.sciss" %% "scalacolliderugens-core" % uv,
     "org.scalatest" %% "scalatest" % "1.9.1" % "test"
   )
 }
 
-libraryDependencies <+= scalaVersion { sv =>
-  "org.scala-lang" % "scala-actors" % sv
-}
+// libraryDependencies <+= scalaVersion { sv =>
+//   "org.scala-lang" % "scala-actors" % sv
+// }
 
 retrieveManaged := true
 
@@ -99,6 +101,3 @@ seq(lsSettings :_*)
 (LsKeys.ghUser in LsKeys.lsync) := Some("Sciss")
 
 (LsKeys.ghRepo in LsKeys.lsync) <<= name(Some(_))
-
-// bug in ls -- doesn't find the licenses from global scope
-(licenses in LsKeys.lsync) := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))

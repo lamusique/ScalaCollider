@@ -28,9 +28,17 @@ package impl
 
 import java.io.{InputStreamReader, BufferedReader, File, IOException}
 import java.net.InetSocketAddress
-import actors.DaemonActor
 import de.sciss.osc.{Message, Client => OSCClient}
 import util.control.NonFatal
+import de.sciss.processor.impl.ProcessorImpl
+import concurrent.{ExecutionContext, Await, Promise}
+import concurrent.duration._
+import de.sciss.processor.Processor
+import java.util.concurrent.TimeoutException
+import message.{Status, StatusReply}
+import de.sciss.osc
+import annotation.tailrec
+import de.sciss.model.impl.ModelImpl
 
 private[synth] object ConnectionLike {
    case object Ready
@@ -40,116 +48,131 @@ private[synth] object ConnectionLike {
    final case class RemoveListener( l: ServerConnection.Listener )
 }
 
-private[synth] sealed trait ConnectionLike extends ServerConnection {
-   import ConnectionLike._
-   import ServerConnection.{ Running => SCRunning, _ }
+private[synth] sealed trait ConnectionLike extends ServerConnection with ModelImpl[ServerConnection.Condition] {
+  conn =>
 
-   val actor = new DaemonActor {
-      def act() { react {
-         case Abort => abortHandler( None )
-         case Ready => loop {
-            if( connectionAlive ) {
-                  if( !c.isConnected ) c.connect()
-                  c.action = p => this ! p
-                  var tnotify = 0L
-                  def snotify() {
-                    tnotify = System.currentTimeMillis + 500
-                    c ! message.ServerNotify(onOff = true)
-                  }
-                  snotify()
-                  loop { reactWithin( math.max( 0L, tnotify - System.currentTimeMillis) ) {
-                     case actors.TIMEOUT     => snotify() // loop is retried
-                     case AddListener( l )   => actAddList( l )
-                     case RemoveListener( l )=> actRemoveList( l )
-                     case Abort              => abortHandler( None )
-                     case Message( "/done", "/notify" ) =>
-                        var tstatus = 0L
-                        def sstatus() {
-                           tstatus = System.currentTimeMillis + 500
-                           c ! message.Status
-                        }
-                        sstatus()
-                        loop { reactWithin( math.max( 0L, tstatus - System.currentTimeMillis) ) {
-                           case actors.TIMEOUT     => sstatus() // loop is retried
-                           case AddListener( l )   => actAddList( l )
-                           case RemoveListener( l )=> actRemoveList( l )
-                           case Abort              => abortHandler( None )
-                           case cnt: message.StatusReply =>
-                              val s    = new ServerImpl( name, c, addr, config, clientConfig )
-                              s.counts = cnt
-                              dispatch( Preparing( s ))
-                              s.initTree()
-                              dispatch( SCRunning( s ))
-                              createAliveThread( s )
-                              loop { react {
-                                 case QueryServer        => reply( s )
-                                 case AddListener( l )   => actAddList( l ); actDispatch( l, SCRunning( s ))
-                                 case RemoveListener( l )=> actRemoveList( l )
-                                 case Abort              => abortHandler( Some( s ))
-                                 case ServerConnection.Aborted =>
-                                    s.serverOffline()
-                                    dispatch( Aborted )
-                                    loop { react {
-                                       case AddListener( l )   => actAddList( l ); actDispatch( l, Aborted )
-                                       case RemoveListener( l )=> actRemoveList( l )
-                                       case Abort              => reply ()
-                                       case QueryServer        => reply( s )
-                                    }}
-                              }}
-                        }}
-                  }}
-            } else loop { react {
-               case Abort  => reply ()
-               case _      =>
-            }}
-         }
-      }}
+  import ConnectionLike._
+  import ServerConnection.{Running => SCRunning, _}
 
-      private def abortHandler( server: Option[ ServerImpl ]) {
-         handleAbort()
-         val from = sender
-         loop { react {
-            case ServerConnection.Aborted =>
-               server.foreach( _.serverOffline() )
-               dispatch( ServerConnection.Aborted )
-               from ! ()
+//  private val sync  = new AnyRef
+//  private var phase = Promise[Unit]()
+//
+//  override protected def notifyAborted() {
+//    sync.synchronized {
+//      phase.failure(Processor.Aborted())
+//    }
+//  }
 
-            case AddListener( l )   => actAddList( l )
-            case RemoveListener( l )=> actRemoveList( l )
-            case _                  => // XXX ?
-         }}
+  //   def server : Future[ Server ]
+
+  def abort() {
+    Handshake.abort()
+  }
+
+  object Handshake extends ProcessorImpl[Server, Any] {
+    def body(): Server = {
+      if (!connectionAlive) throw new IllegalStateException("Connection closed")
+      if (!c.isConnected) c.connect()
+      ping(message.ServerNotify(on = true)) {
+        case Message("/done", "/notify") =>
       }
-   }
+      val cnt = ping(Status) {
+        case m: StatusReply => m
+      }
+      val s = new ServerImpl(name, c, addr, config, clientConfig, cnt)
+      conn.dispatch(Preparing(s))
+      s.initTree()
+      conn.dispatch(SCRunning(s))
+      createAliveThread(s)
 
-  private def actDispatch(l: ServerConnection.Listener, change: ServerConnection.Condition) {
-    try {
-      if (l isDefinedAt change) l(change)
-    } catch {
-      case NonFatal(e) => e.printStackTrace() // catch, but print
+      ???
+
+      s
+    }
+
+    private def ping[A](message: Message)(reply: PartialFunction[osc.Packet, A]): A = {
+      val phase = Promise[A]()
+      c.action = { p =>
+        if (reply.isDefinedAt(p)) phase.trySuccess(reply(p))
+      }
+      val result = phase.future
+
+      @tailrec def loop(): A = try {
+        checkAborted()
+        c ! message
+        Await.result(result, 500.milliseconds)
+      } catch {
+        case _: TimeoutException => loop()
+      }
+
+      loop()
     }
   }
 
-  private def actAddList(l: ServerConnection.Listener) {
-    super.addListener(l)
-  }
+//    loop {
+//      react {
+//        case QueryServer => reply(s)
+//        case AddListener(l) => actAddList(l); actDispatch(l, SCRunning(s))
+//        case RemoveListener(l) => actRemoveList(l)
+//        case Abort => abortHandler(Some(s))
+//        case ServerConnection.Aborted =>
+//          s.serverOffline()
+//          dispatch(Aborted)
+//          loop {
+//            react {
+//              case AddListener(l) => actAddList(l); actDispatch(l, Aborted)
+//              case RemoveListener(l) => actRemoveList(l)
+//              case Abort => reply()
+//              case QueryServer => reply(s)
+//            }
+//          }
+//      }
+//    }
 
-  private def actRemoveList(l: ServerConnection.Listener) {
-    super.removeListener(l)
-  }
+//
+//    private def abortHandler(server: Option[ServerImpl]) {
+//      handleAbort()
+//      val from = sender
+//      loop {
+//        react {
+//          case ServerConnection.Aborted =>
+//            server.foreach(_.serverOffline())
+//            dispatch(ServerConnection.Aborted)
+//            from !()
+//
+//          case AddListener(l) => actAddList(l)
+//          case RemoveListener(l) => actRemoveList(l)
+//          case _ => // XXX ?
+//        }
+//      }
+//    }
+//  }
 
-  override def addListener(l: ServerConnection.Listener): ServerConnection.Listener = {
-    actor ! AddListener(l)
-    l
-  }
+//  private def actDispatch(l: ServerConnection.Listener, change: ServerConnection.Condition) {
+//    try {
+//      if (l isDefinedAt change) l(change)
+//    } catch {
+//      case NonFatal(e) => e.printStackTrace() // catch, but print
+//    }
+//  }
 
-  override def removeListener(l: ServerConnection.Listener): ServerConnection.Listener = {
-    actor ! RemoveListener(l)
-    l
-  }
+//  private def actAddList(l: ServerConnection.Listener) {
+//    super.addListener(l)
+//  }
+//
+//  private def actRemoveList(l: ServerConnection.Listener) {
+//    super.removeListener(l)
+//  }
 
-  //   lazy val server : Future[ Server ] = actor !! (QueryServer, { case s: Server => s })
-//   lazy val abort : Future[ Unit ] = actor !! (Abort, { case _ => ()})
-   def abort() { actor ! Abort }
+//  override def addListener(l: ServerConnection.Listener): ServerConnection.Listener = {
+//    actor ! AddListener(l)
+//    l
+//  }
+//
+//  override def removeListener(l: ServerConnection.Listener): ServerConnection.Listener = {
+//    actor ! RemoveListener(l)
+//    l
+//  }
 
    def handleAbort() : Unit
    def connectionAlive : Boolean
@@ -158,15 +181,14 @@ private[synth] sealed trait ConnectionLike extends ServerConnection {
    def createAliveThread( s: Server ) : Unit
 }
 
-private[synth] final class Connection @throws( classOf[ IOException ])
-   ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val config: Server.Config,
-     val clientConfig: Client.Config, aliveThread: Boolean )
-extends ConnectionLike {
-//      import ConnectionLike._
+private[synth] final class Connection(val name: String, val c: OSCClient, val addr: InetSocketAddress, val config: Server.Config,
+                                      val clientConfig: Client.Config, aliveThread: Boolean)
+  extends ConnectionLike {
 
    def start() {
-      actor.start()
-      actor ! ConnectionLike.Ready
+     import ExecutionContext.Implicits.global
+     Handshake.start()
+      // actor ! ConnectionLike.Ready
    }
 
    override def toString = "connect<" + name + ">"
@@ -200,7 +222,7 @@ extends ConnectionLike {
          p.destroy()
       } finally {
          println( "scsynth terminated (" + p.exitValue +")" )
-         actor ! ServerConnection.Aborted
+         abort() // actor ! ServerConnection.Aborted
       }}
    }
 
@@ -225,7 +247,7 @@ if( line.startsWith( "Super" ) && line.contains( " ready" )) isBooting = false
             } catch {
                case e: Throwable => isOpen = false
             }
-            actor ! (if( isOpen ) Ready else Abort)
+            ??? // actor ! (if( isOpen ) Ready else Abort)
             while( isOpen ) {
                val line = inReader.readLine
                isOpen = line != null
@@ -237,7 +259,7 @@ if( line.startsWith( "Super" ) && line.contains( " ready" )) isBooting = false
       // ...and go
       postThread.start()
       processThread.start()
-      actor.start()
+      ??? // actor.start()
    }
 
    override def toString = "boot<" + name + ">"

@@ -26,6 +26,8 @@
 package de.sciss.synth
 
 import collection.immutable.IntMap
+import de.sciss.model.impl.ModelImpl
+import de.sciss.model.Model
 
 object NodeManager {
   type Listener = Model.Listener[NodeManager.Update]
@@ -46,7 +48,7 @@ object NodeManager {
   case object Cleared extends Update
 }
 
-final class NodeManager(val server: Server) extends Model[NodeManager.Update] {
+final class NodeManager(val server: Server) extends ModelImpl[NodeManager.Update] {
   import NodeManager._
 
   private var nodes: Map[Int, Node] = _

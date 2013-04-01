@@ -26,15 +26,16 @@
 package de.sciss.synth
 
 import collection.immutable.IntMap
+import de.sciss.model.impl.ModelImpl
 
 object BufferManager {
-   case class BufferInfo( buffer: Buffer, info: message.BufferInfo.Data )
+  case class BufferInfo(buffer: Buffer, info: message.BufferInfo.Data)
 }
 
-final class BufferManager( server: Server ) extends Model[BufferManager.BufferInfo] {
-   import BufferManager._
+final class BufferManager(server: Server) extends ModelImpl[BufferManager.BufferInfo] {
+  import BufferManager._
 
-   private var buffers: Map[Int, Buffer] = _
+  private var buffers: Map[Int, Buffer] = _
    private val sync = new AnyRef
 
    // ---- constructor ----

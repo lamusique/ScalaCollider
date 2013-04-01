@@ -20,7 +20,7 @@ To link to ScalaCollider:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `1.5.+`
+The current version `v` is `1.6.+`
 
 ### starting a SuperCollider server
 

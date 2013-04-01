@@ -25,6 +25,9 @@
 
 package de.sciss.synth
 
+import de.sciss.model.impl.ModelImpl
+import de.sciss.model.Model
+
 /**
  * Add-actions are used by the server to determine where to place a node with
  * respect to other nodes. They form an enumeration of integers which are
@@ -72,7 +75,7 @@ case object addReplace  extends AddAction( 4 )
 object Node {
   type Listener = Model.Listener[NodeManager.NodeChange]
 }
-abstract class Node extends Model[NodeManager.NodeChange] {
+abstract class Node extends ModelImpl[NodeManager.NodeChange] {
 
   // ---- abstract ----
   def server: Server
