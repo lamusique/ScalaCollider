@@ -869,20 +869,20 @@ trait Server extends ServerLike with Model[Server.Update] {
 
    import Server._
 
-   def clientConfig: Client.Config
+   def clientConfig : Client.Config
 
-   def rootNode : Group
+   def rootNode     : Group
    def defaultGroup : Group
-   def nodeManager : NodeManager
-   def bufManager : BufferManager
+   def nodeManager  : NodeManager
+   def bufManager   : BufferManager
 
-   def isLocal : Boolean
-   def isConnected : Boolean
-   def isRunning : Boolean
-   def isOffline : Boolean
+   def isLocal      : Boolean
+   def isConnected  : Boolean
+   def isRunning    : Boolean
+   def isOffline    : Boolean
 
    def nextNodeID(): Int
-   def nextSyncID() : Int
+   def nextSyncID(): Int
 
   def allocControlBus(numChannels: Int): Int
   def allocAudioBus  (numChannels: Int): Int

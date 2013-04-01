@@ -1,12 +1,12 @@
-## ScalaCollider
+# ScalaCollider
 
-### statement
+## statement
 
-ScalaCollider is a SuperCollider client for the Scala language. It is (C)opyright 2008-2013 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
+ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008-2013 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
-### requirements / installation
+## building
 
-ScalaCollider currently builds with sbt 0.12 against Scala 2.10. It requires Java 1.6 and SuperCollider 3.5 or higher. It depends on [ScalaOSC](http://github.com/Sciss/ScalaOSC), [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile), and [ScalaColliderUGens](http://github.com/Sciss/ScalaColliderUGens).
+ScalaCollider currently builds with sbt 0.12 against Scala 2.10. It requires SuperCollider 3.5 or higher. Note that the UGens are provided by the separate [ScalaColliderUGens](http://github.com/Sciss/ScalaColliderUGens) project. A simple Swing front end is provided by the [ScalaColliderSwing](http://github.com/Sciss/ScalaColliderSwing) project.
 
 Targets for sbt:
 
@@ -16,13 +16,15 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-To link to ScalaCollider:
+## linking
+
+To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
 The current version `v` is `1.6.+`
 
-### starting a SuperCollider server
+## starting a SuperCollider server
 
 The following short example illustrates how a server can be launched and a synth played:
 
@@ -58,11 +60,17 @@ On the other hand, if you run ScalaCollider from a Bash terminal, you instead ed
 
 For more sound examples, see `ExampleCmd.txt`. There is also an introductory video for the [Swing frontend](http://github.com/Sciss/ScalaColliderSwing) at [www.screencast.com/t/YjUwNDZjMT](http://www.screencast.com/t/YjUwNDZjMT).
 
-### creating an IntelliJ IDEA project
+## packages
+
+- Audio file functionality is provided by the [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile) library.
+- Open Sound Control functionality is provided by the [ScalaOSC](http://github.com/Sciss/ScalaOSC) library.
+- MIDI functionality is not included, but can be added with the [ScalaMIDI](http://github.com/Sciss/ScalaMIDI) library.
+
+## creating an IntelliJ IDEA project
 
 If you want to develop the sources of ScalaCollider, the recommended way is to use IntelliJ IDEA. To create the project files, proceed as follows. If you have not installed the sbt-idea plugin yet, create the following contents in `~/.sbt/plugins/build.sbt`:
 
-    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.1.0")
+    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.2.0")
 
 Then to create the IDEA project, run `sbt gen-idea`.
 

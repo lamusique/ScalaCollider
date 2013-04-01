@@ -39,6 +39,8 @@ import message.{Status, StatusReply}
 import de.sciss.osc
 import annotation.tailrec
 import de.sciss.model.impl.ModelImpl
+import util.{Failure, Success}
+import ExecutionContext.Implicits.global
 
 private[synth] object ConnectionLike {
    case object Ready
@@ -69,8 +71,8 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
     Handshake.abort()
   }
 
-  object Handshake extends ProcessorImpl[Server, Any] {
-    def body(): Server = {
+  object Handshake extends ProcessorImpl[ServerImpl, Any] {
+    def body(): ServerImpl = {
       if (!connectionAlive) throw new IllegalStateException("Connection closed")
       if (!c.isConnected) c.connect()
       ping(message.ServerNotify(on = true)) {
@@ -79,15 +81,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       val cnt = ping(Status) {
         case m: StatusReply => m
       }
-      val s = new ServerImpl(name, c, addr, config, clientConfig, cnt)
-      conn.dispatch(Preparing(s))
-      s.initTree()
-      conn.dispatch(SCRunning(s))
-      createAliveThread(s)
-
-      ???
-
-      s
+      new ServerImpl(name, c, addr, config, clientConfig, cnt)
     }
 
     private def ping[A](message: Message)(reply: PartialFunction[osc.Packet, A]): A = {
@@ -107,6 +101,16 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
 
       loop()
     }
+  }
+
+  Handshake.addListener {
+    case Processor.Result(_, Success(s)) =>
+      dispatch(Preparing(s))
+      s.initTree()
+      dispatch(SCRunning(s))
+      createAliveThread(s)
+    case Processor.Result(_, Failure(e)) =>
+      dispatch(Aborted)
   }
 
 //    loop {
@@ -186,7 +190,6 @@ private[synth] final class Connection(val name: String, val c: OSCClient, val ad
   extends ConnectionLike {
 
    def start() {
-     import ExecutionContext.Implicits.global
      Handshake.start()
       // actor ! ConnectionLike.Ready
    }
@@ -259,7 +262,7 @@ if( line.startsWith( "Super" ) && line.contains( " ready" )) isBooting = false
       // ...and go
       postThread.start()
       processThread.start()
-      ??? // actor.start()
+      Handshake.start()
    }
 
    override def toString = "boot<" + name + ">"
