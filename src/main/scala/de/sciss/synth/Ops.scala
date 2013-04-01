@@ -25,7 +25,6 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.Packet
 import collection.immutable.{IndexedSeq => IIdxSeq}
 import language.implicitConversions
 import de.sciss.osc
@@ -49,20 +48,26 @@ object Ops {
   }
 
   // cannot occur inside value class at the moment
-  private[this] def sendSynthDefWithAction(d: SynthDef, server: Server, msgFun: Option[Packet] => osc.Message,
+  private[this] def sendSynthDefWithAction(d: SynthDef, server: Server, msgFun: Option[osc.Packet] => osc.Message,
                                            completion: SynthDef.Completion, name: String) {
     completion.action map { action =>
-      val syncMsg = server.syncMsg
+      val syncMsg = server.syncMsg()
       val syncID = syncMsg.id
-      val compPacket: Packet = completion.message match {
+      val compPacket: osc.Packet = completion.message match {
         case Some(msgFun2) => osc.Bundle.now(msgFun2(d), syncMsg)
         case None => syncMsg
       }
-      server.!?(msgFun(Some(compPacket))) {
-        // XXX timeout kind of arbitrary
+      val p   = msgFun(Some(compPacket))
+      val fut = server.!!(p) {
         case message.Synced(`syncID`) => action(d)
-        case message.TIMEOUT => println("ERROR: " + d + "." + name + " : timeout!")
+//        case message.TIMEOUT => println("ERROR: " + d + "." + name + " : timeout!")
       }
+      val cfg = server.clientConfig
+      import cfg.executionContext
+      fut.onFailure {
+        case message.Timeout() => println(s"ERROR: $d.$name : timeout!")
+      }
+
     } getOrElse {
       server ! msgFun(completion.message.map(_.apply(d)))
     }
@@ -298,11 +303,11 @@ object Ops {
       server ! allocMsg(numFrames, numChannels, makePacket(completion))
     }
 
-    def free(completion: Optional[Packet] = None) {
+    def free(completion: Optional[osc.Packet] = None) {
       server ! freeMsg(completion, release = true)
     }
 
-    def close(completion: Option[Packet] = None) {
+    def close(completion: Option[osc.Packet] = None) {
       server ! closeMsg(completion)
     }
 
@@ -380,7 +385,7 @@ object Ops {
 
     def fill(infos: message.BufferFill.Info*) { server ! fillMsg(infos: _*) }
 
-    def zero(completion: Option[Packet] = None) { server ! zeroMsg(completion) }
+    def zero(completion: Option[osc.Packet] = None) { server ! zeroMsg(completion) }
 
     def write(path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
               sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,

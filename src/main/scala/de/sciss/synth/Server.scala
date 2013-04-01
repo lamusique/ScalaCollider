@@ -26,13 +26,16 @@
 package de.sciss.synth
 
 import io.{AudioFileType, SampleFormat}
-import java.io.{File, IOException}
-import de.sciss.osc.{Dump, Client => OSCClient, Packet, Transport, TCP, UDP}
+import java.io.File
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
 import collection.mutable
 import language.implicitConversions
 import de.sciss.model.Model
 import message.StatusReply
+import de.sciss.osc
+import osc.{TCP, UDP}
+import concurrent.duration._
+import concurrent.Future
 
 object Server {
   @volatile private var _default: Server = null
@@ -189,7 +192,7 @@ object Server {
     /**
      * (Realtime) Open Sound Control transport used by scsynth. (Either of `UDP` and `TCP`).
      */
-    def transport: Transport.Net
+    def transport: osc.Transport.Net
 
     /**
      * (Realtime) An option to enable particular input 'streams' or 'bundles' of a sound card.
@@ -483,7 +486,7 @@ object Server {
                                      /* val memoryLocking: Boolean, */
                                      val host: String,
                                      val port: Int,
-                                     val transport: Transport.Net,
+                                     val transport: osc.Transport.Net,
                                      val inputStreamsEnabled: Option[String],
                                      val outputStreamsEnabled: Option[String],
                                      val deviceNames: Option[(String, String)],
@@ -599,7 +602,7 @@ object Server {
     /**
      * (Realtime) The default transport is `UDP`.
      */
-    var transport: Transport.Net = UDP
+    var transport: osc.Transport.Net = UDP
     /**
      * (Realtime) The default settings for enabled input streams is `None`
      */
@@ -773,7 +776,7 @@ object Server {
     new impl.ServerImpl(name, c, addr, config, clientConfig, StatusReply(0, 0, 0, 0, 0f, 0f, 0.0, 0.0))
   }
 
-  private def prepareConnection(config: Config, clientConfig: Client.Config): (InetSocketAddress, OSCClient) = {
+  private def prepareConnection(config: Config, clientConfig: Client.Config): (InetSocketAddress, osc.Client) = {
     val addr = new InetSocketAddress(config.host, config.port)
     val clientAddr = clientConfig.addr getOrElse {
       if (addr.getAddress.isLoopbackAddress)
@@ -785,7 +788,7 @@ object Server {
     (addr, c)
   }
 
-  def allocPort(transport: Transport): Int = {
+  def allocPort(transport: osc.Transport): Int = {
     transport match {
       case TCP =>
         val ss = new ServerSocket(0)
@@ -824,8 +827,8 @@ object Server {
 
   final case class Counts(c: message.StatusReply) extends Update
 
-  private def createClient(transport: Transport.Net, serverAddr: InetSocketAddress,
-                           clientAddr: InetSocketAddress): OSCClient = {
+  private def createClient(transport: osc.Transport.Net, serverAddr: InetSocketAddress,
+                           clientAddr: InetSocketAddress): osc.Client = {
     val client = transport match {
       case UDP =>
         val cfg = UDP.Config()
@@ -893,7 +896,7 @@ trait Server extends ServerLike with Model[Server.Update] {
   def allocBuffer(numChannels: Int): Int
   def freeBuffer (index      : Int): Unit
 
-  def !(p: Packet): Unit
+  def !(p: osc.Packet): Unit
 
 //   /**
 //    * Sends out an OSC packet that generates some kind of reply, and
@@ -930,19 +933,19 @@ trait Server extends ServerLike with Model[Server.Update] {
    * returns immediately. It registers a handler to parse that reply.
    * The handler is tested for each incoming OSC message (using its
    * `isDefinedAt` method) and invoked and removed in case of a
-   * match. If the handler doesn't match in the given timeout period,
-   * it is invoked with message `TIMEOUT` and removed. If the handler
-   * wishes not to do anything particular in the case of a timeout,
-   * it simply should not add a case for `TIMEOUT`.
+   * match, completing the returned future.
    *
-   * @param   timeOut  the timeout in milliseconds
-   * @param   p        the packet to send out
-   * @param   handler  the handler to match against incoming messages
-   *                   or timeout
+   * If the handler doesn't match in the given timeout period,
+   * the future fails with a `Timeout` exception, and the handler is removed.
    *
-   * @see  [[de.sciss.synth.message.TIMEOUT]]
+   * @param   packet    the packet to send out
+   * @param   timeout   the timeout in milliseconds
+   * @param   handler   the handler to match against incoming messages
+   * @return   a future of the successfully completed handler or timeout exception
+   *
+   * @see  [[de.sciss.synth.message.Timeout]]
    */
-  def !?(p: Packet, timeOut: Long = 6000L)(handler: PartialFunction[Any, Unit]): Unit
+  def !![A](packet: osc.Packet, timeout: Duration = 6.seconds)(handler: PartialFunction[osc.Message, A]): Future[A]
 
   def counts: StatusReply
 
@@ -960,7 +963,7 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   final def syncMsg(): message.Sync = message.Sync(nextSyncID())
 
-  def dumpOSC(mode: Dump = Dump.Text): Unit
+  def dumpOSC(mode: osc.Dump = osc.Dump.Text): Unit
 
   def quit(): Unit
 

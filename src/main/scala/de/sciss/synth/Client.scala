@@ -27,12 +27,14 @@ package de.sciss.synth
 
 import java.net.InetSocketAddress
 import language.implicitConversions
+import concurrent.ExecutionContext
 
 object Client {
   sealed trait ConfigLike {
     def clientID: Int
     def nodeIDOffset: Int
     def addr: Option[InetSocketAddress]
+    def executionContext: ExecutionContext
   }
 
   object Config {
@@ -49,6 +51,7 @@ object Client {
   }
 
   final class Config private[Client](val clientID: Int, val nodeIDOffset: Int, val addr: Option[InetSocketAddress])
+                                     (implicit val executionContext: ExecutionContext)
     extends ConfigLike {
     override def toString = "ClientOptions"
   }
@@ -57,8 +60,8 @@ object Client {
     var clientID: Int = 0
     var nodeIDOffset: Int = 1000
     var addr: Option[InetSocketAddress] = None
+    var executionContext: ExecutionContext = ExecutionContext.global
 
-    def build: Config = new Config(clientID, nodeIDOffset, addr)
+    def build: Config = new Config(clientID, nodeIDOffset, addr)(executionContext)
   }
-
 }

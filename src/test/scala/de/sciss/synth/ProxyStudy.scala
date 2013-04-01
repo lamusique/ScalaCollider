@@ -42,7 +42,7 @@ object ProxyStudy2 extends App {
    class DefBuilder {
       def getBuilder[ A ]( tpe: ControlType { type Proxy = A }) : ControlBuilder[ A ] = {
 
-         sys.error( "How to do that???" )
+         sys.error( "How to do that?" )
       }
 
       def build : Def = {
@@ -101,7 +101,7 @@ object ProxyStudy {
 
 
 
-         sys.error( "How to do that???" )
+         sys.error( "How to do that?" )
       }
    }
 }

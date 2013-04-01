@@ -26,12 +26,11 @@
 package de.sciss.synth
 package impl
 
-import java.io.{InputStreamReader, BufferedReader, File, IOException}
+import java.io.{InputStreamReader, BufferedReader, File}
 import java.net.InetSocketAddress
 import de.sciss.osc.{Message, Client => OSCClient}
-import util.control.NonFatal
 import de.sciss.processor.impl.ProcessorImpl
-import concurrent.{ExecutionContext, Await, Promise}
+import concurrent.{Await, Promise}
 import concurrent.duration._
 import de.sciss.processor.Processor
 import java.util.concurrent.TimeoutException
@@ -40,7 +39,6 @@ import de.sciss.osc
 import annotation.tailrec
 import de.sciss.model.impl.ModelImpl
 import util.{Failure, Success}
-import ExecutionContext.Implicits.global
 
 private[synth] object ConnectionLike {
    case object Ready
@@ -53,26 +51,26 @@ private[synth] object ConnectionLike {
 private[synth] sealed trait ConnectionLike extends ServerConnection with ModelImpl[ServerConnection.Condition] {
   conn =>
 
-  import ConnectionLike._
   import ServerConnection.{Running => SCRunning, _}
-
-//  private val sync  = new AnyRef
-//  private var phase = Promise[Unit]()
-//
-//  override protected def notifyAborted() {
-//    sync.synchronized {
-//      phase.failure(Processor.Aborted())
-//    }
-//  }
-
-  //   def server : Future[ Server ]
 
   def abort() {
     Handshake.abort()
   }
 
   object Handshake extends ProcessorImpl[ServerImpl, Any] {
+    private val beginCond = Promise[Unit]()
+
+    def begin() {
+      beginCond.trySuccess()
+    }
+
+    override def notifyAborted() {
+      beginCond.failure(Processor.Aborted())
+    }
+
     def body(): ServerImpl = {
+      Await.result(beginCond.future, Duration.Inf)
+
       if (!connectionAlive) throw new IllegalStateException("Connection closed")
       if (!c.isConnected) c.connect()
       ping(message.ServerNotify(on = true)) {
@@ -110,170 +108,120 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       dispatch(SCRunning(s))
       createAliveThread(s)
     case Processor.Result(_, Failure(e)) =>
+      handleAbort()
       dispatch(Aborted)
   }
 
-//    loop {
-//      react {
-//        case QueryServer => reply(s)
-//        case AddListener(l) => actAddList(l); actDispatch(l, SCRunning(s))
-//        case RemoveListener(l) => actRemoveList(l)
-//        case Abort => abortHandler(Some(s))
-//        case ServerConnection.Aborted =>
-//          s.serverOffline()
-//          dispatch(Aborted)
-//          loop {
-//            react {
-//              case AddListener(l) => actAddList(l); actDispatch(l, Aborted)
-//              case RemoveListener(l) => actRemoveList(l)
-//              case Abort => reply()
-//              case QueryServer => reply(s)
-//            }
-//          }
-//      }
-//    }
-
-//
-//    private def abortHandler(server: Option[ServerImpl]) {
-//      handleAbort()
-//      val from = sender
-//      loop {
-//        react {
-//          case ServerConnection.Aborted =>
-//            server.foreach(_.serverOffline())
-//            dispatch(ServerConnection.Aborted)
-//            from !()
-//
-//          case AddListener(l) => actAddList(l)
-//          case RemoveListener(l) => actRemoveList(l)
-//          case _ => // XXX ?
-//        }
-//      }
-//    }
-//  }
-
-//  private def actDispatch(l: ServerConnection.Listener, change: ServerConnection.Condition) {
-//    try {
-//      if (l isDefinedAt change) l(change)
-//    } catch {
-//      case NonFatal(e) => e.printStackTrace() // catch, but print
-//    }
-//  }
-
-//  private def actAddList(l: ServerConnection.Listener) {
-//    super.addListener(l)
-//  }
-//
-//  private def actRemoveList(l: ServerConnection.Listener) {
-//    super.removeListener(l)
-//  }
-
-//  override def addListener(l: ServerConnection.Listener): ServerConnection.Listener = {
-//    actor ! AddListener(l)
-//    l
-//  }
-//
-//  override def removeListener(l: ServerConnection.Listener): ServerConnection.Listener = {
-//    actor ! RemoveListener(l)
-//    l
-//  }
-
-   def handleAbort() : Unit
-   def connectionAlive : Boolean
-   def c : OSCClient
-   def clientConfig: Client.Config
-   def createAliveThread( s: Server ) : Unit
+  def handleAbort(): Unit
+  def connectionAlive: Boolean
+  def c: OSCClient
+  def clientConfig: Client.Config
+  def createAliveThread(s: Server): Unit
 }
 
 private[synth] final class Connection(val name: String, val c: OSCClient, val addr: InetSocketAddress, val config: Server.Config,
                                       val clientConfig: Client.Config, aliveThread: Boolean)
   extends ConnectionLike {
 
-   def start() {
-     Handshake.start()
-      // actor ! ConnectionLike.Ready
-   }
+  import clientConfig.executionContext
 
-   override def toString = "connect<" + name + ">"
+  def start() {
+    Handshake.start()
+    Handshake.begin()
+  }
 
-   def handleAbort() {}
-   def connectionAlive = true // XXX could add a timeout?
-   def createAliveThread( s: Server ) {
-      if( aliveThread ) s.startAliveThread( 1.0f, 0.25f, 40 ) // allow for a luxury 10 seconds absence
-   }
+  override def toString = "connect<" + name + ">"
+
+  def handleAbort() {}
+
+  def connectionAlive = true
+
+  // XXX could add a timeout?
+  def createAliveThread(s: Server) {
+    if (aliveThread) s.startAliveThread(1.0f, 0.25f, 40) // allow for a luxury 10 seconds absence
+  }
 }
 
-private[synth] final class Booting @throws( classOf[ IOException ])
-   ( val name: String, val c: OSCClient, val addr: InetSocketAddress, val config: Server.Config,
-     val clientConfig: Client.Config, aliveThread: Boolean )
-extends ConnectionLike {
-   import ConnectionLike._
+private[synth] final class Booting(val name: String, val c: OSCClient, val addr: InetSocketAddress,
+                                   val config: Server.Config, val clientConfig: Client.Config, aliveThread: Boolean)
+  extends ConnectionLike {
 
-   lazy val p = {
-      val processArgs   = config.toRealtimeArgs
-      val directory     = new File( config.programPath ).getParentFile
-      val pb            = new ProcessBuilder( processArgs: _* )
-         .directory( directory )
-         .redirectErrorStream( true )
-      pb.start    // throws IOException if command not found or not executable
-   }
+  import clientConfig.executionContext
 
-   lazy val processThread = new Thread {
-      override def run() { try {
-         p.waitFor()
-      } catch { case e: InterruptedException =>
-         p.destroy()
+  // the actual scsynth system process
+  lazy val p: Process = {
+    val processArgs = config.toRealtimeArgs
+    val directory   = new File(config.programPath).getParentFile
+    val pb          = new ProcessBuilder(processArgs: _*)
+      .directory(directory)
+      .redirectErrorStream(true)
+    pb.start()  // throws IOException if command not found or not executable
+  }
+
+  // an auxiliary thread that monitors the scsynth process
+  lazy val processThread: Thread = new Thread {
+    override def run() {
+      try {
+        p.waitFor()
+      } catch {
+        case e: InterruptedException => p.destroy()
       } finally {
-         println( "scsynth terminated (" + p.exitValue +")" )
-         abort() // actor ! ServerConnection.Aborted
-      }}
-   }
-
-   def start() {
-      val inReader   = new BufferedReader( new InputStreamReader( p.getInputStream ))
-      val postThread = new Thread {
-         override def run() {
-            var isOpen         = true
-            var isBooting      = true
-            try {
-               while( isOpen && isBooting ) {
-                  val line = inReader.readLine()
-                  isOpen = line != null
-                  if( isOpen ) {
-                     println( line )
-// of course some sucker screwed it up and added another period in SC 3.4.4
-//                        if( line == "SuperCollider 3 server ready." ) isBooting = false
-// one more... this should allow for debug versions and supernova to be detected, too
-if( line.startsWith( "Super" ) && line.contains( " ready" )) isBooting = false
-                  }
-               }
-            } catch {
-               case e: Throwable => isOpen = false
-            }
-            ??? // actor ! (if( isOpen ) Ready else Abort)
-            while( isOpen ) {
-               val line = inReader.readLine
-               isOpen = line != null
-               if( isOpen ) println( line )
-            }
-         }
+        println("scsynth terminated (" + p.exitValue + ")")
+        abort()
       }
+    }
+  }
 
-      // ...and go
-      postThread.start()
-      processThread.start()
-      Handshake.start()
-   }
+  def start() {
+    // a thread the pipes the scsynth process output to the standard console
+    val postThread = new Thread {
+      override def run() {
+        val inReader  = new BufferedReader(new InputStreamReader(p.getInputStream))
+        var isOpen    = true
+        var isBooting = true
+        try {
+          while (isOpen && isBooting) {
+            val line = inReader.readLine()
+            isOpen = line != null
+            if (isOpen) {
+              println(line)
+              // of course some sucker screwed it up and added another period in SC 3.4.4
+              //                        if( line == "SuperCollider 3 server ready." ) isBooting = false
+              // one more... this should allow for debug versions and supernova to be detected, too
+              if (line.startsWith("Super") && line.contains(" ready")) isBooting = false
+            }
+          }
+        } catch {
+          case e: Throwable => isOpen = false
+        }
+        if (isOpen) { // if `false`, `processThread` will terminate and invoke `abort()`
+          Handshake.begin()
+        }
+        while (isOpen) {
+          val line = inReader.readLine
+          isOpen = line != null
+          if (isOpen) println(line)
+        }
+      }
+    }
 
-   override def toString = "boot<" + name + ">"
+    // make sure to begin with firing up Handshake, so that an immediate
+    // failure of precessThread does not call abort prematurely
+    Handshake.start()
+    postThread.start()
+    processThread.start()
+  }
 
-   def handleAbort() { processThread.interrupt() }
-   def connectionAlive = processThread.isAlive
-   def createAliveThread( s: Server ) {
-      // note that we optimistically assume that if we boot the server, it
-      // will not die (exhausting deathBounces). if it crashes, the boot
-      // thread's process will know anyway. this way we avoid stupid
-      // server offline notifications when using slow asynchronous commands
-      if( aliveThread ) s.startAliveThread( 1.0f, 0.25f, Int.MaxValue )
-   }
+  override def toString = "boot<" + name + ">"
+
+  def handleAbort() { processThread.interrupt() }
+  def connectionAlive = processThread.isAlive
+
+  def createAliveThread(s: Server) {
+    // note that we optimistically assume that if we boot the server, it
+    // will not die (exhausting deathBounces). if it crashes, the boot
+    // thread's process will know anyway. this way we avoid stupid
+    // server offline notifications when using slow asynchronous commands
+    if (aliveThread) s.startAliveThread(1.0f, 0.25f, Int.MaxValue)
+  }
 }

@@ -27,14 +27,13 @@ package de.sciss.synth
 package message
 
 import de.sciss.osc.Message
+import util.control.NonFatal
 
 trait Handler {
   // returns `true` if the handler wishes to be removed
   private[synth] def handle(msg: Message): Boolean
 
   private[synth] def removed(): Unit
-
-  //   private[synth] def timedOut : Unit
 }
 
 object Responder {
@@ -63,7 +62,7 @@ object Responder {
       if (handled) try {
         handler(msg)
       } catch {
-        case e: Throwable => e.printStackTrace()
+        case NonFatal(e) => e.printStackTrace()
       }
       once && handled
     }
@@ -77,7 +76,6 @@ object Responder {
 trait Responder extends Handler {
   def server: Server
 
-  def add(): this.type
-
+  def add   (): this.type
   def remove(): this.type
 }

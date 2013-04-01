@@ -71,7 +71,7 @@ private[synth] final class GraphFunction[T](thunk: => T)(implicit res: GraphFunc
     val compl       = Bundle.now(synthMsg, defFreeMsg)
     // synth.onEnd { server ! synthDef.freeMsg } // why would we want to accumulate the defs?
     if (bytes.remaining > (65535 / 4)) {
-      // "preliminary fix until full size works" (???)
+      // "preliminary fix until full size works" (?)
       if (server.isLocal) {
         import Ops._
         synthDef.load(server, completion = compl)

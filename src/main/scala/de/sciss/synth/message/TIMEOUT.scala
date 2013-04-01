@@ -1,3 +1,3 @@
 package de.sciss.synth.message
 
-case object TIMEOUT
+final case class Timeout() extends RuntimeException // osc.Message("TIMEOUT")
