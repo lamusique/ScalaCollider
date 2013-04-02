@@ -53,13 +53,14 @@ final class NodeManager(val server: Server) extends ModelImpl[NodeManager.Update
 
   private var nodes: Map[Int, Node] = _
   private val sync     = new AnyRef
-	
-	// ---- constructor ----
+
+  // ---- constructor ----
   clear()
-//      if( server.isRunning ) {
-//         val defaultGroup = server.defaultGroup
-//         nodes += defaultGroup.id -> defaultGroup
-//      }
+
+  //      if( server.isRunning ) {
+  //         val defaultGroup = server.defaultGroup
+  //         nodes += defaultGroup.id -> defaultGroup
+  //      }
 
   def nodeChange(e: message.NodeChange) {
     e match {
@@ -77,6 +78,7 @@ final class NodeManager(val server: Server) extends ModelImpl[NodeManager.Update
         dispatchBoth(NodeGo(node, info))
 
       case message.NodeEnd(nodeID, info) =>
+        // println(s"---- NodeEnd: ${nodes.get(nodeID)}")
         nodes.get(nodeID).foreach { node =>
           unregister(node)
           dispatchBoth(NodeEnd(node, info))
@@ -109,12 +111,14 @@ final class NodeManager(val server: Server) extends ModelImpl[NodeManager.Update
   // by the message dispatch management
   def register(node: Node) {
     sync.synchronized {
+      // println(s"---- register node: $node")
       nodes += node.id -> node
     }
   }
 
   def unregister(node: Node) {
     sync.synchronized {
+      // println(s"---- unregister node: $node")
       nodes -= node.id
     }
   }

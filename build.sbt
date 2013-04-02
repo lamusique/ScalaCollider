@@ -1,10 +1,10 @@
 name := "ScalaCollider"
 
-version := "1.6.0-SNAPSHOT"
+version := "1.6.0"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.10.0"  // _not 2.10.1_ because of SI-7268
 
 description := "A sound synthesis library for the SuperCollider server"
 
@@ -32,6 +32,8 @@ libraryDependencies <<= version { v =>
 retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
+
+scalacOptions ++= Seq("-Xelide-below", "INFO")     // elide debug logging!
 
 // ---- console ----
 

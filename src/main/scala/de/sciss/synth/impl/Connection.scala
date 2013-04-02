@@ -36,9 +36,10 @@ import de.sciss.processor.Processor
 import java.util.concurrent.TimeoutException
 import message.{Status, StatusReply}
 import de.sciss.osc
-import annotation.tailrec
+import annotation.{elidable, tailrec}
 import de.sciss.model.impl.ModelImpl
 import util.{Failure, Success}
+import util.control.NonFatal
 
 private[synth] object ConnectionLike {
    case object Ready
@@ -46,7 +47,10 @@ private[synth] object ConnectionLike {
    case object QueryServer
    final case class AddListener( l: ServerConnection.Listener )
    final case class RemoveListener( l: ServerConnection.Listener )
+
+  @elidable(elidable.CONFIG) def debug(what: => String) { println(s"<connect> $what") }
 }
+import ConnectionLike.debug
 
 private[synth] sealed trait ConnectionLike extends ServerConnection with ModelImpl[ServerConnection.Condition] {
   conn =>
@@ -55,20 +59,29 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
 
   def abort() {
     Handshake.abort()
+    Handshake.value.foreach {
+      case Success(s) =>
+        s.serverOffline()
+        dispatch(Aborted)
+      case _ =>
+    }
   }
 
   object Handshake extends ProcessorImpl[ServerImpl, Any] {
     private val beginCond = Promise[Unit]()
 
     def begin() {
+      debug("begin")
       beginCond.trySuccess()
     }
 
     override def notifyAborted() {
-      beginCond.failure(Processor.Aborted())
+      debug("notifyAborted")
+      beginCond.tryFailure(Processor.Aborted())
     }
 
     def body(): ServerImpl = {
+      debug("body")
       Await.result(beginCond.future, Duration.Inf)
 
       if (!connectionAlive) throw new IllegalStateException("Connection closed")
@@ -89,25 +102,44 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       }
       val result = phase.future
 
-      @tailrec def loop(): A = try {
+//      // @tailrec broken in 2.10.0, works in 2.10.1
+//      @tailrec def loop(): A = try {
+//        checkAborted()
+//        c ! message
+//        Await.result(result, 500.milliseconds)
+//      } catch {
+//        case _: TimeoutException => loop()
+//      }
+//
+//      loop()
+
+      while (true) try {
         checkAborted()
         c ! message
-        Await.result(result, 500.milliseconds)
-      } catch {
-        case _: TimeoutException => loop()
-      }
+        val res = Await.result(result, 500.milliseconds)
+        return res
 
-      loop()
+      } catch {
+        case _: TimeoutException => // loop()
+      }
+      sys.error("Never here")
     }
   }
 
   Handshake.addListener {
     case Processor.Result(_, Success(s)) =>
+      debug("success")
       dispatch(Preparing(s))
       s.initTree()
       dispatch(SCRunning(s))
       createAliveThread(s)
     case Processor.Result(_, Failure(e)) =>
+      e match {
+        case Processor.Aborted() =>
+          debug("failure: aborted")
+        case NonFatal(n) =>
+          n.printStackTrace()
+      }
       handleAbort()
       dispatch(Aborted)
   }
@@ -159,14 +191,20 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
   }
 
   // an auxiliary thread that monitors the scsynth process
-  lazy val processThread: Thread = new Thread {
+  val processThread: Thread = new Thread {
+    setDaemon(true)
     override def run() {
       try {
-        p.waitFor()
+        debug("enter waitFor")
+        val res = p.waitFor()
+        debug("exit waitFor")
+        println(s"scsynth terminated ($res)")
       } catch {
-        case e: InterruptedException => p.destroy()
+        case e: InterruptedException =>
+          debug("InterruptedException")
+          p.destroy()
       } finally {
-        println("scsynth terminated (" + p.exitValue + ")")
+        debug("abort")
         abort()
       }
     }
@@ -175,7 +213,9 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
   def start() {
     // a thread the pipes the scsynth process output to the standard console
     val postThread = new Thread {
+      setDaemon(true)
       override def run() {
+        debug("postThread")
         val inReader  = new BufferedReader(new InputStreamReader(p.getInputStream))
         var isOpen    = true
         var isBooting = true
@@ -192,9 +232,10 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
             }
           }
         } catch {
-          case e: Throwable => isOpen = false
+          case NonFatal(e) => isOpen = false
         }
         if (isOpen) { // if `false`, `processThread` will terminate and invoke `abort()`
+          debug("isOpen")
           Handshake.begin()
         }
         while (isOpen) {
@@ -207,6 +248,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
 
     // make sure to begin with firing up Handshake, so that an immediate
     // failure of precessThread does not call abort prematurely
+    debug("start")
     Handshake.start()
     postThread.start()
     processThread.start()

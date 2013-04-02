@@ -25,6 +25,7 @@
 
 package de.sciss.synth
 
+import impl.ServerImpl
 import io.{AudioFileType, SampleFormat}
 import java.io.File
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
@@ -38,14 +39,7 @@ import concurrent.duration._
 import concurrent.Future
 
 object Server {
-  @volatile private var _default: Server = null
-  def default: Server = {
-    if (_default == null) throw new IllegalStateException("There is no default Server yet")
-    _default
-  }
-  def default_=(value: Server) {
-    _default = value
-  }
+  def default: Server = ServerImpl.default
 
   /**
    * The default file path to `scsynth`. If the runtime (system) property `"SC_HOME"` is provided,
@@ -868,24 +862,24 @@ trait ServerConnection extends ServerLike with Model[ServerConnection.Condition]
 }
 
 trait Server extends ServerLike with Model[Server.Update] {
-   server =>
+  server =>
 
-   import Server._
+  import Server._
 
-   def clientConfig : Client.Config
+  def clientConfig : Client.Config
 
-   def rootNode     : Group
-   def defaultGroup : Group
-   def nodeManager  : NodeManager
-   def bufManager   : BufferManager
+  def rootNode     : Group
+  def defaultGroup : Group
+  def nodeManager  : NodeManager
+  def bufManager   : BufferManager
 
-   def isLocal      : Boolean
-   def isConnected  : Boolean
-   def isRunning    : Boolean
-   def isOffline    : Boolean
+  def isLocal      : Boolean
+  def isConnected  : Boolean
+  def isRunning    : Boolean
+  def isOffline    : Boolean
 
-   def nextNodeID(): Int
-   def nextSyncID(): Int
+  def nextNodeID(): Int
+  def nextSyncID(): Int
 
   def allocControlBus(numChannels: Int): Int
   def allocAudioBus  (numChannels: Int): Int
@@ -898,35 +892,35 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   def !(p: osc.Packet): Unit
 
-//   /**
-//    * Sends out an OSC packet that generates some kind of reply, and
-//    * returns immediately a `RevocableFuture` representing the parsed reply.
-//    * This parsing is done by a handler which is registered.
-//    * The handler is tested for each incoming OSC message (using its
-//    * `isDefinedAt` method) and invoked and removed in case of a
-//    * match. Note that the caller is responsible for timing out
-//    * the handler after a reasonable time. To do this, the
-//    * method `revoke` on the returned future must be called, which
-//    * will silently unregister the handler.
-//    *
-//    * '''Warning''': It is crucial that the Future is awaited
-//    * only within a dedicated actor thread. In particular you must
-//    * be careful and aware of the fact that the handler is executed
-//    * on the OSC receiver actor's body, and that you must not
-//    * try to await the future from ''any'' handler function
-//    * registered with OSC reception, because it would not be
-//    * possible to pull the reply message of the OSC receiver's
-//    * mailbox while the actor body blocks.
-//    *
-//    * @param   p        the packet to send out
-//    * @param   handler  the handler to match against incoming messages
-//    *    or timeout
-//    * @return  the future representing the parsed reply, and providing
-//    *    a `revoke` method to issue a timeout.
-//    *
-//    * @see  [[scala.actors.Futures]]
-//    */
-//   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ]
+  //   /**
+  //    * Sends out an OSC packet that generates some kind of reply, and
+  //    * returns immediately a `RevocableFuture` representing the parsed reply.
+  //    * This parsing is done by a handler which is registered.
+  //    * The handler is tested for each incoming OSC message (using its
+  //    * `isDefinedAt` method) and invoked and removed in case of a
+  //    * match. Note that the caller is responsible for timing out
+  //    * the handler after a reasonable time. To do this, the
+  //    * method `revoke` on the returned future must be called, which
+  //    * will silently unregister the handler.
+  //    *
+  //    * '''Warning''': It is crucial that the Future is awaited
+  //    * only within a dedicated actor thread. In particular you must
+  //    * be careful and aware of the fact that the handler is executed
+  //    * on the OSC receiver actor's body, and that you must not
+  //    * try to await the future from ''any'' handler function
+  //    * registered with OSC reception, because it would not be
+  //    * possible to pull the reply message of the OSC receiver's
+  //    * mailbox while the actor body blocks.
+  //    *
+  //    * @param   p        the packet to send out
+  //    * @param   handler  the handler to match against incoming messages
+  //    *    or timeout
+  //    * @return  the future representing the parsed reply, and providing
+  //    *    a `revoke` method to issue a timeout.
+  //    *
+  //    * @see  [[scala.actors.Futures]]
+  //    */
+  //   def !![ A ]( p: Packet, handler: PartialFunction[ Message, A ]) : RevocableFuture[ A ]
 
   /**
    * Sends out an OSC packet that generates some kind of reply, and
@@ -961,13 +955,13 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   def queryCounts(): Unit
 
-  final def syncMsg(): message.Sync = message.Sync(nextSyncID())
+  def syncMsg(): message.Sync
 
   def dumpOSC(mode: osc.Dump = osc.Dump.Text): Unit
 
   def quit(): Unit
 
-  final def quitMsg = message.ServerQuit
+  def quitMsg: message.ServerQuit.type
 
   def dispose(): Unit
 

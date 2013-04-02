@@ -37,17 +37,27 @@ import concurrent.duration._
 import concurrent.{Await, future, Promise, Future, TimeoutException}
 
 private[synth] object ServerImpl {
-   def add( s: Server ) {
-      this.synchronized {
-         if( Server.default == null ) Server.default = s
-      }
-   }
+  @volatile private var _default: Server = null
+  def default: Server = {
+    val res = _default
+    if (res == null) throw new IllegalStateException("There is no default Server yet")
+    res
+  }
+//  def default_=(value: Server) {
+//    _default = value
+//  }
 
-   def remove( s: Server ) {
-      this.synchronized {
-         if( Server.default == s ) Server.default = null
-      }
-   }
+  private[impl] def add(s: Server) {
+    this.synchronized {
+      if (_default == null) _default = s
+    }
+  }
+
+  private[impl] def remove(s: Server) {
+    this.synchronized {
+      if (_default == s) _default = null
+    }
+  }
 }
 
 private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr: InetSocketAddress,
@@ -111,6 +121,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
      val res      = promise.future
      val oh       = new OSCTimeOutHandler(handler, promise)
      OSCReceiverActor.addHandler(oh)
+     server ! p // only after addHandler!
      future {
        try {
          Await.ready(res, timeout)
@@ -118,7 +129,6 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
          case _: TimeoutException => promise.tryFailure(message.Timeout())
        }
      }
-     server ! p // only after addHandler!
      res
    }
 
@@ -234,6 +244,10 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
     }
   }
 
+  def syncMsg(): message.Sync = message.Sync(nextSyncID())
+  def quitMsg = message.ServerQuit
+
+
   // -------- internal class StatusWatcher --------
 
   private class StatusWatcher(delay: Float, period: Float, deathBounces: Int)
@@ -322,7 +336,9 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
     def !(p: osc.Packet) {
       future { blocking {
         p match {
-          case nodeMsg        : message.NodeChange  => nodeManager.nodeChange(nodeMsg)
+          case nodeMsg        : message.NodeChange  =>
+            // println(s"---- NodeChange: $nodeMsg")
+            nodeManager.nodeChange(nodeMsg)
           case bufInfoMsg     : message.BufferInfo  => bufManager.bufferInfo(bufInfoMsg)
           case statusReplyMsg : message.StatusReply => aliveThread.foreach(_.statusReply(statusReplyMsg))
           case _ =>
