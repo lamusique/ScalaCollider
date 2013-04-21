@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.6.0"
+version := "1.7.0"
 
 organization := "de.sciss"
 
@@ -17,17 +17,13 @@ libraryDependencies <<= version { v =>
 //  val uv = v.substring(0, i) + "+"
   val uv = "1.5.+"
   Seq(
-    "de.sciss" %% "scalaosc" % "1.1.+",
-    "de.sciss" %% "scalaaudiofile" % "1.4.+",
-    "de.sciss" %% "processor" % "0.1.+",
+    "de.sciss" %% "scalaosc"                % "1.1.+",
+    "de.sciss" %% "scalaaudiofile"          % "1.4.+",
+    "de.sciss" %% "processor"               % "0.2.+",
     "de.sciss" %% "scalacolliderugens-core" % uv,
     "org.scalatest" %% "scalatest" % "1.9.1" % "test"
   )
 }
-
-// libraryDependencies <+= scalaVersion { sv =>
-//   "org.scala-lang" % "scala-actors" % sv
-// }
 
 retrieveManaged := true
 
@@ -54,8 +50,8 @@ buildInfoSettings
 sourceGenerators in Compile <+= buildInfo
 
 buildInfoKeys := Seq(name, organization, version, scalaVersion, description,
-   BuildInfoKey.map(homepage ) { case (k, opt) => k -> opt.get },
-   BuildInfoKey.map(licenses ) { case (_, Seq( (lic, _) )) => "license" -> lic }
+  BuildInfoKey.map(homepage ) { case (k, opt) => k -> opt.get },
+  BuildInfoKey.map(licenses ) { case (_, Seq( (lic, _) )) => "license" -> lic }
 )
 
 buildInfoPackage := "de.sciss.synth"
