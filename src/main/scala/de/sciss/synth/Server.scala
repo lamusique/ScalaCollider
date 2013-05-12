@@ -313,7 +313,7 @@ object Server {
      */
     implicit def build(cb: ConfigBuilder): Config = cb.build
 
-    private[Server] def toNonRealtimeArgs( o: ConfigLike ): List[ String ] = {
+    private[Server] def toNonRealtimeArgs(o: ConfigLike): List[String] = {
       val b = List.newBuilder[String]
 
       // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
@@ -499,6 +499,13 @@ object Server {
     override def toString = "ServerOptions"
   }
 
+  object ConfigBuilder {
+    def apply(config: Config): ConfigBuilder = {
+      val b = new ConfigBuilder
+      b.read(config)
+      b
+    }
+  }
   /**
    * @see [[de.sciss.synth.Server.Config]]
    * @see [[de.sciss.synth.Server.ConfigLike]]
@@ -692,13 +699,50 @@ object Server {
       hostAddr.isLoopbackAddress || hostAddr.isSiteLocalAddress
     }
 
-    def build : Config = new Config(
+    def build: Config = new Config(
       programPath, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
       maxNodes, maxSynthDefs, memorySize, wireBuffers, randomSeeds, loadSynthDefs, machPortName, verbosity,
       plugInsPaths, restrictedPath, /* memoryLocking, */ host, port, transport, inputStreamsEnabled, outputStreamsEnabled,
       deviceNames, deviceName, inputBusChannels, hardwareBlockSize, zeroConf, maxLogins, sessionPassword,
       nrtCommandPath,
       nrtInputPath, nrtOutputPath, nrtHeaderFormat, nrtSampleFormat)
+
+    def read(config: Config) {
+      programPath         = config.programPath
+      controlBusChannels  = config.controlBusChannels
+      audioBusChannels    = config.audioBusChannels
+      outputBusChannels   = config.outputBusChannels
+      blockSize           = config.blockSize
+      sampleRate          = config.sampleRate
+      audioBuffers        = config.audioBuffers
+      maxNodes            = config.maxNodes
+      maxSynthDefs        = config.maxSynthDefs
+      memorySize          = config.memorySize
+      wireBuffers         = config.wireBuffers
+      randomSeeds         = config.randomSeeds
+      loadSynthDefs       = config.loadSynthDefs
+      machPortName        = config.machPortName
+      verbosity           = config.verbosity
+      plugInsPaths        = config.plugInsPaths
+      restrictedPath      = config.restrictedPath
+      host                = config.host
+      port                = config.port
+      transport           = config.transport
+      inputStreamsEnabled = config.inputStreamsEnabled
+      outputStreamsEnabled= config.outputStreamsEnabled
+      deviceNames         = config.deviceNames
+      deviceName          = config.deviceName
+      inputBusChannels    = config.inputBusChannels
+      hardwareBlockSize   = config.hardwareBlockSize
+      zeroConf            = config.zeroConf
+      maxLogins           = config.maxLogins
+      sessionPassword     = config.sessionPassword
+      nrtCommandPath      = config.nrtCommandPath
+      nrtInputPath        = config.nrtInputPath
+      nrtOutputPath       = config.nrtOutputPath
+      nrtHeaderFormat     = config.nrtHeaderFormat
+      nrtSampleFormat     = config.nrtSampleFormat
+    }
   }
 
   def boot: ServerConnection = boot()()
@@ -767,7 +811,10 @@ object Server {
   def dummy(name: String = "dummy", config: Config = Config().build,
             clientConfig: Client.Config = Client.Config().build): Server = {
     val (addr, c) = prepareConnection(config, clientConfig)
-    new impl.ServerImpl(name, c, addr, config, clientConfig, StatusReply(0, 0, 0, 0, 0f, 0f, 0.0, 0.0))
+    val sr        = config.sampleRate
+    val status    = StatusReply(numUGens = 0, numSynths = 0, numGroups = 0, numDefs = 0, avgCPU = 0f, peakCPU = 0f,
+                                sampleRate = sr, actualSampleRate = sr)
+    new impl.ServerImpl(name, c, addr, config, clientConfig, status)
   }
 
   private def prepareConnection(config: Config, clientConfig: Client.Config): (InetSocketAddress, osc.Client) = {

@@ -42,13 +42,16 @@ import util.{Failure, Success}
 import util.control.NonFatal
 
 private[synth] object ConnectionLike {
-   case object Ready
-   case object Abort
-   case object QueryServer
-   final case class AddListener( l: ServerConnection.Listener )
-   final case class RemoveListener( l: ServerConnection.Listener )
+  case object Ready
+  case object Abort
+  case object QueryServer
 
-  @elidable(elidable.CONFIG) def debug(what: => String) { println(s"<connect> $what") }
+  final case class AddListener   (l: ServerConnection.Listener)
+  final case class RemoveListener(l: ServerConnection.Listener)
+
+  @elidable(elidable.CONFIG) def debug(what: => String) {
+    println(s"<connect> $what")
+  }
 }
 import ConnectionLike.debug
 
@@ -102,16 +105,16 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       }
       val result = phase.future
 
-//      // @tailrec broken in 2.10.0, works in 2.10.1
-//      @tailrec def loop(): A = try {
-//        checkAborted()
-//        c ! message
-//        Await.result(result, 500.milliseconds)
-//      } catch {
-//        case _: TimeoutException => loop()
-//      }
-//
-//      loop()
+      //      // @tailrec broken in 2.10.0, works in 2.10.1
+      //      @tailrec def loop(): A = try {
+      //        checkAborted()
+      //        c ! message
+      //        Await.result(result, 500.milliseconds)
+      //      } catch {
+      //        case _: TimeoutException => loop()
+      //      }
+      //
+      //      loop()
 
       while (true) try {
         checkAborted()
@@ -192,7 +195,10 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
 
   // an auxiliary thread that monitors the scsynth process
   val processThread: Thread = new Thread {
-    setDaemon(true)
+    // __do not++ set this to daemon, because that way, the JVM exits while booting. we
+    // need at least one non-daemon thread.
+
+    // setDaemon(true)
     override def run() {
       try {
         debug("enter waitFor")
@@ -249,14 +255,14 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
     // make sure to begin with firing up Handshake, so that an immediate
     // failure of precessThread does not call abort prematurely
     debug("start")
-    Handshake.start()
-    postThread.start()
+    Handshake    .start()
+    postThread   .start()
     processThread.start()
   }
 
   override def toString = "boot<" + name + ">"
 
-  def handleAbort() { processThread.interrupt() }
+  def handleAbort()   { processThread.interrupt() }
   def connectionAlive = processThread.isAlive
 
   def createAliveThread(s: Server) {
