@@ -30,13 +30,12 @@ import collection.breakOut
 import collection.immutable.{IndexedSeq => IIdxSeq}
 //import Predef.{any2stringadd => _}
 
-final case class Flatten( elem: GE ) extends GE.Lazy {
-   def rate = elem.rate
+final case class Flatten(elem: GE) extends GE.Lazy {
 
-   def displayName = "Flatten"
-   override def toString = elem.toString + ".flatten"
+  def rate              = elem.rate
+  override def toString = elem.toString + ".flatten"
 
-   def makeUGens : UGenInLike = UGenInGroup( elem.expand.flatOutputs )
+  def makeUGens: UGenInLike = UGenInGroup(elem.expand.flatOutputs)
 }
 
 /**
@@ -46,61 +45,64 @@ final case class Flatten( elem: GE ) extends GE.Lazy {
  * Note: This may cause problems in future projects involving serialization of
  * synth graphs, due to the generic nature of the `fun` argument.
  */
-final case class MapExpanded( in: GE )( fun: IIdxSeq[ GE ] => GE ) extends GE.Lazy {
-   def rate = UndefinedRate
-   def displayName = "MapExpanded"
+final case class MapExpanded(in: GE)(fun: IIdxSeq[GE] => GE) extends GE.Lazy {
 
-   protected def makeUGens : UGenInLike = {
-      val _in = in.expand
-      val res = fun( _in.outputs )
-      res.expand
-   }
+  def rate        = UndefinedRate
+
+  protected def makeUGens: UGenInLike = {
+    val _in = in.expand
+    val res = fun(_in.outputs)
+    res.expand
+  }
 }
 
-
 object Mix {
-   /**
-    * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
-    */
-	def tabulate( n: Int )( fun: (Int) => GE )/* ( implicit rate: R ) */ : Mix.Seq =
-      Mix.Seq( IIdxSeq.tabulate( n )( i => fun( i )))
+  /**
+   * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
+   */
+  def tabulate(n: Int)(fun: (Int) => GE) /* ( implicit rate: R ) */ : Mix.Seq =
+    Mix.Seq(IIdxSeq.tabulate(n)(i => fun(i)))
 
-   /**
-    * A mixing idiom that corresponds to @Seq.fill@.
-    */
-   def fill( n: Int )( thunk: => GE )/* ( implicit rate: R ) */ : Mix.Seq =
-      Mix.Seq( IIdxSeq.fill( n )( thunk ))
+  /**
+   * A mixing idiom that corresponds to @Seq.fill@.
+   */
+  def fill(n: Int)(thunk: => GE) /* ( implicit rate: R ) */ : Mix.Seq =
+    Mix.Seq(IIdxSeq.fill(n)(thunk))
 
-   def seq( elems: IIdxSeq[ GE ])/* ( implicit rate: R ) */ = Seq( elems )
+  def seq(elems: IIdxSeq[GE]) /* ( implicit rate: R ) */ = Seq(elems)
 
-   def mono( elem: GE ) = Mono( elem )
+  def mono(elem: GE) = Mono(elem)
 
-   final case class Seq( elems: IIdxSeq[ GE ])
-   extends GE.Lazy {
-def numOutputs = if( elems.isEmpty ) 0 else 1 // XXX korrekt?
-      def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+  final case class Seq(elems: IIdxSeq[GE])
+    extends GE.Lazy {
 
-      def displayName = "Mix.Seq"
-      override def toString = displayName + elems.mkString( "(", ",", ")" )
+    def numOutputs  = if (elems.isEmpty) 0 else 1
+    // XXX korrekt?
+    def rate                    = MaybeRate.reduce(elems.map(_.rate): _*)
+    override def productPrefix  = "Mix.Seq"
 
-      def makeUGens : UGenInLike = if( elems.nonEmpty ) elems.reduceLeft( _ + _ ).expand else UGenInGroup.empty
-   }
+    override def toString = productPrefix + elems.mkString("(", ",", ")")
 
-   final case class Mono( elem: GE )
-   extends GE.Lazy {
-def numOutputs = 1
-      def rate = elem.rate
+    def makeUGens: UGenInLike = if (elems.nonEmpty) elems.reduceLeft(_ + _).expand else UGenInGroup.empty
+  }
 
-      def displayName = "Mix.Mono"
-      override def toString = displayName + "(" + elem + ")"
+  final case class Mono(elem: GE)
+    extends GE.Lazy {
 
-      def makeUGens : UGenInLike = {
-         val flat = elem.expand.flatOutputs
-         if( flat.nonEmpty ) {
-            flat.reduceLeft( BinaryOp.Plus.make1( _, _ ))
-         } else UGenInGroup.empty
-      }
-   }
+    def numOutputs  = 1
+    def rate        = elem.rate
+    override def productPrefix = "Mix.Mono"
+
+    override def toString = productPrefix + "(" + elem + ")"
+
+    def makeUGens: UGenInLike = {
+      val flat = elem.expand.flatOutputs
+      if (flat.nonEmpty) {
+        flat.reduceLeft(BinaryOpUGen.Plus.make1(_, _))
+      } else UGenInGroup.empty
+    }
+  }
+
 }
 
 /**
@@ -124,60 +126,61 @@ final case class Mix(elem: GE)
 
   protected def makeUGen(args: IIdxSeq[UGenIn]): UGenInLike = {
     if (args.nonEmpty) {
-      args.reduceLeft(BinaryOp.Plus.make1(_, _))
+      args.reduceLeft(BinaryOpUGen.Plus.make1(_, _))
     } else UGenInGroup.empty
   }
 }
 
-final case class Zip( elems: GE* ) extends GE.Lazy {
-//def numOutputs = elems.minBy( _.numOutputs ).numOutputs
-   def rate = MaybeRate.reduce( elems.map( _.rate ): _* )
+final case class Zip(elems: GE*) extends GE.Lazy {
+  //def numOutputs = elems.minBy( _.numOutputs ).numOutputs
+  def rate = MaybeRate.reduce(elems.map(_.rate): _*)
 
-   def displayName = "Zip"
-   override def toString = displayName + elems.mkString( "(", ",", " )" )
-   def makeUGens : UGenInLike = {
-      val exp: IIdxSeq[ UGenInLike ] = elems.map( _.expand )( breakOut )
-      val sz      = exp.map( _.outputs.size )   // exp.view.map ?
-      val minSz   = sz.min
-//      val res = UGenInGroup( IIdxSeq.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
-      /* val res = */ UGenInGroup( (0 until minSz).flatMap( i => exp.map( _.unwrap( i ))))
-//println( "Zip.expand = " + res )
-//      res
-   }
+  def makeUGens: UGenInLike = {
+    val exp: IIdxSeq[UGenInLike] = elems.map(_.expand)(breakOut)
+    val sz = exp.map(_.outputs.size) // exp.view.map ?
+    val minSz = sz.min
+    //      val res = UGenInGroup( IIdxSeq.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
+    /* val res = */ UGenInGroup((0 until minSz).flatMap(i => exp.map(_.unwrap(i))))
+    //println( "Zip.expand = " + res )
+    //      res
+  }
 }
 
 object Reduce {
-   /**
-    * Same result as `Mix( _ )`
-    */
-   def +( elem: GE )    = apply( elem, BinaryOp.Plus )
-   def *( elem: GE )    = apply( elem, BinaryOp.Times )
-//   def all_===( elem: GE ) = error( "TODO" )
-//   def all_!==( elem: GE ) = error( "TODO" )
-   def min( elem: GE )  = apply( elem, BinaryOp.Min )
-   def max( elem: GE )  = apply( elem, BinaryOp.Max )
-   def &( elem: GE )    = apply( elem, BinaryOp.BitAnd )
-   def |( elem: GE )    = apply( elem, BinaryOp.BitOr )
-   def ^( elem: GE )    = apply( elem, BinaryOp.BitXor )
+  import BinaryOpUGen.{Plus, Times, Min, Max, BitAnd, BitOr, BitXor}
+  /**
+   * Same result as `Mix( _ )`
+   */
+  def +  (elem: GE) = apply(elem, Plus  )
+  def *  (elem: GE) = apply(elem, Times )
+  //   def all_sig_==( elem: GE ) = error( "TODO" )
+  //   def all_sig_!=( elem: GE ) = error( "TODO" )
+  def min(elem: GE) = apply(elem, Min   )
+  def max(elem: GE) = apply(elem, Max   )
+  def &  (elem: GE) = apply(elem, BitAnd)
+  def |  (elem: GE) = apply(elem, BitOr )
+  def ^  (elem: GE) = apply(elem, BitXor)
 }
-final case class Reduce( elem: GE, op: BinaryOp.Op )
-extends UGenSource.SingleOut {  // XXX TODO: should not be UGenSource
-   def rate = elem.rate
 
-   protected def makeUGens : UGenInLike = unwrap( elem.expand.outputs )
+final case class Reduce(elem: GE, op: BinaryOpUGen.Op)
+  extends UGenSource.SingleOut {
+  // XXX TODO: should not be UGenSource
+  def rate = elem.rate
 
-   protected def makeUGen( args: IIdxSeq[ UGenIn ]) : UGenInLike = {
-      if( args.nonEmpty ) {
-         args.reduceLeft( op.make1( _, _ ))
-      } else UGenInGroup.empty
-   }
+  protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
+
+  protected def makeUGen(args: IIdxSeq[UGenIn]): UGenInLike = {
+    if (args.nonEmpty) {
+      args.reduceLeft(op.make1(_, _))
+    } else UGenInGroup.empty
+  }
 }
 
 object WrapOut {
   private def makeFadeEnv(fadeTime: Float): UGenIn = {
     val cFadeTime = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(fadeTime), Some("fadeTime"))).outputs(0)
     val cGate     = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(1), Some("gate"))).outputs(0)
-    val startVal  = BinaryOp.Leq.make1(cFadeTime, 0)
+    val startVal  = BinaryOpUGen.Leq.make1(cFadeTime, 0)
 
     // Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 )
     val env = IIdxSeq[UGenIn](startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0)
@@ -208,7 +211,7 @@ final case class WrapOut(in: GE, fadeTime: Optional[Float] = 0.02f) extends UGen
       val ins3 = fadeTime.option match {
         case Some(fdt) =>
           val env = makeFadeEnv(fdt)
-          val ins2 = ins.map(BinaryOp.Times.make1(_, env))
+          val ins2 = ins.map(BinaryOpUGen.Times.make1(_, env))
           if (rate == audio) replaceZeroesWithSilence(ins2) else ins2
         case None => ins
       }
@@ -219,22 +222,22 @@ final case class WrapOut(in: GE, fadeTime: Optional[Float] = 0.02f) extends UGen
 }
 
 object SplayAz {
-   def ar( numChannels: Int, in: GE, spread: GE = 1f, center: GE = 0f, level: GE = 1f, width: GE = 2f, orient: GE = 0f ) =
-      apply( audio, numChannels, in, spread, center, level, width, orient )
+  def ar(numChannels: Int, in: GE, spread: GE = 1f, center: GE = 0f, level: GE = 1f, width: GE = 2f, orient: GE = 0f) =
+    apply(audio, numChannels, in, spread, center, level, width, orient)
 }
-final case class SplayAz( rate: Rate, numChannels: Int, in: GE, spread: GE, center: GE, level: GE, width: GE, orient: GE )
-extends GE.Lazy {
-   def numOutputs = numChannels
-   def displayName = "SplayAz"
+final case class SplayAz(rate: Rate, numChannels: Int, in: GE, spread: GE, center: GE, level: GE, width: GE, orient: GE)
+  extends GE.Lazy {
 
-   protected def makeUGens : UGenInLike = {
-      val _in  = in.expand
-      val n    = _in.outputs.size
-      val pf   = (0.5f * spread) / n
-      val pos  = Seq.tabulate( n )( _ * pf + center )
-      val mix  = Mix( PanAz( rate, numChannels, _in, pos, level, width, orient ))
-      mix.expand
-   }
+  def numOutputs  = numChannels
+
+  protected def makeUGens: UGenInLike = {
+    val _in = in.expand
+    val n   = _in.outputs.size
+    val pf  = (0.5f * spread) / n
+    val pos = Seq.tabulate(n)(_ * pf + center)
+    val mix = Mix(PanAz(rate, numChannels, _in, pos, level, width, orient))
+    mix.expand
+  }
 }
 
 /**
@@ -252,31 +255,31 @@ extends GE.Lazy {
  * @see [[de.sciss.synth.ugen.LinExp]]
  * @see [[de.sciss.synth.ugen.Clip]]
  */
-final case class LinLin( /* rate: MaybeRate, */ in: GE, srcLo: GE = 0f, srcHi: GE = 1f, dstLo: GE = 0f, dstHi: GE = 1f )
-extends GE.Lazy {
-   def displayName = "LinLin"
+final case class LinLin(/* rate: MaybeRate, */ in: GE, srcLo: GE = 0f, srcHi: GE = 1f, dstLo: GE = 0f, dstHi: GE = 1f)
+  extends GE.Lazy {
 
-   def rate: MaybeRate = in.rate // XXX correct?
+  def rate: MaybeRate = in.rate // XXX correct?
 
-   protected def makeUGens : UGenInLike = {
-      val scale  = (dstHi - dstLo) / (srcHi - srcLo)
-      val offset = dstLo - (scale * srcLo)
-      MulAdd( in, scale, offset ).expand
-   }
+  protected def makeUGens: UGenInLike = {
+    val scale  = (dstHi - dstLo) / (srcHi - srcLo)
+    val offset = dstLo - (scale * srcLo)
+    MulAdd(in, scale, offset).expand
+  }
 }
 
 object Silent {
-   def ar: Silent = ar()
-   def ar( numChannels: Int = 1 ) = apply( numChannels )
-}
-final case class Silent( numChannels: Int ) extends GE.Lazy with AudioRated {
-   def displayName = "Silent"
+  def ar: Silent = ar()
 
-   protected def makeUGens: UGenInLike = {
-      val dc = DC.ar( 0 )
-      val ge: GE = if( numChannels == 1 ) dc else Seq.fill( numChannels )( dc )
-      ge.expand
-   }
+  def ar(numChannels: Int = 1) = apply(numChannels)
+}
+
+final case class Silent(numChannels: Int) extends GE.Lazy with AudioRated {
+
+  protected def makeUGens: UGenInLike = {
+    val dc = DC.ar(0)
+    val ge: GE = if (numChannels == 1) dc else Seq.fill(numChannels)(dc)
+    ge.expand
+  }
 }
 
 /**
@@ -285,29 +288,32 @@ final case class Silent( numChannels: Int ) extends GE.Lazy with AudioRated {
  * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
  */
 object PhysicalIn {
-   /**
-    * Short cut for reading a mono signal from the first physical input
-    */
-   def ar : PhysicalIn = ar()
-   /**
-    * @param indices       the physical index to read from (beginning at zero which corresponds to
-    *                      the first channel of the audio interface or sound driver). Maybe be a
-    *                      multichannel element to specify discrete indices.
-    * @param numChannels   the number of consecutive channels to read. For discrete indices this
-    *                      applies to each index!
-    */
-   def ar( indices: GE = 0, numChannels: Int = 1 ) : PhysicalIn = apply( indices, Seq( numChannels ))
+  /**
+   * Short cut for reading a mono signal from the first physical input
+   */
+  def ar: PhysicalIn = ar()
 
-   /**
-    * @param indices       the physical index to read from (beginning at zero which corresponds to
-    *                      the first channel of the audio interface or sound driver). Maybe be a
-    *                      multichannel element to specify discrete indices.
-    * @param numChannels   the number of consecutive channels to read for each index. Wraps around
-    *                      if the sequence has less elements than indices has channels.
-    */
-   def ar( indices: GE, numChannels: Seq[ Int ]) : PhysicalIn = apply( indices, numChannels )
-//   def apply( index: GE, moreIndices: GE* ) : PhysicalIn = apply( (index +: moreIndices).map( (_, 1) ): _* )
+  /**
+   * @param indices       the physical index to read from (beginning at zero which corresponds to
+   *                      the first channel of the audio interface or sound driver). Maybe be a
+   *                      multichannel element to specify discrete indices.
+   * @param numChannels   the number of consecutive channels to read. For discrete indices this
+   *                      applies to each index!
+   */
+  def ar(indices: GE = 0, numChannels: Int = 1): PhysicalIn = apply(indices, Seq(numChannels))
+
+  /**
+   * @param indices       the physical index to read from (beginning at zero which corresponds to
+   *                      the first channel of the audio interface or sound driver). Maybe be a
+   *                      multichannel element to specify discrete indices.
+   * @param numChannels   the number of consecutive channels to read for each index. Wraps around
+   *                      if the sequence has less elements than indices has channels.
+   */
+  def ar(indices: GE, numChannels: Seq[Int]): PhysicalIn = apply(indices, numChannels)
+
+  //   def apply( index: GE, moreIndices: GE* ) : PhysicalIn = apply( (index +: moreIndices).map( (_, 1) ): _* )
 }
+
 /**
  * A graph element which reads from a connected sound driver input. This is a convenience
  * element for accessing physical input signals, e.g. from a microphone connected to your
@@ -328,21 +334,21 @@ object PhysicalIn {
  * @param numChannels   the number of consecutive channels to read for each index. Wraps around
  *                      if the sequence has less elements than indices has channels.
  */
-final case class PhysicalIn( indices: GE, numChannels: Seq[ Int ]) extends GE.Lazy with AudioRated {
-   def displayName = "PhyiscalIn"
+final case class PhysicalIn(indices: GE, numChannels: Seq[Int]) extends GE.Lazy with AudioRated {
 
-   protected def makeUGens: UGenInLike = {
-      val offset        = NumOutputBuses.ir
-      val _indices      = indices.expand.outputs
-      val iNumCh        = numChannels.toIndexedSeq
-      val _numChannels  = if( _indices.size <= iNumCh.size ) iNumCh else {
-         IIdxSeq.tabulate( _indices.size )( ch => iNumCh( ch % iNumCh.size ))
-      }
+  protected def makeUGens: UGenInLike = {
+    val offset = NumOutputBuses.ir
+    val _indices = indices.expand.outputs
+    val iNumCh = numChannels.toIndexedSeq
+    val _numChannels = if (_indices.size <= iNumCh.size) iNumCh
+    else {
+      IIdxSeq.tabulate(_indices.size)(ch => iNumCh(ch % iNumCh.size))
+    }
 
-      Flatten( (_indices zip _numChannels).map {
-         case (index, num) => In.ar( index + offset, num )
-      }).expand
-   }
+    Flatten((_indices zip _numChannels).map {
+      case (index, num) => In.ar(index + offset, num)
+    }).expand
+  }
 }
 
 /**
@@ -359,30 +365,32 @@ final case class PhysicalIn( indices: GE, numChannels: Seq[ Int ]) extends GE.La
  * }}}
  */
 object PhysicalOut {
-   /**
-    * @param indices       the physical index to write to (beginning at zero which corresponds to
-    *                      the first channel of the audio interface or sound driver). may be a
-    *                      multichannel argument to specify discrete channels. In this case, any
-    *                      remaining channels in `in` are associated with the last bus index offset.
-    * @param in            the signal to write
-    */
-   def ar( indices: GE = 0, in: GE ) : PhysicalOut = apply( indices, in )
+  /**
+   * @param indices       the physical index to write to (beginning at zero which corresponds to
+   *                      the first channel of the audio interface or sound driver). may be a
+   *                      multichannel argument to specify discrete channels. In this case, any
+   *                      remaining channels in `in` are associated with the last bus index offset.
+   * @param in            the signal to write
+   */
+  def ar(indices: GE = 0, in: GE): PhysicalOut = apply(indices, in)
 }
-final case class PhysicalOut( indices: GE, in: GE ) extends UGenSource.ZeroOut with AudioRated {
-    // XXX TODO: should not be UGenSource
 
-   protected def makeUGens {
-      val _in        = in.expand.outputs
-      val _indices   = indices.expand.outputs
-      _indices.dropRight( 1 ).zip( _in ).foreach { case (index, sig) =>
-         Out.ar( index, sig )
-      }
-      (_indices.lastOption, _in.drop( _indices.size - 1 )) match {
-         case (Some( index ), sig) if( sig.nonEmpty ) =>
-            Out.ar( index, sig )
-         case _ =>
-      }
-   }
+final case class PhysicalOut(indices: GE, in: GE) extends UGenSource.ZeroOut with AudioRated {
+  // XXX TODO: should not be UGenSource
 
-   protected def makeUGen( args: IIdxSeq[ UGenIn ]) {}   // XXX not used, ugly
+  protected def makeUGens {
+    val _in = in.expand.outputs
+    val _indices = indices.expand.outputs
+    _indices.dropRight(1).zip(_in).foreach {
+      case (index, sig) =>
+        Out.ar(index, sig)
+    }
+    (_indices.lastOption, _in.drop(_indices.size - 1)) match {
+      case (Some(index), sig) if (sig.nonEmpty) =>
+        Out.ar(index, sig)
+      case _ =>
+    }
+  }
+
+  protected def makeUGen(args: IIdxSeq[UGenIn]) {} // XXX not used, ugly
 }

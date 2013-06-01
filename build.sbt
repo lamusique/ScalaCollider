@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.7.1"
+version := "1.8.0-SNAPSHOT"
 
 organization := "de.sciss"
 
@@ -13,9 +13,9 @@ homepage <<= name { n => Some(url("https://github.com/Sciss/" + n)) }
 licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
 libraryDependencies <<= version { v =>
-//  val i  = v.lastIndexOf('.') + 1
-//  val uv = v.substring(0, i) + "+"
-  val uv = "1.5.+"
+  //  val i  = v.lastIndexOf('.') + 1
+  //  val uv = v.substring(0, i) + "+"
+  val uv = "1.6.+"
   Seq(
     "de.sciss" %% "scalaosc"                % "1.1.+",
     "de.sciss" %% "scalaaudiofile"          % "1.4.+",

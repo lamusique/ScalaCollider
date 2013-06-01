@@ -25,16 +25,14 @@
 
 package de.sciss.synth
 
-import ugen.{ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, BinaryOp, UnaryOp, MulAdd}
+import de.sciss.synth.ugen.{UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd}
 
 final class GEOps(val g: GE ) extends AnyVal {
-  def `\\`(index: Int) = ChannelProxy(g, index)
+  def `\\`(index: Int)      : GE = ChannelProxy(g, index)
+  def madd(mul: GE, add: GE): GE = MulAdd(g, mul, add)
+  def flatten               : GE = Flatten(g)
 
-  def madd(mul: GE, add: GE) = MulAdd(g, mul, add)
-
-  def flatten = Flatten(g)
-
-  def poll: Poll = poll()
+def poll : Poll = poll()
 
   /**
    * Polls the output values of this graph element, and prints the result to the console.
@@ -68,51 +66,52 @@ final class GEOps(val g: GE ) extends AnyVal {
     }, trigID)
   }
 
-  import UnaryOp._
+  import UnaryOpUGen._
+
+  @inline private def unOp(op: UnaryOpUGen.Op): GE = op.make(g)
 
   // unary ops
-  def unary_- : GE    = Neg.make(g)
+  def unary_-   : GE  = unOp(Neg       )
   // def bitNot: GE = ...
-  def abs: GE         = Abs.make(g)
+  def abs       : GE  = unOp(Abs       )
   // def toFloat: GE = ...
   // def toInteger: GE = ...
-  def ceil: GE        = Ceil.make(g)
-  def floor: GE       = Floor.make(g)
-  def frac: GE        = Frac.make(g)
-  def signum: GE      = Signum.make(g)
-  def squared: GE     = Squared.make(g)
-  def cubed: GE       = Cubed.make(g)
-  def sqrt: GE        = Sqrt.make(g)
-  def exp: GE         = Exp.make(g)
-  def reciprocal: GE  = Reciprocal.make(g)
-  def midicps: GE     = Midicps.make(g)
-  def cpsmidi: GE     = Cpsmidi.make(g)
-  def midiratio: GE   = Midiratio.make(g)
-  def ratiomidi: GE   = Ratiomidi.make(g)
-  def dbamp: GE       = Dbamp.make(g)
-  def ampdb: GE       = Ampdb.make(g)
-  def octcps: GE      = Octcps.make(g)
-  def cpsoct: GE      = Cpsoct.make(g)
-  def log: GE         = Log.make(g)
-  def log2: GE        = Log2.make(g)
-  def log10: GE       = Log10.make(g)
-  def sin: GE         = Sin.make(g)
-  def cos: GE         = Cos.make(g)
-  def tan: GE         = Tan.make(g)
-  def asin: GE        = Asin.make(g)
-  def acos: GE        = Acos.make(g)
-  def atan: GE        = Atan.make(g)
-  def sinh: GE        = Sinh.make(g)
-  def cosh: GE        = Cosh.make(g)
-  def tanh: GE        = Tanh.make(g)
+  def ceil      : GE  = unOp(Ceil      )
+  def floor     : GE  = unOp(Floor     )
+  def frac      : GE  = unOp(Frac      )
+  def signum    : GE  = unOp(Signum    )
+  def squared   : GE  = unOp(Squared   )
+  def cubed     : GE  = unOp(Cubed     )
+  def sqrt      : GE  = unOp(Sqrt      )
+  def exp       : GE  = unOp(Exp       )
+  def reciprocal: GE  = unOp(Reciprocal)
+  def midicps   : GE  = unOp(Midicps   )
+  def cpsmidi   : GE  = unOp(Cpsmidi   )
+  def midiratio : GE  = unOp(Midiratio )
+  def ratiomidi : GE  = unOp(Ratiomidi )
+  def dbamp     : GE  = unOp(Dbamp     )
+  def ampdb     : GE  = unOp(Ampdb     )
+  def octcps    : GE  = unOp(Octcps    )
+  def cpsoct    : GE  = unOp(Cpsoct    )
+  def log       : GE  = unOp(Log       )
+  def log2      : GE  = unOp(Log2      )
+  def log10     : GE  = unOp(Log10     )
+  def sin       : GE  = unOp(Sin       )
+  def cos       : GE  = unOp(Cos       )
+  def tan       : GE  = unOp(Tan       )
+  def asin      : GE  = unOp(Asin      )
+  def acos      : GE  = unOp(Acos      )
+  def atan      : GE  = unOp(Atan      )
+  def sinh      : GE  = unOp(Sinh      )
+  def cosh      : GE  = unOp(Cosh      )
+  def tanh      : GE  = unOp(Tanh      )
   // def rand : GE              = UnOp.make( 'rand, this )
   // def rand2 : GE             = UnOp.make( 'rand2, this )
   // def linrand : GE           = UnOp.make( 'linrand, this )
   // def bilinrand : GE         = UnOp.make( 'bilinrand, this )
   // def sum3rand : GE          = UnOp.make( 'sum3rand, this )
-  def distort: GE     = Distort.make(g)
-
-  def softclip: GE    = Softclip.make(g)
+  def distort   : GE  = unOp(Distort   )
+  def softclip  : GE  = unOp(Softclip  )
 
   // def coin : GE              = UnOp.make( 'coin, this )
   // def even : GE              = UnOp.make( 'even, this )
@@ -121,9 +120,8 @@ final class GEOps(val g: GE ) extends AnyVal {
   // def hanWindow : GE         = UnOp.make( 'hanWindow, this )
   // def welWindow : GE         = UnOp.make( 'sum3rand, this )
   // def triWindow : GE         = UnOp.make( 'triWindow, this )
-  def ramp: GE        = Ramp.make(g)
-
-  def scurve: GE      = Scurve.make(g)
+  def ramp      : GE  = unOp(Ramp      )
+  def scurve    : GE  = unOp(Scurve    )
 
   // def isPositive : GE        = UnOp.make( 'isPositive, this )
   // def isNegative : GE        = UnOp.make( 'isNegative, this )
@@ -131,60 +129,60 @@ final class GEOps(val g: GE ) extends AnyVal {
   // def rho : GE               = UnOp.make( 'rho, this )
   // def theta : GE             = UnOp.make( 'theta, this )
 
-  import BinaryOp._
+  import BinaryOpUGen._
 
   // binary ops
-  private def binOp(op: BinaryOp.Op, b: GE): GE = op.make(g, b)
+  @inline private def binOp(op: BinaryOpUGen.Op, b: GE): GE = op.make(g, b)
 
-  def +       (b: GE): GE = binOp(Plus, b)
-  def -       (b: GE): GE = binOp(Minus, b)
-  def *       (b: GE): GE = binOp(Times, b)
+  def +       (b: GE): GE = binOp(Plus    , b)
+  def -       (b: GE): GE = binOp(Minus   , b)
+  def *       (b: GE): GE = binOp(Times   , b)
   // def div(b: GE): GE = ...
-  def /       (b: GE): GE = binOp(Div, b)
-  def %       (b: GE): GE = binOp(Mod, b)
-  def ===     (b: GE): GE = binOp(Eq, b)
-  def !==     (b: GE): GE = binOp(Neq, b)
-  def <       (b: GE): GE = binOp(Lt, b)
-  def >       (b: GE): GE = binOp(Gt, b)
-  def <=      (b: GE): GE = binOp(Leq, b)
-  def >=      (b: GE): GE = binOp(Geq, b)
-  def min     (b: GE): GE = binOp(Min, b)
-  def max     (b: GE): GE = binOp(Max, b)
-  def &       (b: GE): GE = binOp(BitAnd, b)
-  def |       (b: GE): GE = binOp(BitOr, b)
-  def ^       (b: GE): GE = binOp(BitXor, b)
+  def /       (b: GE): GE = binOp(Div     , b)
+  def %       (b: GE): GE = binOp(Mod     , b)
+  def sig_==  (b: GE): GE = binOp(Eq      , b)
+  def sig_!=  (b: GE): GE = binOp(Neq     , b)
+  def <       (b: GE): GE = binOp(Lt      , b)
+  def >       (b: GE): GE = binOp(Gt      , b)
+  def <=      (b: GE): GE = binOp(Leq     , b)
+  def >=      (b: GE): GE = binOp(Geq     , b)
+  def min     (b: GE): GE = binOp(Min     , b)
+  def max     (b: GE): GE = binOp(Max     , b)
+  def &       (b: GE): GE = binOp(BitAnd  , b)
+  def |       (b: GE): GE = binOp(BitOr   , b)
+  def ^       (b: GE): GE = binOp(BitXor  , b)
   // def lcm(b: GE): GE = ...
   // def gcd(b: GE): GE = ...
 
-  def round   (b: GE): GE = binOp(Round, b)
-  def roundup (b: GE): GE = binOp(Roundup, b)
-  def trunc   (b: GE): GE = binOp(Trunc, b)
-  def atan2   (b: GE): GE = binOp(Atan2, b)
-  def hypot   (b: GE): GE = binOp(Hypot, b)
-  def hypotx  (b: GE): GE = binOp(Hypotx, b)
-  def pow     (b: GE): GE = binOp(Pow, b)
+  def round   (b: GE): GE = binOp(Round   , b)
+  def roundup (b: GE): GE = binOp(Roundup , b)
+  def trunc   (b: GE): GE = binOp(Trunc   , b)
+  def atan2   (b: GE): GE = binOp(Atan2   , b)
+  def hypot   (b: GE): GE = binOp(Hypot   , b)
+  def hypotx  (b: GE): GE = binOp(Hypotx  , b)
+  def pow     (b: GE): GE = binOp(Pow     , b)
 
   // def <<(b: GE): GE = ...
   // def >>(b: GE): GE = ...
   // def unsgnRghtShift(b: GE): GE = ...
   // def fill(b: GE): GE = ...
 
-  def ring1   (b: GE): GE = binOp(Ring1, b)
-  def ring2   (b: GE): GE = binOp(Ring2, b)
-  def ring3   (b: GE): GE = binOp(Ring3, b)
-  def ring4   (b: GE): GE = binOp(Ring4, b)
-  def difsqr  (b: GE): GE = binOp(Difsqr, b)
-  def sumsqr  (b: GE): GE = binOp(Sumsqr, b)
-  def sqrsum  (b: GE): GE = binOp(Sqrsum, b)
-  def sqrdif  (b: GE): GE = binOp(Sqrdif, b)
-  def absdif  (b: GE): GE = binOp(Absdif, b)
-  def thresh  (b: GE): GE = binOp(Thresh, b)
-  def amclip  (b: GE): GE = binOp(Amclip, b)
+  def ring1   (b: GE): GE = binOp(Ring1   , b)
+  def ring2   (b: GE): GE = binOp(Ring2   , b)
+  def ring3   (b: GE): GE = binOp(Ring3   , b)
+  def ring4   (b: GE): GE = binOp(Ring4   , b)
+  def difsqr  (b: GE): GE = binOp(Difsqr  , b)
+  def sumsqr  (b: GE): GE = binOp(Sumsqr  , b)
+  def sqrsum  (b: GE): GE = binOp(Sqrsum  , b)
+  def sqrdif  (b: GE): GE = binOp(Sqrdif  , b)
+  def absdif  (b: GE): GE = binOp(Absdif  , b)
+  def thresh  (b: GE): GE = binOp(Thresh  , b)
+  def amclip  (b: GE): GE = binOp(Amclip  , b)
   def scaleneg(b: GE): GE = binOp(Scaleneg, b)
-  def clip2   (b: GE): GE = binOp(Clip2, b)
-  def excess  (b: GE): GE = binOp(Excess, b)
-  def fold2   (b: GE): GE = binOp(Fold2, b)
-  def wrap2   (b: GE): GE = binOp(Wrap2, b)
+  def clip2   (b: GE): GE = binOp(Clip2   , b)
+  def excess  (b: GE): GE = binOp(Excess  , b)
+  def fold2   (b: GE): GE = binOp(Fold2   , b)
+  def wrap2   (b: GE): GE = binOp(Wrap2   , b)
   def firstarg(b: GE): GE = binOp(Firstarg, b)
 
 // def rrand(b: GE): GE    = ...
