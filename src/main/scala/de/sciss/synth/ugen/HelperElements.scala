@@ -79,7 +79,7 @@ object Mix {
     def numOutputs  = if (elems.isEmpty) 0 else 1
     // XXX korrekt?
     def rate                    = MaybeRate.reduce(elems.map(_.rate): _*)
-    override def productPrefix  = "Mix.Seq"
+    override def productPrefix  = "Mix$Seq"
 
     override def toString = productPrefix + elems.mkString("(", ",", ")")
 
@@ -91,7 +91,7 @@ object Mix {
 
     def numOutputs  = 1
     def rate        = elem.rate
-    override def productPrefix = "Mix.Mono"
+    override def productPrefix = "Mix$Mono"
 
     override def toString = productPrefix + "(" + elem + ")"
 

@@ -25,7 +25,7 @@
 
 package de.sciss.synth
 
-import de.sciss.synth.ugen.{UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd}
+import ugen.{UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd, Constant}
 
 final class GEOps(val g: GE ) extends AnyVal {
   def `\\`(index: Int)      : GE = ChannelProxy(g, index)

@@ -27,6 +27,7 @@ package de.sciss
 package synth
 
 import collection.immutable.NumericRange
+import ugen.Constant
 
 object RichNumber {
    /**

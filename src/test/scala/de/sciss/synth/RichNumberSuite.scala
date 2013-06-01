@@ -1,7 +1,7 @@
 package de.sciss.synth
 
 import org.scalatest.FunSpec
-import de.sciss.synth.ugen.BinaryOpUGen
+import ugen.{BinaryOpUGen, Constant}
 import language.implicitConversions
 
 /**
