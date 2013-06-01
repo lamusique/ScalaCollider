@@ -24,11 +24,10 @@
  */
 
 package de.sciss.synth
+package ugen
 
 import scala.math.{max, pow, cos, sin, abs, exp, sqrt, Pi}
 import collection.immutable.{IndexedSeq => IIdxSeq}
-import language.implicitConversions
-import ugen.Constant
 
 case object stepShape extends Env.ConstShape {
   final val id = 0
@@ -107,47 +106,41 @@ case object cubShape extends Env.ConstShape {
     (yPow3 * yPow3 * yPow3).toFloat
   }
 }
-//case class varShape[ T <: Rate, U <: Rate ]( override val idGE: GE[ T ],
-//                                             override val curvatureGE: GE[ U ] = 0 ) extends EnvShape[ T, U ]
-final case class varShape( override val idGE: GE, override val curvatureGE: GE = 0 ) extends Env.Shape
 
-//object EnvSeg {
-//   type Any = EnvSeg[ _ <: Rate, _ <: Rate, _ <: Rate, _ <: Rate ]
-//}
-//case class EnvSeg[ R <: Rate, S <: Rate, T <: Rate, U <: Rate ]( dur: GE[ R ], targetLevel: GE[ S ], shape: EnvShape[ T, U ] = linShape )
+final case class varShape(override val idGE: GE, override val curvatureGE: GE = 0) extends Env.Shape
 
-sealed trait EnvFactory[ V <: EnvLike ] {
-   protected def create( startLevel: GE, segments: Env.Seg* ) : V
+sealed trait EnvFactory[V <: EnvLike] {
+  protected def create(startLevel: GE, segments: Env.Seg*): V
 
-	// fixed duration envelopes
-   def triangle : V = triangle()
+  // fixed duration envelopes
+  def triangle: V = triangle()
 
-	def triangle( dur: GE = 1, level: GE = 1 )
-      /* ( implicit r: RateOrder[ R, scalar, R ])*/ : V =  {
-	  val durH = dur * 0.5f
-	  create( 0, Env.Seg( durH, level ), Env.Seg( durH, 0 ))
-	}
+  def triangle(dur: GE = 1, level: GE = 1)
+  /* ( implicit r: RateOrder[ R, scalar, R ])*/ : V = {
+    val durH = dur * 0.5f
+    create(0, Env.Seg(durH, level), Env.Seg(durH, 0))
+  }
 
-   def sine : V = sine()
+  def sine: V = sine()
 
-	def sine /*[ R <: Rate, S <: Rate ]*/( dur: GE = 1, level: GE = 1 )
-      /* ( implicit r: RateOrder[ R, scalar, R ])*/ : V = {
-	  val durH = dur * 0.5f
-	  create( 0, Env.Seg( durH, level, sinShape ), Env.Seg( durH, 0, sinShape ))
-	}
+  def sine /*[ R <: Rate, S <: Rate ]*/ (dur: GE = 1, level: GE = 1)
+  /* ( implicit r: RateOrder[ R, scalar, R ])*/ : V = {
+    val durH = dur * 0.5f
+    create(0, Env.Seg(durH, level, sinShape), Env.Seg(durH, 0, sinShape))
+  }
 
-   def perc : V = perc()
+  def perc: V = perc()
 
-	def perc( attack: GE = 0.01, release: GE = 1, level: GE = 1,
-             shape: Env.Shape /*.Any*/ = curveShape( -4 )) : V =
-      create( 0, Env.Seg( attack, level, shape ), Env.Seg( release, 0, shape ))
+  def perc(attack: GE = 0.01, release: GE = 1, level: GE = 1,
+           shape: Env.Shape /*.Any*/ = curveShape(-4)): V =
+    create(0, Env.Seg(attack, level, shape), Env.Seg(release, 0, shape))
 
-   def linen : V = linen()
+  def linen: V = linen()
 
-	def linen( attack: GE = 0.01f, sustain: GE = 1, release: GE = 1,
-              level: GE = 1, shape: Env.Shape /*.Any*/ = linShape ) : V =
-		create( 0, Env.Seg( attack, level, shape ), Env.Seg( sustain, level, shape ),
-                 Env.Seg( release, 0, shape ))
+  def linen(attack: GE = 0.01f, sustain: GE = 1, release: GE = 1,
+            level: GE = 1, shape: Env.Shape /*.Any*/ = linShape): V =
+    create(0, Env.Seg(attack, level, shape), Env.Seg(sustain, level, shape),
+      Env.Seg(release, 0, shape))
 }
 
 object Env extends EnvFactory[Env] {
@@ -223,26 +216,23 @@ object Env extends EnvFactory[Env] {
     new Env(0, List(Seg(attack, level, shape), Seg(release, 0, shape)), 1)
 }
 
-object EnvLike {
-  implicit def toGE(env: EnvLike): GE = env.toGE
-}
+//object EnvLike {
+//  implicit def toGE(env: EnvLike): GE = env.toGE
+//}
 
-sealed trait EnvLike {
+sealed trait EnvLike extends GE {
   def startLevel: GE
   def segments: Seq[Env.Seg]
   def isSustained: Boolean
-
-  // note: we do not define toSeq because the format is
-  // significantly different so there is little sense in doing so
-  //	def toSeq : Seq[ GE ] ...
-  def toGE: GE
 }
 
 final case class Env(startLevel: GE, segments: Seq[Env.Seg],
                      releaseNode: GE = -99, loopNode: GE = -99)
   extends EnvLike {
 
-  def toGE: GE = {
+  private[synth] def expand: UGenInLike = toGE
+
+  private def toGE: GE = {
     val segmIdx = segments.toIndexedSeq
     val sizeGE: GE = segmIdx.size
     val res: IIdxSeq[GE] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap(seg =>
@@ -255,31 +245,38 @@ final case class Env(startLevel: GE, segments: Seq[Env.Seg],
     GE.fromSeq(res)
   }
 
+  def rate: MaybeRate = toGE.rate
+
   def isSustained = releaseNode != Constant(-99)
 }
 
-object IEnv extends EnvFactory[ IEnv ] {
-   protected def create( startLevel: GE, segments: Env.Seg* ) =
-      new IEnv( startLevel, segments )
+object IEnv extends EnvFactory[IEnv] {
+  protected def create(startLevel: GE, segments: Env.Seg*) =
+    new IEnv(startLevel, segments)
 }
 
-final case class IEnv( startLevel: GE, segments: Seq[ Env.Seg ], offset: GE = 0 )
-extends EnvLike {
-	def toGE : GE = {
-      val segmIdx    = segments.toIndexedSeq
-      val sizeGE: GE = segmIdx.size
-      val totalDur   = segmIdx.foldLeft[ GE ]( 0 )( (sum, next) => sum + next.dur )
-      val res: IIdxSeq[ GE ] = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap( seg =>
-         IIdxSeq[ GE ]( seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel ))
-      //geSeqToGE[ UGenIn ]( res )
-//      (res: GE) : AnyMulti
+final case class IEnv(startLevel: GE, segments: Seq[Env.Seg], offset: GE = 0)
+  extends EnvLike {
 
-//      GE.bubbleGE( res ) // GE.fromAnySeq( res )
-//      Multi.bubbleGen( res )
-//      GE.fromSeq[ Rate ]( res )
-//      GE.fromSeq( res )
-      GE.fromSeq( res )
-   }
+  private[synth] def expand: UGenInLike = toGE
 
-   def isSustained = false
+  private def toGE: GE = {
+    val segmIdx     = segments.toIndexedSeq
+    val sizeGE: GE  = segmIdx.size
+    val totalDur    = segmIdx.foldLeft[GE](0)((sum, next) => sum + next.dur)
+    val res: IIdxSeq[GE] = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap(seg =>
+      IIdxSeq[GE](seg.dur, seg.shape.idGE, seg.shape.curvatureGE, seg.targetLevel))
+    //geSeqToGE[ UGenIn ]( res )
+    //      (res: GE) : AnyMulti
+
+    //      GE.bubbleGE( res ) // GE.fromAnySeq( res )
+    //      Multi.bubbleGen( res )
+    //      GE.fromSeq[ Rate ]( res )
+    //      GE.fromSeq( res )
+    GE.fromSeq(res)
+  }
+
+  def rate: MaybeRate = toGE.rate
+
+  def isSustained = false
 }
