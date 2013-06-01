@@ -71,7 +71,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
 
   def recvMsg: message.SynthDefRecv = recvMsg(None)
 
-  def recvMsg(completion: Option[Packet]) = message.SynthDefRecv(toBytes, completion)
+  def recvMsg(completion: Optional[Packet]) = message.SynthDefRecv(toBytes, completion)
 
   def toBytes: ByteBuffer = {
     val baos  = new ByteArrayOutputStream
@@ -94,7 +94,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
 
   def loadMsg: message.SynthDefLoad = loadMsg()
 
-  def loadMsg(dir: String = defaultDir, completion: Option[Packet] = None) =
+  def loadMsg(dir: String = defaultDir, completion: Optional[Packet] = None) =
     message.SynthDefLoad(dir + sep + name + ".scsyndef", completion)
 
   def write(dir: String = defaultDir, overwrite: Boolean = true) {

@@ -107,10 +107,10 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   def closeMsg: message.BufferClose = closeMsg(None)
 
-  def closeMsg(completion: Option[Packet] = None) =
+  def closeMsg(completion: Optional[Packet] = None) =
     message.BufferClose(id, completion)
 
-  def allocMsg(numFrames: Int, numChannels: Int = 1, completion: Option[Packet] = None) = {
+  def allocMsg(numFrames: Int, numChannels: Int = 1, completion: Optional[Packet] = None) = {
     numFramesVar = numFrames
     numChannelsVar = numChannels
     sampleRateVar = server.sampleRate.toFloat
@@ -118,14 +118,14 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
   }
 
   def allocReadMsg(path: String, startFrame: Int = 0, numFrames: Int = -1,
-                   completion: Option[Packet] = None) = {
+                   completion: Optional[Packet] = None) = {
     // this.cache;
     // path = argpath;
     message.BufferAllocRead(id, path, startFrame, numFrames, completion)
   }
 
   def allocReadChannelMsg(path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[Int],
-                          completion: Option[Packet] = None) = {
+                          completion: Optional[Packet] = None) = {
     // this.cache;
     // path = argpath;
     message.BufferAllocReadChannel(id, path, startFrame, numFrames, channels.toList, completion)
@@ -135,12 +135,12 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     message.BufferRead(id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
 
   def readMsg(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
-              leaveOpen: Boolean = false, completion: Option[Packet] = None) =
+              leaveOpen: Boolean = false, completion: Optional[Packet] = None) =
     message.BufferRead(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, completion)
 
   def readChannelMsg(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                      leaveOpen: Boolean = false, channels: Seq[Int],
-                     completion: Option[Packet] = None) =
+                     completion: Optional[Packet] = None) =
     message.BufferReadChannel(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
       completion)
 
@@ -172,12 +172,12 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   def zeroMsg: message.BufferZero = zeroMsg(None)
 
-  def zeroMsg(completion: Option[Packet]) =
+  def zeroMsg(completion: Optional[Packet]) =
     message.BufferZero(id, completion)
 
   def writeMsg(path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
                sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
-               leaveOpen: Boolean = false, completion: Option[Packet] = None) = {
+               leaveOpen: Boolean = false, completion: Optional[Packet] = None) = {
     // require( isPowerOfTwo( this.numFrames ))
     message.BufferWrite(id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion)
   }
@@ -186,14 +186,13 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     val a = completion.action
     if (forceQuery || a.isDefined) {
       register()
-      a.foreach {
-        action =>
-          lazy val l: Buffer.Listener = {
-            case BufferManager.BufferInfo(_, _) =>
-              removeListener(l)
-              action(this)
-          }
-          addListener(l)
+      a.foreach { action =>
+        lazy val l: Buffer.Listener = {
+          case BufferManager.BufferInfo(_, _) =>
+            removeListener(l)
+            action(this)
+        }
+        addListener(l)
       }
     }
     (completion.message, a) match {

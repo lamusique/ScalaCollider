@@ -197,7 +197,7 @@ object WrapOut {
 /**
  * XXX TODO: This should not be a UGenSource.ZeroOut but just a LazyExpander !
  */
-final case class WrapOut(in: GE, fadeTime: Optional[Float] = 0.02f) extends UGenSource.ZeroOut with WritesBus {
+final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends UGenSource.ZeroOut with WritesBus {
   import WrapOut._
 
   protected def makeUGens {
@@ -208,7 +208,7 @@ final case class WrapOut(in: GE, fadeTime: Optional[Float] = 0.02f) extends UGen
     if (ins.isEmpty) return
     val rate = ins.map(_.rate).max
     if ((rate == audio) || (rate == control)) {
-      val ins3 = fadeTime.option match {
+      val ins3 = fadeTime match {
         case Some(fdt) =>
           val env = makeFadeEnv(fdt)
           val ins2 = ins.map(BinaryOpUGen.Times.make1(_, env))
