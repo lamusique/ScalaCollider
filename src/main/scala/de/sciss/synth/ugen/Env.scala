@@ -53,14 +53,14 @@ sealed trait EnvFactory[V] {
   def perc: V = perc()
 
   def perc(attack: GE = 0.01, release: GE = 1, level: GE = 1,
-           shape: Env.Curve = parametric(-4)): V =
-    create(0, Vector[Seg]((attack, level, shape), (release, 0, shape)))
+           curve: Env.Curve = parametric(-4)): V =
+    create(0, Vector[Seg]((attack, level, curve), (release, 0, curve)))
 
   def linen: V = linen()
 
   def linen(attack: GE = 0.01f, sustain: GE = 1, release: GE = 1,
-            level: GE = 1, shape: Env.Curve = linear): V =
-    create(0, Vector[Seg]((attack, level, shape), (sustain, level, shape), (release, 0, shape)))
+            level: GE = 1, curve: Env.Curve = linear): V =
+    create(0, Vector[Seg]((attack, level, curve), (sustain, level, curve), (release, 0, curve)))
 }
 
 object Env extends EnvFactory[Env] {
@@ -89,40 +89,42 @@ object Env extends EnvFactory[Env] {
 
   object Segment {
     implicit def fromTuple3[D, L, S](tup: (D, L, S))
-                                    (implicit durView: D => GE, levelView: L => GE, slopeView: S => Curve): Segment =
+                                    (implicit durView: D => GE, levelView: L => GE, curveView: S => Curve): Segment =
       Segment(tup._1, tup._2, tup._3)
 
     implicit def fromTuple2[D, L](tup: (D, L))(implicit durView: D => GE, levelView: L => GE): Segment =
       Segment(tup._1, tup._2, linear)
   }
-  final case class Segment(dur: GE, targetLevel: GE, slope: Curve = linear)
+  final case class Segment(dur: GE, targetLevel: GE, curve: Curve = linear)
 
   protected def create(startLevel: GE, segments: IIdxSeq[Segment]) = new Env(startLevel, segments)
 
   // envelopes with sustain
-  def cutoff(release: GE = 0.1f, level: GE = 1, slope: Curve = linear): Env = {
-    val releaseLevel: GE = slope match {
+  def cutoff(release: GE = 0.1f, level: GE = 1, curve: Curve = linear): Env = {
+    val releaseLevel: GE = curve match {
       case Curve.Const(`exponential`) => 1e-05f // dbamp( -100 )
       case _ => 0
     }
-    new Env(level, (release, releaseLevel, slope) :: Nil, 0)
+    new Env(level, (release, releaseLevel, curve) :: Nil, 0)
   }
 
-//  def dadsr(delay: GE = 0.1f, attack: GE = 0.01f, decay: GE = 0.3f, sustainLevel: GE = 0.5f, release: GE = 1,
-//            peakLevel: GE = 1, shape: Curve = parametric(-4), bias: GE = 0): Env =
-//    new Env(bias, List(Seg(delay, bias, shape),
-//      Seg(attack, peakLevel + bias, shape),
-//      Seg(decay, peakLevel * sustainLevel + bias, shape),
-//      Seg(release, bias, shape)), 3)
-//
-//  def adsr(attack: GE = 0.01f, decay: GE = 0.3f, sustainLevel: GE = 0.5f, release: GE = 1, peakLevel: GE = 1,
-//           shape: Curve = parametric(-4), bias: GE = 0): Env =
-//    new Env(bias, List(Seg(attack, bias, shape),
-//      Seg(decay, peakLevel * sustainLevel + bias, shape),
-//      Seg(release, bias, shape)), 2)
-//
-//  def asr(attack: GE = 0.01f, level: GE = 1, release: GE = 1, shape: Curve = parametric(-4)): Env =
-//    new Env(0, List(Seg(attack, level, shape), Seg(release, 0, shape)), 1)
+  def dadsr(delay: GE = 0.1f, attack: GE = 0.01f, decay: GE = 0.3f, sustainLevel: GE = 0.5f, release: GE = 1,
+            peakLevel: GE = 1, curve: Curve = parametric(-4), bias: GE = 0): Env =
+    new Env(bias, Vector[Segment](
+      (delay, bias, curve),
+      (attack, peakLevel + bias, curve),
+      (decay, peakLevel * sustainLevel + bias, curve),
+      (release, bias, curve)), 3)
+
+  def adsr(attack: GE = 0.01f, decay: GE = 0.3f, sustainLevel: GE = 0.5f, release: GE = 1, peakLevel: GE = 1,
+           curve: Curve = parametric(-4), bias: GE = 0): Env =
+    new Env(bias, Vector[Segment](
+      (attack, bias, curve),
+      (decay, peakLevel * sustainLevel + bias, curve),
+      (release, bias, curve)), 2)
+
+  def asr(attack: GE = 0.01f, level: GE = 1, release: GE = 1, curve: Curve = parametric(-4)): Env =
+    new Env(0, Vector[Segment]((attack, level, curve), (release, 0, curve)), 1)
 }
 
 sealed trait EnvLike extends GE {
@@ -141,7 +143,7 @@ final case class Env(startLevel: GE, segments: ISeq[Env.Segment],
     val segmIdx = segments.toIndexedSeq
     val sizeGE: GE = segmIdx.size
     val res: IIdxSeq[GE] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap(seg =>
-      Vector[GE](seg.targetLevel, seg.dur, seg.slope.id, seg.slope.curvature))
+      Vector[GE](seg.targetLevel, seg.dur, seg.curve.id, seg.curve.curvature))
     res
   }
 
@@ -164,7 +166,7 @@ final case class IEnv(startLevel: GE, segments: ISeq[Env.Segment], offset: GE = 
     val sizeGE: GE  = segmIdx.size
     val totalDur    = segmIdx.foldLeft[GE](0)((sum, next) => sum + next.dur)
     val res: IIdxSeq[GE] = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap(seg =>
-      Vector[GE](seg.dur, seg.slope.id, seg.slope.curvature, seg.targetLevel))
+      Vector[GE](seg.dur, seg.curve.id, seg.curve.curvature, seg.targetLevel))
     res
   }
 
