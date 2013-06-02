@@ -12,7 +12,7 @@ homepage <<= name { n => Some(url("https://github.com/Sciss/" + n)) }
 
 licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-libraryDependencies <<= version { v =>
+libraryDependencies <++= version { v =>
   //  val i  = v.lastIndexOf('.') + 1
   //  val uv = v.substring(0, i) + "+"
   val uv = "1.6.+"
