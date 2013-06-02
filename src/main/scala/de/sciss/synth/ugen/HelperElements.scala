@@ -38,43 +38,39 @@ final case class Flatten(elem: GE) extends GE.Lazy {
   def makeUGens: UGenInLike = UGenInGroup(elem.expand.flatOutputs)
 }
 
-/**
- * A simple graph element that takes a function and upon UGen expansion
- * applies the multi-channel expanded version of the input argument to that function.
- *
- * Note: This may cause problems in future projects involving serialization of
- * synth graphs, due to the generic nature of the `fun` argument.
- */
-final case class MapExpanded(in: GE)(fun: IIdxSeq[GE] => GE) extends GE.Lazy {
-
-  def rate        = UndefinedRate
-
-  protected def makeUGens: UGenInLike = {
-    val _in = in.expand
-    val res = fun(_in.outputs)
-    res.expand
-  }
-}
+///** A simple graph element that takes a function and upon UGen expansion
+//  * applies the multi-channel expanded version of the input argument to that function.
+//  *
+//  * Note: This may cause problems in future projects involving serialization of
+//  * synth graphs, due to the generic nature of the `fun` argument.
+//  */
+//final case class MapExpanded(in: GE)(fun: IIdxSeq[GE] => GE) extends GE.Lazy {
+//
+//  def rate        = UndefinedRate
+//
+//  protected def makeUGens: UGenInLike = {
+//    val _in = in.expand
+//    val res = fun(_in.outputs)
+//    res.expand
+//  }
+//}
 
 object Mix {
-  /**
-   * A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.
-   */
-  def tabulate(n: Int)(fun: (Int) => GE) /* ( implicit rate: R ) */ : Mix.Seq =
-    Mix.Seq(IIdxSeq.tabulate(n)(i => fun(i)))
+  /** A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang. */
+  def tabulate(n: Int)(fun: Int => GE): GE =
+    Mix.Seq(Vector.tabulate(n)(i => fun(i)))
 
   /**
    * A mixing idiom that corresponds to @Seq.fill@.
    */
-  def fill(n: Int)(thunk: => GE) /* ( implicit rate: R ) */ : Mix.Seq =
-    Mix.Seq(IIdxSeq.fill(n)(thunk))
+  def fill(n: Int)(thunk: => GE): GE =
+    Mix.Seq(Vector.fill(n)(thunk))
 
-  def seq(elems: IIdxSeq[GE]) /* ( implicit rate: R ) */ = Seq(elems)
+  def seq(elems: IIdxSeq[GE]): GE = Seq(elems)
 
-  def mono(elem: GE) = Mono(elem)
+  def mono(elem: GE): GE = Mono(elem)
 
-  final case class Seq(elems: IIdxSeq[GE])
-    extends GE.Lazy {
+  final case class Seq(elems: IIdxSeq[GE]) extends GE.Lazy {
 
     def numOutputs  = if (elems.isEmpty) 0 else 1
     // XXX korrekt?
@@ -86,9 +82,7 @@ object Mix {
     def makeUGens: UGenInLike = if (elems.nonEmpty) elems.reduceLeft(_ + _).expand else UGenInGroup.empty
   }
 
-  final case class Mono(elem: GE)
-    extends GE.Lazy {
-
+  final case class Mono(elem: GE) extends GE.Lazy {
     def numOutputs  = 1
     def rate        = elem.rate
     override def productPrefix = "Mix$Mono"
@@ -102,7 +96,6 @@ object Mix {
       } else UGenInGroup.empty
     }
   }
-
 }
 
 /**
@@ -117,8 +110,7 @@ object Mix {
  * Mix( Pan2.ar( SinOsc.ar( 440 :: 660 :: Nil ))) --> [ left( 440 ) + left( 660 ), right( 440 ) + right( 660 )]
  * }}}
 */
-final case class Mix(elem: GE)
-  extends UGenSource.SingleOut {  // XXX TODO: should not be UGenSource
+final case class Mix(elem: GE) extends UGenSource.SingleOut {  // XXX TODO: should not be UGenSource
 
   def rate = elem.rate
 
@@ -139,7 +131,7 @@ final case class Zip(elems: GE*) extends GE.Lazy {
     val exp: IIdxSeq[UGenInLike] = elems.map(_.expand)(breakOut)
     val sz = exp.map(_.outputs.size) // exp.view.map ?
     val minSz = sz.min
-    //      val res = UGenInGroup( IIdxSeq.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
+    //      val res = UGenInGroup( Vector.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
     /* val res = */ UGenInGroup((0 until minSz).flatMap(i => exp.map(_.unwrap(i))))
     //println( "Zip.expand = " + res )
     //      res
@@ -153,8 +145,8 @@ object Reduce {
    */
   def +  (elem: GE) = apply(elem, Plus  )
   def *  (elem: GE) = apply(elem, Times )
-  //   def all_sig_==( elem: GE ) = error( "TODO" )
-  //   def all_sig_!=( elem: GE ) = error( "TODO" )
+  //   def all_sig_==( elem: GE ) = ...
+  //   def all_sig_!=( elem: GE ) = ...
   def min(elem: GE) = apply(elem, Min   )
   def max(elem: GE) = apply(elem, Max   )
   def &  (elem: GE) = apply(elem, BitAnd)
@@ -162,8 +154,7 @@ object Reduce {
   def ^  (elem: GE) = apply(elem, BitXor)
 }
 
-final case class Reduce(elem: GE, op: BinaryOpUGen.Op)
-  extends UGenSource.SingleOut {
+final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.SingleOut {
   // XXX TODO: should not be UGenSource
   def rate = elem.rate
 
@@ -342,7 +333,7 @@ final case class PhysicalIn(indices: GE, numChannels: Seq[Int]) extends GE.Lazy 
     val iNumCh = numChannels.toIndexedSeq
     val _numChannels = if (_indices.size <= iNumCh.size) iNumCh
     else {
-      IIdxSeq.tabulate(_indices.size)(ch => iNumCh(ch % iNumCh.size))
+      Vector.tabulate(_indices.size)(ch => iNumCh(ch % iNumCh.size))
     }
 
     Flatten((_indices zip _numChannels).map {
