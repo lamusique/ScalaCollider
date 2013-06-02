@@ -1,32 +1,50 @@
-### changes
+# changes
 
-#### changes in v1.4.0
+This document only hightlights major changes which probably require some adjustments when upgrading.
+
+## changes in v1.8.0
+
+* several types moved from package `synth` to `synth.ugen` to simplify the new serialization mechanism used in SoundProcesses
+* this includes `Env` and `Constant`
+* `Env.ConstShape` became `Curve` and is separate from the conversion to graph elements
+* the constant envelope shapes are now inside `Curve`. E.g. `linShape` became `Curve.linear` etc.
+* named control generation uses magnet pattern, disallows varargs. Instead of `"freq".kr(400, 500, 600)` one must now write `"freq.kr(Seq(400, 500, 600))`.
+
+## changes in v1.6.0
+
+* drops dependency on scala-actors, uses futures and processor library instead.
+
+## changes in v1.5.0
+
+* package `osc` became `message` not to conflict with ScalaOSC. The `OSC` prefix was dropped from classes.
+
+## changes in v1.4.0
 
 * UGens have been externalised as a library dependency to ScalaColliderUGens project
 * requires Scala 2.10 now
 
-#### changes in v0.34
+## changes in v0.34
 
 * SynthGraph is serializable
 * bit of clean up in rich numbers
 
-#### changes in v0.33
+## changes in v0.33
 
 * fix for `LinLin` UGen removed from SuperCollider.
 
-#### changes in v0.32
+## changes in v0.32
 
 * OSC array support (e.g. setting multi-channel controls directly in synth instantiation).
 * fix for `SendTrig` argument names
 * elimination of functionally equivalent UGens and removal of no-op subtrees re-enabled
 * fix for `Silent` UGen removed from SuperCollider.
 
-#### changes in v0.31
+## changes in v0.31
 
 * `ServerOptions` became `Server.Config`. And a config builder is created via `Server.Config()`. This makes it more regular with the nomenclature of ScalaOSC. Likewise, `ClientOptions` became `Client.Config`.
 * `Server.test` which was originally really meant just for quick testing, was renamed to `Server.run`, because it is generally useful for running a server without caring too much about the booting process.
 
-#### changes in v0.30
+## changes in v0.30
 
 __Note:__ There have been made several changes from 0.25 to 0.30...
 
