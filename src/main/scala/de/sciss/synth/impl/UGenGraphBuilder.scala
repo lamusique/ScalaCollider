@@ -46,11 +46,11 @@ object DefaultUGenGraphBuilderFactory extends UGenGraph.BuilderFactory {
 
     def build: UGenGraph = {
       var g = graph
-      var controlProxies = ISet.empty[ControlProxyLike[_]]
+      var controlProxies = ISet.empty[ControlProxyLike]
       while (g.nonEmpty) {
         // XXX these two lines could be more efficient eventually -- using a 'clearable' SynthGraph
         controlProxies ++= g.controlProxies
-        g = SynthGraph(g.sources.foreach(e => e.force(this))) // allow for further graphs being created
+        g = SynthGraph(g.sources.foreach(_.force(builder))) // allow for further graphs being created
       }
       build(controlProxies)
     }
@@ -61,9 +61,9 @@ object UGenGraphBuilderLike {
 
   // ---- IndexedUGen ----
   private final class IndexedUGen(val ugen: UGen, var index: Int, var effective: Boolean) {
-    val parents   = MBuffer.empty[IndexedUGen]
-    var children  = MBuffer.empty[IndexedUGen]
-    var richInputs: List[RichUGenInBuilder] = Nil // null
+    val parents     = MBuffer.empty[IndexedUGen]
+    var children    = MBuffer.empty[IndexedUGen]
+    var richInputs  = List   .empty[RichUGenInBuilder]
 
     override def toString = s"IndexedUGen($ugen, $index, $effective) : richInputs = $richInputs"
   }
@@ -97,10 +97,10 @@ object UGenGraphBuilderLike {
 }
 
 trait BasicUGenGraphBuilder extends UGenGraphBuilderLike {
-   protected var ugens          = IIdxSeq.empty[ UGen ]
-   protected var controlValues  = IIdxSeq.empty[ Float ]
-   protected var controlNames   = IIdxSeq.empty[ (String, Int) ]
-   protected var sourceMap      = Map.empty[ AnyRef, Any ]
+  protected var ugens         = IIdxSeq.empty[UGen]
+  protected var controlValues = IIdxSeq.empty[Float]
+  protected var controlNames  = IIdxSeq.empty[(String, Int)]
+  protected var sourceMap     = Map    .empty[AnyRef, Any]
 }
 
 /**
@@ -114,10 +114,10 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
   import UGenGraphBuilderLike._
 
   // updated during build
-  protected var ugens: IIdxSeq[UGen]
-  protected var controlValues: IIdxSeq[Float]
-  protected var controlNames: IIdxSeq[(String, Int)]
-  protected var sourceMap: Map[AnyRef, Any]
+  protected var ugens         : IIdxSeq[UGen]
+  protected var controlValues : IIdxSeq[Float]
+  protected var controlNames  : IIdxSeq[(String, Int)]
+  protected var sourceMap     : Map[AnyRef, Any]
 
   // this proxy function is useful because `elem.force` is package private.
   // so other projects implementing `UGenGraphBuilderLike` can use this function
@@ -133,7 +133,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     *
     * @return  the completed `UGenGraph` build
     */
-  final protected def build(controlProxies: Iterable[ControlProxyLike[_]]): UGenGraph = {
+  final protected def build(controlProxies: Iterable[ControlProxyLike]): UGenGraph = {
     //         val ctrlProxyMap        = buildControls( graph.controlProxies )
     val ctrlProxyMap        = buildControls(controlProxies)
     val (igens, constants)  = indexUGens(ctrlProxyMap)
@@ -143,11 +143,10 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     UGenGraph(constants, controlValues, controlNames, richUGens)
   }
 
-  private def indexUGens(ctrlProxyMap: Map[ControlProxyLike[_], (UGen, Int)]):
-    (IIdxSeq[IndexedUGen], IIdxSeq[Float]) = {
-
+  private def indexUGens(ctrlProxyMap: Map[ControlProxyLike, (UGen, Int)]): (IIdxSeq[IndexedUGen], IIdxSeq[Float]) = {
     val constantMap   = MMap.empty[Float, RichConstant]
-    var constants     = IIdxSeq.empty[Float]
+    val constants     = Vector.newBuilder[Float]
+    var numConstants  = 0
     var numIneff      = ugens.size
     val indexedUGens  = ugens.zipWithIndex.map { case (ugen, idx) =>
       val eff = ugen.hasSideEffect
@@ -164,29 +163,30 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
       // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
       // might be http://lampsvn.epfl.ch/trac/scala/ticket/4020
-      iu.richInputs = iu.ugen.inputs.map({
+      iu.richInputs = iu.ugen.inputs.map {
         // don't worry -- the match _is_ exhaustive
         case Constant(value) => constantMap.get(value) getOrElse {
-          val rc = new RichConstant(constants.size)
-          constantMap += value -> rc
-          constants :+= value
+          val rc        = new RichConstant(numConstants)
+          constantMap  += value -> rc
+          constants    += value
+          numConstants += 1
           rc
         }
 
         case up: UGenProxy =>
-          val iui = ugenMap(up.source /* .ref */)
-          iu.parents += iui
+          val iui       = ugenMap(up.source /* .ref */)
+          iu.parents   += iui
           iui.children += iu
           new RichUGenProxyBuilder(iui, up.outputIndex)
 
         case ControlUGenOutProxy(proxy, outputIndex /* , _ */) =>
           val (ugen, off) = ctrlProxyMap(proxy)
-          val iui = ugenMap(ugen /* .ref */)
-          iu.parents += iui
-          iui.children += iu
+          val iui         = ugenMap(ugen /* .ref */)
+          iu.parents     += iui
+          iui.children   += iu
           new RichUGenProxyBuilder(iui, off + outputIndex)
 
-      })(breakOut)
+      } (breakOut)
       if (iu.effective) iu.richInputs.foreach(numIneff -= _.makeEffective())
     }
     val filtered: IIdxSeq[IndexedUGen] = if (numIneff == 0) indexedUGens
@@ -195,7 +195,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
         iu.children = iu.children.filter(_.effective)
         iu
     }
-    (filtered, constants)
+    (filtered, constants.result())
   }
 
   /*
@@ -220,7 +220,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       val iu      = avail.pop()
       iu.index    = cnt
       sorted(cnt) = iu
-      cnt += 1
+      cnt        += 1
       iu.children foreach { iuc =>
         iuc.parents.remove(iuc.parents.indexOf(iu))
         if (iuc.parents.isEmpty) /* avail =*/ avail.push(iuc)
@@ -231,7 +231,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
 
   final def visit[U](ref: AnyRef, init: => U): U = {
     sourceMap.getOrElse(ref, {
-      val exp = init // .asInstanceOf[ U ]
+      val exp    = init // .asInstanceOf[ U ]
       sourceMap += ref -> exp
       // exp.foreach( addUGen( _ ))
       exp
@@ -244,19 +244,14 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
 
   final def addControl(values: IIdxSeq[Float], name: Option[String]): Int = {
     val specialIndex = controlValues.size
-    controlValues ++= values
+    controlValues  ++= values
     name.foreach(n => controlNames :+= n -> specialIndex)
     specialIndex
   }
 
-  private def buildControls(p: Iterable[ControlProxyLike[_]]): Map[ControlProxyLike[_], (UGen, Int)] = {
-    import language.existentials
-    // grmpfff...
-    p.groupBy(_.factory).flatMap(tuple => {
-      val (factory, proxies) = tuple
-      factory.build(builder, proxies.toSeq.asInstanceOf[Seq[factory.Proxy /* XXX horrible */ ]]: _*)
-      //            res.valuesIterator.foreach( tup => addUGen( tup._1 ))
-      //            res
-    })(breakOut)
+  private def buildControls(p: Iterable[ControlProxyLike]): Map[ControlProxyLike, (UGen, Int)] = {
+    p.groupBy(_.factory).flatMap { case (factory, proxies) =>
+      factory.build(builder, proxies.toIndexedSeq)
+    } (breakOut)
   }
 }

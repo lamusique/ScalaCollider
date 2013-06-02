@@ -404,7 +404,8 @@ object Ops {
         // working around nasty compiler bug
         val ply = PlayBuf.ar(numChannels, id, BufRateScale.kr(id), loop = if (loop) 1 else 0)
         if (!loop) FreeSelfWhenDone.kr(ply)
-        ply * "amp".kr(amp)
+        val ampCtl = "amp".kr(amp) // XXX TODO: scalac 2.10.0 inference bug
+        ply * ampCtl
       }
     }
   }

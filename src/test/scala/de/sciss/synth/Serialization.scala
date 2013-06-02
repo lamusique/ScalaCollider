@@ -19,11 +19,11 @@ object Serialization extends App {
       }
       Out.ar( 0, m )
    }
-   val baos = new ByteArrayOutputStream()
-   val oos  = new ObjectOutputStream( baos )
-   oos.writeObject( in )
-   val bais = new ByteArrayInputStream( baos.toByteArray )
-   val ois  = new ObjectInputStream( bais )
-   val out  = ois.readObject.asInstanceOf[ SynthGraph ]
-   println( "Ok" )
+  val baos  = new ByteArrayOutputStream()
+  val oos   = new ObjectOutputStream(baos)
+  oos.writeObject(in)
+  val bais  = new ByteArrayInputStream(baos.toByteArray)
+  val ois   = new ObjectInputStream(bais)
+  val out   = ois.readObject.asInstanceOf[SynthGraph]
+  println("Ok")
 }
