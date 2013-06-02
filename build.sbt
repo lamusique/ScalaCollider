@@ -4,7 +4,7 @@ version := "1.8.0-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.2-RC2"  // "2.10.0"  // _not 2.10.1_ because of SI-7268
+scalaVersion := "2.10.0"  // _not 2.10.1 or 2.10.2_ because of SI-7268 / SI-7436 ; "2.10.3-RC1"
 
 description := "A sound synthesis library for the SuperCollider server"
 
