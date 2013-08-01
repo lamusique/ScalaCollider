@@ -31,7 +31,6 @@ import de.sciss.synth.{Completion => Comp}
 import File.{separator => sep}
 import de.sciss.osc.{Bundle, Message, Packet}
 
-
 object SynthDef {
   type Completion         = Comp[SynthDef]
   final val NoCompletion  = Comp[SynthDef](None, None)
@@ -42,7 +41,7 @@ object SynthDef {
            (implicit factory: UGenGraph.BuilderFactory = impl.DefaultUGenGraphBuilderFactory): SynthDef =
     SynthDef(name, SynthGraph(thunk).expand)
 
-  def write(path: String, defs: Seq[SynthDef]) {
+  def write(path: String, defs: Seq[SynthDef]): Unit = {
     val os  = new FileOutputStream(path)
     val dos = new DataOutputStream(new BufferedOutputStream(os))
 
@@ -87,7 +86,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
     ByteBuffer.wrap(baos.toByteArray).asReadOnlyBuffer()
   }
 
-  private def write(dos: DataOutputStream) {
+  private def write(dos: DataOutputStream): Unit = {
     writePascalString(dos, name)
     graph.write(dos)
   }
@@ -97,7 +96,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
   def loadMsg(dir: String = defaultDir, completion: Optional[Packet] = None) =
     message.SynthDefLoad(dir + sep + name + ".scsyndef", completion)
 
-  def write(dir: String = defaultDir, overwrite: Boolean = true) {
+  def write(dir: String = defaultDir, overwrite: Boolean = true): Unit = {
     val file = new File(dir, name + ".scsyndef")
     if (file.exists) {
       if (overwrite) file.delete() else return
@@ -105,16 +104,14 @@ final case class SynthDef(name: String, graph: UGenGraph) {
     SynthDef.write(file.getAbsolutePath, this :: Nil)
   }
 
-  @inline private def writePascalString(dos: DataOutputStream, str: String) {
+  @inline private def writePascalString(dos: DataOutputStream, str: String): Unit = {
     dos.writeByte(str.size)
     dos.write(str.getBytes)
   }
 
-  def hexDump() {
-    Packet.printHexOn(toBytes, Console.out)
-  }
+  def hexDump(): Unit = Packet.printHexOn(toBytes, Console.out)
 
-  def testTopoSort() {
+  def testTopoSort(): Unit = {
     graph.ugens.zipWithIndex.foreach { case (ru, i) =>
       ru.inputSpecs.toList.zipWithIndex.foreach { case ((ref, _), j) =>
         if ((ref >= 0) && (ref <= i)) {
@@ -125,7 +122,7 @@ final case class SynthDef(name: String, graph: UGenGraph) {
     println("Test succeeded.")
   }
 
-  def debugDump() {
+  def debugDump(): Unit = {
      graph.ugens.zipWithIndex.foreach { case (ru, i) =>
        println("#" + i + " : " + ru.ugen.name +
          (if (ru.ugen.specialIndex != 0) "-" + ru.ugen.specialIndex else "") + ru.inputSpecs.map({

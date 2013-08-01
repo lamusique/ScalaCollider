@@ -27,19 +27,17 @@ package de.sciss.synth
 
 import de.sciss.synth.{Completion => Comp}
 import de.sciss.osc.{Bundle, Packet}
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import de.sciss.model.Model
 import de.sciss.model.impl.ModelImpl
 
 object Buffer {
-  type Listener = Model.Listener[BufferManager.BufferInfo]
+  type Listener     = Model.Listener[BufferManager.BufferInfo]
 
-  type Completion = Comp[Buffer]
-  val NoCompletion = Comp[Buffer](None, None)
+  type Completion   = Comp[Buffer]
+  val NoCompletion  = Comp[Buffer](None, None)
 
-  def apply(server: Server = Server.default): Buffer = {
-    apply(server, allocID(server))
-  }
+  def apply(server: Server = Server.default): Buffer = apply(server, allocID(server))
 
   private def allocID(server: Server): Int = {
     val id = server.allocBuffer(1)
@@ -51,7 +49,7 @@ object Buffer {
 }
 final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager.BufferInfo] {
 
-//  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
+  //  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
 
   import Buffer._
 
@@ -60,24 +58,25 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
   private var numChannelsVar  = -1
   private var sampleRateVar   = 0f
 
-  override def toString = "Buffer(" + server + "," + id +
-    (if (numFramesVar >= 0) ") : <" + numFramesVar + "," + numChannelsVar + "," + sampleRateVar + ">" else ")")
+  private val sync            = new AnyRef
+
+  override def toString = s"Buffer($server,$id" +
+    (if (numFramesVar >= 0) s") : <$numFramesVar,$numChannelsVar,$sampleRateVar>" else ")")
 
   def numFrames   = numFramesVar
   def numChannels = numChannelsVar
   def sampleRate  = sampleRateVar
 
-  def register() {
-    server.bufManager.register(this)
-  }
+  def register(): Unit = server.bufManager.register(this)
 
-  private[synth] def updated(change: BufferManager.BufferInfo) {
-    val info = change.info
-    numFramesVar = info.numFrames
-    numChannelsVar = info.numChannels
-    sampleRateVar = info.sampleRate
-    dispatch(change)
-  }
+  private[synth] def updated(change: BufferManager.BufferInfo): Unit =
+    sync.synchronized {
+      val info        = change.info
+      numFramesVar    = info.numFrames
+      numChannelsVar  = info.numChannels
+      sampleRateVar   = info.sampleRate
+      dispatch(change)
+    }
 
   def queryMsg = message.BufferQuery(id)
 
@@ -90,46 +89,41 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
    *                   <code>false</code> here, and manually release the id, using the <code>release</code>
    *                   method
    */
-  def freeMsg(completion: Optional[Packet] = None, release: Boolean = true) = {
-    if (release) this.release()
-    message.BufferFree(id, completion)
-  }
+  def freeMsg(completion: Optional[Packet] = None, release: Boolean = true): message.BufferFree =
+    sync.synchronized {
+      if (release) this.release()
+      message.BufferFree(id, completion)
+    }
 
-  /**
-   * Releases the buffer id to the id-allocator pool, without sending any
-   * OSCMessage. Use with great care.
-   */
-  def release() {
-    if (released) sys.error(this.toString + " : has already been freed")
-    server.freeBuffer(id)
-    released = true
-  }
+  /** Releases the buffer id to the id-allocator pool, without sending any
+    * OSCMessage. Use with great care.
+    */
+  def release(): Unit =
+    sync.synchronized {
+      if (released) sys.error(this.toString + " : has already been freed")
+      server.freeBuffer(id)
+      released = true
+    }
 
   def closeMsg: message.BufferClose = closeMsg(None)
 
-  def closeMsg(completion: Optional[Packet] = None) =
-    message.BufferClose(id, completion)
+  def closeMsg(completion: Optional[Packet] = None) = message.BufferClose(id, completion)
 
-  def allocMsg(numFrames: Int, numChannels: Int = 1, completion: Optional[Packet] = None) = {
-    numFramesVar = numFrames
-    numChannelsVar = numChannels
-    sampleRateVar = server.sampleRate.toFloat
-    message.BufferAlloc(id, numFrames, numChannels, completion)
-  }
+  def allocMsg(numFrames: Int, numChannels: Int = 1, completion: Optional[Packet] = None): message.BufferAlloc =
+    sync.synchronized {
+      numFramesVar    = numFrames
+      numChannelsVar  = numChannels
+      sampleRateVar   = server.sampleRate.toFloat
+      message.BufferAlloc(id, numFrames, numChannels, completion)
+    }
 
   def allocReadMsg(path: String, startFrame: Int = 0, numFrames: Int = -1,
-                   completion: Optional[Packet] = None) = {
-    // this.cache;
-    // path = argpath;
+                   completion: Optional[Packet] = None) =
     message.BufferAllocRead(id, path, startFrame, numFrames, completion)
-  }
 
   def allocReadChannelMsg(path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[Int],
-                          completion: Optional[Packet] = None) = {
-    // this.cache;
-    // path = argpath;
+                          completion: Optional[Packet] = None) =
     message.BufferAllocReadChannel(id, path, startFrame, numFrames, channels.toList, completion)
-  }
 
   def cueMsg(path: String, startFrame: Int = 0, completion: Completion = NoCompletion) =
     message.BufferRead(id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
@@ -144,21 +138,13 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     message.BufferReadChannel(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
       completion)
 
-  def setMsg(pairs: (Int, Float)*) = {
-//    val numSmp = numChannels * numFrames
-//    require(pairs.forall(tup => (tup._1 >= 0 && tup._1 < numSmp)))
-    message.BufferSet(id, pairs: _*)
-  }
+  def setMsg(pairs: (Int, Float)*) = message.BufferSet(id, pairs: _*)
 
-  def setnMsg(v: IIdxSeq[Float]) = {
-//    val numSmp = numChannels * numFrames
-//    require(v.size == numSmp)
-    message.BufferSetn(id, (0, v.toIndexedSeq))
-  }
+  def setnMsg(v: Vec[Float]) = message.BufferSetn(id, (0, v.toIndexedSeq))
 
-  def setnMsg(pairs: (Int, IIdxSeq[Float])*) = {
-    val numSmp = numChannels * numFrames
-//    require(pairs.forall(tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp)))
+  def setnMsg(pairs: (Int, Vec[Float])*) = {
+    //    val numSmp = numChannels * numFrames
+    //    require(pairs.forall(tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp)))
     val ipairs = pairs.map(tup => (tup._1, tup._2.toIndexedSeq))
     message.BufferSetn(id, ipairs: _*)
   }
@@ -166,21 +152,16 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
   /** Convenience method for creating a fill message for one given range */
   def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, message.BufferFill.Info(index, num, value))
 
-  def fillMsg(infos: message.BufferFill.Info*) = {
-    message.BufferFill(id, infos: _*)
-  }
+  def fillMsg(infos: message.BufferFill.Info*) = message.BufferFill(id, infos: _*)
 
   def zeroMsg: message.BufferZero = zeroMsg(None)
 
-  def zeroMsg(completion: Optional[Packet]) =
-    message.BufferZero(id, completion)
+  def zeroMsg(completion: Optional[Packet]) = message.BufferZero(id, completion)
 
   def writeMsg(path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
                sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
-               leaveOpen: Boolean = false, completion: Optional[Packet] = None) = {
-    // require( isPowerOfTwo( this.numFrames ))
+               leaveOpen: Boolean = false, completion: Optional[Packet] = None) =
     message.BufferWrite(id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion)
-  }
 
   def makePacket(completion: Completion, forceQuery: Boolean = false): Option[Packet] = {
     val a = completion.action

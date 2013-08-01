@@ -390,7 +390,7 @@ object Server {
       b.result()
     }
 
-    private[Server] def addCommonArgs( o: ConfigLike, b: mutable.Builder[ String, _ ]) {
+    private[Server] def addCommonArgs(o: ConfigLike, b: mutable.Builder[String, Any]): Unit = {
       if (o.controlBusChannels != 4096) {
         b += "-c"
         b += o.controlBusChannels.toString
@@ -625,13 +625,13 @@ object Server {
     private var deviceNamesVar: Option[(String, String)] = None
 
     def deviceName: Option[String] = deviceNameVar
-    def deviceName_=(value: Option[String]) {
+    def deviceName_=(value: Option[String]): Unit = {
       deviceNameVar = value
       if (value.isDefined) deviceNamesVar = None
     }
 
     def deviceNames: Option[(String, String)] = deviceNamesVar
-    def deviceNames_=(value: Option[(String, String)]) {
+    def deviceNames_=(value: Option[(String, String)]): Unit = {
       deviceNamesVar = value
       if (value.isDefined) deviceNameVar = None
     }
@@ -677,7 +677,7 @@ object Server {
      *
      * This method will fail with runtime exception if the host is not local.
      */
-    def pickPort() {
+    def pickPort(): Unit = {
       require(isLocal)
       transport match {
         case UDP =>
@@ -707,7 +707,7 @@ object Server {
       nrtCommandPath,
       nrtInputPath, nrtOutputPath, nrtHeaderFormat, nrtSampleFormat)
 
-    def read(config: Config) {
+    def read(config: Config): Unit = {
       programPath         = config.programPath
       controlBusChannels  = config.controlBusChannels
       audioBusChannels    = config.audioBusChannels
@@ -774,14 +774,13 @@ object Server {
     sc
   }
 
-  def run( code: Server => Unit ) { run()( code )}
+  def run(code: Server => Unit): Unit = run()(code)
 
-  /**
-   * Utility method to test code quickly with a running server. This boots a
-   * server and executes the passed in code when the server is up. A shutdown
-   * hook is registered to make sure the server is destroyed when the VM exits.
-   */
-  def run(config: Config = Config().build)(code: Server => Unit) {
+  /** Utility method to test code quickly with a running server. This boots a
+    * server and executes the passed in code when the server is up. A shutdown
+    * hook is registered to make sure the server is destroyed when the VM exits.
+    */
+  def run(config: Config = Config().build)(code: Server => Unit): Unit = {
     //      val b = boot( config = config )
     val sync = new AnyRef
     var s: Server = null
@@ -793,21 +792,19 @@ object Server {
     }
     sc.addListener(li)
     Runtime.getRuntime.addShutdownHook(new Thread {
-      override def run() {
+      override def run(): Unit =
         sync.synchronized {
           if (s != null) {
             if (s.condition != Server.Offline) s.quit()
           } else sc.abort()
         }
-      }
     })
     sc.start()
   }
 
-  /**
-   * Creates an unconnected server proxy. This may be useful for creating NRT command files.
-   * Any attempt to try to send messages to the server will fail.
-   */
+  /** Creates an unconnected server proxy. This may be useful for creating NRT command files.
+    * Any attempt to try to send messages to the server will fail.
+    */
   def dummy(name: String = "dummy", config: Config = Config().build,
             clientConfig: Client.Config = Client.Config().build): Server = {
     val (addr, c) = prepareConnection(config, clientConfig)
@@ -847,11 +844,11 @@ object Server {
           ds.close()
         }
 
-      case other => sys.error("Unsupported transport : " + other.name)
+      case other => sys.error(s"Unsupported transport : ${other.name}")
     }
   }
 
-  def printError(name: String, t: Throwable) {
+  def printError(name: String, t: Throwable): Unit = {
     println(name + " : ")
     t.printStackTrace()
   }
@@ -889,17 +886,17 @@ object Server {
 }
 
 sealed trait ServerLike {
-  def name: String
+  def name  : String
   def config: Server.Config
-  def addr: InetSocketAddress
+  def addr  : InetSocketAddress
 }
 
 object ServerConnection {
   type Listener = Model.Listener[Condition]
 
   sealed abstract class Condition
-  case class Preparing(server: Server) extends Condition
-  case class Running(server: Server) extends Condition
+  case class  Preparing(server: Server) extends Condition
+  case class  Running  (server: Server) extends Condition
   case object Aborted extends Condition
 }
 

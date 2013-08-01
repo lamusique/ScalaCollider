@@ -28,7 +28,7 @@ package message
 
 import java.nio.ByteBuffer
 import collection.breakOut
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import collection.mutable.ListBuffer
 import java.io.PrintStream
 import de.sciss.osc.{Bundle, Message, Packet, PacketCodec}
@@ -140,84 +140,61 @@ object ServerCodec extends PacketCodec {
     */
   }
 
-  def encodeMessage(msg: Message, b: ByteBuffer) {
-    superCodec.encodeMessage(msg, b)
-  }
+  def encodeMessage(msg: Message, b: ByteBuffer): Unit = superCodec.encodeMessage(msg, b)
 
   def encodedMessageSize(msg: Message) = superCodec.encodedMessageSize(msg)
 
-  def encodeBundle(bndl: Bundle, b: ByteBuffer) {
-    superCodec.encodeBundle(bndl, b)
-  }
+  def encodeBundle(bndl: Bundle, b: ByteBuffer): Unit = superCodec.encodeBundle(bndl, b)
 
-  def printAtom(value: Any, stream: PrintStream, nestCount: Int) {
+  def printAtom(value: Any, stream: PrintStream, nestCount: Int): Unit =
     superCodec.printAtom(value, stream, nestCount)
-  }
 
   final val charsetName = superCodec.charsetName
 
   private def decodeFail(name: String): Nothing = throw PacketCodec.MalformedPacket(name)
 }
-// val nodeID: Int, val parentID: Int, val predID: Int, val succID: Int, val headID: Int, val tailID: Int )
 
-/**
- *    Identifies messages received or sent by the
- *    SuperCollider server
- */
+/** Identifies messages received or sent by the SuperCollider server. */
 sealed trait ServerMessage
 
-/**
- * Identifies messages sent to the SuperCollider server
- */
+/** Identifies messages sent to the SuperCollider server. */
 sealed trait Send extends ServerMessage {
   def isSynchronous: Boolean
 }
-/**
- * Identifies messages sent to the server which are
- * executed synchronously
- */
+
+/** Identifies messages sent to the server which are executed synchronously. */
 sealed trait SyncSend extends Send {
   final def isSynchronous = true
 }
-/**
- * Identifies command messages sent to the server which are
- * executed synchronously and do not return a message
- */
+
+/** Identifies command messages sent to the server which are executed synchronously and do not return a message. */
 trait SyncCmd extends SyncSend
-/**
- * Identifies query messages sent to the server which are
- * executed synchronously and produce a reply message
- */
+
+/** Identifies query messages sent to the server which are executed synchronously and produce a reply message. */
 trait SyncQuery extends SyncSend
-/**
- * Identifies messages sent to the server which are
- * executed asynchronously and reply with a form of
- * done-message.
- */
+
+/** Identifies messages sent to the server which are executed asynchronously and reply with a form of done-message. */
 sealed trait AsyncSend extends Send {
   final def isSynchronous = false
 }
-/**
- * Identifies messages returned by SuperCollider server
- */
+
+/** Identifies messages returned by SuperCollider server. */
 trait Receive extends ServerMessage
 
-/**
- * Represents a `/synced` message, a reply from the server acknowledging that
- * all asynchronous operations up to the corresponding `/sync` message (i.e. with
- * the same id) have been completed
- */
+/** Represents a `/synced` message, a reply from the server acknowledging that
+  * all asynchronous operations up to the corresponding `/sync` message (i.e. with
+  * the same id) have been completed
+  */
 final case class Synced(id: Int) extends Message("/synced", id) with Receive
 
-/**
- * Represents a `/sync` message, which is queued with the asynchronous messages
- * on the server, and which, when executed, triggers a corresponding `/synced` reply
- * message (i.e. with the same id)
- *
- * @param   id    an arbitrary identifier which can be used to match the corresponding
- *                reply message. typically the id is incremented by 1 for each
- *                `/sync` message sent out.
- */
+/** Represents a `/sync` message, which is queued with the asynchronous messages
+  * on the server, and which, when executed, triggers a corresponding `/synced` reply
+  * message (i.e. with the same id)
+  *
+  * @param   id    an arbitrary identifier which can be used to match the corresponding
+  *                reply message. typically the id is incremented by 1 for each
+  *                `/sync` message sent out.
+  */
 final case class Sync(id: Int) extends Message("/sync", id) with AsyncSend
 
 final case class StatusReply(numUGens: Int, numSynths: Int, numGroups: Int, numDefs: Int, avgCPU: Float,
@@ -387,7 +364,7 @@ final case class BufferSet(id: Int, indicesAndValues: (Int, Float)*)
   extends Message("/b_set", (id :: (indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil)(breakOut): List[Any])): _*)
   with SyncCmd
 
-final case class BufferSetn(id: Int, indicesAndValues: (Int, IIdxSeq[Float])*)
+final case class BufferSetn(id: Int, indicesAndValues: (Int, Vec[Float])*)
   extends Message("/b_setn", (id +: indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2)): _*)
   with SyncCmd
 
@@ -411,8 +388,8 @@ final case class ControlBusSet(indicesAndValues: (Int, Float)*)
   extends Message("/c_set", indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil): _*)
   with SyncCmd
 
-//case class BusValuesPair( index: Int, values: IIdxSeq[ Float ])
-final case class ControlBusSetn(indicesAndValues: (Int, IIdxSeq[Float])*)
+//case class BusValuesPair( index: Int, values: Vec[ Float ])
+final case class ControlBusSetn(indicesAndValues: (Int, Vec[Float])*)
   extends Message("/c_setn", indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
 

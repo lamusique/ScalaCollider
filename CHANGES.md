@@ -2,6 +2,11 @@
 
 This document only hightlights major changes which probably require some adjustments when upgrading.
 
+## changes in v1.9.0
+
+* fixes #35: `BufferOps.close` should take `Optional` instead of `Option`
+* removes duplicate class `AddAction` which is already provided by the UGens API (dependency)
+
 ## changes in v1.8.0
 
 * several types moved from package `synth` to `synth.ugen` to simplify the new serialization mechanism used in SoundProcesses

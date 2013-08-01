@@ -25,7 +25,7 @@
 
 package de.sciss.synth
 
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 import language.implicitConversions
 
 object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMapImplicits {
@@ -35,23 +35,23 @@ object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMa
   final case class Single(key: Any, value: Float)
     extends ControlSetMap {
 
-    def toSetSeq : IIdxSeq[Any] = Vector(key,    value)
-    def toSetnSeq: IIdxSeq[Any] = Vector(key, 1, value)
+    def toSetSeq : Vec[Any] = Vector(key,    value)
+    def toSetnSeq: Vec[Any] = Vector(key, 1, value)
   }
 
   object Multi extends MultiControlSetMapImplicits
 
-  final case class Multi(key: Any, values: IIdxSeq[Float])
+  final case class Multi(key: Any, values: Vec[Float])
     extends ControlSetMap {
 
-    def toSetSeq : IIdxSeq[Any] = Vector(key, values)
-    def toSetnSeq: IIdxSeq[Any] = key +: values.size +: values
+    def toSetSeq : Vec[Any] = Vector(key, values)
+    def toSetnSeq: Vec[Any] = key +: values.size +: values
   }
 }
 
 sealed trait ControlSetMap {
-  def toSetSeq : IIdxSeq[Any]
-  def toSetnSeq: IIdxSeq[Any]
+  def toSetSeq : Vec[Any]
+  def toSetnSeq: Vec[Any]
 }
 
 private[synth] sealed trait SingleControlSetMapImplicits {
@@ -76,8 +76,8 @@ object ControlKBusMap {
   final case class Single(key: Any, index: Int)
     extends ControlKBusMap {
 
-    def toMapSeq : IIdxSeq[Any] = Vector(key, index)
-    def toMapnSeq: IIdxSeq[Any] = Vector(key, index, 1)
+    def toMapSeq : Vec[Any] = Vector(key, index)
+    def toMapnSeq: Vec[Any] = Vector(key, index, 1)
   }
 
   implicit def intKBusControlKBus   (tup: (Int   , ControlBus)) = Multi(tup._1, tup._2.index, tup._2.numChannels)
@@ -87,13 +87,13 @@ object ControlKBusMap {
   final case class Multi(key: Any, index: Int, numChannels: Int)
     extends ControlKBusMap {
 
-    def toMapnSeq: IIdxSeq[Any] = Vector(key, index, numChannels)
+    def toMapnSeq: Vec[Any] = Vector(key, index, numChannels)
   }
 }
 
 /** A mapping from a control-rate bus to a synth control. */
 sealed trait ControlKBusMap {
-  def toMapnSeq: IIdxSeq[Any]
+  def toMapnSeq: Vec[Any]
 }
 
 object ControlABusMap {
@@ -104,8 +104,8 @@ object ControlABusMap {
   final case class Single(key: Any, index: Int)
     extends ControlABusMap {
 
-    def toMapaSeq : IIdxSeq[Any] = Vector(key, index)
-    def toMapanSeq: IIdxSeq[Any] = Vector(key, index, 1)
+    def toMapaSeq : Vec[Any] = Vector(key, index)
+    def toMapanSeq: Vec[Any] = Vector(key, index, 1)
   }
 
   implicit def intABusControlABus   (tup: (Int   , AudioBus)) = Multi(tup._1, tup._2.index, tup._2.numChannels)
@@ -115,7 +115,7 @@ object ControlABusMap {
   final case class Multi(key: Any, index: Int, numChannels: Int)
     extends ControlABusMap {
 
-    def toMapanSeq: IIdxSeq[Any] = Vector(key, index, numChannels)
+    def toMapanSeq: Vec[Any] = Vector(key, index, numChannels)
   }
 }
 
@@ -128,5 +128,5 @@ object ControlABusMap {
   * @see  [[de.sciss.synth.ugen.InFeedback]]
   */
 sealed trait ControlABusMap {
-  def toMapanSeq: IIdxSeq[Any]
+  def toMapanSeq: Vec[Any]
 }

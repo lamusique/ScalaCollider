@@ -25,7 +25,6 @@
 
 package de.sciss.synth
 
-import collection.immutable.IntMap
 import de.sciss.model.impl.ModelImpl
 import de.sciss.model.Model
 
@@ -62,7 +61,7 @@ final class NodeManager(val server: Server) extends ModelImpl[NodeManager.Update
   //         nodes += defaultGroup.id -> defaultGroup
   //      }
 
-  def nodeChange(e: message.NodeChange) {
+  def nodeChange(e: message.NodeChange): Unit =
     e match {
       case message.NodeGo(nodeID, info) =>
         val node = nodes.get(nodeID) getOrElse {
@@ -100,37 +99,33 @@ final class NodeManager(val server: Server) extends ModelImpl[NodeManager.Update
         }
 
       case _ =>
-	}}
+	}
 
-  private def dispatchBoth(change: NodeChange) {
+  private def dispatchBoth(change: NodeChange): Unit = {
     dispatch(change)
     change.node.updated(change)
   }
 
   // eventually this should be done automatically
   // by the message dispatch management
-  def register(node: Node) {
+  def register(node: Node): Unit =
     sync.synchronized {
       // println(s"---- register node: $node")
       nodes += node.id -> node
     }
-  }
 
-  def unregister(node: Node) {
+  def unregister(node: Node): Unit =
     sync.synchronized {
       // println(s"---- unregister node: $node")
       nodes -= node.id
     }
-  }
 
-  def getNode(id: Int): Option[Node] = sync.synchronized {
-    nodes.get(id)
-  }
+  def getNode(id: Int): Option[Node] = nodes.get(id)  // sync.synchronized { }
 
-  def clear() {
+  def clear(): Unit = {
     val rootNode = server.rootNode // new Group( server, 0 )
     sync.synchronized {
-      nodes = IntMap(rootNode.id -> rootNode)
+      nodes = Map(rootNode.id -> rootNode)
     }
     dispatch(Cleared)
   }

@@ -2,7 +2,7 @@
 
 ## statement
 
-ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008-2013 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/licenses/ScalaCollider-License.txt) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
+ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008-2013 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/LICENSE) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
 ## building
 
@@ -16,7 +16,7 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-__Note__: Due to [SI-7268](https://issues.scala-lang.org/browse/SI-7268), the project must be currently compiled against Scala 2.10.0 and not 2.10.1.
+__Note__: Due to [SI-7268](https://issues.scala-lang.org/browse/SI-7268), the project must be currently compiled against Scala 2.10.0 and not 2.10.1. It can be used, however, with any Scala 2.10 version.
 
 ## linking
 
@@ -24,7 +24,7 @@ To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `1.8.+`
+The current version `v` is `1.9.+`
 
 ## starting a SuperCollider server
 
@@ -68,15 +68,7 @@ For more sound examples, see `ExampleCmd.txt`. There is also an introductory vid
 - Open Sound Control functionality is provided by the [ScalaOSC](http://github.com/Sciss/ScalaOSC) library.
 - MIDI functionality is not included, but can be added with the [ScalaMIDI](http://github.com/Sciss/ScalaMIDI) library.
 
-## creating an IntelliJ IDEA project
-
-If you want to develop the sources of ScalaCollider, the recommended way is to use IntelliJ IDEA. To create the project files, proceed as follows. If you have not installed the sbt-idea plugin yet, create the following contents in `~/.sbt/plugins/build.sbt`:
-
-    addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.2.0")
-
-Then to create the IDEA project, run `sbt gen-idea`.
-
-### download and resources
+## download and resources
 
 The current version can be downloaded from [github.com/Sciss/ScalaCollider](http://github.com/Sciss/ScalaCollider).
 

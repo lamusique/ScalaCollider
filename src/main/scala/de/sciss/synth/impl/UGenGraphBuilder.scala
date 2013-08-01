@@ -29,7 +29,7 @@ package impl
 
 import collection.breakOut
 import collection.mutable.{Map => MMap, Buffer => MBuffer, Stack => MStack}
-import collection.immutable.{IndexedSeq => IIdxSeq, Set => ISet}
+import collection.immutable.{IndexedSeq => Vec, Set => ISet}
 import UGenGraph.RichUGen
 import de.sciss.synth.ugen.{Constant, UGenProxy, ControlUGenOutProxy, ControlProxyLike}
 
@@ -97,9 +97,9 @@ object UGenGraphBuilderLike {
 }
 
 trait BasicUGenGraphBuilder extends UGenGraphBuilderLike {
-  protected var ugens         = IIdxSeq.empty[UGen]
-  protected var controlValues = IIdxSeq.empty[Float]
-  protected var controlNames  = IIdxSeq.empty[(String, Int)]
+  protected var ugens         = Vec.empty[UGen]
+  protected var controlValues = Vec.empty[Float]
+  protected var controlNames  = Vec.empty[(String, Int)]
   protected var sourceMap     = Map    .empty[AnyRef, Any]
 }
 
@@ -114,16 +114,14 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
   import UGenGraphBuilderLike._
 
   // updated during build
-  protected var ugens         : IIdxSeq[UGen]
-  protected var controlValues : IIdxSeq[Float]
-  protected var controlNames  : IIdxSeq[(String, Int)]
+  protected var ugens         : Vec[UGen]
+  protected var controlValues : Vec[Float]
+  protected var controlNames  : Vec[(String, Int)]
   protected var sourceMap     : Map[AnyRef, Any]
 
   // this proxy function is useful because `elem.force` is package private.
   // so other projects implementing `UGenGraphBuilderLike` can use this function
-  final protected def force(elem: Lazy) {
-    elem.force(this)
-  }
+  final protected def force(elem: Lazy): Unit = elem.force(this)
 
   /** Finalizes the build process. It is assumed that the graph elements have been expanded at this
     * stage, having called into `addUGen` and `addControl`. The caller must collect all the control
@@ -138,12 +136,12 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     val ctrlProxyMap        = buildControls(controlProxies)
     val (igens, constants)  = indexUGens(ctrlProxyMap)
     val indexedUGens        = sortUGens(igens)
-    val richUGens: IIdxSeq[RichUGen] =
+    val richUGens: Vec[RichUGen] =
       indexedUGens.map(iu => RichUGen(iu.ugen, iu.richInputs.map(_.create)))(breakOut)
     UGenGraph(constants, controlValues, controlNames, richUGens)
   }
 
-  private def indexUGens(ctrlProxyMap: Map[ControlProxyLike, (UGen, Int)]): (IIdxSeq[IndexedUGen], IIdxSeq[Float]) = {
+  private def indexUGens(ctrlProxyMap: Map[ControlProxyLike, (UGen, Int)]): (Vec[IndexedUGen], Vec[Float]) = {
     val constantMap   = MMap.empty[Float, RichConstant]
     val constants     = Vector.newBuilder[Float]
     var numConstants  = 0
@@ -189,7 +187,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       } (breakOut)
       if (iu.effective) iu.richInputs.foreach(numIneff -= _.makeEffective())
     }
-    val filtered: IIdxSeq[IndexedUGen] = if (numIneff == 0) indexedUGens
+    val filtered: Vec[IndexedUGen] = if (numIneff == 0) indexedUGens
     else indexedUGens.collect {
       case iu if iu.effective =>
         iu.children = iu.children.filter(_.effective)
@@ -208,7 +206,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
    *    mNumWireBufs might be different, so it's a space not a
    *    time issue.
    */
-  private def sortUGens(indexedUGens: IIdxSeq[IndexedUGen]): Array[IndexedUGen] = {
+  private def sortUGens(indexedUGens: Vec[IndexedUGen]): Array[IndexedUGen] = {
     indexedUGens.foreach(iu => iu.children = iu.children.sortWith((a, b) => a.index > b.index))
     val sorted = new Array[IndexedUGen](indexedUGens.size)
     //      val avail   = MStack( indexedUGens.filter( _.parents.isEmpty ) : _* )
@@ -238,11 +236,9 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     }).asInstanceOf[U] // XXX hmmm, not so pretty...
   }
 
-  final def addUGen(ugen: UGen) {
-    ugens :+= ugen
-  }
+  final def addUGen(ugen: UGen): Unit = ugens :+= ugen
 
-  final def addControl(values: IIdxSeq[Float], name: Option[String]): Int = {
+  final def addControl(values: Vec[Float], name: Option[String]): Int = {
     val specialIndex = controlValues.size
     controlValues  ++= values
     name.foreach(n => controlNames :+= n -> specialIndex)

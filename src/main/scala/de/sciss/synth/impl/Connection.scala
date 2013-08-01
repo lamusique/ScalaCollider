@@ -36,7 +36,7 @@ import de.sciss.processor.Processor
 import java.util.concurrent.TimeoutException
 import message.{Status, StatusReply}
 import de.sciss.osc
-import annotation.{elidable, tailrec}
+import annotation.elidable
 import de.sciss.model.impl.ModelImpl
 import util.{Failure, Success}
 import util.control.NonFatal
@@ -60,7 +60,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
 
   import ServerConnection.{Running => SCRunning, _}
 
-  def abort() {
+  def abort(): Unit = {
     Handshake.abort()
     Handshake.value.foreach {
       case Success(s) =>
@@ -73,12 +73,12 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
   object Handshake extends ProcessorImpl[ServerImpl, Any] {
     private val beginCond = Promise[Unit]()
 
-    def begin() {
+    def begin(): Unit = {
       debug("begin")
       beginCond.trySuccess()
     }
 
-    override def notifyAborted() {
+    override def notifyAborted(): Unit = {
       debug("notifyAborted")
       beginCond.tryFailure(Processor.Aborted())
     }
@@ -160,21 +160,20 @@ private[synth] final class Connection(val name: String, val c: OSCClient, val ad
 
   import clientConfig.executionContext
 
-  def start() {
+  def start(): Unit = {
     Handshake.start()
     Handshake.begin()
   }
 
   override def toString = "connect<" + name + ">"
 
-  def handleAbort() {}
+  def handleAbort() = ()
 
   def connectionAlive = true
 
   // XXX could add a timeout?
-  def createAliveThread(s: Server) {
+  def createAliveThread(s: Server): Unit =
     if (aliveThread) s.startAliveThread(1.0f, 0.25f, 40) // allow for a luxury 10 seconds absence
-  }
 }
 
 private[synth] final class Booting(val name: String, val c: OSCClient, val addr: InetSocketAddress,
@@ -199,7 +198,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
     // need at least one non-daemon thread.
 
     // setDaemon(true)
-    override def run() {
+    override def run(): Unit =
       try {
         debug("enter waitFor")
         val res = p.waitFor()
@@ -213,14 +212,13 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
         debug("abort")
         abort()
       }
-    }
   }
 
-  def start() {
+  def start(): Unit = {
     // a thread the pipes the scsynth process output to the standard console
     val postThread = new Thread {
       setDaemon(true)
-      override def run() {
+      override def run(): Unit = {
         debug("postThread")
         val inReader  = new BufferedReader(new InputStreamReader(p.getInputStream))
         var isOpen    = true
@@ -262,14 +260,13 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
 
   override def toString = "boot<" + name + ">"
 
-  def handleAbort()   { processThread.interrupt() }
-  def connectionAlive = processThread.isAlive
+  def handleAbort()  : Unit     = processThread.interrupt()
+  def connectionAlive: Boolean  = processThread.isAlive
 
-  def createAliveThread(s: Server) {
+  def createAliveThread(s: Server): Unit =
     // note that we optimistically assume that if we boot the server, it
     // will not die (exhausting deathBounces). if it crashes, the boot
     // thread's process will know anyway. this way we avoid stupid
     // server offline notifications when using slow asynchronous commands
     if (aliveThread) s.startAliveThread(1.0f, 0.25f, Int.MaxValue)
-  }
 }

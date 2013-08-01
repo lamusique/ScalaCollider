@@ -26,14 +26,14 @@
 package de.sciss.synth
 package ugen
 
-import collection.immutable.{IndexedSeq => IIdxSeq, Seq => ISeq}
+import collection.immutable.{IndexedSeq => Vec, Seq => ISeq}
 import de.sciss.synth.Curve.{sine => sin, _}
 import language.implicitConversions
 
 sealed trait EnvFactory[V] {
   import Env.{Segment => Seg}
 
-  protected def create(startLevel: GE, segments: IIdxSeq[Seg]): V
+  protected def create(startLevel: GE, segments: Vec[Seg]): V
 
   // fixed duration envelopes
   def triangle: V = triangle()
@@ -97,7 +97,7 @@ object Env extends EnvFactory[Env] {
   }
   final case class Segment(dur: GE, targetLevel: GE, curve: Curve = linear)
 
-  protected def create(startLevel: GE, segments: IIdxSeq[Segment]) = new Env(startLevel, segments)
+  protected def create(startLevel: GE, segments: Vec[Segment]) = new Env(startLevel, segments)
 
   // envelopes with sustain
   def cutoff(release: GE = 0.1f, level: GE = 1, curve: Curve = linear): Env = {
@@ -142,7 +142,7 @@ final case class Env(startLevel: GE, segments: ISeq[Env.Segment],
   private def toGE: GE = {
     val segmIdx = segments.toIndexedSeq
     val sizeGE: GE = segmIdx.size
-    val res: IIdxSeq[GE] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap(seg =>
+    val res: Vec[GE] = startLevel +: sizeGE +: releaseNode +: loopNode +: segmIdx.flatMap(seg =>
       Vector[GE](seg.targetLevel, seg.dur, seg.curve.id, seg.curve.curvature))
     res
   }
@@ -153,7 +153,7 @@ final case class Env(startLevel: GE, segments: ISeq[Env.Segment],
 }
 
 object IEnv extends EnvFactory[IEnv] {
-  protected def create(startLevel: GE, segments: IIdxSeq[Env.Segment]) = new IEnv(startLevel, segments)
+  protected def create(startLevel: GE, segments: Vec[Env.Segment]) = new IEnv(startLevel, segments)
 }
 
 final case class IEnv(startLevel: GE, segments: ISeq[Env.Segment], offset: GE = 0)
@@ -165,7 +165,7 @@ final case class IEnv(startLevel: GE, segments: ISeq[Env.Segment], offset: GE = 
     val segmIdx     = segments.toIndexedSeq
     val sizeGE: GE  = segmIdx.size
     val totalDur    = segmIdx.foldLeft[GE](0)((sum, next) => sum + next.dur)
-    val res: IIdxSeq[GE] = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap(seg =>
+    val res: Vec[GE] = offset +: startLevel +: sizeGE +: totalDur +: segmIdx.flatMap(seg =>
       Vector[GE](seg.dur, seg.curve.id, seg.curve.curvature, seg.targetLevel))
     res
   }

@@ -1,6 +1,6 @@
 name := "ScalaCollider"
 
-version := "1.8.0"
+version := "1.9.0"
 
 organization := "de.sciss"
 
@@ -15,9 +15,9 @@ licenses := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 libraryDependencies <++= version { v =>
   //  val i  = v.lastIndexOf('.') + 1
   //  val uv = v.substring(0, i) + "+"
-  val uv = "1.6.+"
+  val uv = "1.6.2+"
   Seq(
-    "de.sciss" %% "scalaosc"                % "1.1.+",
+    "de.sciss" %% "scalaosc"                % "1.1.1+",
     "de.sciss" %% "scalaaudiofile"          % "1.4.+",
     "de.sciss" %% "processor"               % "0.2.+",
     "de.sciss" %% "scalacolliderugens-core" % uv,
@@ -60,12 +60,12 @@ buildInfoPackage := "de.sciss.synth"
 
 publishMavenStyle := true
 
-publishTo <<= version { (v: String) =>
-   Some(if (v.endsWith("-SNAPSHOT"))
-      "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
-   else
-      "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-   )
+publishTo <<= version { v =>
+  Some(if (v.endsWith("-SNAPSHOT"))
+    "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+  else
+    "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+  )
 }
 
 publishArtifact in Test := false

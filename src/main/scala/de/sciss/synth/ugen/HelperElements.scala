@@ -27,7 +27,7 @@ package de.sciss.synth
 package ugen
 
 import collection.breakOut
-import collection.immutable.{IndexedSeq => IIdxSeq}
+import collection.immutable.{IndexedSeq => Vec}
 //import Predef.{any2stringadd => _}
 
 final case class Flatten(elem: GE) extends GE.Lazy {
@@ -44,7 +44,7 @@ final case class Flatten(elem: GE) extends GE.Lazy {
 //  * Note: This may cause problems in future projects involving serialization of
 //  * synth graphs, due to the generic nature of the `fun` argument.
 //  */
-//final case class MapExpanded(in: GE)(fun: IIdxSeq[GE] => GE) extends GE.Lazy {
+//final case class MapExpanded(in: GE)(fun: Vec[GE] => GE) extends GE.Lazy {
 //
 //  def rate        = UndefinedRate
 //
@@ -66,11 +66,11 @@ object Mix {
   def fill(n: Int)(thunk: => GE): GE =
     Mix.Seq(Vector.fill(n)(thunk))
 
-  def seq(elems: IIdxSeq[GE]): GE = Seq(elems)
+  def seq(elems: Vec[GE]): GE = Seq(elems)
 
   def mono(elem: GE): GE = Mono(elem)
 
-  final case class Seq(elems: IIdxSeq[GE]) extends GE.Lazy {
+  final case class Seq(elems: Vec[GE]) extends GE.Lazy {
 
     def numOutputs  = if (elems.isEmpty) 0 else 1
     // XXX korrekt?
@@ -116,7 +116,7 @@ final case class Mix(elem: GE) extends UGenSource.SingleOut {  // XXX TODO: shou
 
   protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
 
-  protected def makeUGen(args: IIdxSeq[UGenIn]): UGenInLike = {
+  protected def makeUGen(args: Vec[UGenIn]): UGenInLike = {
     if (args.nonEmpty) {
       args.reduceLeft(BinaryOpUGen.Plus.make1(_, _))
     } else UGenInGroup.empty
@@ -128,7 +128,7 @@ final case class Zip(elems: GE*) extends GE.Lazy {
   def rate = MaybeRate.reduce(elems.map(_.rate): _*)
 
   def makeUGens: UGenInLike = {
-    val exp: IIdxSeq[UGenInLike] = elems.map(_.expand)(breakOut)
+    val exp: Vec[UGenInLike] = elems.map(_.expand)(breakOut)
     val sz = exp.map(_.outputs.size) // exp.view.map ?
     val minSz = sz.min
     //      val res = UGenInGroup( Vector.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
@@ -160,7 +160,7 @@ final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.Single
 
   protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
 
-  protected def makeUGen(args: IIdxSeq[UGenIn]): UGenInLike = {
+  protected def makeUGen(args: Vec[UGenIn]): UGenInLike = {
     if (args.nonEmpty) {
       args.reduceLeft(op.make1(_, _))
     } else UGenInGroup.empty
@@ -169,19 +169,19 @@ final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.Single
 
 object WrapOut {
   private def makeFadeEnv(fadeTime: Float): UGenIn = {
-    val cFadeTime = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(fadeTime), Some("fadeTime"))).outputs(0)
-    val cGate     = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(1), Some("gate"))).outputs(0)
+    val cFadeTime = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(fadeTime), Some("fadeTime"))).outputs(0)
+    val cGate     = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(1), Some("gate"))).outputs(0)
     val startVal  = BinaryOpUGen.Leq.make1(cFadeTime, 0)
 
     // Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 )
-    val env = IIdxSeq[UGenIn](startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0)
+    val env = Vec[UGenIn](startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0)
 
     // this is slightly more costly than what sclang does
     // (using non-linear shape plus an extra unary op),
     // but it fadeout is much smoother this way...
     //EnvGen.kr( env, gate, timeScale = dt, doneAction = freeSelf ).squared
 
-    new UGen.SingleOut("EnvGen", control, IIdxSeq[UGenIn](cGate, 1, 0, cFadeTime, freeSelf) ++ env)
+    new UGen.SingleOut("EnvGen", control, Vec[UGenIn](cGate, 1, 0, cFadeTime, freeSelf) ++ env)
   }
 }
 
@@ -195,7 +195,7 @@ final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends 
     unwrap(in.expand.outputs)
   }
 
-  protected def makeUGen(ins: IIdxSeq[UGenIn]) {
+  protected def makeUGen(ins: Vec[UGenIn]): Unit = {
     if (ins.isEmpty) return
     val rate = ins.map(_.rate).max
     if ((rate == audio) || (rate == control)) {
@@ -206,7 +206,7 @@ final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends 
           if (rate == audio) replaceZeroesWithSilence(ins2) else ins2
         case None => ins
       }
-      val cOut = new Control.UGen(control, 1, UGenGraph.builder.addControl(IIdxSeq(0), Some("out"))).outputs(0)
+      val cOut = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(0), Some("out"))).outputs(0)
       new UGen.ZeroOut("Out", rate, cOut +: ins3) // with WritesBus {}
     }
   }
@@ -383,5 +383,5 @@ final case class PhysicalOut(indices: GE, in: GE) extends UGenSource.ZeroOut wit
     }
   }
 
-  protected def makeUGen(args: IIdxSeq[UGenIn]) {} // XXX not used, ugly
+  protected def makeUGen(args: Vec[UGenIn]) = () // XXX not used, ugly
 }

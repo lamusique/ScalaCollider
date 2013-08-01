@@ -67,9 +67,9 @@ object Responder {
       once && handled
     }
 
-    private[synth] def removed() {}
+    private[synth] def removed() = ()
 
-    override def toString = "Responder(" + server + (if (once) ", once = true" else "") + ")@" + hashCode().toHexString
+    override def toString = s"Responder($server${if (once) ", once = true" else ""})@${hashCode().toHexString}"
   }
 }
 

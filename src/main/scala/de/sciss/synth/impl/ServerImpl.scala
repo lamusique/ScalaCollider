@@ -43,21 +43,18 @@ private[synth] object ServerImpl {
     if (res == null) throw new IllegalStateException("There is no default Server yet")
     res
   }
-//  def default_=(value: Server) {
+//  def default_=(value: Server): Unit =
 //    _default = value
-//  }
 
-  private[impl] def add(s: Server) {
+  private[impl] def add(s: Server): Unit =
     this.synchronized {
       if (_default == null) _default = s
     }
-  }
 
-  private[impl] def remove(s: Server) {
+  private[impl] def remove(s: Server): Unit =
     this.synchronized {
       if (_default == s) _default = null
     }
-  }
 }
 
 private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr: InetSocketAddress,
@@ -100,21 +97,21 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
   def isRunning   = _condition == Running
   def isOffline   = _condition == Offline
 
-  def nextNodeID() = nodeAllocator.alloc()
+  def nextNodeID(): Int = nodeAllocator.alloc()
 
-  def allocControlBus(numChannels: Int) = controlBusAllocator.alloc(numChannels)
-  def allocAudioBus  (numChannels: Int) = audioBusAllocator  .alloc(numChannels)
-  def allocBuffer    (numChannels: Int) = bufferAllocator    .alloc(numChannels)
+  def allocControlBus(numChannels: Int): Int = controlBusAllocator.alloc(numChannels)
+  def allocAudioBus  (numChannels: Int): Int = audioBusAllocator  .alloc(numChannels)
+  def allocBuffer    (numChannels: Int): Int = bufferAllocator    .alloc(numChannels)
 
-  def freeControlBus(index: Int) { controlBusAllocator.free(index) }
-  def freeAudioBus  (index: Int) { audioBusAllocator  .free(index) }
-  def freeBuffer    (index: Int) { bufferAllocator    .free(index) }
+  def freeControlBus(index: Int): Unit = controlBusAllocator.free(index)
+  def freeAudioBus  (index: Int): Unit = audioBusAllocator  .free(index)
+  def freeBuffer    (index: Int): Unit = bufferAllocator    .free(index)
 
   def nextSyncID(): Int = uniqueSync.synchronized {
     val res = uniqueID; uniqueID += 1; res
   }
 
-  def !(p: osc.Packet) { c ! p }
+  def !(p: osc.Packet): Unit = c ! p
 
    def !![A](p: osc.Packet, timeout: Duration)(handler: PartialFunction[osc.Message, A]): Future[A] = {
      val promise  = Promise[A]()
@@ -134,21 +131,21 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
 
   def counts = countsVar
 
-  private[synth] def counts_=(newCounts: message.StatusReply) {
+  private[synth] def counts_=(newCounts: message.StatusReply): Unit = {
     countsVar = newCounts
     dispatch(Counts(newCounts))
   }
 
   def sampleRate = counts.sampleRate
 
-  def dumpTree(controls: Boolean = false) {
+  def dumpTree(controls: Boolean = false): Unit = {
     import Ops._
     rootNode.dumpTree(controls)
   }
 
   def condition = _condition
 
-  private[synth] def condition_=(newCondition: Condition) {
+  private[synth] def condition_=(newCondition: Condition): Unit =
     condSync.synchronized {
       if (newCondition != _condition) {
         _condition = newCondition
@@ -170,9 +167,8 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
            dispatch( newCondition )
          }
       }
-   }
 
-  def startAliveThread(delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25) {
+  def startAliveThread(delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25): Unit =
     condSync.synchronized {
       if (aliveThread.isEmpty) {
         val statusWatcher = new StatusWatcher(delay, period, deathBounces)
@@ -180,20 +176,16 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
         statusWatcher.start()
       }
     }
-  }
 
-  def stopAliveThread() {
+  def stopAliveThread(): Unit =
     condSync.synchronized {
       aliveThread.foreach(_.stop())
       aliveThread = None
     }
-  }
 
-  def queryCounts() {
-    this ! message.Status
-  }
+  def queryCounts(): Unit = this ! message.Status
 
-  def dumpOSC(mode: osc.Dump) {
+  def dumpOSC(mode: osc.Dump): Unit = {
     c.dumpIn(mode, filter = {
       case m: message.StatusReply => false
       case _ => true
@@ -204,45 +196,38 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
     })
   }
 
-  private def serverLost() {
-    nodeManager.clear()
-    bufManager.clear()
+  private def serverLost(): Unit = {
+    nodeManager     .clear()
+    bufManager      .clear()
     OSCReceiverActor.clear()
   }
 
-  def serverOffline() {
+  def serverOffline(): Unit =
     condSync.synchronized {
       stopAliveThread()
       condition = Offline
     }
-  }
 
-  def quit() {
+  def quit(): Unit = {
     this ! quitMsg
     dispose()
   }
 
-  def addResponder(resp: message.Responder) {
-    OSCReceiverActor.addHandler(resp)
-  }
+  def addResponder   (resp: message.Responder): Unit = OSCReceiverActor.addHandler   (resp)
+  def removeResponder(resp: message.Responder): Unit = OSCReceiverActor.removeHandler(resp)
 
-  def removeResponder(resp: message.Responder) {
-    OSCReceiverActor.removeHandler(resp)
-  }
-
-  def initTree() {
+  def initTree(): Unit = {
     nodeManager.register(defaultGroup)
     server ! defaultGroup.newMsg(rootNode, addToHead)
   }
 
-  def dispose() {
+  def dispose(): Unit =
     condSync.synchronized {
       serverOffline()
       ServerImpl.remove(this)
       c.close()
       OSCReceiverActor.dispose()
     }
-  }
 
   def syncMsg(): message.Sync = message.Sync(nextSyncID())
   def quitMsg = message.ServerQuit
@@ -250,22 +235,22 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
 
   // -------- internal class StatusWatcher --------
 
-  private class StatusWatcher(delay: Float, period: Float, deathBounces: Int)
+  private final class StatusWatcher(delay: Float, period: Float, deathBounces: Int)
     extends Runnable {
     watcher =>
 
-    private var	alive			   = deathBounces
-    private val delayMillis = (delay * 1000).toInt
-    private val periodMillis = (period * 1000).toInt
+    private var	alive			          = deathBounces
+    private val delayMillis         = (delay  * 1000).toInt
+    private val periodMillis        = (period * 1000).toInt
     //      private val	timer			   = new SwingTimer( periodMillis, this )
-    private var timer: Option[Timer] = None
+    private var timer               = Option.empty[Timer]
     private var callServerContacted = true
-    private val sync = new AnyRef
+    private val sync                = new AnyRef
 
     //      // ---- constructor ----
     //      timer.setInitialDelay( delayMillis )
 
-    def start() {
+    def start(): Unit = {
       stop()
       val t = new Timer("StatusWatcher", true)
       t.schedule(new TimerTask {
@@ -277,7 +262,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       timer = Some(t)
     }
 
-    def stop() {
+    def stop(): Unit = {
       //         timer.stop
       timer.foreach { t =>
         t.cancel()
@@ -285,7 +270,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       }
     }
 
-    def run() {
+    def run(): Unit = {
       sync.synchronized {
         alive -= 1
         if (alive < 0) {
@@ -301,7 +286,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       }
     }
 
-    def statusReply( msg: message.StatusReply ) {
+    def statusReply(msg: message.StatusReply): Unit =
       sync.synchronized {
         alive = deathBounces
         // note: put the counts before running
@@ -314,7 +299,6 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
           condition = Running
         }
       }
-    }
   }
 
   private object OSCReceiverActor /* extends DaemonActor */ {
@@ -333,8 +317,8 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
     private val sync = new AnyRef
     @volatile private var handlers = Set.empty[message.Handler]
 
-    def !(p: osc.Packet) {
-      future { blocking {
+    def !(p: osc.Packet): Unit = future {
+      blocking {
         p match {
           case nodeMsg        : message.NodeChange  =>
             // println(s"---- NodeChange: $nodeMsg")
@@ -350,10 +334,10 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
             }
           case _ => // ignore bundles send from scsynth
         }
-      }}
+      }
     }
 
-    def clear() {
+    def clear(): Unit = {
       val h = sync.synchronized {
         val res = handlers
         handlers = Set.empty
@@ -362,16 +346,12 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       h.foreach(_.removed())
     }
 
-    def dispose() {
-      clear()
-      // running = false
-    }
+    def dispose(): Unit = clear()
 
-    def addHandler(h: message.Handler) {
+    def addHandler(h: message.Handler): Unit =
       sync.synchronized(handlers += h)
-    }
 
-    def removeHandler(h: message.Handler) {
+    def removeHandler(h: message.Handler): Unit = {
       val seen = sync.synchronized {
         val res = handlers.contains(h)
         if (res) handlers -= h
@@ -379,74 +359,11 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       }
       if (seen) h.removed()
     }
-
-    //      def timeOutHandler( handler: OSCTimeOutHandler ) {
-//         this ! TimeOutHandler( handler )
-//      }
-
-      // ------------ OSCListener interface ------------
-
-//      def messageReceived( p: Packet ) {
-////if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : ! : " + msg )
-//         this ! p
-//      }
-
-//      def act() {
-//         var running    = true
-//         var handlers   = Set.empty[ message.Handler ]
-////         while( running )( receive { })
-//         loopWhile( running )( react {
-//            case msg: Message => debug( msg ) {
-////            case ReceivedMessage( msg, sender, time ) => debug( msg ) {
-////if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : received : " + msg )
-//               msg match {
-//                  case nodeMsg:        message.NodeChange           => nodeManager.nodeChange( nodeMsg )
-//                  case bufInfoMsg:     message.BufferInfo    => bufManager.bufferInfo( bufInfoMsg )
-//                  case statusReplyMsg: message.StatusReply   => aliveThread.foreach( _.statusReply( statusReplyMsg ))
-//                  case _ =>
-//               }
-////if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : handlers" )
-//               handlers.foreach( h => if( h.handle( msg )) handlers -= h )
-//            }
-//            case AddHandler( h )    => handlers += h
-//            case RemoveHandler( h ) => if( handlers.contains( h )) { handlers -= h; h.removed() }
-//            case TimeOutHandler( h )=> if( handlers.contains( h )) { handlers -= h; h.timedOut() }
-//            case Clear              => handlers.foreach( _.removed() ); handlers = Set.empty
-//            case Dispose            => running = false
-//            case m                  => println( "Received illegal message " + m )
-//         })
-//      }
    }
-
-//   private def debug( msg: AnyRef )( code: => Unit ) {
-//      val t1 = System.currentTimeMillis
-//      try {
-//         code
-//      } catch {
-//         case e: Throwable => println( "" + new java.util.Date() + " OOOPS : msg " + msg + " produced " + e )
-//      }
-//      val t2 = System.currentTimeMillis
-//      if( (t2 - t1) > 2000 ) println( "" + new java.util.Date() + " WOW this took long (" + (t2-t1) + "): " + msg )
-//   }
-
-   // -------- internal osc.Handler implementations --------
-
-//   private class OSCInfHandler[ A ]( fun: PartialFunction[ Message, A ], ch: OutputChannel[ A ])
-//   extends message.Handler {
-//      def handle( msg: Message ) : Boolean = {
-//         val handled = fun.isDefinedAt( msg )
-////if( msg.name == "/synced" ) println( "" + new java.aux.Date() + " : inf handled : " + msg + " ? " + handled )
-//         if( handled ) try {
-//            ch ! fun.apply( msg )
-//         } catch { case e: Throwable => e.printStackTrace() }
-//         handled
-//      }
-//      def removed() {}
-//   }
-//
 
   private final class OSCTimeOutHandler[A](fun: PartialFunction[osc.Message, A], promise: Promise[A])
     extends message.Handler {
+
     def handle(msg: osc.Message): Boolean = {
       if (promise.isCompleted) return true
 
@@ -460,14 +377,6 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       handled
     }
 
-    def removed() {}
-
-//    def timedOut() {
-//      if (fun.isDefinedAt(message.TIMEOUT)) try {
-//        fun.apply(message.TIMEOUT)
-//      } catch {
-//        case e: Throwable => e.printStackTrace()
-//      }
-//    }
+    def removed() = ()
   }
 }
