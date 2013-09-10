@@ -1,10 +1,10 @@
 name := "ScalaCollider"
 
-version := "1.9.0"
+version := "1.9.1-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0"  // _not 2.10.1 or 2.10.2_ because of SI-7268 / SI-7436 ; "2.10.3-RC1"
+scalaVersion := "2.10.0"  // _not 2.10.1 or 2.10.2_ because of SI-7268 / SI-7436
 
 description := "A sound synthesis library for the SuperCollider server"
 

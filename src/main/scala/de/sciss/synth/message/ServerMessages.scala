@@ -289,28 +289,28 @@ sealed trait HasCompletion extends AsyncSend {
 final case class BufferQuery(ids: Int*) extends Message("/b_query", ids: _*) with SyncQuery
 
 final case class BufferFree(id: Int, completion: Option[Packet])
-  extends Message("/b_free", (id :: completion.toList): _*)
+  extends Message("/b_free", id :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
 final case class BufferClose(id: Int, completion: Option[Packet])
-  extends Message("/b_close", (id :: completion.toList): _*)
+  extends Message("/b_close", id :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
 final case class BufferAlloc(id: Int, numFrames: Int, numChannels: Int, completion: Option[Packet])
-  extends Message("/b_alloc", (id :: numFrames :: numChannels :: completion.toList): _*)
+  extends Message("/b_alloc", id :: numFrames :: numChannels :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
 final case class BufferAllocRead(id: Int, path: String, startFrame: Int, numFrames: Int, completion: Option[Packet])
-  extends Message("/b_allocRead", (id :: path :: startFrame :: numFrames :: completion.toList): _*)
+  extends Message("/b_allocRead", id :: path :: startFrame :: numFrames :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
@@ -318,7 +318,7 @@ final case class BufferAllocRead(id: Int, path: String, startFrame: Int, numFram
 
 final case class BufferAllocReadChannel(id: Int, path: String, startFrame: Int, numFrames: Int,
                                         channels: List[Int], completion: Option[Packet])
-  extends Message("/b_allocReadChannel", (id :: path :: startFrame :: numFrames :: channels ::: completion.toList): _*)
+  extends Message("/b_allocReadChannel", id :: path :: startFrame :: numFrames :: channels ::: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
@@ -327,7 +327,7 @@ final case class BufferAllocReadChannel(id: Int, path: String, startFrame: Int, 
 final case class BufferRead(id: Int, path: String, fileStartFrame: Int, numFrames: Int, bufStartFrame: Int,
                             leaveOpen: Boolean, completion: Option[Packet])
   extends Message("/b_read",
-    (id :: path :: fileStartFrame :: numFrames :: bufStartFrame :: leaveOpen :: completion.toList): _*)
+    id :: path :: fileStartFrame :: numFrames :: bufStartFrame :: leaveOpen :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
@@ -337,14 +337,14 @@ final case class BufferReadChannel(id: Int, path: String, fileStartFrame: Int, n
                                    bufStartFrame: Int, leaveOpen: Boolean, channels: List[Int],
                                    completion: Option[Packet])
   extends Message("/b_readChannel",
-    (id :: path :: fileStartFrame :: numFrames :: bufStartFrame :: leaveOpen :: channels ::: completion.toList): _*)
+    id :: path :: fileStartFrame :: numFrames :: bufStartFrame :: leaveOpen :: channels ::: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
 final case class BufferZero(id: Int, completion: Option[Packet])
-  extends Message("/b_zero", (id :: completion.toList): _*)
+  extends Message("/b_zero", id :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
@@ -354,18 +354,18 @@ final case class BufferWrite(id: Int, path: String, fileType: io.AudioFileType, 
                              numFrames: Int, startFrame: Int, leaveOpen: Boolean,
                              completion: Option[Packet])
   extends Message("/b_write",
-    (id :: path :: fileType.id :: sampleFormat.id :: numFrames :: startFrame :: leaveOpen :: completion.toList): _*)
+    id :: path :: fileType.id :: sampleFormat.id :: numFrames :: startFrame :: leaveOpen :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
 final case class BufferSet(id: Int, indicesAndValues: (Int, Float)*)
-  extends Message("/b_set", (id :: (indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil)(breakOut): List[Any])): _*)
+  extends Message("/b_set", id :: (indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil)(breakOut): List[Any]): _*)
   with SyncCmd
 
 final case class BufferSetn(id: Int, indicesAndValues: (Int, Vec[Float])*)
-  extends Message("/b_setn", (id +: indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2)): _*)
+  extends Message("/b_setn", id +: indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
 
 object BufferFill {
@@ -381,7 +381,7 @@ object BufferFill {
   final case class Info(index: Int, num: Int, value: Float)
 }
 final case class BufferFill(id: Int, infos: BufferFill.Info*)
-  extends Message("/b_fill", (id :: (infos.flatMap(i => i.index :: i.num :: i.value :: Nil)(breakOut): List[Any])): _*)
+  extends Message("/b_fill", id :: (infos.flatMap(i => i.index :: i.num :: i.value :: Nil)(breakOut): List[Any]): _*)
   with SyncCmd
 
 final case class ControlBusSet(indicesAndValues: (Int, Float)*)
@@ -454,7 +454,7 @@ final case class GroupDeepFree(ids: Int*)
 
 final case class SynthNew(defName: String, id: Int, addAction: Int, targetID: Int, controls: ControlSetMap*)
   extends Message("/s_new",
-    (defName +: id +: addAction +: targetID +: controls.flatMap(_.toSetSeq)): _*)
+    defName +: id +: addAction +: targetID +: controls.flatMap(_.toSetSeq): _*)
   with SyncCmd
 
 final case class NodeRun(nodes: (Int, Boolean)*)
@@ -462,11 +462,11 @@ final case class NodeRun(nodes: (Int, Boolean)*)
   with SyncCmd
 
 final case class NodeSet(id: Int, pairs: ControlSetMap*)
-  extends Message("/n_set", (id +: pairs.flatMap(_.toSetSeq)): _*)
+  extends Message("/n_set", id +: pairs.flatMap(_.toSetSeq): _*)
   with SyncCmd
 
 final case class NodeSetn(id: Int, pairs: ControlSetMap*)
-  extends Message("/n_setn", (id +: pairs.flatMap(_.toSetnSeq)): _*)
+  extends Message("/n_setn", id +: pairs.flatMap(_.toSetnSeq): _*)
   with SyncCmd
 
 final case class NodeTrace(ids: Int*)
@@ -482,19 +482,19 @@ final case class NodeFree(ids: Int*)
   with SyncCmd
 
 final case class NodeMap(id: Int, mappings: ControlKBusMap.Single*)
-  extends Message("/n_map", (id +: mappings.flatMap(_.toMapSeq)): _*)
+  extends Message("/n_map", id +: mappings.flatMap(_.toMapSeq): _*)
   with SyncCmd
 
 final case class NodeMapn(id: Int, mappings: ControlKBusMap*)
-  extends Message("/n_mapn", (id +: mappings.flatMap(_.toMapnSeq)): _*)
+  extends Message("/n_mapn", id +: mappings.flatMap(_.toMapnSeq): _*)
   with SyncCmd
 
 final case class NodeMapa(id: Int, mappings: ControlABusMap.Single*)
-  extends Message("/n_mapa", (id +: mappings.flatMap(_.toMapaSeq)): _*)
+  extends Message("/n_mapa", id +: mappings.flatMap(_.toMapaSeq): _*)
   with SyncCmd
 
 final case class NodeMapan(id: Int, mappings: ControlABusMap*)
-  extends Message("/n_mapan", (id +: mappings.flatMap(_.toMapanSeq)): _*)
+  extends Message("/n_mapan", id +: mappings.flatMap(_.toMapanSeq): _*)
   with SyncCmd
 
 object NodeFill {
@@ -502,7 +502,7 @@ object NodeFill {
 }
 final case class NodeFill(id: Int, fillings: NodeFill.Info*)
   extends Message("/n_fill",
-    (id :: (fillings.flatMap(f => f.control :: f.numChannels :: f.value :: Nil)(breakOut): List[Any]): _*)
+    id :: (fillings.flatMap(f => f.control :: f.numChannels :: f.value :: Nil)(breakOut): List[Any]): _*
   )
   with SyncCmd
 
@@ -539,7 +539,7 @@ final case class NodeAfter(groups: (Int, Int)*)
   with SyncCmd
 
 final case class SynthDefRecv(bytes: ByteBuffer, completion: Option[Packet])
-  extends Message("/d_recv", (bytes :: completion.toList): _*)
+  extends Message("/d_recv", bytes :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
@@ -550,14 +550,14 @@ final case class SynthDefFree(names: String*)
   with SyncCmd
 
 final case class SynthDefLoad(path: String, completion: Option[Packet])
-  extends Message("/d_load", (path :: completion.toList): _*)
+  extends Message("/d_load", path :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
 final case class SynthDefLoadDir(path: String, completion: Option[Packet])
-  extends Message("/d_loadDir", (path :: completion.toList): _*)
+  extends Message("/d_loadDir", path :: completion.toList: _*)
   with HasCompletion {
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)

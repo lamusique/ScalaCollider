@@ -6,15 +6,13 @@ object Curve {
   case object step extends Curve {
     final val id = 0
   
-    def levelAt(pos: Float, y1: Float, y2: Float) =
-      if (pos < 1f) y1 else y2
+    def levelAt(pos: Float, y1: Float, y2: Float) = if (pos < 1f) y1 else y2
   }
   
   case object linear extends Curve {
     final val id = 1
   
-    def levelAt(pos: Float, y1: Float, y2: Float) =
-      pos * (y2 - y1) + y1
+    def levelAt(pos: Float, y1: Float, y2: Float) = pos * (y2 - y1) + y1
   }
   val lin = linear
   
@@ -65,9 +63,9 @@ object Curve {
     final val id = 6
   
     def levelAt(pos: Float, y1: Float, y2: Float) = {
-      val y1Pow2 = sqrt(y1)
-      val y2Pow2 = sqrt(y2)
-      val yPow2 = pos * (y2Pow2 - y1Pow2) + y1Pow2
+      val y1Pow2  = sqrt(y1)
+      val y2Pow2  = sqrt(y2)
+      val yPow2   = pos * (y2Pow2 - y1Pow2) + y1Pow2
       (yPow2 * yPow2).toFloat
     }
   }
