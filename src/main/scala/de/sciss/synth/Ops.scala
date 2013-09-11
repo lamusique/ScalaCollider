@@ -29,6 +29,16 @@ import collection.immutable.{IndexedSeq => Vec}
 import language.implicitConversions
 import de.sciss.osc
 
+/** Importing the contents of this object adds imperative (side-effect) functions to resources such as
+  * synths, buses, buffers. In general these reflect the OSC messages defined for each object, and send
+  * them straight to the server. For example, a `Synth` has function `newMsg` which returns an OSC message
+  * to instantiate the synth of the server. After importing `Ops`, you will be able to directly launch
+  * a synth using `SynthDef.play` or `Synth.play`. You will be able to directly allocate and read buffers,
+  * and so forth.
+  *
+  * The reason why these functions are separated from the rest of the API is to allow other frameworks
+  * such as SoundProcesses to avoid side-effects which they handle differently (e.g., using STM).
+  */
 object Ops {
   //   implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
 

@@ -325,17 +325,17 @@ val x = play {
       LFNoise1.kr(8).madd(dmul, dadd).max(0)
     )
 
-    val freq = Lag.kr(             // lag the pitch so it glissandos between pitches
+    val freq = Lag.kr(           // lag the pitch so it glissandos between pitches
       LFNoise0.kr(               // use low freq step noise as a pitch control
-        Vector(1, 0.5, 0.25)(   // choose a frequency of pitch change
+        Vector(1, 0.5, 0.25)(    // choose a frequency of pitch change
           util.Random.nextInt(3)
         )
       ).madd(
-        7,                     // +/- 7 semitones
-        IRand(36, 96)          // random center note
-      ).round(1),                // round to nearest semitone
+        7,                       // +/- 7 semitones
+        IRand(36, 96)            // random center note
+      ).roundTo(1),              // round to nearest semitone
       0.2                        // gliss time
-    ).midicps                      // convert to hertz
+    ).midicps                    // convert to hertz
 
     Pan2.ar(    // pan each intrument
       CombL.ar(excitation, 0.02, freq.reciprocal, 3),    // comb delay simulates string
@@ -498,6 +498,15 @@ val x = play {
     Dseq(Seq(204, 400, 201, 502, 300, 200), inf),
     Drand(Seq(1.01, 0.2, 0.1, 2), inf) * MouseY.kr(0.01, 3, 1),
     Curve.cubed.id
+  )
+  SinOsc.ar(freq * Seq(1, 1.01)) * 0.1
+}
+
+val x = play {
+  // notice argument order for Duty and TDuty being different from sclang!
+  val freq = Duty.kr(
+    Drand(Seq(0.01, 0.2, 0.4), inf),  // demand ugen as durations
+    Dseq(Seq(204, 400, 201, 502, 300, 200), inf)
   )
   SinOsc.ar(freq * Seq(1, 1.01)) * 0.1
 }

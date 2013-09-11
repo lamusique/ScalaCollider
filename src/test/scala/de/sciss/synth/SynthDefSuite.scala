@@ -1,13 +1,12 @@
 package de.sciss.synth
 
 import org.scalatest.FunSpec
-import Predef.{any2stringadd => _}
+// import Predef.{any2stringadd => _}
 
-/**
- * To run only this test:
- *
- * test-only de.sciss.synth.RichNumberSuite
- */
+/** To run only this test:
+  *
+  * test-only de.sciss.synth.RichNumberSuite
+  */
 class SynthDefSuite extends FunSpec {
   describe("Synth definitions") {
     it("should compile various standard examples") {
@@ -86,15 +85,15 @@ class SynthDefSuite extends FunSpec {
         val p  = 15 // number of partials per channel per 'cymbal'.
         val f1 = Rand(500, 2500)
         val f2 = Rand(0, 8000)
-        val res = (for (i <- (1 to 2)) yield {
+        val res = for (i <- 1 to 2) yield {
           val z = KlangSpec.fill(p) {
             // sine oscil bank specification :
-            (f1 + Rand(0, f2),  // frequencies
-             1,                 // amplitudes
-             Rand(1, 5))        // ring times
+            (f1 + Rand(0, f2), // frequencies
+              1, // amplitudes
+              Rand(1, 5)) // ring times
           }
           Klank.ar(z, Decay.ar(Impulse.ar(Rand(0.5, 3.5)), 0.004) * WhiteNoise.ar(0.03))
-        })
+        }
         WrapOut(res)
       }
 
@@ -152,7 +151,7 @@ class SynthDefSuite extends FunSpec {
               .madd(
               7, // +/- 7 semitones
               IRand(36, 96) // random center note
-            ).round(1), // round to nearest semitone
+            ).roundTo(1), // round to nearest semitone
             0.2 // gliss time
           ).midicps // convert to hertz
 

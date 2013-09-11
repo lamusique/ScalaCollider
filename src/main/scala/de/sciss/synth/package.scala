@@ -27,42 +27,60 @@ package de.sciss
 
 import language.implicitConversions
 
-package object synth /* extends de.sciss.synth.LowPriorityImplicits */ /* with de.sciss.synth.RateRelations */ {
-
+/** The `synth` package provides some type enrichments. In particular converting numbers to
+  * constant graph elements, operators on graph elements and allowing succinct creation of named controls.
+  * Furthermore, it contains the `play` function to quickly test graph functions.
+  */
+package object synth {
+  /** Positive `Float` infinity. Useful for sequence based demand UGens.
+    * `-inf` gives you negative infinity.
+    */
   final val inf = Float.PositiveInfinity
 
-  /** This conversion is particularly important to balance priorities,
-    * as the plain pair of `intToGE` and `enrichFloat` have equal
-    * priorities for an Int despite being in sub/superclass relationship,
-    * probably due to the numeric widening which would be needed.
-    *
-    * Note that we use the same name as scala.Predef.intWrapper. That
-    * way the original conversion is hidden!
-    */
-  implicit def intWrapper(i: Int): RichInt = new RichInt(i)
+  // ---- implicit ----
 
-  /** Note that we use the same name as scala.Predef.floatWrapper. That
-    * way the original conversion is hidden!
-    */
-  implicit def floatWrapper(f: Float): RichFloat = new RichFloat(f)
+  /* This conversion is particularly important to balance priorities,
+   * as the plain pair of `intToGE` and `enrichFloat` have equal
+   * priorities for an Int despite being in sub/superclass relationship,
+   * probably due to the numeric widening which would be needed.
+   *
+   * Note that we use the same name as scala.Predef.intWrapper. That
+   * way the original conversion is hidden!
+   */
+  implicit def intGEWrapper       (i: Int   ): synth  .RichInt    = new synth  .RichInt   (i)
+  implicit def floatGEWrapper     (f: Float ): synth  .RichFloat  = new synth  .RichFloat (f)
+  implicit def doubleGEWrapper    (d: Double): synth  .RichDouble = new synth  .RichDouble(d)
+  implicit def intNumberWrapper   (i: Int   ): numbers.RichInt    = new numbers.RichInt   (i)
+  implicit def floatNumberWrapper (f: Float ): numbers.RichFloat  = new numbers.RichFloat (f)
+  implicit def doubleNumberWrapper(d: Double): numbers.RichDouble = new numbers.RichDouble(d)
 
-  /** Note that we use the same name as scala.Predef.doubleWrapper. That
-    * way the original conversion is hidden!
-    */
-  implicit def doubleWrapper(d: Double): RichDouble = new RichDouble(d)
-
+  /** Provides operators for graph elements, such as `.abs`, `.linlin` or `.poll`. */
   implicit def geOps(g: GE): GEOps = new GEOps(g)
 
-  // pimping. XXX TODO: ControlProxyFactory could be implicit class?
+  // XXX TODO: ControlProxyFactory could be implicit class?
+  /** Allows the construction or named controls, for example via `"freq".kr`. */
   implicit def stringToControlProxyFactory(name: String): ugen.ControlProxyFactory = new ugen.ControlProxyFactory(name)
 
-  // implicit def messageToOption(msg: Packet): Option[Packet] = Some(msg)
+  // ---- explicit ----
 
-  // explicit methods
-
+  /** Wraps the body of the thunk argument in a `SynthGraph`, adds an output UGen, and plays the graph
+    * on the default group of the default server.
+    *
+    * @param  thunk   the thunk which produces the UGens to play
+    * @return         a reference to the spawned Synth
+    */
   def play[T: GraphFunction.Result](thunk: => T): Synth = play()(thunk)
 
-  // XXX TODO: fadeTime should be Optional[ Double ] not Option[ Float ]
+  /** Wraps the body of the thunk argument in a `SynthGraph`, adds an output UGen, and plays the graph
+    * in a synth attached to a given target.
+    *
+    * @param  target      the target with respect to which to place the synth
+    * @param  addAction   the relation between the new synth and the target
+    * @param  outBus      audio bus index which is used for the synthetically generated `Out` UGen.
+    * @param  fadeTime    if defined, specifies the fade-in time for a synthetically added amplitude envelope.
+    * @param  thunk       the thunk which produces the UGens to play
+    * @return             a reference to the spawned Synth
+    */
   def play[T: GraphFunction.Result](target: Node = Server.default, outBus: Int = 0,
                                     fadeTime: Optional[Float] = Some(0.02f),
                                     addAction: AddAction = addToHead)(thunk: => T): Synth = {

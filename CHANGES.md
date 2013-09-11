@@ -2,6 +2,12 @@
 
 This document only hightlights major changes which probably require some adjustments when upgrading.
 
+## changes in v1.10.0
+
+* fixes UGens #7 `Duty` and `TDuty` argument order was wrong. UGens #8 `Median` argument names were swapped.
+* externalises number enrichment (project [Numbers](https://github.com/Sciss/Numbers)).
+* GE op `round` became `roundTo`, `roundup` became `roundUpTo`. That way `round` is kept for the standard Scala operation
+
 ## changes in v1.9.0
 
 * fixes #35: `BufferOps.close` should take `Optional` instead of `Option`

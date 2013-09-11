@@ -1,6 +1,8 @@
 package de.sciss.synth
 
 import scala.math.{max, pow, cos, sin, abs, sqrt, Pi}
+import scala.annotation.switch
+import de.sciss.serial.{DataOutput, ImmutableSerializer, DataInput}
 
 object Curve {
   case object step extends Curve {
@@ -78,6 +80,30 @@ object Curve {
       val y2Pow3  = pow(y2, 0.3333333)
       val yPow3   = pos * (y2Pow3 - y1Pow3) + y1Pow3
       (yPow3 * yPow3 * yPow3).toFloat
+    }
+  }
+
+  implicit object serializer extends ImmutableSerializer[Curve] {
+    def write(shape: Curve, out: DataOutput): Unit = {
+      out.writeInt(shape.id)
+      shape match {
+        case parametric(c)  => out.writeFloat(c)
+        case _              =>
+      }
+    }
+
+    def read(in: DataInput): Curve = {
+      (in.readInt(): @switch) match {
+        case step       .id => step
+        case linear     .id => linear
+        case exponential.id => exponential
+        case sine       .id => sine
+        case welch      .id => welch
+        case parametric .id => parametric(in.readFloat())
+        case squared    .id => squared
+        case cubed      .id => cubed
+        case other          => sys.error("Unexpected envelope shape ID " + other)
+      }
     }
   }
 }

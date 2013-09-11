@@ -92,7 +92,7 @@ object Mix {
     def makeUGens: UGenInLike = {
       val flat = elem.expand.flatOutputs
       if (flat.nonEmpty) {
-        flat.reduceLeft(BinaryOpUGen.Plus.make1(_, _))
+        flat.reduceLeft(BinaryOpUGen.Plus.make1)
       } else UGenInGroup.empty
     }
   }
@@ -118,7 +118,7 @@ final case class Mix(elem: GE) extends UGenSource.SingleOut {  // XXX TODO: shou
 
   protected def makeUGen(args: Vec[UGenIn]): UGenInLike = {
     if (args.nonEmpty) {
-      args.reduceLeft(BinaryOpUGen.Plus.make1(_, _))
+      args.reduceLeft(BinaryOpUGen.Plus.make1)
     } else UGenInGroup.empty
   }
 }
@@ -129,7 +129,7 @@ final case class Zip(elems: GE*) extends GE.Lazy {
 
   def makeUGens: UGenInLike = {
     val exp: Vec[UGenInLike] = elems.map(_.expand)(breakOut)
-    val sz = exp.map(_.outputs.size) // exp.view.map ?
+    val sz    = exp.map(_.outputs.size) // exp.view.map ?
     val minSz = sz.min
     //      val res = UGenInGroup( Vector.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
     /* val res = */ UGenInGroup((0 until minSz).flatMap(i => exp.map(_.unwrap(i))))
@@ -162,7 +162,7 @@ final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.Single
 
   protected def makeUGen(args: Vec[UGenIn]): UGenInLike = {
     if (args.nonEmpty) {
-      args.reduceLeft(op.make1(_, _))
+      args.reduceLeft(op.make1)
     } else UGenInGroup.empty
   }
 }
@@ -377,7 +377,7 @@ final case class PhysicalOut(indices: GE, in: GE) extends UGenSource.ZeroOut wit
         Out.ar(index, sig)
     }
     (_indices.lastOption, _in.drop(_indices.size - 1)) match {
-      case (Some(index), sig) if (sig.nonEmpty) =>
+      case (Some(index), sig) if sig.nonEmpty =>
         Out.ar(index, sig)
       case _ =>
     }

@@ -25,14 +25,16 @@
 
 package de.sciss.synth
 
-import ugen.{UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd, Constant}
+import de.sciss.synth.ugen.{Wrap, Fold, Clip, UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd, Constant}
 
-final class GEOps(val g: GE ) extends AnyVal {
+final class GEOps(val self: GE ) extends AnyVal { me =>
+  import me.{self => g}
+
   def `\\`(index: Int)      : GE = ChannelProxy(g, index)
   def madd(mul: GE, add: GE): GE = MulAdd(g, mul, add)
   def flatten               : GE = Flatten(g)
 
-def poll : Poll = poll()
+  def poll: Poll = poll()
 
   /**
    * Polls the output values of this graph element, and prints the result to the console.
@@ -154,8 +156,8 @@ def poll : Poll = poll()
   // def lcm(b: GE): GE = ...
   // def gcd(b: GE): GE = ...
 
-  def round   (b: GE): GE = binOp(Round   , b)
-  def roundup (b: GE): GE = binOp(Roundup , b)
+  def roundTo (b: GE): GE = binOp(RoundTo , b)
+  def roundUpTo (b: GE): GE = binOp(RoundUpTo, b)
   def trunc   (b: GE): GE = binOp(Trunc   , b)
   def atan2   (b: GE): GE = binOp(Atan2   , b)
   def hypot   (b: GE): GE = binOp(Hypot   , b)
@@ -188,9 +190,33 @@ def poll : Poll = poll()
 // def rrand(b: GE): GE    = ...
 // def exprrand(b: GE): GE = ...
 
-  def linlin(srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE): GE =
-    LinLin(/* rate, */ g, srcLo, srcHi, dstLo, dstHi)
+  def clip(low: GE, high: GE): GE = {
+    require(g.rate != demand)
+    val r = g.rate.toOption.getOrElse(???)
+    Clip(r, g, low, high)
+  }
 
-  def linexp(srcLo: GE, srcHi: GE, dstLo: GE, dstHi: GE): GE =
-    LinExp(g.rate, g, srcLo, srcHi, dstLo, dstHi) // should be highest rate of all inputs? XXX
+  def fold(low: GE, high: GE): GE = {
+    require(g.rate != demand)
+    val r = g.rate.toOption.getOrElse(???)
+    Fold(r, g, low, high)
+  }
+
+  def wrap(low: GE, high: GE): GE = {
+    require(g.rate != demand)
+    val r = g.rate.toOption.getOrElse(???)
+    Wrap(r, g, low, high)
+  }
+
+  def linlin(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
+    LinLin(/* rate, */ g, inLow, inHigh, outLow, outHigh)
+
+  def linexp(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
+    LinExp(g.rate, g, inLow, inHigh, outLow, outHigh) // should be highest rate of all inputs? XXX
+
+  def explin(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
+    (g / inLow).log / (inHigh / inLow).log * (outHigh - outLow) + outLow
+
+  def expexp(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
+    (outHigh / outLow).pow((g / inLow).log / (inHigh / inLow).log) * outLow
 }
