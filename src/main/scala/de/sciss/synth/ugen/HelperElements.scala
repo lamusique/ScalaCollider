@@ -185,15 +185,16 @@ object WrapOut {
   }
 }
 
-/**
- * XXX TODO: This should not be a UGenSource.ZeroOut but just a LazyExpander !
- */
+// XXX TODO: This should not be a UGenSource.ZeroOut but just a Lazy.Expander[Unit] !
+/** An element which writes an input signal to a bus, optionally applying a short fade-in.
+  * This is automatically added when using the `play { ... }` syntax. If the fade time is
+  * given, an envelope is added with a control named `"gate"` which can be used to release
+  * the synth. The bus is given by a control named `"out"` and defaults to zero.
+  */
 final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends UGenSource.ZeroOut with WritesBus {
   import WrapOut._
 
-  protected def makeUGens {
-    unwrap(in.expand.outputs)
-  }
+  protected def makeUGens: Unit = unwrap(in.expand.outputs)
 
   protected def makeUGen(ins: Vec[UGenIn]): Unit = {
     if (ins.isEmpty) return
@@ -227,7 +228,7 @@ final case class SplayAz(rate: Rate, numChannels: Int, in: GE, spread: GE, cente
     val pf  = (0.5f * spread) / n
     val pos = Seq.tabulate(n)(_ * pf + center)
     val mix = Mix(PanAz(rate, numChannels, _in, pos, level, width, orient))
-    mix.expand
+    mix
   }
 }
 
@@ -254,7 +255,7 @@ final case class LinLin(/* rate: MaybeRate, */ in: GE, srcLo: GE = 0f, srcHi: GE
   protected def makeUGens: UGenInLike = {
     val scale  = (dstHi - dstLo) / (srcHi - srcLo)
     val offset = dstLo - (scale * srcLo)
-    MulAdd(in, scale, offset).expand
+    MulAdd(in, scale, offset)
   }
 }
 
@@ -269,7 +270,7 @@ final case class Silent(numChannels: Int) extends GE.Lazy with AudioRated {
   protected def makeUGens: UGenInLike = {
     val dc = DC.ar(0)
     val ge: GE = if (numChannels == 1) dc else Seq.fill(numChannels)(dc)
-    ge.expand
+    ge
   }
 }
 
@@ -338,7 +339,7 @@ final case class PhysicalIn(indices: GE, numChannels: Seq[Int]) extends GE.Lazy 
 
     Flatten((_indices zip _numChannels).map {
       case (index, num) => In.ar(index + offset, num)
-    }).expand
+    })
   }
 }
 
