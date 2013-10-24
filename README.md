@@ -72,6 +72,6 @@ For more sound examples, see `ExampleCmd.txt`. There is also an introductory vid
 
 The current version can be downloaded from [github.com/Sciss/ScalaCollider](http://github.com/Sciss/ScalaCollider).
 
-More information is available from the wiki at [github.com/Sciss/ScalaCollider/wiki](http://github.com/Sciss/ScalaCollider/wiki).
+More information is available from the wiki at [github.com/Sciss/ScalaCollider/wiki](http://github.com/Sciss/ScalaCollider/wiki). The API documentation is available at [sciss.github.io/ScalaCollider/latest/api](http://sciss.github.io/ScalaCollider/latest/api/).
 
 A mailing list is available at [groups.google.com/group/scalacollider](http://groups.google.com/group/scalacollider).
