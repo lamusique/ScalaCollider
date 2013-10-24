@@ -1,30 +1,21 @@
-// import com.typesafe.sbt.SbtGit.{GitKeys => git}
+scalaVersion  in ThisBuild := "2.10.3"
 
-val commonSettings = Seq(
-  organization := "de.sciss",
-  version      := "0.1-SNAPSHOT",
-  scalaVersion := "2.10.3"
-)
+val lOSC       = RootProject(uri("git://github.com/Sciss/ScalaOSC.git#v1.1.2"))
 
-retrieveManaged in ThisBuild := true
+val lAudioFile = RootProject(uri("git://github.com/Sciss/ScalaAudioFile.git#v1.4.1"))
 
-val scalaOSC           = RootProject(uri("git://github.com/Sciss/ScalaOSC.git#v1.1.2"))
+val lUGens     = RootProject(uri("git://github.com/Sciss/ScalaColliderUGens.git#v1.7.2"))
 
-val scalaAudioFile     = RootProject(uri("git://github.com/Sciss/ScalaAudioFile.git#v1.4.1"))
+val lMain      = RootProject(uri("git://github.com/Sciss/ScalaCollider.git#v1.10.0"))
 
-val scalaColliderUGens = RootProject(uri("git://github.com/Sciss/ScalaColliderUGens.git#v1.7.2"))
-
-val scalaCollider      = RootProject(uri("git://github.com/Sciss/ScalaCollider.git#v1.10.0"))
+git.gitCurrentBranch in ThisBuild := "master"
 
 val root = (project in file("."))
-  .settings(commonSettings: _*)
   .settings(unidocSettings: _*)
   .settings(site.settings ++ ghpages.settings: _*)
   .settings(
-    name := "ScalaCollider",
     site.addMappingsToSiteDir(mappings in (ScalaUnidoc, packageDoc), "latest/api"),
-    git.remoteRepo := "git@github.com:Sciss/ScalaCollider.git",
+    git.remoteRepo := s"git@github.com:Sciss/ScalaCollider.git",
     scalacOptions in (Compile, doc) ++= Seq("-skip-packages", "de.sciss.osc.impl")
   )
-  .aggregate(scalaOSC, scalaAudioFile, scalaColliderUGens, scalaCollider)
-
+  .aggregate(lOSC, lAudioFile, lUGens, lMain)
