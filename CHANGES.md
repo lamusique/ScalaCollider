@@ -1,6 +1,6 @@
 # changes
 
-This document only hightlights major changes which probably require some adjustments when upgrading.
+This document only highlights major changes which probably require some adjustments when upgrading.
 
 ## changes in v1.10.0
 
@@ -64,6 +64,6 @@ __Note:__ There have been made several changes from 0.25 to 0.30...
 * The SynthDef creation process is now two staged. The `GE` tree is captured as a `SynthGraph` which in turn expands into a `UGenGraph`.
 * Automatic subtree omission for side-effect-free roots is currently disabled.
 * the implicit conversion to `GraphFunction` has been disabled. so instead of `{ }.play`, use `play { }`
-* Multi-channel nesting and expansion now behaves like in sclang.
+* Multi-channel nesting and expansion now behaves like in SCLang.
 * Recursive graph generation may require type annotations. Specifically all UGen source classes now return the UGen source type itself instead of a generic `GE`, which comes with the need to annotate `var`s in certain cases.
 * Methods `outputs` and `numOutputs` are not available for the lazy graph elements. You can mostly work around this by using special graph elements for channel handling, like `Zip`, `Reduce`, `Splay`, `Mix`, `Flatten`. Method `\` (backslash) is still preserved, but it may change in a future version if it causes problems with graph re-writing. If you really need to re-arrange the channels of an element, you can currently work around this by using the `MapExpanded` element.

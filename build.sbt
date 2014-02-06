@@ -1,10 +1,10 @@
 name         := "ScalaCollider"
 
-version      := "1.10.1-SNAPSHOT"
+version      := "1.10.1"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0"  // _not 2.10.1 or 2.10.2_ because of SI-7268 / SI-7436
+scalaVersion := "2.10.0"  // _not 2.10.1 through 2.10.3_ because of SI-7436
 
 description  := "A sound synthesis library for the SuperCollider server"
 
@@ -15,11 +15,11 @@ licenses     := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 lazy val ugensVersion = "1.7.+"
 
 libraryDependencies ++= Seq(
-  "de.sciss" %% "scalaosc"                % "1.1.1+",
-  "de.sciss" %% "scalaaudiofile"          % "1.4.+",
-  "de.sciss" %% "processor"               % "0.2.+",
-  "de.sciss" %% "scalacolliderugens-core" % ugensVersion,
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+  "de.sciss"      %% "scalaosc"                % "1.1.1+",
+  "de.sciss"      %% "scalaaudiofile"          % "1.4.+",
+  "de.sciss"      %% "processor"               % "0.2.+",
+  "de.sciss"      %% "scalacolliderugens-core" % ugensVersion,
+  "org.scalatest" %% "scalatest"               % "2.0" % "test"
 )
 
 retrieveManaged := true
@@ -47,8 +47,8 @@ buildInfoSettings
 sourceGenerators in Compile <+= buildInfo
 
 buildInfoKeys := Seq(name, organization, version, scalaVersion, description,
-  BuildInfoKey.map(homepage ) { case (k, opt) => k -> opt.get },
-  BuildInfoKey.map(licenses ) { case (_, Seq( (lic, _) )) => "license" -> lic }
+  BuildInfoKey.map(homepage) { case (k, opt) => k -> opt.get },
+  BuildInfoKey.map(licenses) { case (_, Seq( (lic, _) )) => "license" -> lic }
 )
 
 buildInfoPackage := "de.sciss.synth"

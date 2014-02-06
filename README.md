@@ -2,7 +2,7 @@
 
 ## statement
 
-ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008-2013 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/LICENSE) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
+ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008&ndash;2014 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/LICENSE) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
 ## building
 
@@ -16,7 +16,7 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-__Note__: Due to [SI-7268](https://issues.scala-lang.org/browse/SI-7268), the project must be currently compiled against Scala 2.10.0 and not 2.10.1. It can be used, however, with any Scala 2.10 version.
+__Note__: Due to [SI-7268](https://issues.scala-lang.org/browse/SI-7268), the project must be currently compiled against Scala 2.10.0 and not 2.10.1 through 2.10.3. It can be used, however, with any Scala 2.10 version.
 
 ## linking
 
@@ -24,7 +24,7 @@ To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `1.10.+`
+The current version `v` is `1.10.1+`
 
 ## starting a SuperCollider server
 
@@ -53,12 +53,25 @@ The following short example illustrates how a server can be launched and a synth
     
 ```
 
+### Specifying SC_HOME
+
 You might omit to set the `programPath` of the server's configuration, as ScalaCollider will by default read the system property `SC_HOME`, and if that is not set, the environment variable `SC_HOME`. Environment variables are stored depending on your operating system. On OS X, if you use the app-bundle of ScalaCollider-Swing, you can access them from the terminal:
 
+    $ mkdir ~/.MacOSX
     $ touch ~/.MacOSX/environment.plist
     $ open ~/.MacOSX/environment.plist
 
-On the other hand, if you run ScalaCollider from a Bash terminal, you instead edit `~/.bash_profile`. The entry is something like `export SC_HOME=/path/to/folder-of-scsynth`. On linux, the environment variables probably go in `~/.profile`.
+Here, `open` should launch the PropertyEditor. Otherwise you can edit this file using a text editor. The content will be like this:
+
+    {
+      "SC_HOME" = "/Applications/SuperCollider_3.6.5/SuperCollider.app/Contents/Resources/";
+    }
+
+On the other hand, if you run ScalaCollider from a Bash terminal, you edit `~/.bash_profile` instead. The entry is something like:
+
+    export SC_HOME=/path/to/folder-of-scsynth
+
+On linux, the environment variables probably go in `~/.profile`.
 
 For more sound examples, see `ExampleCmd.txt`. There is also an introductory video for the [Swing frontend](http://github.com/Sciss/ScalaColliderSwing) at [www.screencast.com/t/YjUwNDZjMT](http://www.screencast.com/t/YjUwNDZjMT).
 
