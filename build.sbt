@@ -1,10 +1,10 @@
 name         := "ScalaCollider"
 
-version      := "1.10.1"
+version      := "1.11.0-SNAPSHOT"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.0"  // _not 2.10.1 through 2.10.3_ because of SI-7436
+scalaVersion := "2.11.0-RC3"
 
 description  := "A sound synthesis library for the SuperCollider server"
 
@@ -12,17 +12,25 @@ homepage     := Some(url("https://github.com/Sciss/" + name.value))
 
 licenses     := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val ugensVersion = "1.7.+"
+lazy val ugensVersion     = "1.8.+"
+
+lazy val oscVersion       = "1.1.3+"
+
+lazy val audioFileVersion = "1.4.2+"
+
+lazy val processorVersion = "0.2.+"
+
+lazy val scalaTestVersion = "2.1.2"
 
 libraryDependencies ++= Seq(
-  "de.sciss"      %% "scalaosc"                % "1.1.1+",
-  "de.sciss"      %% "scalaaudiofile"          % "1.4.+",
-  "de.sciss"      %% "processor"               % "0.2.+",
+  "de.sciss"      %% "scalaosc"                % oscVersion,
+  "de.sciss"      %% "scalaaudiofile"          % audioFileVersion,
+  "de.sciss"      %% "processor"               % processorVersion,
   "de.sciss"      %% "scalacolliderugens-core" % ugensVersion,
-  "org.scalatest" %% "scalatest"               % "2.0" % "test"
+  "org.scalatest" %% "scalatest"               % scalaTestVersion % "test"
 )
 
-retrieveManaged := true
+// retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
