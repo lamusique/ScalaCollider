@@ -1,12 +1,12 @@
 name         := "ScalaCollider"
 
-version      := "1.11.0"
+version      := "1.11.1"
 
 organization := "de.sciss"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.10.0" // for FUCK'S SAKE, SI-7436!!! Scala broken through out 2.10.x except for 2.10.0
 
-crossScalaVersions := Seq("2.11.0-RC3", "2.10.4")
+crossScalaVersions := Seq("2.11.0-RC3", "2.10.0")
 
 description  := "A sound synthesis library for the SuperCollider server"
 
