@@ -1,10 +1,12 @@
 name         := "ScalaCollider"
 
-version      := "1.11.0-SNAPSHOT"
+version      := "1.11.0"
 
 organization := "de.sciss"
 
-scalaVersion := "2.11.0-RC3"
+scalaVersion := "2.10.4"
+
+crossScalaVersions := Seq("2.11.0-RC3", "2.10.4")
 
 description  := "A sound synthesis library for the SuperCollider server"
 
@@ -14,9 +16,9 @@ licenses     := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
 lazy val ugensVersion     = "1.8.+"
 
-lazy val oscVersion       = "1.1.3+"
+lazy val oscVersion       = "1.1.2+"
 
-lazy val audioFileVersion = "1.4.2+"
+lazy val audioFileVersion = "1.4.1+"
 
 lazy val processorVersion = "0.2.+"
 
@@ -30,7 +32,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest"               % scalaTestVersion % "test"
 )
 
-// retrieveManaged := true
+retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
 
