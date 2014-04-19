@@ -358,7 +358,7 @@ object PhysicalOut {
 final case class PhysicalOut(indices: GE, in: GE) extends UGenSource.ZeroOut with AudioRated {
   // XXX TODO: should not be UGenSource
 
-  protected def makeUGens {
+  protected def makeUGens: Unit = {
     val _in = in.expand.outputs
     val _indices = indices.expand.outputs
     _indices.dropRight(1).zip(_in).foreach {

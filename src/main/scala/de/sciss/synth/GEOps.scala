@@ -24,24 +24,23 @@ final class GEOps(val self: GE ) extends AnyVal { me =>
 
   def poll: Poll = poll()
 
-  /**
-   * Polls the output values of this graph element, and prints the result to the console.
-   * This is a convenient method for wrapping this graph element in a `Poll` UGen.
-   *
-   * @param   trig     a signal to trigger the printing. If this is a constant, it is
-   *                   interpreted as a frequency value and an `Impulse` generator of that frequency
-   *                   is used instead.
-   * @param   label    a string to print along with the values, in order to identify
-   *                   different polls. Using the special label `"#auto"` (default) will generated
-   *                   automatic useful labels using information from the polled graph element
-   * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
-   *                   (similar to `SendTrig`)
-   *
-   * @see  [[de.sciss.synth.ugen.Poll]]
-   */
+  /** Polls the output values of this graph element, and prints the result to the console.
+    * This is a convenient method for wrapping this graph element in a `Poll` UGen.
+    *
+    * @param   trig     a signal to trigger the printing. If this is a constant, it is
+    *                   interpreted as a frequency value and an `Impulse` generator of that frequency
+    *                   is used instead.
+    * @param   label    a string to print along with the values, in order to identify
+    *                   different polls. Using the special label `"#auto"` (default) will generated
+    *                   automatic useful labels using information from the polled graph element
+    * @param   trigID   if greater then 0, a `"/tr"` OSC message is sent back to the client
+    *                   (similar to `SendTrig`)
+    *
+    * @see  [[de.sciss.synth.ugen.Poll]]
+    */
   def poll(trig: GE = 10, label: Optional[String] = None, trigID: GE = -1): Poll = {
     val trig1 = trig match {
-      case Constant(freq) => Impulse((g.rate ?| audio) max control, freq, 0) // XXX good? or throw an error? should have a maxRate?
+      case Constant(freq) => Impulse((g.rate getOrElse audio) max control, freq, 0) // XXX good? or throw an error? should have a maxRate?
       case other          => other
     }
     Poll(trig1.rate, trig1, g, label.getOrElse {

@@ -1,28 +1,30 @@
-name         := "ScalaCollider"
+name               := "ScalaCollider"
 
-version      := "1.11.1"
+version            := "1.12.0-SNAPSHOT"
 
-organization := "de.sciss"
+organization       := "de.sciss"
 
-scalaVersion := "2.10.0" // for FUCK'S SAKE, SI-7436!!! Scala broken through out 2.10.x except for 2.10.0
+// note SI-7436! Scala is broken throughout 2.10.x except for 2.10.0; might be fixed in 2.10.5
 
-crossScalaVersions := Seq("2.11.0-RC3", "2.10.0")
+scalaVersion       := "2.11.0"
 
-description  := "A sound synthesis library for the SuperCollider server"
+crossScalaVersions := Seq("2.11.0", "2.10.0")
 
-homepage     := Some(url("https://github.com/Sciss/" + name.value))
+description        := "A sound synthesis library for the SuperCollider server"
 
-licenses     := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
+homepage           := Some(url("https://github.com/Sciss/" + name.value))
 
-lazy val ugensVersion     = "1.8.+"
+licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val oscVersion       = "1.1.2+"
+lazy val ugensVersion     = "1.9.+"
 
-lazy val audioFileVersion = "1.4.1+"
+lazy val oscVersion       = "1.1.3"
 
-lazy val processorVersion = "0.2.+"
+lazy val audioFileVersion = "1.4.2"
 
-lazy val scalaTestVersion = "2.1.2"
+lazy val processorVersion = "0.3.0"
+
+lazy val scalaTestVersion = "2.1.3"
 
 libraryDependencies ++= Seq(
   "de.sciss"      %% "scalaosc"                % oscVersion,
@@ -34,7 +36,7 @@ libraryDependencies ++= Seq(
 
 retrieveManaged := true
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
 
 scalacOptions ++= Seq("-Xelide-below", "INFO")     // elide debug logging!
 
@@ -84,11 +86,11 @@ pomExtra := { val n = name.value
   <connection>scm:git:git@github.com:Sciss/{n}.git</connection>
 </scm>
 <developers>
-   <developer>
-      <id>sciss</id>
-      <name>Hanns Holger Rutz</name>
-      <url>http://www.sciss.de</url>
-   </developer>
+  <developer>
+    <id>sciss</id>
+    <name>Hanns Holger Rutz</name>
+    <url>http://www.sciss.de</url>
+  </developer>
 </developers>
 }
 

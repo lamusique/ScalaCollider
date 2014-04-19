@@ -31,7 +31,7 @@ object Ops {
   //   implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
 
   /** This allows conversions to Group so that something like Server.default.freeAll becomes possible. */
-  implicit def groupOps[G <% Group](g: G): GroupOps = new GroupOps(g)
+  implicit def groupOps[G](g: G)(implicit view: G => Group): GroupOps = new GroupOps(g)
 
   //   implicit def bufferOps( b: Buffer ) : BufferOps = new BufferOps( b )
   //   implicit def controlBusOps( b: ControlBus ) : ControlBusOps = new ControlBusOps( b )

@@ -37,9 +37,7 @@ private[synth] object ConnectionLike {
   final case class AddListener   (l: ServerConnection.Listener)
   final case class RemoveListener(l: ServerConnection.Listener)
 
-  @elidable(elidable.CONFIG) def debug(what: => String) {
-    println(s"<connect> $what")
-  }
+  @elidable(elidable.CONFIG) def debug(what: => String): Unit = println(s"<connect> $what")
 }
 import ConnectionLike.debug
 
@@ -63,7 +61,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
 
     def begin(): Unit = {
       debug("begin")
-      beginCond.trySuccess()
+      beginCond.trySuccess(())
     }
 
     override def notifyAborted(): Unit = {

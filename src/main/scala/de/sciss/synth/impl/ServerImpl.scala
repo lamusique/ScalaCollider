@@ -22,7 +22,7 @@ import message.StatusReply
 import de.sciss.osc
 import util.control.NonFatal
 import concurrent.duration._
-import concurrent.{Await, future, Promise, Future, TimeoutException}
+import concurrent.{Await, Promise, Future, TimeoutException}
 
 private[synth] object ServerImpl {
   @volatile private var _default: Server = null
@@ -107,7 +107,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
      val oh       = new OSCTimeOutHandler(handler, promise)
      OSCReceiverActor.addHandler(oh)
      server ! p // only after addHandler!
-     future {
+     Future {
        try {
          Await.ready(res, timeout)
        } catch {
@@ -242,9 +242,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       stop()
       val t = new Timer("StatusWatcher", true)
       t.schedule(new TimerTask {
-        def run() {
-          watcher.run()
-        } // invokeOnMainThread( watcher )
+        def run(): Unit = watcher.run()
       }, delayMillis, periodMillis)
       Some(t)
       timer = Some(t)
@@ -305,7 +303,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
     private val sync = new AnyRef
     @volatile private var handlers = Set.empty[message.Handler]
 
-    def !(p: osc.Packet): Unit = future {
+    def !(p: osc.Packet): Unit = Future {
       blocking {
         p match {
           case nodeMsg        : message.NodeChange  =>
