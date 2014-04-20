@@ -30,7 +30,7 @@ final class BufferManager(server: Server) extends ModelImpl[BufferManager.Buffer
 
   def bufferInfo(msg: message.BufferInfo): Unit =
     sync.synchronized {
-      msg.infos.foreach { info =>
+      msg.data.foreach { info =>
         buffers.get(info.bufID).foreach { buf =>
           // this is the only safe way: automatically unregister,
           // since unlike nodes whose id is steadily increasing

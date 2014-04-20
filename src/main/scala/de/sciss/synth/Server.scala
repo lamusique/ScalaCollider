@@ -805,23 +805,22 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   def !(p: osc.Packet): Unit
 
-  /**
-   * Sends out an OSC packet that generates some kind of reply, and
-   * returns immediately. It registers a handler to parse that reply.
-   * The handler is tested for each incoming OSC message (using its
-   * `isDefinedAt` method) and invoked and removed in case of a
-   * match, completing the returned future.
-   *
-   * If the handler doesn't match in the given timeout period,
-   * the future fails with a `Timeout` exception, and the handler is removed.
-   *
-   * @param   packet    the packet to send out
-   * @param   timeout   the timeout in milliseconds
-   * @param   handler   the handler to match against incoming messages
-   * @return   a future of the successfully completed handler or timeout exception
-   *
-   * @see  [[de.sciss.synth.message.Timeout]]
-   */
+  /** Sends out an OSC packet that generates some kind of reply, and
+    * returns immediately. It registers a handler to parse that reply.
+    * The handler is tested for each incoming OSC message (using its
+    * `isDefinedAt` method) and invoked and removed in case of a
+    * match, completing the returned future.
+    *
+    * If the handler doesn't match in the given timeout period,
+    * the future fails with a `Timeout` exception, and the handler is removed.
+    *
+    * @param   packet    the packet to send out
+    * @param   timeout   the timeout in milliseconds
+    * @param   handler   the handler to match against incoming messages
+    * @return   a future of the successfully completed handler or timeout exception
+    *
+    * @see  [[de.sciss.synth.message.Timeout]]
+    */
   def !![A](packet: osc.Packet, timeout: Duration = 6.seconds)(handler: PartialFunction[osc.Message, A]): Future[A]
 
   def counts: StatusReply
@@ -840,7 +839,10 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   def syncMsg(): message.Sync
 
-  def dumpOSC(mode: osc.Dump = osc.Dump.Text): Unit
+  def dumpOSC(mode: osc.Dump, filter: osc.Packet => Boolean = _ => true): Unit
+
+  def dumpInOSC (mode: osc.Dump = osc.Dump.Text, filter: osc.Packet => Boolean = _ => true): Unit
+  def dumpOutOSC(mode: osc.Dump = osc.Dump.Text, filter: osc.Packet => Boolean = _ => true): Unit
 
   def quit(): Unit
 

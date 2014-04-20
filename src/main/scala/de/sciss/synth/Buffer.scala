@@ -48,8 +48,10 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   private val sync            = new AnyRef
 
-  override def toString = s"Buffer($server,$id" +
-    (if (numFramesVar >= 0) s") : <$numFramesVar,$numChannelsVar,$sampleRateVar>" else ")")
+  override def toString = {
+    val info = if (numFramesVar >= 0) s" : <$numFramesVar,$numChannelsVar,$sampleRateVar>" else ""
+    s"Buffer($server,$id)$info"
+  }
 
   def numFrames   = numFramesVar
   def numChannels = numChannelsVar
@@ -138,9 +140,9 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
   }
 
   /** Convenience method for creating a fill message for one given range */
-  def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, message.BufferFill.Info(index, num, value))
+  def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, message.BufferFill.Data(index, num, value))
 
-  def fillMsg(infos: message.BufferFill.Info*) = message.BufferFill(id, infos: _*)
+  def fillMsg(infos: message.BufferFill.Data*) = message.BufferFill(id, infos: _*)
 
   def zeroMsg: message.BufferZero = zeroMsg(None)
 

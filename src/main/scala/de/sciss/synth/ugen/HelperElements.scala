@@ -16,12 +16,11 @@ package ugen
 
 import collection.breakOut
 import collection.immutable.{IndexedSeq => Vec}
-//import Predef.{any2stringadd => _}
 
 final case class Flatten(elem: GE) extends GE.Lazy {
 
   def rate              = elem.rate
-  override def toString = elem.toString + ".flatten"
+  override def toString = s"$elem.flatten"
 
   def makeUGens: UGenInLike = UGenInGroup(elem.expand.flatOutputs)
 }
@@ -44,13 +43,11 @@ final case class Flatten(elem: GE) extends GE.Lazy {
 //}
 
 object Mix {
-  /** A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang. */
+  /** A mixing idiom that corresponds to `Seq.tabulate` and to `Array.fill` in sclang. */
   def tabulate(n: Int)(fun: Int => GE): GE =
     Mix.Seq(Vector.tabulate(n)(i => fun(i)))
 
-  /**
-   * A mixing idiom that corresponds to @Seq.fill@.
-   */
+  /** A mixing idiom that corresponds to `Seq.fill`. */
   def fill(n: Int)(thunk: => GE): GE =
     Mix.Seq(Vector.fill(n)(thunk))
 
@@ -58,14 +55,30 @@ object Mix {
 
   def mono(elem: GE): GE = Mono(elem)
 
+  /** A mixing idiom that is not actually adding elements, but recursively folding them.
+    *
+    * Calling this method is equivalent to
+    * {{{
+    * (1 to n).foldLeft(elem) { (res, _) => fun(res) }
+    * }}}
+    *
+    * It is often used in the SuperCollider examples to apply a filtering process such as reverberation
+    * several times,
+    *
+    * @param elem the input element
+    * @param n    the number of iterations
+    * @param fun  a function that is recursively applied to produce the output
+    */
+  def fold(elem: GE, n: Int)(fun: GE => GE): GE = (elem /: (1 to n)){ (res, _) => fun(res) }
+
   final case class Seq(elems: Vec[GE]) extends GE.Lazy {
 
     def numOutputs  = if (elems.isEmpty) 0 else 1
-    // XXX korrekt?
+    // XXX correct?
     def rate                    = MaybeRate.reduce(elems.map(_.rate): _*)
     override def productPrefix  = "Mix$Seq"
 
-    override def toString = productPrefix + elems.mkString("(", ",", ")")
+    override def toString = elems.mkString(s"$productPrefix(", ",", ")")
 
     def makeUGens: UGenInLike = if (elems.nonEmpty) elems.reduceLeft(_ + _).expand else UGenInGroup.empty
   }
@@ -75,7 +88,7 @@ object Mix {
     def rate        = elem.rate
     override def productPrefix = "Mix$Mono"
 
-    override def toString = productPrefix + "(" + elem + ")"
+    override def toString = s"$productPrefix($elem)"
 
     def makeUGens: UGenInLike = {
       val flat = elem.expand.flatOutputs
@@ -86,18 +99,17 @@ object Mix {
   }
 }
 
-/**
- * Mixes the channels of a signal together. Works exactly like the sclang counterpart.
- *
- * Here are some examples:
- *
- * {{{
- * Mix( SinOsc.ar( 440 :: 660 :: Nil )) --> SinOsc.ar( 440 ) + SinOsc.ar( 660 )
- * Mix( SinOsc.ar( 440 )) --> SinOsc.ar( 440 )
- * Mix( Pan2.ar( SinOsc.ar )) --> left + right
- * Mix( Pan2.ar( SinOsc.ar( 440 :: 660 :: Nil ))) --> [ left( 440 ) + left( 660 ), right( 440 ) + right( 660 )]
- * }}}
-*/
+/** Mixes the channels of a signal together. Works exactly like the sclang counterpart.
+  *
+  * Here are some examples:
+  *
+  * {{{
+  * Mix(SinOsc.ar(440 :: 660 :: Nil)) --> SinOsc.ar(440) + SinOsc.ar(660)
+  * Mix(SinOsc.ar(440)) --> SinOsc.ar(440)
+  * Mix(Pan2.ar(SinOsc.ar)) --> left + right
+  * Mix(Pan2.ar(SinOsc.ar(440 :: 660 :: Nil))) --> [left(440) + left(660), right(440) + right(660)]
+  * }}}
+  */
 final case class Mix(elem: GE) extends UGenSource.SingleOut {  // XXX TODO: should not be UGenSource
 
   def rate = elem.rate
@@ -128,9 +140,7 @@ final case class Zip(elems: GE*) extends GE.Lazy {
 
 object Reduce {
   import BinaryOpUGen.{Plus, Times, Min, Max, BitAnd, BitOr, BitXor}
-  /**
-   * Same result as `Mix( _ )`
-   */
+  /** Same result as `Mix( _ )` */
   def +  (elem: GE) = apply(elem, Plus  )
   def *  (elem: GE) = apply(elem, Times )
   //   def all_sig_==( elem: GE ) = ...
@@ -148,11 +158,12 @@ final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.Single
 
   protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
 
-  protected def makeUGen(args: Vec[UGenIn]): UGenInLike = {
+  protected def makeUGen(args: Vec[UGenIn]): UGenInLike =
     if (args.nonEmpty) {
       args.reduceLeft(op.make1)
-    } else UGenInGroup.empty
-  }
+    } else {
+      UGenInGroup.empty
+    }
 }
 
 object WrapOut {
@@ -220,21 +231,20 @@ final case class SplayAz(rate: Rate, numChannels: Int, in: GE, spread: GE, cente
   }
 }
 
-/**
- * A graph element which maps a linear range to another linear range.
- * The equivalent formula is `(in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo`.
- *
- * '''Note''': No clipping is performed. If the input signal exceeds the input range, the output will also exceed its range.
- *
- * @param in              The input signal to convert.
- * @param srcLo           The lower limit of input range.
- * @param srcHi           The upper limit of input range.
- * @param dstLo           The lower limit of output range.
- * @param dstHi           The upper limit of output range.
- *
- * @see [[de.sciss.synth.ugen.LinExp]]
- * @see [[de.sciss.synth.ugen.Clip]]
- */
+/** A graph element which maps a linear range to another linear range.
+  * The equivalent formula is `(in - srcLo) / (srcHi - srcLo) * (dstHi - dstLo) + dstLo`.
+  *
+  * '''Note''': No clipping is performed. If the input signal exceeds the input range, the output will also exceed its range.
+  *
+  * @param in              The input signal to convert.
+  * @param srcLo           The lower limit of input range.
+  * @param srcHi           The upper limit of input range.
+  * @param dstLo           The lower limit of output range.
+  * @param dstHi           The upper limit of output range.
+  *
+  * @see [[de.sciss.synth.ugen.LinExp]]
+  * @see [[de.sciss.synth.ugen.Clip]]
+  */
 final case class LinLin(/* rate: MaybeRate, */ in: GE, srcLo: GE = 0f, srcHi: GE = 1f, dstLo: GE = 0f, dstHi: GE = 1f)
   extends GE.Lazy {
 
@@ -262,58 +272,52 @@ final case class Silent(numChannels: Int) extends GE.Lazy with AudioRated {
   }
 }
 
-/**
- * A graph element which reads from a connected sound driver input. This is a convenience
- * element for accessing physical input signals, e.g. from a microphone connected to your
- * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
- */
+/** A graph element which reads from a connected sound driver input. This is a convenience
+  * element for accessing physical input signals, e.g. from a microphone connected to your
+  * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
+  */
 object PhysicalIn {
-  /**
-   * Short cut for reading a mono signal from the first physical input
-   */
+  /** Short cut for reading a mono signal from the first physical input. */
   def ar: PhysicalIn = ar()
 
-  /**
-   * @param indices       the physical index to read from (beginning at zero which corresponds to
-   *                      the first channel of the audio interface or sound driver). Maybe be a
-   *                      multichannel element to specify discrete indices.
-   * @param numChannels   the number of consecutive channels to read. For discrete indices this
-   *                      applies to each index!
-   */
+  /** @param indices       the physical index to read from (beginning at zero which corresponds to
+    *                      the first channel of the audio interface or sound driver). Maybe be a
+    *                      multichannel element to specify discrete indices.
+    * @param numChannels   the number of consecutive channels to read. For discrete indices this
+    *                      applies to each index!
+    */
   def ar(indices: GE = 0, numChannels: Int = 1): PhysicalIn = apply(indices, Seq(numChannels))
 
-  /**
-   * @param indices       the physical index to read from (beginning at zero which corresponds to
-   *                      the first channel of the audio interface or sound driver). Maybe be a
-   *                      multichannel element to specify discrete indices.
-   * @param numChannels   the number of consecutive channels to read for each index. Wraps around
-   *                      if the sequence has less elements than indices has channels.
-   */
+  /** @param indices       the physical index to read from (beginning at zero which corresponds to
+    *                      the first channel of the audio interface or sound driver). Maybe be a
+    *                      multichannel element to specify discrete indices.
+    * @param numChannels   the number of consecutive channels to read for each index. Wraps around
+    *                      if the sequence has less elements than indices has channels.
+    */
   def ar(indices: GE, numChannels: Seq[Int]): PhysicalIn = apply(indices, numChannels)
 
   //   def apply( index: GE, moreIndices: GE* ) : PhysicalIn = apply( (index +: moreIndices).map( (_, 1) ): _* )
 }
 
-/**
- * A graph element which reads from a connected sound driver input. This is a convenience
- * element for accessing physical input signals, e.g. from a microphone connected to your
- * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
- *
- * For example, consider an audio interface with channels 1 to 8 being analog line inputs,
- * channels 9 and 10 being AES/EBU and channels 11 to 18 being ADAT inputs. To read a combination
- * of the analog and ADAT inputs, either of the following statement can be used:
- *
- * {{{
- * PhysicalIn( Seq( 0, 8 ), Seq( 8, 8 ))
- * PhysicalIn( Seq( 0, 8 ), Seq( 8 ))      // numChannels wraps!
- * }}}
- *
- * @param indices       the physical index to read from (beginning at zero which corresponds to
- *                      the first channel of the audio interface or sound driver). Maybe be a
- *                      multichannel element to specify discrete indices.
- * @param numChannels   the number of consecutive channels to read for each index. Wraps around
- *                      if the sequence has less elements than indices has channels.
- */
+/** A graph element which reads from a connected sound driver input. This is a convenience
+  * element for accessing physical input signals, e.g. from a microphone connected to your
+  * audio interface. It expands to a regular `In` UGen offset by `NumOutputBuses.ir`.
+  *
+  * For example, consider an audio interface with channels 1 to 8 being analog line inputs,
+  * channels 9 and 10 being AES/EBU and channels 11 to 18 being ADAT inputs. To read a combination
+  * of the analog and ADAT inputs, either of the following statement can be used:
+  *
+  * {{{
+  * PhysicalIn(Seq(0, 8), Seq(8, 8))
+  * PhysicalIn(Seq(0, 8), Seq(8))      // numChannels wraps!
+  * }}}
+  *
+  * @param indices       the physical index to read from (beginning at zero which corresponds to
+  *                      the first channel of the audio interface or sound driver). Maybe be a
+  *                      multichannel element to specify discrete indices.
+  * @param numChannels   the number of consecutive channels to read for each index. Wraps around
+  *                      if the sequence has less elements than indices has channels.
+  */
 final case class PhysicalIn(indices: GE, numChannels: Seq[Int]) extends GE.Lazy with AudioRated {
 
   protected def makeUGens: UGenInLike = {
@@ -331,27 +335,25 @@ final case class PhysicalIn(indices: GE, numChannels: Seq[Int]) extends GE.Lazy 
   }
 }
 
-/**
- * A graph element which writes to a connected sound driver output. This is a convenience
- * element for `Out` with the ability to povide a set of discrete indices to which
- * corresponding channels of the input signal are mapped, whereas multichannel expansion
- * with respect to the index argument of `Out` typically do not achieve what you expect.
- *
- * For example, to flip left and right when writing a stereo signal:
- *
- * {{{
- * // sine appears on the right channel, and noise on the left
- * play { PhysicalOut( Seq( 1, 0 ), Seq( SinOsc.ar * LFPulse.ar(4), WhiteNoise.ar ) * 0.2 )}
- * }}}
- */
+/** A graph element which writes to a connected sound driver output. This is a convenience
+  * element for `Out` with the ability to provide a set of discrete indices to which
+  * corresponding channels of the input signal are mapped, whereas multichannel expansion
+  * with respect to the index argument of `Out` typically do not achieve what you expect.
+  *
+  * For example, to flip left and right when writing a stereo signal:
+  *
+  * {{{
+  * // sine appears on the right channel, and noise on the left
+  * play { PhysicalOut( Seq( 1, 0 ), Seq( SinOsc.ar * LFPulse.ar(4), WhiteNoise.ar ) * 0.2 )}
+  * }}}
+  */
 object PhysicalOut {
-  /**
-   * @param indices       the physical index to write to (beginning at zero which corresponds to
-   *                      the first channel of the audio interface or sound driver). may be a
-   *                      multichannel argument to specify discrete channels. In this case, any
-   *                      remaining channels in `in` are associated with the last bus index offset.
-   * @param in            the signal to write
-   */
+  /** @param indices       the physical index to write to (beginning at zero which corresponds to
+    *                      the first channel of the audio interface or sound driver). may be a
+    *                      multichannel argument to specify discrete channels. In this case, any
+    *                      remaining channels in `in` are associated with the last bus index offset.
+    * @param in            the signal to write
+    */
   def ar(indices: GE = 0, in: GE): PhysicalOut = apply(indices, in)
 }
 

@@ -138,7 +138,7 @@ object Ops {
 
     def fill(control: Any, numChannels: Int, value: Float): Unit = server ! fillMsg(control, numChannels, value)
 
-    def fill(fillings: message.NodeFill.Info*): Unit = server ! fillMsg(fillings: _*)
+    def fill(fillings: message.NodeFill.Data*): Unit = server ! fillMsg(fillings: _*)
 
     /** Moves this node before another node
       *
@@ -318,7 +318,7 @@ object Ops {
 
     def fill(index: Int, num: Int, value: Float): Unit = server ! fillMsg(index, num, value)
 
-    def fill(infos: message.BufferFill.Info*): Unit = server ! fillMsg(infos: _*)
+    def fill(infos: message.BufferFill.Data*): Unit = server ! fillMsg(infos: _*)
 
     def zero(completion: Optional[osc.Packet] = None): Unit = server ! zeroMsg(completion)
 

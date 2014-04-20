@@ -173,16 +173,22 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
 
   def queryCounts(): Unit = this ! message.Status
 
-  def dumpOSC(mode: osc.Dump): Unit = {
+  def dumpOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit = {
+    dumpInOSC (mode, filter)
+    dumpOutOSC(mode, filter)
+  }
+
+  def dumpInOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit =
     c.dumpIn(mode, filter = {
       case m: message.StatusReply => false
-      case _ => true
+      case p => filter(p)
     })
+
+  def dumpOutOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit =
     c.dumpOut(mode, filter = {
       case message.Status => false
-      case _ => true
+      case p => filter(p)
     })
-  }
 
   private def serverLost(): Unit = {
     nodeManager     .clear()

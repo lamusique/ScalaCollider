@@ -27,7 +27,7 @@ final case class Group(server: Server, id: Int)
 //  def this() = this(Server.default)
 
   def newMsg(target: Node, addAction: AddAction) =
-    message.GroupNew(message.GroupNew.Info(id, addAction.id, target.id))
+    message.GroupNew(message.GroupNew.Data(id, addAction.id, target.id))
 
   def dumpTreeMsg: message.GroupDumpTree = dumpTreeMsg(postControls = false)
 

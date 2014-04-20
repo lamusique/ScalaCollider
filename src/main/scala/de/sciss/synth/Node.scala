@@ -130,9 +130,9 @@ abstract class Node extends ModelImpl[NodeManager.NodeChange] {
     message.NodeMapan(id, mappings: _*)
 
   def fillMsg(control: Any, numChannels: Int, value: Float) =
-    message.NodeFill(id, message.NodeFill.Info(control, numChannels, value))
+    message.NodeFill(id, message.NodeFill.Data(control, numChannels, value))
 
-  def fillMsg(fillings: message.NodeFill.Info*) = message.NodeFill(id, fillings: _*)
+  def fillMsg(fillings: message.NodeFill.Data*) = message.NodeFill(id, fillings: _*)
 
   /** Creates an OSC message to move this node before another node
     *

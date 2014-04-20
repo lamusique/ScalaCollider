@@ -20,6 +20,9 @@ import collection.immutable.{IndexedSeq => Vec}
 import collection.mutable.ListBuffer
 import java.io.PrintStream
 import de.sciss.osc.{Bundle, Message, Packet, PacketCodec}
+import de.sciss.osc
+import scala.annotation.switch
+import scala.runtime.ScalaRunTime
 
 object ServerCodec extends PacketCodec {
    import Packet._
@@ -193,6 +196,18 @@ final case class StatusReply(numUGens: Int, numSynths: Int, numGroups: Int, numD
 
 case object Status extends Message("/status") with SyncQuery
 
+final case class DumpOSC(mode: osc.Dump) extends Message("/dumpOSC", mode.id) with SyncCmd
+
+case object ClearSched extends Message("/clearSched") with SyncCmd
+
+object Error {
+  val Off       = apply(0)
+  val On        = apply(1)
+  val BundleOff = apply(-1)
+  val BundleOn  = apply(-2)
+}
+final case class Error(mode: Int) extends Message("/error", mode) with SyncCmd
+
 //trait NodeChange {
 //	def name: String // aka command (/n_go, /n_end, /n_off, /n_on, /n_move, /n_info)
 //	def nodeID:   Int
@@ -256,8 +271,8 @@ object BufferInfo {
   final case class Data(bufID: Int, numFrames: Int, numChannels: Int, sampleRate: Float)
 }
 
-final case class BufferInfo(infos: BufferInfo.Data*)
-  extends Message("/b_info", infos.flatMap(info =>
+final case class BufferInfo(data: BufferInfo.Data*)
+  extends Message("/b_info", data.flatMap(info =>
     List[Any](info.bufID, info.numFrames, info.numChannels, info.sampleRate)): _*)
   with Receive
 
@@ -366,11 +381,94 @@ object BufferFill {
     *               multiple the number of frames by the number of channels
     * @param value  the value to write to the buffer in the given range
     */
-  final case class Info(index: Int, num: Int, value: Float)
+  final case class Data(index: Int, num: Int, value: Float)
 }
-final case class BufferFill(id: Int, infos: BufferFill.Info*)
-  extends Message("/b_fill", id :: (infos.flatMap(i => i.index :: i.num :: i.value :: Nil)(breakOut): List[Any]): _*)
+final case class BufferFill(id: Int, data: BufferFill.Data*)
+  extends Message("/b_fill", id :: (data.flatMap(i => i.index :: i.num :: i.value :: Nil)(breakOut): List[Any]): _*)
   with SyncCmd
+
+object BufferGen {
+  sealed trait Command {
+    def name: String
+    def args: Seq[Any]
+    def isSynchronous: Boolean
+  }
+
+  object WaveFill {
+    final case class Flags(normalize: Boolean, wavetable: Boolean, clear: Boolean) {
+      def toInt: Int = (if (normalize) 1 else 0) | (if (wavetable) 2 else 0) | (if (clear) 4 else 0)
+    }
+  }
+  sealed trait WaveFill extends Command {
+    final def isSynchronous = true
+  }
+
+  /** @param partials frequencies */
+  final case class Sine1(flags: WaveFill.Flags, partials: Float*)
+    extends WaveFill {
+
+    def name = "sine1"
+    def args: Seq[Any] = flags.toInt +: partials
+  }
+
+  /** @param partials pair of (freq, amp) */
+  final case class Sine2(flags: WaveFill.Flags, partials: (Float, Float)*)
+    extends WaveFill {
+      def name = "sine2"
+      def args: Seq[Any] = flags.toInt +: partials.flatMap(tup => tup._1 :: tup._2 :: Nil)
+  }
+
+  object Sine3 {
+    final case class Data(freq: Float, amp: Float, phase: Float)
+  }
+  final case class Sine3(flags: WaveFill.Flags, partials: Sine3.Data*)
+    extends WaveFill {
+
+    def name = "sine3"
+    def args: Seq[Any] = flags.toInt +: partials.flatMap(d => d.freq :: d.amp :: d.phase :: Nil)
+  }
+
+  /** Fills a buffer with a series of chebyshev polynomials, which can be defined as:
+    * {{{
+    * cheby(n) = amplitude * cos(n * acos(x))
+    * }}}
+    * The first float value specifies the amplitude for n = 1, the second float value specifies the amplitude
+    * for n = 2, and so on. To eliminate a DC offset when used as a waveshaper, the wavetable is offset so that
+    * the center value is zero.
+    */
+  final case class Cheby(flags: WaveFill.Flags, amps: Float*)
+    extends WaveFill {
+
+    def name = "cheby"
+    def args: Seq[Any] = flags.toInt +: amps
+  }
+
+  /** Copies samples from the source buffer to the destination buffer specified in the `b_gen` message.
+    * If the number of samples to copy is negative, the maximum number of samples possible is copied.
+    */
+  final case class Copy(targetOffset: Int, source: Int, sourceOffset: Int, num: Int)
+    extends Command {
+
+    def name = "copy"
+    def args: Seq[Any] = List(targetOffset, source, sourceOffset, num)
+
+    def isSynchronous = false
+  }
+}
+final case class BufferGen(id: Int, command: BufferGen.Command)
+  extends Message("/b_gen", id +: command.name +: command.args: _*)
+  with Send {
+
+  def isSynchronous: Boolean = command.isSynchronous
+}
+
+final case class BufferGet(id: Int, index: Int*) // `indices` is taken by SeqLike
+  extends Message("/b_get", id +: index: _*)
+  with SyncQuery
+
+final case class BufferGetn(id: Int, indicesAndSizes: (Int, Int)*)
+  extends Message("/b_getn", id +: indicesAndSizes.flatMap(tup => tup._1 :: tup._2 :: Nil): _*)
+  with SyncQuery
 
 final case class ControlBusSet(indicesAndValues: (Int, Float)*)
   extends Message("/c_set", indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil): _*)
@@ -381,14 +479,25 @@ final case class ControlBusSetn(indicesAndValues: (Int, Vec[Float])*)
   extends Message("/c_setn", indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
 
-final case class ControlBusGet(index: Int*) // fucking hell: indices is defined for SeqLike
+final case class ControlBusGet(index: Int*) // `indices` is taken by SeqLike
   extends Message("/c_get", index: _*)
   with SyncQuery
 
-object GroupNew {
-  final case class Info(groupID: Int, addAction: Int, targetID: Int)
+final case class ControlBusGetn(indicesAndSizes: (Int, Int)*)
+  extends Message("/c_getn", indicesAndSizes.flatMap(i => i._1 :: i._2 :: Nil): _*)
+  with SyncQuery
+
+object ControlBusFill {
+  final case class Data(index: Int, num: Int, value: Float)
 }
-final case class GroupNew(groups: GroupNew.Info*)
+final case class ControlBusFill(data: ControlBusFill.Data*)
+  extends Message("/c_fill", data.flatMap(i => i.index :: i.num :: i.value :: Nil): _*)
+  with SyncCmd
+
+object GroupNew {
+  final case class Data(groupID: Int, addAction: Int, targetID: Int)
+}
+final case class GroupNew(groups: GroupNew.Data*)
   extends Message("/g_new", groups.flatMap(g => g.groupID :: g.addAction :: g.targetID :: Nil): _*)
   with SyncCmd
 
@@ -400,34 +509,32 @@ final case class GroupQueryTree(groups: (Int, Boolean)*)
   extends Message("/g_queryTree", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncQuery
 
-/**
- * Represents an `/g_head` message, which pair-wise places nodes at the head
- * of groups.
- * {{{
- * /g_head
- *   [
- *     Int - the ID of the group at which head a node is to be placed (B)
- *     int - the ID of the node to place (A)
- *   ] * N
- * }}}
- * So that for each pair, node A is moved to the head of group B.
- */
+/** Represents an `/g_head` message, which pair-wise places nodes at the head
+  * of groups.
+  * {{{
+  * /g_head
+  *   [
+  *     Int - the ID of the group at which head a node is to be placed (B)
+  *     int - the ID of the node to place (A)
+  *   ] * N
+  * }}}
+  * So that for each pair, node A is moved to the head of group B.
+  */
 final case class GroupHead(groups: (Int, Int)*)
   extends Message("/g_head", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
-/**
- * Represents an `/g_tail` message, which pair-wise places nodes at the tail
- * of groups.
- * {{{
- * /g_tail
- *   [
- *     Int - the ID of the group at which tail a node is to be placed (B)
- *     int - the ID of the node to place (A)
- *   ] * N
- * }}}
- * So that for each pair, node A is moved to the tail of group B.
- */
+/** Represents an `/g_tail` message, which pair-wise places nodes at the tail
+  * of groups.
+  * {{{
+  * /g_tail
+  *   [
+  *     Int - the ID of the group at which tail a node is to be placed (B)
+  *     int - the ID of the node to place (A)
+  *   ] * N
+  * }}}
+  * So that for each pair, node A is moved to the tail of group B.
+  */
 final case class GroupTail(groups: (Int, Int)*)
   extends Message("/g_tail", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
@@ -440,10 +547,22 @@ final case class GroupDeepFree(ids: Int*)
   extends Message("/g_deepFree", ids: _*)
   with SyncCmd
 
+final case class ParGroupNew(groups: GroupNew.Data*)
+  extends Message("/p_new", groups.flatMap(g => g.groupID :: g.addAction :: g.targetID :: Nil): _*)
+  with SyncCmd
+
 final case class SynthNew(defName: String, id: Int, addAction: Int, targetID: Int, controls: ControlSetMap*)
   extends Message("/s_new",
     defName +: id +: addAction +: targetID +: controls.flatMap(_.toSetSeq): _*)
   with SyncCmd
+
+final case class SynthGet(id: Int, controls: Any*)
+  extends Message("/s_get", id +: controls: _*)
+  with SyncQuery
+
+final case class SynthGetn(id: Int, controls: (Any, Int)*)
+  extends Message("/s_getn", id +: controls.flatMap(tup => tup._1 :: tup._2 :: Nil): _*)
+  with SyncQuery
 
 final case class NodeRun(nodes: (Int, Boolean)*)
   extends Message("/n_run", nodes.flatMap(n => n._1 :: n._2 :: Nil): _*)
@@ -486,44 +605,48 @@ final case class NodeMapan(id: Int, mappings: ControlABusMap*)
   with SyncCmd
 
 object NodeFill {
-  final case class Info(control: Any, numChannels: Int, value: Float)
+  final case class Data(control: Any, numChannels: Int, value: Float)
 }
-final case class NodeFill(id: Int, fillings: NodeFill.Info*)
+final case class NodeFill(id: Int, data: NodeFill.Data*)
   extends Message("/n_fill",
-    id :: (fillings.flatMap(f => f.control :: f.numChannels :: f.value :: Nil)(breakOut): List[Any]): _*
+    id :: (data.flatMap(f => f.control :: f.numChannels :: f.value :: Nil)(breakOut): List[Any]): _*
   )
   with SyncCmd
 
-/**
- * Represents an `/n_before` message, which pair-wise places nodes before
- * other nodes.
- * {{{
- * /n_before
- *   [
- *     Int - the ID of the node to place (A)
- *     int - the ID of the node before which the above is placed (B)
- *   ] * N
- * }}}
- * So that for each pair, node A in the same group as node B, to execute immediately before node B.
- */
+/** Represents an `/n_before` message, which pair-wise places nodes before
+  * other nodes.
+  * {{{
+  * /n_before
+  *   [
+  *     Int - the ID of the node to place (A)
+  *     int - the ID of the node before which the above is placed (B)
+  *   ] * N
+  * }}}
+  * So that for each pair, node A in the same group as node B, to execute immediately before node B.
+  */
 final case class NodeBefore(groups: (Int, Int)*)
   extends Message("/n_before", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
-/**
- * Represents an `/n_after` message, which pair-wise places nodes after
- * other nodes.
- * {{{
- * /n_after
- *   [
- *     Int - the ID of the node to place (A)
- *     int - the ID of the node after which the above is placed (B)
- *   ] * N
- * }}}
- * So that for each pair, node A in the same group as node B, to execute immediately after node B.
- */
+/** Represents an `/n_after` message, which pair-wise places nodes after
+  * other nodes.
+  * {{{
+  * /n_after
+  *   [
+  *     Int - the ID of the node to place (A)
+  *     int - the ID of the node after which the above is placed (B)
+  *   ] * N
+  * }}}
+  * So that for each pair, node A in the same group as node B, to execute immediately after node B.
+  */
 final case class NodeAfter(groups: (Int, Int)*)
   extends Message("/n_after", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
+  with SyncCmd
+
+final case class NodeQuery(ids: Int*) extends Message("/n_query", ids: _*) with SyncQuery
+
+final case class NodeOrder(addAction: Int, targetID: Int, ids: Int*)
+  extends Message("/n_order", addAction +: targetID +: ids: _*)
   with SyncCmd
 
 final case class SynthDefRecv(bytes: ByteBuffer, completion: Option[Packet])
@@ -550,3 +673,10 @@ final case class SynthDefLoadDir(path: String, completion: Option[Packet])
 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
+
+final case class UGenCommand(nodeID: Int, ugenIdx: Int, command: String, rest: Any*)
+  extends Message("/u_cmd", nodeID +: ugenIdx +: command +: rest)
+  with SyncCmd
+
+final case class Trigger(nodeID: Int, trig: Int, value: Float)
+  extends Message("/tr", nodeID, trig, value) with Receive
