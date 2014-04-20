@@ -486,7 +486,8 @@ final case class BufferAllocReadChannel(id: Int, path: String, startFrame: Int, 
   *                         value of `-1` denotes that as many frames are read as are available in the file or
   *                         fit into the buffer.
   * @param  bufStartFrame   the frame offset in the buffer to begin writing to.
-  * @param  leaveOpen       if `true`, leaves the file open for streaming with the [[ugen.DiskIn]] UGen.
+  * @param  leaveOpen       if `true`, leaves the file open for streaming with the
+  *                         [[de.sciss.synth.ugen.DiskIn DiskIn]] UGen.
   *
   * @see [[Buffer#readMsg]]
   * @see [[BufferAllocRead]]
@@ -511,7 +512,8 @@ final case class BufferRead(id: Int, path: String, fileStartFrame: Int, numFrame
   *                         value of `-1` denotes that as many frames are read as are available in the file or
   *                         fit into the buffer.
   * @param  bufStartFrame   the frame offset in the buffer to begin writing to.
-  * @param  leaveOpen       if `true`, leaves the file open for streaming with the [[ugen.DiskIn]] UGen.
+  * @param  leaveOpen       if `true`, leaves the file open for streaming with the
+  *                         [[de.sciss.synth.ugen.DiskIn DiskIn]] UGen.
   * @param  channels        a sequence of channel indices to read. Zero corresponds to the first channel of the file.
   *
   * @see [[Buffer#readChannelMsg]]
@@ -553,7 +555,8 @@ final case class BufferZero(id: Int, completion: Option[Packet])
   *                         value of `-1` denotes that the whole buffer content (or the remainder
   *                         after the `startFrame`) is written out.
   * @param  startFrame      the frame offset in the buffer to begin reading from
-  * @param  leaveOpen       if `true`, leaves the file open for streaming with the [[ugen.DiskOut]] UGen.
+  * @param  leaveOpen       if `true`, leaves the file open for streaming with
+  *                         the [[de.sciss.synth.ugen.DiskOut DiskOut]] UGen.
   *
   * @see [[Buffer#writeMsg]]
   * @see [[BufferRead]]
@@ -599,7 +602,7 @@ final case class BufferSet(id: Int, indicesAndValues: (Int, Float)*)
   * @see [[BufferZero]]
   * @see [[BufferGen]]
   */
-final case class BufferSetn(id: Int, indicesAndValues: (Int, Vec[Float])*)
+final case class BufferSetn(id: Int, indicesAndValues: (Int, IndexedSeq[Float])*)
   extends Message("/b_setn", id +: indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
 
@@ -639,6 +642,12 @@ object BufferGen {
   }
 
   object WaveFill {
+    /** @param normalize  if set, the peak amplitude of the generated waveform is normalized to `1.0`
+      * @param wavetable  if set, the format of the waveform is chosen to be usable by interpolating
+      *                   oscillators such as [[de.sciss.synth.ugen.Osc Osc]] or [[de.sciss.synth.ugen.VOsc VOsc]]
+      * @param clear      if set, the previous content is erased, otherwise the new waveform is added
+      *                   to the existing content
+      */
     final case class Flags(normalize: Boolean, wavetable: Boolean, clear: Boolean) {
       def toInt: Int = (if (normalize) 1 else 0) | (if (wavetable) 2 else 0) | (if (clear) 4 else 0)
     }
@@ -699,7 +708,17 @@ object BufferGen {
     def isSynchronous = false
   }
 }
-// XXX TODO: continue documentation here
+/** The `/b_gen` message uses a dedicated command to generate or manipulate the buffer content.
+  *
+  * @param  id      the identifier of the buffer whose contents to write.
+  * @param  command the operation to carry out on the buffer, such as generating a waveform or copying the content
+  *
+  * @see [[Buffer#genMsg]]
+  * @see [[BufferSet]]
+  * @see [[BufferSetn]]
+  * @see [[BufferZero]]
+  * @see [[BufferFill]]
+  */
 final case class BufferGen(id: Int, command: BufferGen.Command)
   extends Message("/b_gen", id +: command.name +: command.args: _*)
   with Send {
@@ -707,27 +726,64 @@ final case class BufferGen(id: Int, command: BufferGen.Command)
   def isSynchronous: Boolean = command.isSynchronous
 }
 
+/** The `/b_get` message.
+  *
+  * @see [[Buffer#getMsg]]
+  * @see [[BufferGetn]]
+  * @see [[BufferSet]]
+  */
 final case class BufferGet(id: Int, index: Int*) // `indices` is taken by SeqLike
   extends Message("/b_get", id +: index: _*)
   with SyncQuery
 
+/** The `/b_getn` message.
+  *
+  * @see [[Buffer#getnMsg]]
+  * @see [[BufferGet]]
+  * @see [[BufferSetn]]
+  */
 final case class BufferGetn(id: Int, indicesAndSizes: (Int, Int)*)
   extends Message("/b_getn", id +: indicesAndSizes.flatMap(tup => tup._1 :: tup._2 :: Nil): _*)
   with SyncQuery
 
+/** The `/c_set` message.
+  *
+  * @see [[ControlBus#setMsg]]
+  * @see [[ControlBusSetn]]
+  * @see [[ControlBusGet]]
+  * @see [[ControlBusFill]]
+  */
 final case class ControlBusSet(indicesAndValues: (Int, Float)*)
   extends Message("/c_set", indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil): _*)
   with SyncCmd
 
-//case class BusValuesPair( index: Int, values: Vec[ Float ])
-final case class ControlBusSetn(indicesAndValues: (Int, Vec[Float])*)
+/** The `/c_setn` message.
+  *
+  * @see [[ControlBus#setnMsg]]
+  * @see [[ControlBusSet]]
+  * @see [[ControlBusGetn]]
+  * @see [[ControlBusFill]]
+  */
+final case class ControlBusSetn(indicesAndValues: (Int, IndexedSeq[Float])*)
   extends Message("/c_setn", indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
 
+/** The `/c_get` message.
+  *
+  * @see [[ControlBus#getMsg]]
+  * @see [[ControlBusGetn]]
+  * @see [[ControlBusSet]]
+  */
 final case class ControlBusGet(index: Int*) // `indices` is taken by SeqLike
   extends Message("/c_get", index: _*)
   with SyncQuery
 
+/** The `/c_getn` message.
+  *
+  * @see [[ControlBus#getnMsg]]
+  * @see [[ControlBusGet]]
+  * @see [[ControlBusSetn]]
+  */
 final case class ControlBusGetn(indicesAndSizes: (Int, Int)*)
   extends Message("/c_getn", indicesAndSizes.flatMap(i => i._1 :: i._2 :: Nil): _*)
   with SyncQuery
@@ -735,6 +791,13 @@ final case class ControlBusGetn(indicesAndSizes: (Int, Int)*)
 object ControlBusFill {
   final case class Data(index: Int, num: Int, value: Float)
 }
+
+/** The `/c_fill` message.
+  *
+  * @see [[ControlBus#fillMsg]]
+  * @see [[ControlBusSet]]
+  * @see [[ControlBusSetn]]
+  */
 final case class ControlBusFill(data: ControlBusFill.Data*)
   extends Message("/c_fill", data.flatMap(i => i.index :: i.num :: i.value :: Nil): _*)
   with SyncCmd
@@ -742,14 +805,17 @@ final case class ControlBusFill(data: ControlBusFill.Data*)
 object GroupNew {
   final case class Data(groupID: Int, addAction: Int, targetID: Int)
 }
+/** The `/g_new` message. */
 final case class GroupNew(groups: GroupNew.Data*)
   extends Message("/g_new", groups.flatMap(g => g.groupID :: g.addAction :: g.targetID :: Nil): _*)
   with SyncCmd
 
+/** The `/g_dumpTree` message. */
 final case class GroupDumpTree(groups: (Int, Boolean)*)
   extends Message("/g_dumpTree", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
+/** The `/g_queryTree` message. */
 final case class GroupQueryTree(groups: (Int, Boolean)*)
   extends Message("/g_queryTree", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncQuery
@@ -782,67 +848,83 @@ final case class GroupTail(groups: (Int, Int)*)
   extends Message("/g_tail", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
+/** The `/g_freeAll` message. */
 final case class GroupFreeAll(ids: Int*)
   extends Message("/g_freeAll", ids: _*)
   with SyncCmd
 
+/** The `/g_deepFree` message. */
 final case class GroupDeepFree(ids: Int*)
   extends Message("/g_deepFree", ids: _*)
   with SyncCmd
 
+/** The `/p_new` message. */
 final case class ParGroupNew(groups: GroupNew.Data*)
   extends Message("/p_new", groups.flatMap(g => g.groupID :: g.addAction :: g.targetID :: Nil): _*)
   with SyncCmd
 
+/** The `/s_new` message. */
 final case class SynthNew(defName: String, id: Int, addAction: Int, targetID: Int, controls: ControlSetMap*)
   extends Message("/s_new",
     defName +: id +: addAction +: targetID +: controls.flatMap(_.toSetSeq): _*)
   with SyncCmd
 
+/** The `/s_get` message. */
 final case class SynthGet(id: Int, controls: Any*)
   extends Message("/s_get", id +: controls: _*)
   with SyncQuery
 
+/** The `/s_getn` message. */
 final case class SynthGetn(id: Int, controls: (Any, Int)*)
   extends Message("/s_getn", id +: controls.flatMap(tup => tup._1 :: tup._2 :: Nil): _*)
   with SyncQuery
 
+/** The `/n_run` message. */
 final case class NodeRun(nodes: (Int, Boolean)*)
   extends Message("/n_run", nodes.flatMap(n => n._1 :: n._2 :: Nil): _*)
   with SyncCmd
 
+/** The `/n_set` message. */
 final case class NodeSet(id: Int, pairs: ControlSetMap*)
   extends Message("/n_set", id +: pairs.flatMap(_.toSetSeq): _*)
   with SyncCmd
 
+/** The `/n_setn` message. */
 final case class NodeSetn(id: Int, pairs: ControlSetMap*)
   extends Message("/n_setn", id +: pairs.flatMap(_.toSetnSeq): _*)
   with SyncCmd
 
+/** The `/n_trace` message. */
 final case class NodeTrace(ids: Int*)
   extends Message("/n_trace", ids: _*)
   with SyncCmd
 
+/** The `/n_noid` message. */
 final case class NodeNoID(ids: Int*)
   extends Message("/n_noid", ids: _*)
   with SyncCmd
 
+/** The `/n_free` message. */
 final case class NodeFree(ids: Int*)
   extends Message("/n_free", ids: _*)
   with SyncCmd
 
+/** The `/n_map` message. */
 final case class NodeMap(id: Int, mappings: ControlKBusMap.Single*)
   extends Message("/n_map", id +: mappings.flatMap(_.toMapSeq): _*)
   with SyncCmd
 
+/** The `/n_mapn` message. */
 final case class NodeMapn(id: Int, mappings: ControlKBusMap*)
   extends Message("/n_mapn", id +: mappings.flatMap(_.toMapnSeq): _*)
   with SyncCmd
 
+/** The `/n_mapa` message. */
 final case class NodeMapa(id: Int, mappings: ControlABusMap.Single*)
   extends Message("/n_mapa", id +: mappings.flatMap(_.toMapaSeq): _*)
   with SyncCmd
 
+/** The `/n_mapan` message. */
 final case class NodeMapan(id: Int, mappings: ControlABusMap*)
   extends Message("/n_mapan", id +: mappings.flatMap(_.toMapanSeq): _*)
   with SyncCmd
@@ -850,6 +932,7 @@ final case class NodeMapan(id: Int, mappings: ControlABusMap*)
 object NodeFill {
   final case class Data(control: Any, numChannels: Int, value: Float)
 }
+/** The `/n_fill` message. */
 final case class NodeFill(id: Int, data: NodeFill.Data*)
   extends Message("/n_fill",
     id :: (data.flatMap(f => f.control :: f.numChannels :: f.value :: Nil)(breakOut): List[Any]): _*
@@ -884,12 +967,15 @@ final case class NodeAfter(groups: (Int, Int)*)
   extends Message("/n_after", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
+/** The `/n_query` message. */
 final case class NodeQuery(ids: Int*) extends Message("/n_query", ids: _*) with SyncQuery
 
+/** The `/n_order` message. */
 final case class NodeOrder(addAction: Int, targetID: Int, ids: Int*)
   extends Message("/n_order", addAction +: targetID +: ids: _*)
   with SyncCmd
 
+/** The `/d_recv` message. */
 final case class SynthDefRecv(bytes: ByteBuffer, completion: Option[Packet])
   extends Message("/d_recv", bytes :: completion.toList: _*)
   with HasCompletion {
@@ -897,10 +983,18 @@ final case class SynthDefRecv(bytes: ByteBuffer, completion: Option[Packet])
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/d_free` message. */
 final case class SynthDefFree(names: String*)
   extends Message("/d_free", names: _*)
   with SyncCmd
 
+/** The `/d_load` message.
+  *
+  * @param path   the path to the file that stores the definition. This can be a pattern
+  *               like `"synthdefs/perc-*"`
+  *
+  * @see [[SynthDef$.loadMsg]]
+  */
 final case class SynthDefLoad(path: String, completion: Option[Packet])
   extends Message("/d_load", path :: completion.toList: _*)
   with HasCompletion {
@@ -908,6 +1002,10 @@ final case class SynthDefLoad(path: String, completion: Option[Packet])
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/d_loadDir` message tells the server to load all synth definitions within a directory.
+  *
+  * @see [[SynthDef.loadDirMsg]]
+  */
 final case class SynthDefLoadDir(path: String, completion: Option[Packet])
   extends Message("/d_loadDir", path :: completion.toList: _*)
   with HasCompletion {
@@ -915,9 +1013,11 @@ final case class SynthDefLoadDir(path: String, completion: Option[Packet])
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/u_cmd` message allows one to send UGen specific commands. */
 final case class UGenCommand(nodeID: Int, ugenIdx: Int, command: String, rest: Any*)
   extends Message("/u_cmd", nodeID +: ugenIdx +: command +: rest)
   with SyncCmd
 
+/** The `/tr` message send from a [[de.sciss.synth.ugen.SendTrig SendTrig]] UGen. */
 final case class Trigger(nodeID: Int, trig: Int, value: Float)
   extends Message("/tr", nodeID, trig, value) with Receive

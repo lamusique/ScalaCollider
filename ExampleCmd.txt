@@ -9,7 +9,7 @@
 // - mul and add arguments have been usually dropped from
 //   the ugen constructors for simplicity. hence you
 //   find frequent use of the madd method.
-// - careful with number divisons, e.g. 2/6 yields
+// - careful with number divisions, e.g. 2/6 yields
 //   0.333... in sclang, and 0 in scala. Use 2.0/6 instead
 
 // analog bubbles
@@ -187,7 +187,7 @@ val x = play {
   val f2 = Rand(0, 8000)
   for (i <- 1 to 2) yield {
     val z = KlangSpec.fill(p) {
-      // sine oscil bank specification :
+      // sine oscillator bank specification :
       (f1 + Rand(0, f2),  // frequencies
        1,                 // amplitudes
        Rand(1, 5))        // ring times
@@ -236,14 +236,14 @@ val x = play {
   // sine percolation sound :
   val s = Mix.fill(d) { Resonz.ar(Dust.ar(2.0 / d) * 50, Rand(200, 3200), 0.003) }
 
-  // reverb predelay time :
+  // reverb pre-delay time :
   val z = DelayN.ar(s, 0.048)
 
   // 'c' length modulated comb delays in parallel :
   val y: GE = Mix(CombL.ar(z, 0.1, LFNoise1.kr(Seq.fill(c)(Rand(0, 0.1))).madd(0.04, 0.05), 15))
 
   // chain of 'a' allpass delays on each of two channels (2 times 'a' total) :
-  val x = (y /: (0 until a)) { (in, _) => 
+  val x = Mix.fold(y, a) { in =>
     AllpassN.ar(in, 0.050, Seq(Rand(0, 0.050), Rand(0, 0.050)), 1)
   }
 
@@ -258,7 +258,7 @@ val x = play {
   // pink noise percussion sound :
   val s = Decay.ar(Dust.ar(0.6) * 0.2, 0.15) * PinkNoise.ar
 
-  // reverb predelay time :
+  // reverb pre-delay time :
   val z = DelayN.ar(s, 0.048, 0.048)
 
   // 6 modulated comb delays in parallel :
@@ -325,7 +325,7 @@ val x = play {
       LFNoise1.kr(8).madd(dmul, dadd).max(0)
     )
 
-    val freq = Lag.kr(           // lag the pitch so it glissandos between pitches
+    val freq = Lag.kr(           // lag the pitch so it makes glissandi between pitches
       LFNoise0.kr(               // use low freq step noise as a pitch control
         Vector(1, 0.5, 0.25)(    // choose a frequency of pitch change
           util.Random.nextInt(3)
@@ -334,18 +334,18 @@ val x = play {
         7,                       // +/- 7 semitones
         IRand(36, 96)            // random center note
       ).roundTo(1),              // round to nearest semitone
-      0.2                        // gliss time
+      0.2                        // glissando time
     ).midicps                    // convert to hertz
 
-    Pan2.ar(    // pan each intrument
+    Pan2.ar(    // pan each instrument
       CombL.ar(excitation, 0.02, freq.reciprocal, 3),    // comb delay simulates string
       Rand(-1, 1)    // random pan position
     )
   }
 
   // add some reverb via allpass delays
-  val x = (signal /: (1 to 5)) { (sig, _) => 
-    AllpassN.ar(sig, 0.05, Seq(Rand(0, 0.05), Rand(0, 0.05)), 1)
+  val x = Mix.fold(signal, 5) { in =>
+    AllpassN.ar(in, 0.05, Seq(Rand(0, 0.05), Rand(0, 0.05)), 1)
   }
   LeakDC.ar(x, 0.995)    // delays build up a lot of DC, so leak it out here.
 }
@@ -376,7 +376,7 @@ val x = play {
 
 // based on record scratcher by Josh Parmenter (2007)
 
-// path to a mono soundfile here
+// path to a mono sound-file here
 val buf = Buffer.read(s, "sounds/a11wlk01.wav")
 val x = play {
   val speed0 = MouseX.kr(-10, 10)
@@ -427,8 +427,8 @@ x.free()
 val x = play {
   // note that Pitch has two outputs, so feeding it with two input channels
   // produces two instances. In order to prevent the multi-channel-expansion
-  // to create two SendReply objects and instead to catenate both pitch
-  // infos, we can use Flatten( _ )
+  // to create two SendReply objects and instead to concatenate both pitch
+  // data, we can use Flatten( _ )
   SendReply.kr(Impulse.kr(10), Pitch.kr(In.ar(NumOutputBuses.ir, 2)).flatten)
 }
 val resp = message.Responder.add() {
@@ -520,11 +520,17 @@ backslash operator, hence instead of
 
 val Seq(freq, hasFreq) = Pitch.kr(...)
 
-you must do
+you can do
 
 val pch     = Pitch.kr(...)
 val freq    = pch \ 0
 val hasFreq = pch \ 1
+
+but even better, use the named outputs:
+
+val pch     = Pitch.kr(...)
+val freq    = pch.freq
+val hasFreq = pch.hasFreq
 
 for example:
 
@@ -533,12 +539,10 @@ for example:
 val x = play {
   val in      = Mix(In.ar(NumOutputBuses.ir + Seq(0, 1)))
   val amp     = Amplitude.kr(in, 0.05, 0.05) * 0.3
-  val pch     = Pitch.kr(in, ampThresh = 0.02, median = 7)
-  val freq    = pch \ 0
-  val hasFreq = pch \ 1
-  hasFreq.poll(1)
-  val syn: GE = Mix(VarSaw.ar(freq * Seq(0.5, 1, 2), 0, LFNoise1.kr(0.3).madd(0.1, 0.1)) * amp)
-  (syn /: (1 to 6)) { (sig, _) =>
+  val p       = Pitch.kr(in, ampThresh = 0.02, median = 7)
+  p.hasFreq.poll(1)
+  val syn     = Mix(VarSaw.ar(p.freq * Seq(0.5, 1.0, 2.0), 0, LFNoise1.kr(0.3).madd(0.1, 0.1)) * amp)
+  Mix.fold(syn, 6) { sig =>
     AllpassN.ar(sig, 0.040, Seq(Rand(0, 0.040), Rand(0, 0.040)), 2)
   }
 }

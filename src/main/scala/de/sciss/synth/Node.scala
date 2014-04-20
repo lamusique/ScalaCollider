@@ -75,11 +75,9 @@ abstract class Node extends ModelImpl[NodeManager.NodeChange] {
     */
   def runMsg(flag: Boolean) = message.NodeRun(id -> flag)
 
-  def setMsg(pairs: ControlSetMap*) =
-    message.NodeSet(id, pairs: _*)
+  def setMsg(pairs: ControlSetMap*) = message.NodeSet(id, pairs: _*)
 
-  def setnMsg(pairs: ControlSetMap*) =
-    message.NodeSetn(id, pairs: _*)
+  def setnMsg(pairs: ControlSetMap*) = message.NodeSetn(id, pairs: _*)
 
   def traceMsg = message.NodeTrace(id)
 
@@ -101,11 +99,9 @@ abstract class Node extends ModelImpl[NodeManager.NodeChange] {
     setMsg("gate" -> value)
   }
 
-  def mapMsg(pairs: ControlKBusMap.Single*) =
-    message.NodeMap(id, pairs: _*)
+  def mapMsg(pairs: ControlKBusMap.Single*) = message.NodeMap(id, pairs: _*)
 
-  def mapnMsg(mappings: ControlKBusMap*) =
-    message.NodeMapn(id, mappings: _*)
+  def mapnMsg(mappings: ControlKBusMap*) = message.NodeMapn(id, mappings: _*)
 
   /** Returns an OSC message to map from an mono-channel audio bus to one of the node's controls.
     *
@@ -115,8 +111,7 @@ abstract class Node extends ModelImpl[NodeManager.NodeChange] {
     *
     * @see  [[de.sciss.synth.ugen.InFeedback]]
     */
-  def mapaMsg(pairs: ControlABusMap.Single*) =
-    message.NodeMapa(id, pairs: _*)
+  def mapaMsg(pairs: ControlABusMap.Single*) = message.NodeMapa(id, pairs: _*)
 
   /** Returns an OSC message to map from an mono- or multi-channel audio bus to one of the node's controls.
     *

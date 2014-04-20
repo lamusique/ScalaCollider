@@ -36,53 +36,58 @@ object Ops {
   //   implicit def bufferOps( b: Buffer ) : BufferOps = new BufferOps( b )
   //   implicit def controlBusOps( b: ControlBus ) : ControlBusOps = new ControlBusOps( b )
 
-  final implicit class SynthDefConstructors(val d: SynthDef.type) extends AnyVal {
-    import SynthDef._
-    def recv(name: String, server: Server = Server.default, completion: Completion = NoCompletion)
+  final implicit class SynthDefConstructors(val `this`: SynthDef.type) extends AnyVal {
+    import SynthDef.{Completion => _, _}
+
+    def recv(name: String, server: Server = Server.default, completion: SynthDef.Completion = Completion.None)
             (thunk: => Unit): SynthDef = {
       val d = apply(name)(thunk)
       d.recv(server, completion)
       d
     }
+
+    def load(path: String, server: Server = Server.default, completion: Completion[Unit] = Completion.None): Unit =
+      sendWithAction((), server, SynthDef.loadMsg(path, _), completion, "SynthDef.load")
   }
 
   // cannot occur inside value class at the moment
-  private[this] def sendSynthDefWithAction(d: SynthDef, server: Server, msgFun: Option[osc.Packet] => osc.Message,
-                                           completion: SynthDef.Completion, name: String): Unit = {
+  private[this] def sendWithAction[A](res: A, server: Server, msgFun: Option[osc.Packet] => osc.Message,
+                                           completion: Completion[A], name: String): Unit = {
     completion.action map { action =>
       val syncMsg = server.syncMsg()
-      val syncID = syncMsg.id
+      val syncID  = syncMsg.id
       val compPacket: osc.Packet = completion.message match {
-        case Some(msgFun2) => osc.Bundle.now(msgFun2(d), syncMsg)
+        case Some(msgFun2) => osc.Bundle.now(msgFun2(res), syncMsg)
         case None => syncMsg
       }
       val p   = msgFun(Some(compPacket))
       val fut = server.!!(p) {
-        case message.Synced(`syncID`) => action(d)
+        case message.Synced(`syncID`) => action(res)
         //        case message.TIMEOUT => println("ERROR: " + d + "." + name + " : timeout!")
       }
       val cfg = server.clientConfig
       import cfg.executionContext
       fut.onFailure {
-        case message.Timeout() => println(s"ERROR: $d.$name : timeout!")
+        case message.Timeout() => println(s"ERROR: $name : timeout!")
       }
 
     } getOrElse {
-      server ! msgFun(completion.message.map(_.apply(d)))
+      server ! msgFun(completion.message.map(_.apply(res)))
     }
   }
 
-  final implicit class SynthDefOps(val d: SynthDef) extends AnyVal {
-    import SynthDef.{Completion, NoCompletion, defaultDir}
+  final implicit class SynthDefOps(val `this`: SynthDef) extends AnyVal { me =>
+    import SynthDef.defaultDir
+    import me.{`this` => d}
     import d._
 
-    def recv(server: Server = Server.default, completion: Completion = NoCompletion): Unit =
-      sendSynthDefWithAction(d, server, recvMsg(_), completion, "recv")
+    def recv(server: Server = Server.default, completion: SynthDef.Completion = Completion.None): Unit =
+      sendWithAction(d, server, recvMsg(_), completion, "SynthDef.recv")
 
     def load(server: Server = Server.default, dir: String = defaultDir,
-             completion: Completion = NoCompletion): Unit = {
+             completion: SynthDef.Completion = Completion.None): Unit = {
       write(dir)
-      sendSynthDefWithAction(d, server, loadMsg(dir, _), completion, "load")
+      sendWithAction(d, server, loadMsg(dir, _), completion, "SynthDef.load")
     }
 
     def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
@@ -93,7 +98,8 @@ object Ops {
     }
   }
 
-  final implicit class NodeOps(val n: Node) extends AnyVal {
+  final implicit class NodeOps(val `this`: Node) extends AnyVal { me =>
+    import me.{`this` => n}
     import n._
 
     def free(): Unit = server ! freeMsg
@@ -154,14 +160,26 @@ object Ops {
       *
       * @see  [[de.sciss.synth.message.NodeAfter]]
       */
-    def moveAfter(node: Node): Unit = server ! moveAfterMsg(node)
+    def moveAfter (node : Node ): Unit = server ! moveAfterMsg (node )
 
+    /** Moves this node to the head of a given group
+      *
+      * @param   group  the target group
+      *
+      * @see  [[de.sciss.synth.message.GroupHead]]
+      */
     def moveToHead(group: Group): Unit = server ! moveToHeadMsg(group)
 
+    /** Moves this node to the tail of a given group
+      *
+      * @param   group  the target group
+      *
+      * @see  [[de.sciss.synth.message.GroupTail]]
+      */
     def moveToTail(group: Group): Unit = server ! moveToTailMsg(group)
   }
 
-  implicit final class GroupConstructors(val g: Group.type) extends AnyVal {
+  implicit final class GroupConstructors(val `this`: Group.type) extends AnyVal {
     import Group._
 
     def play(): Group = head(Server.default.defaultGroup)
@@ -179,7 +197,8 @@ object Ops {
     def replace(target: Node):  Group = play(target, addReplace)
   }
 
-  final class GroupOps(val g: Group) extends AnyVal {
+  final class GroupOps(val `this`: Group) extends AnyVal { me =>
+    import me.{`this` => g}
     import g._
 
     def freeAll(): Unit = server ! freeAllMsg
@@ -189,8 +208,9 @@ object Ops {
     def dumpTree(postControls: Boolean = false): Unit = server ! dumpTreeMsg(postControls)
   }
 
-  implicit final class SynthConstructors(val s: Synth.type) extends AnyVal {
+  implicit final class SynthConstructors(val `this`: Synth.type) extends AnyVal {
     import Synth._
+
     def play(defName: String, args: Seq[ControlSetMap] = Nil, target: Node = Server.default.defaultGroup,
              addAction: AddAction = addToHead): Synth = {
       val synth = apply(target.server)
@@ -215,32 +235,32 @@ object Ops {
 
   }
 
-  implicit final class BufferConstructors(val b: Buffer.type) extends AnyVal {
+  implicit final class BufferConstructors(val `this`: Buffer.type) extends AnyVal {
     import Buffer._
 
     def alloc(server: Server = Server.default, numFrames: Int, numChannels: Int = 1,
-              completion: Completion = NoCompletion): Buffer = {
+              completion: Buffer.Completion = Completion.None): Buffer = {
       val b = apply(server)
       b.alloc(numFrames, numChannels, completion)
       b
     }
 
     def read(server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
-             completion: Completion = NoCompletion): Buffer = {
+             completion: Buffer.Completion = Completion.None): Buffer = {
       val b = apply(server)
       b.allocRead(path, startFrame, numFrames, completion)
       b
     }
 
     def cue(server: Server = Server.default, path: String, startFrame: Int = 0, numChannels: Int = 1,
-            bufFrames: Int = 32768, completion: Completion = NoCompletion): Buffer = {
+            bufFrames: Int = 32768, completion: Buffer.Completion = Completion.None): Buffer = {
       val b = apply(server)
       b.alloc(bufFrames, numChannels, b.cueMsg(path, startFrame, completion))
       b
     }
 
     def readChannel(server: Server = Server.default, path: String, startFrame: Int = 0, numFrames: Int = -1,
-                    channels: Seq[Int], completion: Completion = NoCompletion): Buffer = {
+                    channels: Seq[Int], completion: Buffer.Completion = Completion.None): Buffer = {
       val b = apply(server)
       b.allocReadChannel(path, startFrame, numFrames, channels, completion)
       b
@@ -250,7 +270,7 @@ object Ops {
   implicit final class BufferOps(val b: Buffer) extends AnyVal {
     import b._
 
-    def alloc(numFrames: Int, numChannels: Int = 1, completion: Buffer.Completion = Buffer.NoCompletion): Unit =
+    def alloc(numFrames: Int, numChannels: Int = 1, completion: Buffer.Completion = Completion.None): Unit =
       server ! allocMsg(numFrames, numChannels, makePacket(completion))
 
     def free(completion: Optional[osc.Packet] = None): Unit = server ! freeMsg(completion, release = true)
@@ -258,20 +278,20 @@ object Ops {
     def close(completion: Optional[osc.Packet] = None): Unit = server ! closeMsg(completion)
 
     def allocRead(path: String, startFrame: Int = 0, numFrames: Int = -1,
-                  completion: Buffer.Completion = Buffer.NoCompletion): Unit =
+                  completion: Buffer.Completion = Completion.None): Unit =
       server ! allocReadMsg(path, startFrame, numFrames, makePacket(completion, forceQuery = true))
 
     def allocReadChannel(path: String, startFrame: Int = 0, numFrames: Int = -1, channels: Seq[Int],
-                         completion: Buffer.Completion = Buffer.NoCompletion): Unit =
+                         completion: Buffer.Completion = Completion.None): Unit =
       server ! allocReadChannelMsg(path, startFrame, numFrames, channels, makePacket(completion, forceQuery = true))
 
     def read(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
-             leaveOpen: Boolean = false, completion: Buffer.Completion = Buffer.NoCompletion): Unit =
+             leaveOpen: Boolean = false, completion: Buffer.Completion = Completion.None): Unit =
       server ! readMsg(path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, makePacket(completion))
 
     def readChannel(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
                     leaveOpen: Boolean = false, channels: Seq[Int],
-                    completion: Buffer.Completion = Buffer.NoCompletion): Unit =
+                    completion: Buffer.Completion = Completion.None): Unit =
       server ! readChannelMsg(path, fileStartFrame, numFrames, bufStartFrame, leaveOpen,
         channels, makePacket(completion))
 
@@ -299,7 +319,7 @@ object Ops {
       *             of the first frame of the right channel, followed by the second frame
       *             of the left channel, etc.
       */
-    def setn(v: Vec[Float]): Unit = server ! setnMsg(v)
+    def setn(v: IndexedSeq[Float]): Unit = server ! setnMsg(v)
 
     /** Sets the contents of the buffer by replacing
       * individual contiguous chunks of data. An error is thrown if any of the given
@@ -314,17 +334,17 @@ object Ops {
       *                left channel, the second element to frame `offset / 2` of the right channel,
       *                followed by frame `offset / 2 + 1` of the left channel, and so on.
       */
-    def setn(pairs: (Int, Vec[Float])*): Unit = server ! setnMsg(pairs: _*)
+    def setn(pairs: (Int, IndexedSeq[Float])*): Unit = server ! setnMsg(pairs: _*)
 
     def fill(index: Int, num: Int, value: Float): Unit = server ! fillMsg(index, num, value)
 
-    def fill(infos: message.BufferFill.Data*): Unit = server ! fillMsg(infos: _*)
+    def fill(data: message.BufferFill.Data*): Unit = server ! fillMsg(data: _*)
 
     def zero(completion: Optional[osc.Packet] = None): Unit = server ! zeroMsg(completion)
 
     def write(path: String, fileType: io.AudioFileType = io.AudioFileType.AIFF,
               sampleFormat: io.SampleFormat = io.SampleFormat.Float, numFrames: Int = -1, startFrame: Int = 0,
-              leaveOpen: Boolean = false, completion: Buffer.Completion = Buffer.NoCompletion): Unit =
+              leaveOpen: Boolean = false, completion: Buffer.Completion = Completion.None): Unit =
       server ! writeMsg(path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, makePacket(completion))
 
     // ---- utility methods ----
@@ -350,8 +370,8 @@ object Ops {
 
     def set(pairs: (Int, Float)*): Unit = server ! setMsg(pairs: _*)
 
-    def setn(v: Vec[Float]): Unit = server ! setnMsg(v)
+    def setn(v: IndexedSeq[Float]): Unit = server ! setnMsg(v)
 
-    def setn(pairs: (Int, Vec[Float])*): Unit = server ! setnMsg(pairs: _*)
+    def setn(pairs: (Int, IndexedSeq[Float])*): Unit = server ! setnMsg(pairs: _*)
   }
 }

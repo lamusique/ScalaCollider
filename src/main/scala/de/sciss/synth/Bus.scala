@@ -14,6 +14,12 @@
 package de.sciss.synth
 
 object Bus {
+  /** Allocates a new control bus.
+    * If there are no more available buses, an [[AllocatorExhausted]] exception is thrown.
+    *
+    * @param server       the server on which the bus resides
+    * @param numChannels  the number of channels to allocate
+    */
   def control(server: Server = Server.default, numChannels: Int = 1) = {
     val id = server.allocControlBus(numChannels)
     if (id == -1) {
@@ -23,6 +29,12 @@ object Bus {
     ControlBus(server, id, numChannels)
   }
 
+  /** Allocates a new audio bus.
+    * If there are no more available buses, an [[AllocatorExhausted]] exception is thrown.
+    *
+    * @param server       the server on which the bus resides
+    * @param numChannels  the number of channels to allocate
+    */
   def audio(server: Server = Server.default, numChannels: Int = 1) = {
     val id = server.allocAudioBus(numChannels)
     if (id == -1) {
@@ -43,7 +55,9 @@ sealed trait Bus {
   /** The server to which this bus belongs. */
   def server: Server
 
-  /** Frees the bus. This is a client-side only operation which makes the `index` available again for re-allocation. */
+  /** Frees the bus. This is a client-side only operation which makes the `index` available
+    * again for re-allocation.
+    */
   def free(): Unit
 
   protected final var released  = false
@@ -60,6 +74,12 @@ final case class ControlBus(server: Server, index: Int, numChannels: Int) extend
     released = true
   }
 
+  /** A convenience method that sets the control bus to one value.
+    * It requires that the bus has exactly one channel, otherwise
+    * an exception is thrown.
+    *
+    * @param v  the value to set the bus to
+    */
   def setMsg(v: Float) = {
     require(numChannels == 1)
     message.ControlBusSet((index, v))
@@ -70,9 +90,15 @@ final case class ControlBus(server: Server, index: Int, numChannels: Int) extend
     message.ControlBusSet(pairs.map(tup => (tup._1 + index, tup._2)): _*)
   }
 
-  def setnMsg(v: IndexedSeq[Float]) = {
-    require(v.size == numChannels)
-    message.ControlBusSetn((index, v.toIndexedSeq))
+  /** A convenience method that sets the control bus to a sequence of values.
+    * It requires that the bus's number of channels is equal to the argument's size, otherwise
+    * an exception is thrown.
+    *
+    * @param xs  the vector of values to set the bus to
+    */
+  def setnMsg(xs: IndexedSeq[Float]) = {
+    require(xs.size == numChannels)
+    message.ControlBusSetn((index, xs.toIndexedSeq))
   }
 
   def setnMsg(pairs: (Int, IndexedSeq[Float])*) = {
@@ -81,6 +107,10 @@ final case class ControlBus(server: Server, index: Int, numChannels: Int) extend
     message.ControlBusSetn(ipairs: _*)
   }
 
+  /** A convenience method that gets the control bus value.
+    * It requires that the bus has exactly one channel, otherwise
+    * an exception is thrown.
+    */
   def getMsg = {
     require(numChannels == 1)
     message.ControlBusGet(index)
@@ -94,6 +124,28 @@ final case class ControlBus(server: Server, index: Int, numChannels: Int) extend
   def getMsg(offsets: Int*) = {
     require(offsets.forall(o => o >= 0 && o < numChannels))
     message.ControlBusGet(offsets.map(_ + index): _*)
+  }
+
+  /** A convenience method that queries all channels of the control bus. */
+  def getnMsg = {
+    message.ControlBusGetn(0 -> numChannels)
+  }
+
+  def getnMsg(pairs: (Int, Int)*) = {
+    require(pairs.forall(tup => tup._1 >= 0 && (tup._1 + tup._2) <= numChannels))
+    message.ControlBusGetn(pairs: _*)
+  }
+
+  /** A convenience method that fills all channels of the control bus with one value.
+    */
+  def fillMsg(v: Float) = {
+    val data = message.ControlBusFill.Data(index = 0, num = numChannels, value = v)
+    message.ControlBusFill(data)
+  }
+
+  def fillMsg(data: message.ControlBusFill.Data*) = {
+    require(data.forall(d => d.index >= 0 && (d.index + d.num) < numChannels))
+    message.ControlBusFill(data: _*)
   }
 }
 

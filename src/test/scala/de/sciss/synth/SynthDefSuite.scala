@@ -1,11 +1,11 @@
 package de.sciss.synth
 
 import org.scalatest.FunSpec
-// import Predef.{any2stringadd => _}
 
-/** To run only this test:
-  *
-  * test-only de.sciss.synth.RichNumberSuite
+/* To run only this test:
+
+  test-only de.sciss.synth.RichNumberSuite
+
   */
 class SynthDefSuite extends FunSpec {
   describe("Synth definitions") {
@@ -87,7 +87,7 @@ class SynthDefSuite extends FunSpec {
         val f2 = Rand(0, 8000)
         val res = for (i <- 1 to 2) yield {
           val z = KlangSpec.fill(p) {
-            // sine oscil bank specification :
+            // sine oscillator bank specification :
             (f1 + Rand(0, f2), // frequencies
               1, // amplitudes
               Rand(1, 5)) // ring times
@@ -110,14 +110,16 @@ class SynthDefSuite extends FunSpec {
           Resonz.ar(Dust.ar(2.0 / d) * 50, Rand(200, 3200), 0.003)
         }
 
-        // reverb predelay time :
+        // reverb pre-delay time :
         val z = DelayN.ar(s, 0.048)
 
         // 'c' length modulated comb delays in parallel :
         val y = Mix(CombL.ar(z, 0.1, LFNoise1.kr(Seq.fill(c)(Rand(0, 0.1))).madd(0.04, 0.05), 15))
 
         // chain of 'a' allpass delays on each of two channels (2 times 'a' total) :
-        val x = (0 until a).foldLeft[GE](y)((y, i) => AllpassN.ar(y, 0.050, Seq(Rand(0, 0.050), Rand(0, 0.050)), 1))
+        val x = Mix.fold(y, a) { in =>
+          AllpassN.ar(in, 0.050, Seq(Rand(0, 0.050), Rand(0, 0.050)), 1)
+        }
 
         // add original sound to reverb and play it :
         val res = s + (0.2 * x)
@@ -144,25 +146,27 @@ class SynthDefSuite extends FunSpec {
             LFNoise1.kr(8).madd(dmul, dadd).max(0)
           )
 
-          val freq = Lag.kr(// lag the pitch so it glissandos between pitches
-            LFNoise0.kr(// use low freq step noise as a pitch control
+          val freq = Lag.kr( // lag the pitch so it makes glissandi between pitches
+            LFNoise0.kr( // use low freq step noise as a pitch control
               Vector(1.0, 0.5, 0.25)(// choose a frequency of pitch change
                 util.Random.nextInt(3)))
               .madd(
               7, // +/- 7 semitones
               IRand(36, 96) // random center note
             ).roundTo(1), // round to nearest semitone
-            0.2 // gliss time
+            0.2 // glissando time
           ).midicps // convert to hertz
 
-          Pan2.ar(// pan each intrument
+          Pan2.ar( // pan each instrument
             CombL.ar(excitation, 0.02, freq.reciprocal, 3), // comb delay simulates string
             Rand(-1, 1) // random pan position
           )
         }
 
         // add some reverb via allpass delays
-        val x   = (1 to 5).foldLeft(signal)((sig, _) => AllpassN.ar(sig, 0.05, Seq(Rand(0, 0.05), Rand(0, 0.05)), 1))
+        val x = Mix.fold(signal, 5) { in =>
+          AllpassN.ar(in, 0.05, Seq(Rand(0, 0.05), Rand(0, 0.05)), 1)
+        }
         val res = LeakDC.ar(x, 0.995) // delays build up a lot of DC, so leak it out here.
         WrapOut(res)
       }
@@ -205,9 +209,9 @@ class SynthDefSuite extends FunSpec {
       SynthDef("Demand") {
         val freq = DemandEnvGen.ar(
           Dseq(Seq(204, 400, 201, 502, 300, 200), inf),
-          Drand(Seq(1.01, 0.2, 0.1, 2), inf) * MouseY.kr(0.01, 3, 1),
+          Drand(Seq(1.01, 0.2, 0.1, 2.0), inf) * MouseY.kr(0.01, 3, 1),
           Curve.cubed.id)
-        val res = SinOsc.ar(freq * Seq(1, 1.01)) * 0.1
+        val res = SinOsc.ar(freq * Seq(1.0, 1.01)) * 0.1
         WrapOut(res)
       }
 
@@ -216,12 +220,10 @@ class SynthDefSuite extends FunSpec {
       SynthDef("OutputChans") {
         val in      = Mix(In.ar(NumOutputBuses.ir + Seq(0, 1)))
         val amp     = Amplitude.kr(in, 0.05, 0.05) * 0.3
-        val pch     = Pitch.kr(in, ampThresh = 0.02, median = 7)
-        val freq    = pch \ 0
-        val hasFreq = pch \ 1
-        hasFreq.poll(1)
-        val syn: GE = Mix(VarSaw.ar(freq * Seq(0.5, 1, 2), 0, LFNoise1.kr(0.3).madd(0.1, 0.1)) * amp)
-        val res = (1 to 6).foldLeft(syn) { (sig, _) =>
+        val p       = Pitch.kr(in, ampThresh = 0.02, median = 7)
+        p.hasFreq.poll(1)
+        val syn     = Mix(VarSaw.ar(p.freq * Seq(0.5, 1.0, 2.0), 0, LFNoise1.kr(0.3).madd(0.1, 0.1)) * amp)
+        val res     = Mix.fold(syn, 6) { sig =>
           AllpassN.ar(sig, 0.040, Seq(Rand(0, 0.040), Rand(0, 0.040)), 2)
         }
         WrapOut(res)

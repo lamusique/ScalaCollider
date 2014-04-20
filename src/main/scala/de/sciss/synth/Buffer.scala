@@ -13,17 +13,15 @@
 
 package de.sciss.synth
 
-import de.sciss.synth.{Completion => Comp}
 import de.sciss.osc.{Bundle, Packet}
-import collection.immutable.{IndexedSeq => Vec}
 import de.sciss.model.Model
 import de.sciss.model.impl.ModelImpl
+import de.sciss.synth
 
 object Buffer {
   type Listener     = Model.Listener[BufferManager.BufferInfo]
 
-  type Completion   = Comp[Buffer]
-  val NoCompletion  = Comp[Buffer](None, None)
+  type Completion   = synth.Completion[Buffer]
 
   def apply(server: Server = Server.default): Buffer = apply(server, allocID(server))
 
@@ -38,8 +36,6 @@ object Buffer {
 final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager.BufferInfo] {
 
   //  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
-
-  import Buffer.NoCompletion
 
   private var released        = false
   private var numFramesVar    = -1
@@ -108,7 +104,7 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     */
   def release(): Unit =
     sync.synchronized {
-      if (released) sys.error(this.toString + " : has already been freed")
+      if (released) sys.error(s"$this : has already been freed")
       server.freeBuffer(id)
       released = true
     }
@@ -133,7 +129,7 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
                           completion: Optional[Packet] = None) =
     message.BufferAllocReadChannel(id, path, startFrame, numFrames, channels.toList, completion)
 
-  def cueMsg(path: String, startFrame: Int = 0, completion: Buffer.Completion = NoCompletion) =
+  def cueMsg(path: String, startFrame: Int = 0, completion: Buffer.Completion = Completion.None) =
     message.BufferRead(id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
 
   def readMsg(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
@@ -148,12 +144,12 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   def setMsg(pairs: (Int, Float)*) = message.BufferSet(id, pairs: _*)
 
-  def setnMsg(v: Vec[Float]) = message.BufferSetn(id, (0, v.toIndexedSeq))
+  def setnMsg(v: IndexedSeq[Float]) = message.BufferSetn(id, (0, v))
 
-  def setnMsg(pairs: (Int, Vec[Float])*) = {
+  def setnMsg(pairs: (Int, IndexedSeq[Float])*) = {
     //    val numSmp = numChannels * numFrames
     //    require(pairs.forall(tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp)))
-    val iPairs = pairs.map(tup => (tup._1, tup._2.toIndexedSeq))
+    val iPairs = pairs.map(tup => (tup._1, tup._2))
     message.BufferSetn(id, iPairs: _*)
   }
 
@@ -175,6 +171,8 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
                leaveOpen: Boolean = false, completion: Optional[Packet] = None) =
     message.BufferWrite(id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion)
 
+  def genMsg(command: message.BufferGen.Command) = message.BufferGen(id, command)
+
   def makePacket(completion: Buffer.Completion, forceQuery: Boolean = false): Option[Packet] = {
     val a = completion.action
     if (forceQuery || a.isDefined) {
@@ -189,9 +187,9 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
       }
     }
     (completion.message, a) match {
-      case (None, None)           => if (forceQuery) Some(queryMsg) else None
-      case (Some(msg), None)      => Some(if (forceQuery) Bundle.now(msg(this), queryMsg) else msg(this))
-      case (None, Some(act))      => Some(queryMsg)
+      case (None     , None     ) => if (forceQuery) Some(queryMsg) else None
+      case (Some(msg), None     ) => Some(if (forceQuery) Bundle.now(msg(this), queryMsg) else msg(this))
+      case (None     , Some(act)) => Some(queryMsg)
       case (Some(msg), Some(act)) => Some(Bundle.now(msg(this), queryMsg))
     }
   }

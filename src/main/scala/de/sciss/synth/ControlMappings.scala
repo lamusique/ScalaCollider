@@ -29,11 +29,11 @@ object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMa
 
   object Multi extends MultiControlSetMapImplicits
 
-  final case class Multi(key: Any, values: Vec[Float])
+  final case class Multi(key: Any, values: IndexedSeq[Float])
     extends ControlSetMap {
 
     def toSetSeq : Vec[Any] = Vector(key, values)
-    def toSetnSeq: Vec[Any] = key +: values.size +: values
+    def toSetnSeq: Vec[Any] = key +: values.size +: values.toIndexedSeq
   }
 }
 

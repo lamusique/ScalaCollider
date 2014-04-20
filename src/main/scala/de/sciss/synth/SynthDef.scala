@@ -15,16 +15,24 @@ package de.sciss.synth
 
 import java.io.{ByteArrayOutputStream, BufferedOutputStream, DataOutputStream, File, FileOutputStream}
 import java.nio.ByteBuffer
-import de.sciss.synth.{Completion => Comp}
 import File.{separator => sep}
-import de.sciss.osc.{Bundle, Message, Packet}
+import de.sciss.osc.Packet
+import de.sciss.synth
 
 object SynthDef {
-  type Completion         = Comp[SynthDef]
-  final val NoCompletion  = Comp[SynthDef](None, None)
+  type Completion = synth.Completion[SynthDef]
 
+  /** The default directory for writing synth defs is the
+    * temporary directory given by the system property `"java.io.tmpdir"`
+    */
   var defaultDir          = sys.props("java.io.tmpdir")
 
+  /** The `SynthDef` file name extension (without leading period). */
+  final val extension     = "scsyndef"
+
+  /** Creates a new `SynthDef` with a given name and a thunk parameter that
+    * creates the expanded UGen graph structure.
+    */
   def apply(name: String)(thunk: => Unit)
            (implicit factory: UGenGraph.BuilderFactory = impl.DefaultUGenGraphBuilderFactory): SynthDef =
     SynthDef(name, SynthGraph(thunk).expand)
@@ -43,16 +51,14 @@ object SynthDef {
       dos.close()
     }
   }
-}
-/**
- * @todo    should add load and loadDir to companion object
- */
-final case class SynthDef(name: String, graph: UGenGraph) {
-  syndef =>
 
+  def loadMsg   (path: String, completion: Optional[Packet] = None) = message.SynthDefLoad   (path, completion)
+  def loadDirMsg(path: String, completion: Optional[Packet] = None) = message.SynthDefLoadDir(path, completion)
+}
+final case class SynthDef(name: String, graph: UGenGraph) {
   import SynthDef._
 
-  override def toString = "SynthDef(" + name + ")"
+  override def toString = s"SynthDef($name)"
 
   def freeMsg = message.SynthDefFree(name)
 
@@ -82,10 +88,10 @@ final case class SynthDef(name: String, graph: UGenGraph) {
   def loadMsg: message.SynthDefLoad = loadMsg()
 
   def loadMsg(dir: String = defaultDir, completion: Optional[Packet] = None) =
-    message.SynthDefLoad(dir + sep + name + ".scsyndef", completion)
+    message.SynthDefLoad(s"$dir$sep$name.$extension", completion)
 
   def write(dir: String = defaultDir, overwrite: Boolean = true): Unit = {
-    val file = new File(dir, name + ".scsyndef")
+    val file = new File(dir, s"$name.$extension")
     if (file.exists) {
       if (overwrite) file.delete() else return
     }
@@ -99,11 +105,11 @@ final case class SynthDef(name: String, graph: UGenGraph) {
 
   def hexDump(): Unit = Packet.printHexOn(toBytes, Console.out)
 
-  def testTopoSort(): Unit = {
+  private[synth] def testTopologicalSort(): Unit = {
     graph.ugens.zipWithIndex.foreach { case (ru, i) =>
       ru.inputSpecs.toList.zipWithIndex.foreach { case ((ref, _), j) =>
         if ((ref >= 0) && (ref <= i)) {
-          sys.error("Test failed : ugen " + i + " = " + ru.ugen + " -> input " + j + " = " + ref)
+          sys.error(s"Test failed : ugen $i = ${ru.ugen} -> input $j = $ref")
         }
       }
     }
@@ -112,14 +118,15 @@ final case class SynthDef(name: String, graph: UGenGraph) {
 
   def debugDump(): Unit = {
      graph.ugens.zipWithIndex.foreach { case (ru, i) =>
-       println("#" + i + " : " + ru.ugen.name +
-         (if (ru.ugen.specialIndex != 0) "-" + ru.ugen.specialIndex else "") + ru.inputSpecs.map({
+       val special  = if (ru.ugen.specialIndex != 0) s"-${ru.ugen.specialIndex}" else ""
+       val specs    = ru.inputSpecs.map {
          case (-1, idx) => graph.constants(idx).toString
-         case (uidx, oidx) =>
-           val ru = graph.ugens(uidx);
-           "#" + uidx + " : " + ru.ugen.name +
-             (if (oidx > 0) "@" + oidx else "")
-       }).mkString("( ", ", ", " )"))
+         case (uIdx, oIdx) =>
+           val ru   = graph.ugens(uIdx)
+           val oStr = if (oIdx > 0) "@" + oIdx else ""
+           s"#$uIdx : ${ru.ugen.name}$oStr"
+       } .mkString("( ", ", ", " )")
+       println(s"#$i : ${ru.ugen.name}$special$specs")
      }
    }
 }
