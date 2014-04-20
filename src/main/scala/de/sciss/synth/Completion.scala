@@ -22,4 +22,6 @@ object Completion {
 
   val None = Completion[Any](scala.None, scala.None)
 }
-final case class Completion[-T](message: Option[T => Packet], action: Option[T => Unit])
+final case class Completion[-T](message: Option[T => Packet], action: Option[T => Unit]) {
+  def mapMessage(t: T): Option[Packet] = message.map(_.apply(t))
+}

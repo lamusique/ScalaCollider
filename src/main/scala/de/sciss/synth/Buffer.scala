@@ -129,8 +129,8 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
                           completion: Optional[Packet] = None) =
     message.BufferAllocReadChannel(id, path, startFrame, numFrames, channels.toList, completion)
 
-  def cueMsg(path: String, startFrame: Int = 0, completion: Buffer.Completion = Completion.None) =
-    message.BufferRead(id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
+  def cueMsg(path: String, startFrame: Int = 0, completion: Optional[Packet] = None) =
+    message.BufferRead(id, path, startFrame, numFrames, 0, leaveOpen = true, completion = completion)
 
   def readMsg(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
               leaveOpen: Boolean = false, completion: Optional[Packet] = None) =
@@ -173,24 +173,24 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   def genMsg(command: message.BufferGen.Command) = message.BufferGen(id, command)
 
-  def makePacket(completion: Buffer.Completion, forceQuery: Boolean = false): Option[Packet] = {
-    val a = completion.action
-    if (forceQuery || a.isDefined) {
-      register()
-      a.foreach { action =>
-        lazy val l: Buffer.Listener = {
-          case BufferManager.BufferInfo(_, _) =>
-            removeListener(l)
-            action(this)
-        }
-        addListener(l)
-      }
-    }
-    (completion.message, a) match {
-      case (None     , None     ) => if (forceQuery) Some(queryMsg) else None
-      case (Some(msg), None     ) => Some(if (forceQuery) Bundle.now(msg(this), queryMsg) else msg(this))
-      case (None     , Some(act)) => Some(queryMsg)
-      case (Some(msg), Some(act)) => Some(Bundle.now(msg(this), queryMsg))
-    }
-  }
+  //  private[sciss] def makePacket(completion: Buffer.Completion, forceQuery: Boolean = false): Option[Packet] = {
+  //    val a = completion.action
+  //    if (forceQuery || a.isDefined) {
+  //      register()
+  //      a.foreach { action =>
+  //        lazy val l: Buffer.Listener = {
+  //          case BufferManager.BufferInfo(_, _) =>
+  //            removeListener(l)
+  //            action(this)
+  //        }
+  //        addListener(l)
+  //      }
+  //    }
+  //    (completion.message, a) match {
+  //      case (None     , None     ) => if (forceQuery) Some(queryMsg) else None
+  //      case (Some(msg), None     ) => Some(if (forceQuery) Bundle.now(msg(this), queryMsg) else msg(this))
+  //      case (None     , Some(act)) => Some(queryMsg)
+  //      case (Some(msg), Some(act)) => Some(Bundle.now(msg(this), queryMsg))
+  //    }
+  //  }
 }

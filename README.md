@@ -6,7 +6,7 @@ ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the S
 
 ## building
 
-ScalaCollider currently builds with sbt 0.13 against Scala 2.10. It requires SuperCollider 3.5 or higher. Note that the UGens are provided by the separate [ScalaColliderUGens](http://github.com/Sciss/ScalaColliderUGens) project. A simple Swing front end is provided by the [ScalaColliderSwing](http://github.com/Sciss/ScalaColliderSwing) project.
+ScalaCollider currently builds with sbt 0.13 against Scala 2.11, 2.10. It requires SuperCollider 3.5 or higher. Note that the UGens are provided by the separate [ScalaColliderUGens](http://github.com/Sciss/ScalaColliderUGens) project. A simple Swing front end is provided by the [ScalaColliderSwing](http://github.com/Sciss/ScalaColliderSwing) project.
 
 Targets for sbt:
 
@@ -24,7 +24,7 @@ To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `1.11.1+`
+The current version `v` is `1.12.+`
 
 ## starting a SuperCollider server
 
@@ -36,7 +36,7 @@ The following short example illustrates how a server can be launched and a synth
     import ugen._
     
     val cfg = Server.Config()
-    cfg.programPath = "/path/to/scsynth"
+    cfg.program = "/path/to/scsynth"
     // runs a server and executes the function
     // when the server is booted, with the
     // server as its argument 
@@ -55,7 +55,7 @@ The following short example illustrates how a server can be launched and a synth
 
 ### Specifying SC_HOME
 
-You might omit to set the `programPath` of the server's configuration, as ScalaCollider will by default read the system property `SC_HOME`, and if that is not set, the environment variable `SC_HOME`. Environment variables are stored depending on your operating system. On OS X, if you use the app-bundle of ScalaCollider-Swing, you can access them from the terminal:
+You might omit to set the `program` of the server's configuration, as ScalaCollider will by default read the system property `SC_HOME`, and if that is not set, the environment variable `SC_HOME`. Environment variables are stored depending on your operating system. On OS X, if you use the app-bundle of ScalaCollider-Swing, you can access them from the terminal:
 
     $ mkdir ~/.MacOSX
     $ touch ~/.MacOSX/environment.plist

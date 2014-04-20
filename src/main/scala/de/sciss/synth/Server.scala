@@ -33,7 +33,7 @@ object Server {
     * this specifies the directory of `scsynth`. Otherwise, an environment (shell) variable named
     * `"SC_HOME"` is checked. If neither exists, this returns `scsynth` in the current working directory.
     */
-  def defaultProgramPath: String = sys.props.get("SC_HOME").orElse(sys.env.get("SC_HOME")).fold {
+  def defaultProgram: String = sys.props.get("SC_HOME").orElse(sys.env.get("SC_HOME")).fold {
     "scsynth"
   } {
     home => new File(home, "scsynth").getPath
@@ -56,7 +56,7 @@ object Server {
       *
       * @see [[de.sciss.synth.Server#defaultProgramPath]]
       */
-    def programPath: String
+    def program: String
 
     /** The maximum number of control bus channels. */
     def controlBusChannels: Int
@@ -248,7 +248,7 @@ object Server {
       val b = List.newBuilder[String]
 
       // -N <cmd-filename> <input-filename> <output-filename> <sample-rate> <header-format> <sample-format> <...other scsynth arguments>
-      b += o.programPath
+      b += o.program
       b += "-N"
       b += o.nrtCommandPath
       b += o.nrtInputPath.getOrElse("_")
@@ -264,7 +264,7 @@ object Server {
     private[Server] def toRealtimeArgs(o: ConfigLike): List[String] = {
       val b = List.newBuilder[ String ]
 
-      b += o.programPath
+      b += o.program
       o.transport match {
         case TCP =>
           b += "-t"
@@ -390,7 +390,7 @@ object Server {
   /** @see [[de.sciss.synth.Server.ConfigBuilder]]
     * @see [[de.sciss.synth.Server.ConfigLike]]
     */
-  final class Config private[Server](val programPath: String,
+  final class Config private[Server](val program: String,
                                      val controlBusChannels: Int,
                                      val audioBusChannels: Int,
                                      val outputBusChannels: Int,
@@ -440,11 +440,11 @@ object Server {
     * @see [[de.sciss.synth.Server.ConfigLike]]
     */
   final class ConfigBuilder private[Server]() extends ConfigLike {
-    /** The default `programPath` is read from `defaultProgramPath`
+    /** The default `program` is read from `defaultProgram`
       *
       * @see [[de.sciss.synth.Server#defaultProgramPath]]
       */
-    var programPath: String = defaultProgramPath
+    var program: String = defaultProgram
     /** The default number of control bus channels is `4096` (scsynth default) */
     var controlBusChannels: Int = 4096
     /** The default number of audio bus channels is `128` (scsynth default) */
@@ -570,7 +570,7 @@ object Server {
     }
 
     def build: Config = new Config(
-      programPath, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
+      program, controlBusChannels, audioBusChannels, outputBusChannels, blockSize, sampleRate, audioBuffers,
       maxNodes, maxSynthDefs, memorySize, wireBuffers, randomSeeds, loadSynthDefs, machPortName, verbosity,
       plugInsPaths, restrictedPath, /* memoryLocking, */ host, port, transport, inputStreamsEnabled, outputStreamsEnabled,
       deviceNames, deviceName, inputBusChannels, hardwareBlockSize, zeroConf, maxLogins, sessionPassword,
@@ -578,7 +578,7 @@ object Server {
       nrtInputPath, nrtOutputPath, nrtHeaderFormat, nrtSampleFormat)
 
     def read(config: Config): Unit = {
-      programPath         = config.programPath
+      program             = config.program
       controlBusChannels  = config.controlBusChannels
       audioBusChannels    = config.audioBusChannels
       outputBusChannels   = config.outputBusChannels
@@ -779,7 +779,7 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   import Server._
 
-  def clientConfig : Client.Config
+  val clientConfig : Client.Config
 
   def rootNode     : Group
   def defaultGroup : Group
@@ -811,7 +811,7 @@ trait Server extends ServerLike with Model[Server.Update] {
     * `isDefinedAt` method) and invoked and removed in case of a
     * match, completing the returned future.
     *
-    * If the handler doesn't match in the given timeout period,
+    * If the handler does not match in the given timeout period,
     * the future fails with a `Timeout` exception, and the handler is removed.
     *
     * @param   packet    the packet to send out

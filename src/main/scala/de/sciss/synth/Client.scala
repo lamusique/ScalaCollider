@@ -26,15 +26,12 @@ object Client {
   }
 
   object Config {
-    /**
-     * Creates a new configuration builder with default settings
-     */
+    /** Creates a new configuration builder with default settings. */
     def apply(): ConfigBuilder = new ConfigBuilder()
 
-    /**
-     * Implicit conversion which allows you to use a `ConfigBuilder`
-     * wherever a `Config` is required.
-     */
+    /** Implicit conversion which allows you to use a `ConfigBuilder`
+      * wherever a `Config` is required.
+      */
     implicit def build(cb: ConfigBuilder): Config = cb.build
   }
 

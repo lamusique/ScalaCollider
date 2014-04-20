@@ -61,7 +61,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
 
   val rootNode      = Group(this, 0)
   val defaultGroup  = Group(this, 1)
-  val nodeManager   = new NodeManager(this)
+  val nodeManager   = new NodeManager  (this)
   val bufManager    = new BufferManager(this)
 
   private val nodeAllocator        = new NodeIDAllocator(clientConfig.clientID, clientConfig.nodeIDOffset)
@@ -351,7 +351,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       }
       if (seen) h.removed()
     }
-   }
+  }
 
   private final class OSCTimeOutHandler[A](fun: PartialFunction[osc.Message, A], promise: Promise[A])
     extends message.Handler {

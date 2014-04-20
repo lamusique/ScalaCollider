@@ -171,7 +171,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
   // the actual scsynth system process
   lazy val p: Process = {
     val processArgs = config.toRealtimeArgs
-    val directory   = new File(config.programPath).getParentFile
+    val directory   = new File(config.program).getParentFile
     val pb          = new ProcessBuilder(processArgs: _*)
       .directory(directory)
       .redirectErrorStream(true)

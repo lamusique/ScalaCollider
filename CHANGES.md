@@ -2,6 +2,16 @@
 
 This document only highlights major changes which probably require some adjustments when upgrading.
 
+## changes in v1.12.0
+
+* fixes #31, #36, #40, UGens #10, more UGen docs and examples
+* more consistent argument names, relaxes `Vec[Float]` to `IndexedSeq[Float]` in some places
+* in the server configuration `programPath` was shorted to `program`
+* if `$SC_HOME` is not found, uses plain `"scsynth"` as program path which should correctly resolve to `$PATH` entries.
+* the server port may be left at `0` in which case `pickPort()` is called automatically.
+* the usage of callbacks (`Completion`) is replaced by futures where sensible.
+* uses Scala 2.11 by default
+
 ## changes in v1.10.0
 
 * fixes UGens #7 `Duty` and `TDuty` argument order was wrong. UGens #8 `Median` argument names were swapped.
