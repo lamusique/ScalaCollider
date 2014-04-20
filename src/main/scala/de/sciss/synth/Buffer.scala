@@ -39,7 +39,7 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   //  def this(server: Server = Server.default) = this(server, Buffer.allocID(server))
 
-  import Buffer._
+  import Buffer.NoCompletion
 
   private var released        = false
   private var numFramesVar    = -1
@@ -53,10 +53,29 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     s"Buffer($server,$id)$info"
   }
 
+  /** The number of frames allocated for this buffer, or `-1` if
+    * the buffer was not allocated or its number of frames is
+    * not yet known.
+    */
   def numFrames   = numFramesVar
+
+  /** The number of channels allocated for this buffer, or `-1` if
+    * the buffer was not allocated or its number of channels is
+    * not yet known.
+    */
   def numChannels = numChannelsVar
+
+  /** The sample-rate for this buffer, or `0` if
+    * the buffer was not allocated or its sample-rate is
+    * not yet known.
+    */
   def sampleRate  = sampleRateVar
 
+  /** Adds this buffer to the server's buffer manager so that
+    * its information fields will be tracked and updated.
+    *
+    * It is safe to call this method more than once.
+    */
   def register(): Unit = server.bufManager.register(this)
 
   private[synth] def updated(change: BufferManager.BufferInfo): Unit =
@@ -72,13 +91,12 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   def freeMsg: message.BufferFree = freeMsg(None, release = true)
 
-  /**
-   * @param   release  whether the buffer id should be immediately returned to the id-allocator or not.
-   *                   if you build a system that monitors when bundles are really sent to the server,
-   *                   and you need to deal with transaction abortion, you might want to pass in
-   *                   <code>false</code> here, and manually release the id, using the <code>release</code>
-   *                   method
-   */
+  /** @param   release  whether the buffer id should be immediately returned to the id-allocator or not.
+    *                   if you build a system that monitors when bundles are really sent to the server,
+    *                   and you need to deal with transaction abortion, you might want to pass in
+    *                   <code>false</code> here, and manually release the id, using the <code>release</code>
+    *                   method
+    */
   def freeMsg(completion: Optional[Packet] = None, release: Boolean = true): message.BufferFree =
     sync.synchronized {
       if (release) this.release()
@@ -86,7 +104,7 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     }
 
   /** Releases the buffer id to the id-allocator pool, without sending any
-    * OSCMessage. Use with great care.
+    * OSC message. Use with great care.
     */
   def release(): Unit =
     sync.synchronized {
@@ -115,7 +133,7 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
                           completion: Optional[Packet] = None) =
     message.BufferAllocReadChannel(id, path, startFrame, numFrames, channels.toList, completion)
 
-  def cueMsg(path: String, startFrame: Int = 0, completion: Completion = NoCompletion) =
+  def cueMsg(path: String, startFrame: Int = 0, completion: Buffer.Completion = NoCompletion) =
     message.BufferRead(id, path, startFrame, numFrames, 0, leaveOpen = true, completion = makePacket(completion))
 
   def readMsg(path: String, fileStartFrame: Int = 0, numFrames: Int = -1, bufStartFrame: Int = 0,
@@ -135,14 +153,18 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
   def setnMsg(pairs: (Int, Vec[Float])*) = {
     //    val numSmp = numChannels * numFrames
     //    require(pairs.forall(tup => (tup._1 >= 0 && (tup._1 + tup._2.size) <= numSmp)))
-    val ipairs = pairs.map(tup => (tup._1, tup._2.toIndexedSeq))
-    message.BufferSetn(id, ipairs: _*)
+    val iPairs = pairs.map(tup => (tup._1, tup._2.toIndexedSeq))
+    message.BufferSetn(id, iPairs: _*)
   }
+
+  def getMsg(indices: Int*) = message.BufferGet(id, indices: _*)
+
+  def getnMsg(pairs: (Int, Int)*) = message.BufferGetn(id, pairs: _*)
 
   /** Convenience method for creating a fill message for one given range */
   def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, message.BufferFill.Data(index, num, value))
 
-  def fillMsg(infos: message.BufferFill.Data*) = message.BufferFill(id, infos: _*)
+  def fillMsg(data: message.BufferFill.Data*) = message.BufferFill(id, data: _*)
 
   def zeroMsg: message.BufferZero = zeroMsg(None)
 
@@ -153,7 +175,7 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
                leaveOpen: Boolean = false, completion: Optional[Packet] = None) =
     message.BufferWrite(id, path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, completion)
 
-  def makePacket(completion: Completion, forceQuery: Boolean = false): Option[Packet] = {
+  def makePacket(completion: Buffer.Completion, forceQuery: Boolean = false): Option[Packet] = {
     val a = completion.action
     if (forceQuery || a.isDefined) {
       register()

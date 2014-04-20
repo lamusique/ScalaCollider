@@ -194,8 +194,16 @@ final case class StatusReply(numUGens: Int, numSynths: Int, numGroups: Int, numD
                                       sampleRate, actualSampleRate)
   with Receive
 
+/** The `/status` message that queries the current statistics from the server. */
 case object Status extends Message("/status") with SyncQuery
 
+/** The `/dumpOSC` message that selects how the server reports incoming OSC packets.
+  *
+  * __Note:__ The OSC dump behavior of scsynth has long time been broken. It is recommended
+  * to use client-side only reporting, provided by the `dumpOSC` method of the `Server` class.
+  *
+  * @see [[Server#dumpOSC]]
+  */
 final case class DumpOSC(mode: osc.Dump) extends Message("/dumpOSC", mode.id) with SyncCmd
 
 case object ClearSched extends Message("/clearSched") with SyncCmd
@@ -206,6 +214,7 @@ object Error {
   val BundleOff = apply(-1)
   val BundleOn  = apply(-2)
 }
+/** Produces an `/error` message that selects how the server will report errors to the console. */
 final case class Error(mode: Int) extends Message("/error", mode) with SyncCmd
 
 //trait NodeChange {
@@ -225,52 +234,107 @@ private[synth] sealed trait NodeMessageFactory {
   def apply(nodeID: Int, info: NodeInfo.Data): Message
 }
 
+/** The `/n_go` message is received from the server when a node has been newly created.
+  *
+  * @see [[SynthNew]]
+  * @see [[GroupNew]]
+  */
 object NodeGo extends NodeMessageFactory
 final case class NodeGo(nodeID: Int, info: NodeInfo.Data)
   extends Message("/n_go", info.toList(nodeID): _*) with NodeChange
 
+/** The `/n_end` message is received from the server when a node has been freed.
+  *
+  * @see [[NodeFree]]
+  */
 object NodeEnd extends NodeMessageFactory
 final case class NodeEnd(nodeID: Int, info: NodeInfo.Data)
   extends Message("/n_end", info.toList(nodeID): _*) with NodeChange
 
+/** The `/n_on` message is received from the server when a node has resumed.
+  *
+  * @see [[NodeRun]]
+  */
 object NodeOn extends NodeMessageFactory
 final case class NodeOn(nodeID: Int, info: NodeInfo.Data)
   extends Message("/n_on", info.toList(nodeID): _*) with NodeChange
 
+/** The `/n_off` message is received from the server when a node has been paused.
+  *
+  * @see [[NodeRun]]
+  */
 object NodeOff extends NodeMessageFactory
 final case class NodeOff(nodeID: Int, info: NodeInfo.Data)
   extends Message("/n_off", info.toList(nodeID): _*) with NodeChange
 
+/** The `/n_move` message is received from the server when a node has changed its position in the tree.
+  *
+  * @see [[NodeBefore]]
+  * @see [[NodeAfter]]
+  * @see [[GroupHead]]
+  * @see [[GroupTail]]
+  */
 object NodeMove extends NodeMessageFactory
 final case class NodeMove(nodeID: Int, info: NodeInfo.Data)
   extends Message("/n_move", info.toList(nodeID): _*) with NodeChange
 
 object NodeInfo extends NodeMessageFactory {
+  /** @see [[NodeInfo]]
+    * @see [[NodeGo]]
+    * @see [[NodeEnd]]
+    * @see [[NodeOn]]
+    * @see [[NodeOff]]
+    * @see [[NodeMove]]
+    */
   abstract sealed class Data {
+    /** The identifier of the node's parent group. */
     def parentID: Int
+    /** The identifier of the node preceding this node within the same group,
+      * or `-1` if there is no predecessor.
+      */
     def predID: Int
+    /** The identifier of the node following this node within the same group,
+      * or `-1` if there is no successor.
+      */
     def succID: Int
 
+    /** The serial presentation of the information within an OSC message.
+      * This method is used internally and probably not useful in other ways.
+      */
     def toList(nodeID: Int): List[Any]
   }
 
+  /** Information about a `Synth` node. */
   final case class SynthData(parentID: Int, predID: Int, succID: Int) extends Data {
     def toList(nodeID: Int): List[Any] = nodeID :: parentID :: predID :: succID :: 0 :: Nil
   }
 
+  /** Information about a `Group` node. */
   final case class GroupData(parentID: Int, predID: Int, succID: Int, headID: Int, tailID: Int) extends Data {
     def toList(nodeID: Int): List[Any] = nodeID :: parentID :: predID :: succID :: 1 :: headID :: tailID :: Nil
   }
-
 }
+
+/** An `/n_info` message is received as a reply to an `/n_query` message.
+  *
+  * @param nodeID the identifier of the node for which information has been received
+  * @param info   the information object describing the topological position of the node
+  *
+  * @see [[NodeQuery]]
+  */
 final case class NodeInfo(nodeID: Int, info: NodeInfo.Data)
   extends Message("/n_info", info.toList(nodeID): _*) with NodeChange
 
 // we need List[Any] as scala would otherwise expand to List[Float]!
 object BufferInfo {
+  /** @see [[BufferInfo]] */
   final case class Data(bufID: Int, numFrames: Int, numChannels: Int, sampleRate: Float)
 }
 
+/** A `/b_info` message is received in reply to a `/b_query` message.
+  *
+  * @see [[BufferQuery]]
+  */
 final case class BufferInfo(data: BufferInfo.Data*)
   extends Message("/b_info", data.flatMap(info =>
     List[Any](info.bufID, info.numFrames, info.numChannels, info.sampleRate)): _*)
@@ -278,10 +342,22 @@ final case class BufferInfo(data: BufferInfo.Data*)
 
 // ---- messages to the server ----
 
+/** The `/notify` messages registers or de-registers a client with respect
+  * to receiving reply messages from the server.
+  *
+  * Booting or connecting a server through the regular API automatically handles and does
+  * not require the explicit use of this message.
+  *
+  * @param  on    if `true`, the client is registered, if `false` it is de-registered.
+  */
 final case class ServerNotify(on: Boolean)
   extends Message("/notify", on)
   with AsyncSend
 
+/** The `/quit` message tells the server to shut down.
+  *
+  * @see [[Server#quit]]
+  */
 case object ServerQuit extends Message("/quit") with AsyncSend
 
 sealed trait HasCompletion extends AsyncSend {
@@ -289,8 +365,24 @@ sealed trait HasCompletion extends AsyncSend {
   def updateCompletion(completion: Option[Packet]): Message with AsyncSend with HasCompletion
 }
 
+/** The `/b_query` messages requests a `/b_info` reply message from the server, providing
+  * information about the size and sample-rate of the specified buffers.
+  *
+  * @param ids  a sequence of buffer identifiers to query
+  *
+  * @see [[Buffer#queryMsg]]
+  */
 final case class BufferQuery(ids: Int*) extends Message("/b_query", ids: _*) with SyncQuery
 
+/** The `/b_free` message frees a buffer on the server side. The client side
+  * typically maintains a logical list of allocated buffer identifiers as well,
+  * so one should normally rely on the specific client side API to correctly
+  * free a buffer.
+  *
+  * @see [[Buffer#freeMsg]]
+  * @see [[BufferClose]]
+  * @see [[BufferAlloc]]
+  */
 final case class BufferFree(id: Int, completion: Option[Packet])
   extends Message("/b_free", id :: completion.toList: _*)
   with HasCompletion {
@@ -298,6 +390,14 @@ final case class BufferFree(id: Int, completion: Option[Packet])
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_close` message ensures that a buffer closes an associated audio-file.
+  * This is a no-op if the buffer is not associated with an audio-file or if that
+  * file is already closed.
+  *
+  * @see [[Buffer#closeMsg]]
+  * @see [[BufferFree]]
+  * @see [[BufferAlloc]]
+  */
 final case class BufferClose(id: Int, completion: Option[Packet])
   extends Message("/b_close", id :: completion.toList: _*)
   with HasCompletion {
@@ -305,6 +405,14 @@ final case class BufferClose(id: Int, completion: Option[Packet])
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_alloc` message tells the server to allocate memory for a buffer associated
+  * with its logical identifier.
+  *
+  * @see [[Buffer#allocMsg]]
+  * @see [[BufferFree]]
+  * @see [[BufferAllocRead]]
+  * @see [[BufferAllocReadChannel]]
+  */
 final case class BufferAlloc(id: Int, numFrames: Int, numChannels: Int, completion: Option[Packet])
   extends Message("/b_alloc", id :: numFrames :: numChannels :: completion.toList: _*)
   with HasCompletion {
@@ -312,6 +420,26 @@ final case class BufferAlloc(id: Int, numFrames: Int, numChannels: Int, completi
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_allocRead` message tells the server to allocate memory for a buffer and read
+  * in a portion of an audio-file. The number of channels
+  * and the sample-rate of the buffer are determined by that audio-file.
+  *
+  * @param  id          the identifier to use for the buffer. It must denote a currently un-allocated buffer
+  *                     and be greater than or equal to zero and less than the maximum number of buffers.
+  * @param  path        the path of the audio-file to read. Since the server is an independent process, this must
+  *                     resolve with respect to the server's current working directory. If the server is running on
+  *                     a remote node, the path will be resolved in the server's local file system.
+  * @param  startFrame  the offset in frames into the audio-file to begin reading from
+  * @param  numFrames   the number of frames to read which will be the size of the allocated buffer. The special
+  *                     value less than or equal to zero denotes that the number of frames available in the file
+  *                     from the given offset is used (the entire file will be read).
+  *
+  * @see [[Buffer#allocReadMsg]]
+  * @see [[BufferFree]]
+  * @see [[BufferAlloc]]
+  * @see [[BufferAllocReadChannel]]
+  * @see [[BufferRead]]
+  */
 final case class BufferAllocRead(id: Int, path: String, startFrame: Int, numFrames: Int, completion: Option[Packet])
   extends Message("/b_allocRead", id :: path :: startFrame :: numFrames :: completion.toList: _*)
   with HasCompletion {
@@ -319,6 +447,28 @@ final case class BufferAllocRead(id: Int, path: String, startFrame: Int, numFram
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_allocReadChannel` message tells the server to allocate memory for a buffer and read
+  * in a portion of an audio-file, selecting a subset of its channels. The number of channels
+  * is given by the size of the `channels` argument, and the sample-rate of the buffer is determined
+  * by the audio-file.
+  *
+  * @param  id          the identifier to use for the buffer. It must denote a currently un-allocated buffer
+  *                     and be greater than or equal to zero and less than the maximum number of buffers.
+  * @param  path        the path of the audio-file to read. Since the server is an independent process, this must
+  *                     resolve with respect to the server's current working directory. If the server is running on
+  *                     a remote node, the path will be resolved in the server's local file system.
+  * @param  startFrame  the offset in frames into the audio-file to begin reading from
+  * @param  numFrames   the number of frames to read which will be the size of the allocated buffer. The special
+  *                     value of `-1` denotes that the number of frames available in the file
+  *                     from the given offset is used (the entire file will be read).
+  * @param  channels    a sequence of channel indices to read. Zero corresponds to the first channel of the file.
+  *
+  * @see [[Buffer#allocReadChannelMsg]]
+  * @see [[BufferFree]]
+  * @see [[BufferAlloc]]
+  * @see [[BufferAllocRead]]
+  * @see [[BufferReadChannel]]
+  */
 final case class BufferAllocReadChannel(id: Int, path: String, startFrame: Int, numFrames: Int,
                                         channels: List[Int], completion: Option[Packet])
   extends Message("/b_allocReadChannel", id :: path :: startFrame :: numFrames :: channels ::: completion.toList: _*)
@@ -327,6 +477,21 @@ final case class BufferAllocReadChannel(id: Int, path: String, startFrame: Int, 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_read` message tells the server to read a portion of an audio-file into an existing buffer.
+  *
+  * @param  id              the identifier of the buffer to read into.
+  * @param  path            the path of the audio-file to read.
+  * @param  fileStartFrame  the offset in frames into the audio-file to begin reading from
+  * @param  numFrames       the number of frames to read which will be the size of the allocated buffer. The special
+  *                         value of `-1` denotes that as many frames are read as are available in the file or
+  *                         fit into the buffer.
+  * @param  bufStartFrame   the frame offset in the buffer to begin writing to.
+  * @param  leaveOpen       if `true`, leaves the file open for streaming with the [[ugen.DiskIn]] UGen.
+  *
+  * @see [[Buffer#readMsg]]
+  * @see [[BufferAllocRead]]
+  * @see [[BufferReadChannel]]
+  */
 final case class BufferRead(id: Int, path: String, fileStartFrame: Int, numFrames: Int, bufStartFrame: Int,
                             leaveOpen: Boolean, completion: Option[Packet])
   extends Message("/b_read",
@@ -336,6 +501,23 @@ final case class BufferRead(id: Int, path: String, fileStartFrame: Int, numFrame
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_readChannel` message tells the server to read a portion of an audio-file into an existing buffer,
+  * selecting a subset of the file's channels.
+  *
+  * @param  id              the identifier of the buffer to read into.
+  * @param  path            the path of the audio-file to read.
+  * @param  fileStartFrame  the offset in frames into the audio-file to begin reading from
+  * @param  numFrames       the number of frames to read which will be the size of the allocated buffer. The special
+  *                         value of `-1` denotes that as many frames are read as are available in the file or
+  *                         fit into the buffer.
+  * @param  bufStartFrame   the frame offset in the buffer to begin writing to.
+  * @param  leaveOpen       if `true`, leaves the file open for streaming with the [[ugen.DiskIn]] UGen.
+  * @param  channels        a sequence of channel indices to read. Zero corresponds to the first channel of the file.
+  *
+  * @see [[Buffer#readChannelMsg]]
+  * @see [[BufferAllocReadChannel]]
+  * @see [[BufferRead]]
+  */
 final case class BufferReadChannel(id: Int, path: String, fileStartFrame: Int, numFrames: Int,
                                    bufStartFrame: Int, leaveOpen: Boolean, channels: List[Int],
                                    completion: Option[Packet])
@@ -346,6 +528,14 @@ final case class BufferReadChannel(id: Int, path: String, fileStartFrame: Int, n
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_zero` message clears the contents of a buffer (all samples will be zero).
+  *
+  * @see [[Buffer#zeroMsg]]
+  * @see [[BufferFill]]
+  * @see [[BufferSet]]
+  * @see [[BufferSetn]]
+  * @see [[BufferGen]]
+  */
 final case class BufferZero(id: Int, completion: Option[Packet])
   extends Message("/b_zero", id :: completion.toList: _*)
   with HasCompletion {
@@ -353,6 +543,21 @@ final case class BufferZero(id: Int, completion: Option[Packet])
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_write` message writes a portion of the buffer contents to an audio-file.
+  *
+  * @param  id              the identifier of the buffer whose contents to write.
+  * @param  path            the path of the audio-file to write to.
+  * @param  fileType        the header format of the audio-file
+  * @param  sampleFormat    the sample resolution of the audio-file
+  * @param  numFrames       the number of frames to write. The special
+  *                         value of `-1` denotes that the whole buffer content (or the remainder
+  *                         after the `startFrame`) is written out.
+  * @param  startFrame      the frame offset in the buffer to begin reading from
+  * @param  leaveOpen       if `true`, leaves the file open for streaming with the [[ugen.DiskOut]] UGen.
+  *
+  * @see [[Buffer#writeMsg]]
+  * @see [[BufferRead]]
+  */
 final case class BufferWrite(id: Int, path: String, fileType: io.AudioFileType, sampleFormat: io.SampleFormat,
                              numFrames: Int, startFrame: Int, leaveOpen: Boolean,
                              completion: Option[Packet])
@@ -363,10 +568,37 @@ final case class BufferWrite(id: Int, path: String, fileType: io.AudioFileType, 
   def updateCompletion(completion: Option[Packet]) = copy(completion = completion)
 }
 
+/** The `/b_set` message sets individual samples of the buffer to given values.
+  *
+  * @param  id                the identifier of the buffer whose contents to write.
+  * @param  indicesAndValues  pairs of sample offsets and sample values. The offsets are de-interleaved samples,
+  *                           so for multi-channel buffers, to address a particular frame, the frame index must
+  *                           be multiplied by the number of channels and offset by the channel to write into.
+  *
+  * @see [[Buffer#setMsg]]
+  * @see [[BufferSetn]]
+  * @see [[BufferFill]]
+  * @see [[BufferZero]]
+  * @see [[BufferGen]]
+  */
 final case class BufferSet(id: Int, indicesAndValues: (Int, Float)*)
   extends Message("/b_set", id :: (indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil)(breakOut): List[Any]): _*)
   with SyncCmd
 
+/** The `/b_setn` message sets individual ranges of samples of the buffer to given values.
+  *
+  * @param  id                the identifier of the buffer whose contents to write.
+  * @param  indicesAndValues  pairs of sample offsets and sequences of sample values.
+  *                           The offsets are de-interleaved samples,
+  *                           so for multi-channel buffers, to address a particular frame, the frame index must
+  *                           be multiplied by the number of channels and offset by the channel to write into.
+  *
+  * @see [[Buffer#setnMsg]]
+  * @see [[BufferSet]]
+  * @see [[BufferFill]]
+  * @see [[BufferZero]]
+  * @see [[BufferGen]]
+  */
 final case class BufferSetn(id: Int, indicesAndValues: (Int, Vec[Float])*)
   extends Message("/b_setn", id +: indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
@@ -383,6 +615,18 @@ object BufferFill {
     */
   final case class Data(index: Int, num: Int, value: Float)
 }
+/** The `/b_fill` message sets individual ranges of samples of the buffer to given values.
+  *
+  * @param  id    the identifier of the buffer whose contents to write.
+  * @param  data  tuples which specify the offset into the buffer, the number of samples to overwrite and the
+  *               value with which to overwrite.
+  *
+  * @see [[Buffer#fillMsg]]
+  * @see [[BufferSet]]
+  * @see [[BufferSetn]]
+  * @see [[BufferZero]]
+  * @see [[BufferGen]]
+  */
 final case class BufferFill(id: Int, data: BufferFill.Data*)
   extends Message("/b_fill", id :: (data.flatMap(i => i.index :: i.num :: i.value :: Nil)(breakOut): List[Any]): _*)
   with SyncCmd
@@ -455,6 +699,7 @@ object BufferGen {
     def isSynchronous = false
   }
 }
+// XXX TODO: continue documentation here
 final case class BufferGen(id: Int, command: BufferGen.Command)
   extends Message("/b_gen", id +: command.name +: command.args: _*)
   with Send {
@@ -509,8 +754,7 @@ final case class GroupQueryTree(groups: (Int, Boolean)*)
   extends Message("/g_queryTree", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncQuery
 
-/** Represents an `/g_head` message, which pair-wise places nodes at the head
-  * of groups.
+/** The `/g_head` message pair-wise places nodes at the head of groups.
   * {{{
   * /g_head
   *   [
@@ -524,8 +768,7 @@ final case class GroupHead(groups: (Int, Int)*)
   extends Message("/g_head", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
-/** Represents an `/g_tail` message, which pair-wise places nodes at the tail
-  * of groups.
+/** The `/g_tail` message pair-wise places nodes at the tail of groups.
   * {{{
   * /g_tail
   *   [
@@ -613,8 +856,7 @@ final case class NodeFill(id: Int, data: NodeFill.Data*)
   )
   with SyncCmd
 
-/** Represents an `/n_before` message, which pair-wise places nodes before
-  * other nodes.
+/** The `/n_before` message pair-wise places nodes before other nodes.
   * {{{
   * /n_before
   *   [
@@ -628,8 +870,7 @@ final case class NodeBefore(groups: (Int, Int)*)
   extends Message("/n_before", groups.flatMap(g => g._1 :: g._2 :: Nil): _*)
   with SyncCmd
 
-/** Represents an `/n_after` message, which pair-wise places nodes after
-  * other nodes.
+/** The `/n_after` message pair-wise places nodes after other nodes.
   * {{{
   * /n_after
   *   [
