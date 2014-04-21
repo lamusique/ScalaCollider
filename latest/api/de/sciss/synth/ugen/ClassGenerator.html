@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>ClassGenerator - de.sciss.synth.ugen.ClassGenerator</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -39,7 +43,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="de.sciss.synth.ugen.ClassGenerator">ClassGenerator</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.tools.refactoring.common.CompilerAccess">CompilerAccess</span>, <span class="extype" name="scala.tools.refactoring.util.CompilerProvider">CompilerProvider</span>, <span class="extype" name="scala.tools.refactoring.util.TreeCreationMethods">TreeCreationMethods</span>, <span class="extype" name="scala.tools.refactoring.Refactoring">Refactoring</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.SourceGenerator">SourceGenerator</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.TreeChangesDiscoverer">TreeChangesDiscoverer</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.Formatting">Formatting</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.LayoutHelper">LayoutHelper</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.ReusingPrinter">ReusingPrinter</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.Indentations">Indentations</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.PrettyPrinter">PrettyPrinter</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.AbstractPrinter">AbstractPrinter</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.CommonPrintUtils">CommonPrintUtils</span>, <span class="extype" name="scala.tools.refactoring.sourcegen.TreePrintingTraversals">TreePrintingTraversals</span>, <span class="extype" name="scala.tools.refactoring.common.SilentTracing">SilentTracing</span>, <span class="extype" name="scala.tools.refactoring.common.Tracing">Tracing</span>, <span class="extype" name="scala.tools.refactoring.transformation.TreeTransformations">TreeTransformations</span>, <span class="extype" name="scala.tools.refactoring.transformation.TreeFactory">TreeFactory</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations">Transformations</span>, <span class="extype" name="scala.tools.refactoring.common.Selections">Selections</span>, <span class="extype" name="scala.tools.refactoring.common.PimpedTrees">PimpedTrees</span>, <span class="extype" name="scala.tools.refactoring.common.TreeTraverser">TreeTraverser</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -97,8 +101,34 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.BlockPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="BlockPrintersextendsObject"></a>
+              <ol><li name="scala.tools.refactoring.transformation.TreeTransformations.AdditionalListMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AdditionalListMethods[T&lt;:&lt;?&gt;]extendsAnyRef"></a>
+      <a id="AdditionalListMethods[T]:(TreeTransformations.this)#AdditionalListMethods[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">AdditionalListMethods</span><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.TreeTransformations.AdditionalTreeListMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="AdditionalTreeListMethodsextendsAnyRef"></a>
+      <a id="AdditionalTreeListMethods:(TreeTransformations.this)#AdditionalTreeListMethods"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <span class="name">AdditionalTreeListMethods</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.BlockPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="BlockPrintersextendsAnyRef"></a>
       <a id="BlockPrinters:(ReusingPrinter.this)#BlockPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,7 +141,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.AbstractPrinter.ChangeSet" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ChangeSetextendsObject"></a>
+      <a id="ChangeSetextendsAnyRef"></a>
       <a id="ChangeSet:(AbstractPrinter.this)#ChangeSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -124,7 +154,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AbstractPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.ClassModulePrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ClassModulePrintersextendsObject"></a>
+      <a id="ClassModulePrintersextendsAnyRef"></a>
       <a id="ClassModulePrinters:(ReusingPrinter.this)#ClassModulePrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -137,11 +167,11 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeFactory.CopyTypeFromOtherTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="CopyTypeFromOtherTreeextendsObject"></a>
+      <a id="CopyTypeFromOtherTreeextendsAnyRef"></a>
       <a id="CopyTypeFromOtherTree:(TreeFactory.this)#CopyTypeFromOtherTree"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">implicit </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -150,11 +180,11 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees.DefDefMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="DefDefMethodsextendsObject"></a>
+      <a id="DefDefMethodsextendsAnyRef"></a>
       <a id="DefDefMethods:(PimpedTrees.this)#DefDefMethods"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">implicit </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -189,7 +219,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTraverser</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.FunctionPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="FunctionPrintersextendsObject"></a>
+      <a id="FunctionPrintersextendsAnyRef"></a>
       <a id="FunctionPrinters:(ReusingPrinter.this)#FunctionPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -202,7 +232,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.IfPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="IfPrintersextendsObject"></a>
+      <a id="IfPrintersextendsAnyRef"></a>
       <a id="IfPrinters:(ReusingPrinter.this)#IfPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -215,7 +245,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.ImportPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ImportPrintersextendsObject"></a>
+      <a id="ImportPrintersextendsAnyRef"></a>
       <a id="ImportPrinters:(ReusingPrinter.this)#ImportPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -241,11 +271,11 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees.ImportSelectorTreeExtractor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ImportSelectorTreeExtractorextendsObject"></a>
+      <a id="ImportSelectorTreeExtractorextendsAnyRef"></a>
       <a id="ImportSelectorTreeExtractor:(PimpedTrees.this)#ImportSelectorTreeExtractor"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">implicit </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -254,7 +284,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.Indentations.Indentation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="IndentationextendsObject"></a>
+      <a id="IndentationextendsAnyRef"></a>
       <a id="Indentation:(Indentations.this)#Indentation"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -267,7 +297,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Indentations</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.LiteralPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="LiteralPrintersextendsObject"></a>
+      <a id="LiteralPrintersextendsAnyRef"></a>
       <a id="LiteralPrinters:(ReusingPrinter.this)#LiteralPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -280,7 +310,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.MethodCallPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="MethodCallPrintersextendsObject"></a>
+      <a id="MethodCallPrintersextendsAnyRef"></a>
       <a id="MethodCallPrinters:(ReusingPrinter.this)#MethodCallPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -293,7 +323,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.MiscPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="MiscPrintersextendsObject"></a>
+      <a id="MiscPrintersextendsAnyRef"></a>
       <a id="MiscPrinters:(ReusingPrinter.this)#MiscPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -358,7 +388,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees.NotInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="NotInstanceOf[T&lt;:&lt;?&gt;]extendsObject"></a>
+      <a id="NotInstanceOf[T&lt;:&lt;?&gt;]extendsAnyRef"></a>
       <a id="NotInstanceOf[T]:(PimpedTrees.this)#NotInstanceOf[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -371,7 +401,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.PackagePrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="PackagePrintersextendsObject"></a>
+      <a id="PackagePrintersextendsAnyRef"></a>
       <a id="PackagePrinters:(ReusingPrinter.this)#PackagePrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -384,7 +414,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.PatternMatchingPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="PatternMatchingPrintersextendsObject"></a>
+      <a id="PatternMatchingPrintersextendsAnyRef"></a>
       <a id="PatternMatchingPrinters:(ReusingPrinter.this)#PatternMatchingPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -423,7 +453,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AbstractPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.PrintingUtils" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="PrintingUtilsextendsObject"></a>
+      <a id="PrintingUtilsextendsAnyRef"></a>
       <a id="PrintingUtils:(ReusingPrinter.this)#PrintingUtils"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -436,7 +466,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.Selections.Selection" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="SelectionextendsObject"></a>
+      <a id="SelectionextendsAnyRef"></a>
       <a id="Selection:(Selections.this)#Selection"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -475,7 +505,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.SuperPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="SuperPrintersextendsObject"></a>
+      <a id="SuperPrintersextendsAnyRef"></a>
       <a id="SuperPrinters:(ReusingPrinter.this)#SuperPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -488,7 +518,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees.TemplateMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="TemplateMethodsextendsObject"></a>
+      <a id="TemplateMethodsextendsAnyRef"></a>
       <a id="TemplateMethods:(PimpedTrees.this)#TemplateMethods"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -501,11 +531,11 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.Tracing.TraceAndReturn" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="TraceAndReturn[T&lt;:&lt;?&gt;]extendsObject"></a>
+      <a id="TraceAndReturn[T&lt;:&lt;?&gt;]extendsAnyRef"></a>
       <a id="TraceAndReturn[T]:TraceAndReturn[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">implicit </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -515,7 +545,7 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Tracing</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations.Transformation" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="Transformation[X&lt;:&lt;?&gt;,Y&lt;:&lt;?&gt;]extendsX=&gt;Option[Y]"></a>
-      <a id="Transformation[X,Y]:Transformation[X,Y]"></a>
+      <a id="Transformation[X,Y]:(Transformations.this)#Transformation[X,Y]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
@@ -553,7 +583,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTraverser</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees.TreeMethodsForPositions" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="TreeMethodsForPositionsextendsObject"></a>
+      <a id="TreeMethodsForPositionsextendsAnyRef"></a>
       <a id="TreeMethodsForPositions:(PimpedTrees.this)#TreeMethodsForPositions"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -566,7 +596,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.TreePrintingTraversals.TreePrinting" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="TreePrintingextendsObject"></a>
+      <a id="TreePrintingextendsAnyRef"></a>
       <a id="TreePrinting:(TreePrintingTraversals.this)#TreePrinting"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -579,11 +609,11 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreePrintingTraversals</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeTransformations.TreeReplacesOtherTreeViaPosition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="TreeReplacesOtherTreeViaPosition[T&lt;:&lt;?&gt;]extendsObject"></a>
+      <a id="TreeReplacesOtherTreeViaPosition[T&lt;:&lt;?&gt;]extendsAnyRef"></a>
       <a id="TreeReplacesOtherTreeViaPosition[T&lt;:scala.tools.nsc.Global.Tree]:(TreeTransformations.this)#TreeReplacesOtherTreeViaPosition[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
+        <span class="modifier">implicit </span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
@@ -618,7 +648,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTraverser</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.TryThrowPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="TryThrowPrintersextendsObject"></a>
+      <a id="TryThrowPrintersextendsAnyRef"></a>
       <a id="TryThrowPrinters:(ReusingPrinter.this)#TryThrowPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -631,7 +661,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.TypePrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="TypePrintersextendsObject"></a>
+      <a id="TypePrintersextendsAnyRef"></a>
       <a id="TypePrinters:(ReusingPrinter.this)#TypePrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -644,7 +674,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.ValDefDefPrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="ValDefDefPrintersextendsObject"></a>
+      <a id="ValDefDefPrintersextendsAnyRef"></a>
       <a id="ValDefDefPrinters:(ReusingPrinter.this)#ValDefDefPrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -657,7 +687,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.ReusingPrinter.WhilePrinters" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="WhilePrintersextendsObject"></a>
+      <a id="WhilePrintersextendsAnyRef"></a>
       <a id="WhilePrinters:(ReusingPrinter.this)#WhilePrinters"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -669,6 +699,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ReusingPrinter</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.Transformations.X" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="X=Transformations.this.global.Tree"></a>
+      <a id="X:X"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">type</span>
+      </span>
+      <span class="symbol">
+        <span class="name">X</span><span class="result"> = <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees.SourceLayoutTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SourceLayoutTreeextendsPimpedTrees.this.global.TreewithProductwithSerializable"></a>
       <a id="SourceLayoutTree:(PimpedTrees.this)#SourceLayoutTree"></a>
@@ -706,19 +749,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
     </li><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -730,7 +760,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -745,19 +775,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -769,82 +786,43 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.ClassGenerator#CHARSET" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="CHARSET:String(&quot;UTF-8&quot;)"></a>
-      <a id="CHARSET:String(&quot;UTF-8&quot;)"></a>
+      <a id="CHARSET:String"></a>
+      <a id="CHARSET:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier">final </span>
+        <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">CHARSET</span><span class="result">: String(&quot;UTF-8&quot;)</span>
+        <span class="name">CHARSET</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.synth.ugen.ClassGenerator#DocWidth" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="DocWidth:Int(80)"></a>
-      <a id="DocWidth:Int(80)"></a>
+      <a id="DocWidth:Int"></a>
+      <a id="DocWidth:Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier">final </span>
+        <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">DocWidth</span><span class="result">: Int(80)</span>
+        <span class="name">DocWidth</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       
-    </li><li name="scala.tools.refactoring.common.PimpedTrees#NoBlock" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="NoBlock:PimpedTrees.this.NotInstanceOf[PimpedTrees.this.global.Block]"></a>
-      <a id="NoBlock:NotInstanceOf[scala.tools.nsc.interactive.Global.Block]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">NoBlock</span><span class="result">: <a href="#NotInstanceOf[T]extendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.NotInstanceOf">NotInstanceOf</a>[<span class="extype" name="scala.reflect.internal.Trees.Block">scala.tools.nsc.interactive.Global.Block</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
-    </li><li name="scala.tools.refactoring.common.PimpedTrees#NoFunction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="NoFunction:PimpedTrees.this.NotInstanceOf[PimpedTrees.this.global.Function]"></a>
-      <a id="NoFunction:NotInstanceOf[scala.tools.nsc.interactive.Global.Function]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">NoFunction</span><span class="result">: <a href="#NotInstanceOf[T]extendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.NotInstanceOf">NotInstanceOf</a>[<span class="extype" name="scala.reflect.internal.Trees.Function">scala.tools.nsc.interactive.Global.Function</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
-    </li><li name="scala.tools.refactoring.common.PimpedTrees#NoPackageDef" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="NoPackageDef:PimpedTrees.this.NotInstanceOf[PimpedTrees.this.global.PackageDef]"></a>
-      <a id="NoPackageDef:NotInstanceOf[scala.tools.nsc.interactive.Global.PackageDef]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">NoPackageDef</span><span class="result">: <a href="#NotInstanceOf[T]extendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.NotInstanceOf">NotInstanceOf</a>[<span class="extype" name="scala.reflect.internal.Trees.PackageDef">scala.tools.nsc.interactive.Global.PackageDef</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.ClassGenerator#ParamColumns" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ParamColumns:Int(24)"></a>
-      <a id="ParamColumns:Int(24)"></a>
+      <a id="ParamColumns:Int"></a>
+      <a id="ParamColumns:Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier">final </span>
+        <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">ParamColumns</span><span class="result">: Int(24)</span>
+        <span class="name">ParamColumns</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       
@@ -887,32 +865,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeCreationMethods</dd></dl></div>
-    </li><li name="scala.tools.refactoring.common.PimpedTrees#additionalDefDefMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="additionalDefDefMethods(t:PimpedTrees.this.global.DefDef):PimpedTrees.this.DefDefMethods"></a>
-      <a id="additionalDefDefMethods(scala.tools.nsc.interactive.Global.DefDef):DefDefMethods"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">additionalDefDefMethods</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.DefDef">scala.tools.nsc.interactive.Global.DefDef</span></span>)</span><span class="result">: <a href="#DefDefMethodsextendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.DefDefMethods">DefDefMethods</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
-    </li><li name="scala.tools.refactoring.transformation.TreeTransformations#additionalListMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="additionalListMethods[T](l:List[T]):Object{defreplaceSequence(what:List[T],replacement:List[T]):List[T]}"></a>
-      <a id="additionalListMethods[T](List[T]):AnyRef{defreplaceSequence(what:List[T],replacement:List[T]):List[T]}"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">additionalListMethods</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="l">l: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.tools.refactoring.transformation.TreeTransformations.additionalListMethods.T">T</span>]</span>)</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span> { def replaceSequence(what: List[T],replacement: List[T]): List[T] }</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
     </li><li name="scala.tools.refactoring.common.PimpedTrees#additionalTemplateMethods" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="additionalTemplateMethods(t:PimpedTrees.this.global.Template):PimpedTrees.this.TemplateMethods"></a>
       <a id="additionalTemplateMethods(scala.tools.nsc.interactive.Global.Template):TemplateMethods"></a>
@@ -922,7 +874,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">additionalTemplateMethods</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Template">scala.tools.nsc.interactive.Global.Template</span></span>)</span><span class="result">: <a href="#TemplateMethodsextendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.TemplateMethods">TemplateMethods</a></span>
+        <span class="name">additionalTemplateMethods</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Template">scala.tools.nsc.interactive.Global.Template</span></span>)</span><span class="result">: <a href="#TemplateMethodsextendsAnyRef" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.TemplateMethods">TemplateMethods</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
@@ -935,7 +887,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">additionalTreeMethodsForPositions</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <a href="#TreeMethodsForPositionsextendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.TreeMethodsForPositions">TreeMethodsForPositions</a></span>
+        <span class="name">additionalTreeMethodsForPositions</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <a href="#TreeMethodsForPositionsextendsAnyRef" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.TreeMethodsForPositions">TreeMethodsForPositions</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
@@ -953,15 +905,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CommonPrintUtils</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#allChildren" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="allChildren[X&lt;:&lt;?&gt;,Y&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$1:&lt;?&gt;):Transformations.this.T[X,Y]"></a>
-      <a id="allChildren[X,Y](⇒T[X,Y])((X)⇒((X)⇒Y)⇒Y):T[X,Y]"></a>
+      <a id="allChildren(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="allChildren(⇒T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">allChildren</span><span class="tparams">[<span name="X">X</span>, <span name="Y">Y</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.Y">Y</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.Y">Y</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.Y">Y</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.allChildren.Y">Y</span>]</span>
+        <span class="name">allChildren</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -978,19 +930,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
-    </li><li name="scala.tools.refactoring.common.Tracing#anythingToTrace" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="anythingToTrace[T](t:T):Tracing.this.TraceAndReturn[T]"></a>
-      <a id="anythingToTrace[T](T):TraceAndReturn[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">anythingToTrace</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="t">t: <span class="extype" name="scala.tools.refactoring.common.Tracing.anythingToTrace.T">T</span></span>)</span><span class="result">: <a href="#TraceAndReturn[T]extendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.TraceAndReturn">TraceAndReturn</a>[<span class="extype" name="scala.tools.refactoring.common.Tracing.anythingToTrace.T">T</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Tracing</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -1030,29 +969,94 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CommonPrintUtils</dd></dl></div>
-    </li><li name="scala.tools.refactoring.sourcegen.LayoutHelper#between" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="between(l:&lt;?&gt;,r:&lt;?&gt;)(implicits:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout.LayoutFromFile"></a>
-      <a id="between(scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree)(SourceFile):LayoutFromFile"></a>
+    </li><li name="scala.tools.refactoring.sourcegen.CommonPrintUtils#balanceParensInLayout" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="balanceParensInLayout(open:&lt;?&gt;,close:&lt;?&gt;,l:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout"></a>
+      <a id="balanceParensInLayout(Char,Char,Layout):Layout"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">between</span><span class="params">(<span name="l">l: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="r">r: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="s">s: <span class="extype" name="scala.tools.nsc.util.SourceFile">SourceFile</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
+        <span class="name">balanceParensInLayout</span><span class="params">(<span name="open">open: <span class="extype" name="scala.Char">Char</span></span>, <span name="close">close: <span class="extype" name="scala.Char">Char</span></span>, <span name="l">l: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout">Layout</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout">Layout</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CommonPrintUtils</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.LayoutHelper#between" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="between(l:&lt;?&gt;,r:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout.LayoutFromFile"></a>
+      <a id="between(scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree):LayoutFromFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">between</span><span class="params">(<span name="l">l: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="r">r: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutHelper</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.LayoutHelper#betweenEndAndPoint" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="betweenEndAndPoint(t1:&lt;?&gt;,t2:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout.LayoutFromFile"></a>
+      <a id="betweenEndAndPoint(scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree):LayoutFromFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">betweenEndAndPoint</span><span class="params">(<span name="t1">t1: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="t2">t2: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutHelper</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.LayoutHelper#betweenPointAndEnd" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="betweenPointAndEnd(t1:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout.LayoutFromFile"></a>
+      <a id="betweenPointAndEnd(scala.tools.nsc.interactive.Global.Tree):LayoutFromFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">betweenPointAndEnd</span><span class="params">(<span name="t1">t1: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutHelper</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.LayoutHelper#betweenStartAndEnd" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="betweenStartAndEnd(t1:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout.LayoutFromFile"></a>
+      <a id="betweenStartAndEnd(scala.tools.nsc.interactive.Global.Tree):LayoutFromFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">betweenStartAndEnd</span><span class="params">(<span name="t1">t1: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutHelper</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.LayoutHelper#betweenStartAndPoint" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="betweenStartAndPoint(t1:&lt;?&gt;):scala.tools.refactoring.sourcegen.Layout.LayoutFromFile"></a>
+      <a id="betweenStartAndPoint(scala.tools.nsc.interactive.Global.Tree):LayoutFromFile"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">betweenStartAndPoint</span><span class="params">(<span name="t1">t1: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutHelper</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#bottomup" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="bottomup[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$7:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="bottomup[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="bottomup(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="bottomup(⇒T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">bottomup</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.bottomup.X">X</span>]</span>
+        <span class="name">bottomup</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -1102,15 +1106,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.ugen.ClassGenerator">ClassGenerator</a> → CompilerAccess</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#constant" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="constant[X&lt;:&lt;?&gt;,Y&lt;:&lt;?&gt;](y:&lt;?&gt;):Transformations.this.T[X,Y]"></a>
-      <a id="constant[X,Y](Y):T[X,Y]"></a>
+      <a id="constant(y:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="constant(X):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">constant</span><span class="tparams">[<span name="X">X</span>, <span name="Y">Y</span>]</span><span class="params">(<span name="y">y: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.constant.Y">Y</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.constant.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.constant.Y">Y</span>]</span>
+        <span class="name">constant</span><span class="params">(<span name="y">y: <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -1157,7 +1161,7 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SourceGenerator</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.SourceGenerator#createText" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="createText(t:SourceGenerator.this.global.Tree,sourceFile:Option[tools.nsc.util.SourceFile]):String"></a>
+      <a id="createText(t:SourceGenerator.this.global.Tree,sourceFile:Option[scala.reflect.internal.util.SourceFile]):String"></a>
       <a id="createText(scala.tools.nsc.interactive.Global.Tree,Option[SourceFile]):String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1165,7 +1169,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">createText</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="sourceFile">sourceFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.tools.nsc.util.SourceFile">SourceFile</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">createText</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="sourceFile">sourceFile: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.reflect.internal.util.SourceFile">SourceFile</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SourceGenerator</dd></dl></div>
@@ -1422,19 +1426,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
-    </li><li name="scala.tools.refactoring.common.PimpedTrees#importToImportSelectorTreeExtractor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="importToImportSelectorTreeExtractor(t:PimpedTrees.this.global.Import):PimpedTrees.this.ImportSelectorTreeExtractor"></a>
-      <a id="importToImportSelectorTreeExtractor(scala.tools.nsc.interactive.Global.Import):ImportSelectorTreeExtractor"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">importToImportSelectorTreeExtractor</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Import">scala.tools.nsc.interactive.Global.Import</span></span>)</span><span class="result">: <a href="#ImportSelectorTreeExtractorextendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.ImportSelectorTreeExtractor">ImportSelectorTreeExtractor</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.CommonPrintUtils#indentation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="indentation(implicitctx:&lt;?&gt;):String"></a>
       <a id="indentation(PrintingContext):String"></a>
@@ -1535,7 +1526,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">layout</span><span class="params">(<span name="start">start: <span class="extype" name="scala.Int">Int</span></span>, <span name="end">end: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="s">s: <span class="extype" name="scala.tools.nsc.util.SourceFile">SourceFile</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
+        <span class="name">layout</span><span class="params">(<span name="start">start: <span class="extype" name="scala.Int">Int</span></span>, <span name="end">end: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="s">s: <span class="extype" name="scala.reflect.internal.util.SourceFile">SourceFile</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Layout.LayoutFromFile">LayoutFromFile</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>LayoutHelper</dd></dl></div>
@@ -1631,15 +1622,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#matchingChildren" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="matchingChildren[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$2:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="matchingChildren[X](T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="matchingChildren(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="matchingChildren(T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">matchingChildren</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.matchingChildren.X">X</span>]</span>
+        <span class="name">matchingChildren</span><span class="params">(<span name="t">t: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -1653,6 +1644,19 @@
       </span>
       <span class="symbol">
         <span class="name">mkApply</span><span class="params">(<span name="mods">mods: <span class="extype" name="scala.reflect.internal.Trees.Modifiers">scala.tools.nsc.interactive.Global.Modifiers</span></span>, <span name="parameters">parameters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]]</span>, <span name="body">body: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>, <span name="typeParameters">typeParameters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.TypeDef">scala.tools.nsc.interactive.Global.TypeDef</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.DefDef">scala.tools.nsc.interactive.Global.DefDef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkAssignmentToCall" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mkAssignmentToCall(call:&lt;?&gt;,returns:&lt;?&gt;):TreeFactory.this.global.Tree"></a>
+      <a id="mkAssignmentToCall(scala.tools.nsc.interactive.Global.Tree,List[scala.tools.nsc.interactive.Global.Symbol]):scala.tools.nsc.interactive.Global.Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mkAssignmentToCall</span><span class="params">(<span name="call">call: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="returns">returns: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
@@ -1679,6 +1683,19 @@
       </span>
       <span class="symbol">
         <span class="name">mkCallDefDef</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="arguments">arguments: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]]</span>, <span name="returns">returns: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkCallValDef" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mkCallValDef(name:&lt;?&gt;,returns:&lt;?&gt;):TreeFactory.this.global.Tree"></a>
+      <a id="mkCallValDef(String,List[scala.tools.nsc.interactive.Global.Symbol]):scala.tools.nsc.interactive.Global.Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mkCallValDef</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="returns">returns: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
@@ -1722,15 +1739,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkDefDef" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="mkDefDef(mods:&lt;?&gt;,name:&lt;?&gt;,parameters:&lt;?&gt;,body:&lt;?&gt;,typeParameters:&lt;?&gt;):TreeFactory.this.global.DefDef"></a>
-      <a id="mkDefDef(scala.tools.nsc.interactive.Global.Modifiers,String,List[List[scala.tools.nsc.interactive.Global.Symbol]],List[scala.tools.nsc.interactive.Global.Tree],List[scala.tools.nsc.interactive.Global.TypeDef]):scala.tools.nsc.interactive.Global.DefDef"></a>
+      <a id="mkDefDef(mods:&lt;?&gt;,name:&lt;?&gt;,parameters:&lt;?&gt;,body:&lt;?&gt;,typeParameters:&lt;?&gt;,returnTypeOpt:&lt;?&gt;):TreeFactory.this.global.DefDef"></a>
+      <a id="mkDefDef(scala.tools.nsc.interactive.Global.Modifiers,String,List[List[scala.tools.nsc.interactive.Global.Symbol]],List[scala.tools.nsc.interactive.Global.Tree],List[scala.tools.nsc.interactive.Global.TypeDef],Option[scala.tools.nsc.interactive.Global.TypeTree]):scala.tools.nsc.interactive.Global.DefDef"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mkDefDef</span><span class="params">(<span name="mods">mods: <span class="extype" name="scala.reflect.internal.Trees.Modifiers">scala.tools.nsc.interactive.Global.Modifiers</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="parameters">parameters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]]</span>, <span name="body">body: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>, <span name="typeParameters">typeParameters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.TypeDef">scala.tools.nsc.interactive.Global.TypeDef</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.DefDef">scala.tools.nsc.interactive.Global.DefDef</span></span>
+        <span class="name">mkDefDef</span><span class="params">(<span name="mods">mods: <span class="extype" name="scala.reflect.internal.Trees.Modifiers">scala.tools.nsc.interactive.Global.Modifiers</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="parameters">parameters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Symbols.Symbol">scala.tools.nsc.interactive.Global.Symbol</span>]]</span>, <span name="body">body: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>, <span name="typeParameters">typeParameters: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.TypeDef">scala.tools.nsc.interactive.Global.TypeDef</span>]</span>, <span name="returnTypeOpt">returnTypeOpt: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.reflect.internal.Trees.TypeTree">scala.tools.nsc.interactive.Global.TypeTree</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.DefDef">scala.tools.nsc.interactive.Global.DefDef</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
@@ -1812,6 +1829,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkModule" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mkModule(mods:&lt;?&gt;,name:&lt;?&gt;,body:&lt;?&gt;,parents:&lt;?&gt;):TreeFactory.this.global.ModuleDef"></a>
+      <a id="mkModule(scala.tools.nsc.interactive.Global.Modifiers,String,List[scala.tools.nsc.interactive.Global.Tree],List[scala.tools.nsc.interactive.Global.Tree]):scala.tools.nsc.interactive.Global.ModuleDef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mkModule</span><span class="params">(<span name="mods">mods: <span class="extype" name="scala.reflect.internal.Trees.Modifiers">scala.tools.nsc.interactive.Global.Modifiers</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="body">body: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>, <span name="parents">parents: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.ModuleDef">scala.tools.nsc.interactive.Global.ModuleDef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkParam" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="mkParam(name:&lt;?&gt;,tpe:&lt;?&gt;,defaultVal:&lt;?&gt;):TreeFactory.this.global.ValDef"></a>
+      <a id="mkParam(String,scala.tools.nsc.interactive.Global.Type,scala.tools.nsc.interactive.Global.Tree):scala.tools.nsc.interactive.Global.ValDef"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">mkParam</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="tpe">tpe: <span class="extype" name="scala.reflect.internal.Types.Type">scala.tools.nsc.interactive.Global.Type</span></span>, <span name="defaultVal">defaultVal: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.ValDef">scala.tools.nsc.interactive.Global.ValDef</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkRenamedImportTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="mkRenamedImportTree(t:&lt;?&gt;,name:&lt;?&gt;):TreeFactory.this.ImportSelectorTree"></a>
       <a id="mkRenamedImportTree(ImportSelectorTree,String):ImportSelectorTree"></a>
@@ -1865,15 +1908,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeFactory#mkValDef" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="mkValDef(name:&lt;?&gt;,rhs:&lt;?&gt;):TreeFactory.this.global.ValDef"></a>
-      <a id="mkValDef(String,scala.tools.nsc.interactive.Global.Tree):scala.tools.nsc.interactive.Global.ValDef"></a>
+      <a id="mkValDef(name:&lt;?&gt;,rhs:&lt;?&gt;,tpt:&lt;?&gt;):TreeFactory.this.global.ValDef"></a>
+      <a id="mkValDef(String,scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.TypeTree):scala.tools.nsc.interactive.Global.ValDef"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">mkValDef</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="rhs">rhs: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.ValDef">scala.tools.nsc.interactive.Global.ValDef</span></span>
+        <span class="name">mkValDef</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="rhs">rhs: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="tpt">tpt: <span class="extype" name="scala.reflect.internal.Trees.TypeTree">scala.tools.nsc.interactive.Global.TypeTree</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.ValDef">scala.tools.nsc.interactive.Global.ValDef</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
@@ -1900,6 +1943,19 @@
       </span>
       <span class="symbol">
         <span class="name">newline</span><span class="params">(<span class="implicit">implicit </span><span name="ctx">ctx: <a href="#PrintingContextextendsProductwithSerializable" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.PrintingContext">PrintingContext</a></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Requisite">Requisite</span> { def getLayout: scala.tools.refactoring.sourcegen.Layout{val asText: String} }</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CommonPrintUtils</dd></dl></div>
+    </li><li name="scala.tools.refactoring.sourcegen.CommonPrintUtils#newlineIndentedToChildren" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="newlineIndentedToChildren(implicitctx:&lt;?&gt;):scala.tools.refactoring.sourcegen.Requisite{defgetLayout:scala.tools.refactoring.sourcegen.Layout{valasText:String}}"></a>
+      <a id="newlineIndentedToChildren(PrintingContext):Requisite{defgetLayout:scala.tools.refactoring.sourcegen.Layout{valasText:String}}"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">newlineIndentedToChildren</span><span class="params">(<span class="implicit">implicit </span><span name="ctx">ctx: <a href="#PrintingContextextendsProductwithSerializable" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.PrintingContext">PrintingContext</a></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.sourcegen.Requisite">Requisite</span> { def getLayout: scala.tools.refactoring.sourcegen.Layout{val asText: String} }</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>CommonPrintUtils</dd></dl></div>
@@ -1943,15 +1999,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#once" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="once[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$9:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="once[X&lt;:AnyRef](T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="once[X&lt;:&lt;?&gt;](t:&lt;?&gt;):Transformations.this.T[X,X]"></a>
+      <a id="once[X&lt;:AnyRef](T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">once</span><span class="tparams">[<span name="X">X &lt;: <span class="extype" name="scala.AnyRef">AnyRef</span></span>]</span><span class="params">(<span name="t">t: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>]</span>
+        <span class="name">once</span><span class="tparams">[<span name="X">X &lt;: <span class="extype" name="scala.AnyRef">AnyRef</span></span>]</span><span class="params">(<span name="t">t: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.once.X">X</span>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -1995,28 +2051,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.ClassGenerator#performFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="performFile(specs:Seq[de.sciss.synth.UGenSpec],file:java.io.File,revision:Int):Unit"></a>
-      <a id="performFile(Seq[UGenSpec],File,Int):Unit"></a>
+      <a id="performFile(node:scala.xml.Node,dir:de.sciss.file.File,name:String,docs:Boolean,forceOverwrite:Boolean):Unit"></a>
+      <a id="performFile(scala.xml.Node,File,String,Boolean,Boolean):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">performFile</span><span class="params">(<span name="specs">specs: <span class="extype" name="scala.Seq">Seq</span>[<a href="../UGenSpec.html" class="extype" name="de.sciss.synth.UGenSpec">UGenSpec</a>]</span>, <span name="file">file: <span class="extype" name="java.io.File">File</span></span>, <span name="revision">revision: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="de.sciss.synth.ugen.ClassGenerator#performFiles" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="performFiles(node:scala.xml.Node,dir:java.io.File,docs:Boolean,forceOverwrite:Boolean):Unit"></a>
-      <a id="performFiles(scala.xml.Node,File,Boolean,Boolean):Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">performFiles</span><span class="params">(<span name="node">node: <span class="extype" name="scala.xml.Node">scala.xml.Node</span></span>, <span name="dir">dir: <span class="extype" name="java.io.File">File</span></span>, <span name="docs">docs: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="forceOverwrite">forceOverwrite: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">performFile</span><span class="params">(<span name="node">node: <span class="extype" name="scala.xml.Node">scala.xml.Node</span></span>, <span name="dir">dir: <span class="extype" name="de.sciss.file.File">File</span></span>, <span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="docs">docs: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="forceOverwrite">forceOverwrite: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
@@ -2033,16 +2076,29 @@
       </span>
       </h4>
       
-    </li><li name="scala.tools.refactoring.transformation.Transformations#postorder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="postorder[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$8:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="postorder[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+    </li><li name="de.sciss.synth.ugen.ClassGenerator#performSpecs" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="performSpecs(specs:Seq[de.sciss.synth.UGenSpec],file:de.sciss.file.File,revision:Int):Unit"></a>
+      <a id="performSpecs(Seq[UGenSpec],File,Int):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">postorder</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.postorder.X">X</span>]</span>
+        <span class="name">performSpecs</span><span class="params">(<span name="specs">specs: <span class="extype" name="scala.Seq">Seq</span>[<a href="../UGenSpec.html" class="extype" name="de.sciss.synth.UGenSpec">UGenSpec</a>]</span>, <span name="file">file: <span class="extype" name="de.sciss.file.File">File</span></span>, <span name="revision">revision: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="scala.tools.refactoring.transformation.Transformations#postorder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="postorder(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="postorder(⇒T[X,X]):T[X,X]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">postorder</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -2086,15 +2142,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#preorder" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="preorder[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$5:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="preorder[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="preorder(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="preorder(⇒T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">preorder</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.preorder.X">X</span>]</span>
+        <span class="name">preorder</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -2138,44 +2194,18 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Refactoring</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeTransformations#replaceTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="replaceTree(from:&lt;?&gt;,to:&lt;?&gt;):TreeTransformations.this.T[TreeTransformations.this.global.Tree,TreeTransformations.this.global.Tree]"></a>
-      <a id="replaceTree(scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree):T[scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree]"></a>
+      <a id="replaceTree(from:&lt;?&gt;,to:&lt;?&gt;):TreeTransformations.this.T[TreeTransformations.this.X,TreeTransformations.this.X]"></a>
+      <a id="replaceTree(scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">replaceTree</span><span class="params">(<span name="from">from: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="to">to: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>, <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>
+        <span class="name">replaceTree</span><span class="params">(<span name="from">from: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="to">to: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
-    </li><li name="scala.tools.refactoring.transformation.TreeTransformations#replacesTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="replacesTree[T&lt;:TreeTransformations.this.global.Tree](t1:T):TreeTransformations.this.TreeReplacesOtherTreeViaPosition[T]"></a>
-      <a id="replacesTree[T&lt;:scala.tools.nsc.interactive.Global.Tree](T):TreeReplacesOtherTreeViaPosition[T]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">replacesTree</span><span class="tparams">[<span name="T">T &lt;: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>]</span><span class="params">(<span name="t1">t1: <span class="extype" name="scala.tools.refactoring.transformation.TreeTransformations.replacesTree.T">T</span></span>)</span><span class="result">: <a href="#TreeReplacesOtherTreeViaPosition[T&lt;:TreeTransformations.this.global.Tree]extendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.TreeReplacesOtherTreeViaPosition">TreeReplacesOtherTreeViaPosition</a>[<span class="extype" name="scala.tools.refactoring.transformation.TreeTransformations.replacesTree.T">T</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
-    </li><li name="scala.tools.refactoring.common.PimpedTrees#scalaVersion" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="scalaVersion:(Int,Int,Int)"></a>
-      <a id="scalaVersion:(Int,Int,Int)"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">lazy val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">scalaVersion</span><span class="result">: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.TreeTransformations#setNoPosition" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setNoPosition:TreeTransformations.this.T[TreeTransformations.this.global.Tree,TreeTransformations.this.global.Tree]"></a>
       <a id="setNoPosition:T[scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree]"></a>
@@ -2202,6 +2232,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
+    </li><li name="scala.tools.refactoring.common.Selections#skipForExpressionTrees" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="skipForExpressionTrees(t:&lt;?&gt;):Selections.this.global.Tree"></a>
+      <a id="skipForExpressionTrees(scala.tools.nsc.interactive.Global.Tree):scala.tools.nsc.interactive.Global.Tree"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">skipForExpressionTrees</span><span class="params">(<span name="t">t: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Selections</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.Formatting#spacingAroundMultipleImports" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="spacingAroundMultipleImports:String"></a>
       <a id="spacingAroundMultipleImports:String"></a>
@@ -2320,15 +2363,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>PimpedTrees</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#topdown" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="topdown[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$4:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="topdown[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="topdown(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="topdown(⇒T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">topdown</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.topdown.X">X</span>]</span>
+        <span class="name">topdown</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -2391,6 +2434,19 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
     </li><li name="scala.tools.refactoring.Refactoring#transformFile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="transformFile(file:&lt;?&gt;,transformations:&lt;?&gt;):List[scala.tools.refactoring.common.TextChange]"></a>
+      <a id="transformFile(AbstractFile,List[Transformation[scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree]]):List[TextChange]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">transformFile</span><span class="params">(<span name="file">file: <span class="extype" name="scala.tools.nsc.io.AbstractFile">AbstractFile</span></span>, <span name="transformations">transformations: <span class="extype" name="scala.List">List</span>[<a href="#Transformation[X,Y]extendsX=&gt;Option[Y]" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.Transformation">Transformation</a>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>, <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]]</span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.tools.refactoring.common.TextChange">TextChange</span>]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Refactoring</dd></dl></div>
+    </li><li name="scala.tools.refactoring.Refactoring#transformFile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="transformFile(file:&lt;?&gt;,transformation:&lt;?&gt;):List[scala.tools.refactoring.common.TextChange]"></a>
       <a id="transformFile(AbstractFile,Transformation[scala.tools.nsc.interactive.Global.Tree,scala.tools.nsc.interactive.Global.Tree]):List[TextChange]"></a>
       <h4 class="signature">
@@ -2416,16 +2472,29 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
-    </li><li name="scala.tools.refactoring.transformation.Transformations#traverseAndTransformAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="traverseAndTransformAll[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$10:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="traverseAndTransformAll[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+    </li><li name="scala.tools.refactoring.transformation.TreeTransformations#traverse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="traverse(tree:TreeTransformations.this.global.Tree,f:TreeTransformations.this.global.Tree=&gt;TreeTransformations.this.global.Tree):TreeTransformations.this.global.Tree"></a>
+      <a id="traverse(scala.tools.nsc.interactive.Global.Tree,(scala.tools.nsc.interactive.Global.Tree)⇒scala.tools.nsc.interactive.Global.Tree):scala.tools.nsc.interactive.Global.Tree"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">traverseAndTransformAll</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.traverseAndTransformAll.X">X</span>]</span>
+        <span class="name">traverse</span><span class="params">(<span name="tree">tree: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>, <span name="f">f: (<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>) ⇒ <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations → Transformations</dd></dl></div>
+    </li><li name="scala.tools.refactoring.transformation.Transformations#traverseAndTransformAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="traverseAndTransformAll(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="traverseAndTransformAll(⇒T[X,X]):T[X,X]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">traverseAndTransformAll</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -2438,7 +2507,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">treeFrom</span><span class="params">(<span name="file">file: <span class="extype" name="scala.tools.nsc.util.SourceFile">SourceFile</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
+        <span class="name">treeFrom</span><span class="params">(<span name="file">file: <span class="extype" name="scala.reflect.internal.util.SourceFile">SourceFile</span></span>)</span><span class="result">: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeCreationMethods</dd></dl></div>
@@ -2455,45 +2524,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeCreationMethods</dd></dl></div>
-    </li><li name="scala.tools.refactoring.util.TreeCreationMethods#treesFrom" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="treesFrom(sources:&lt;?&gt;):List[TreeCreationMethods.this.global.Tree]"></a>
-      <a id="treesFrom(List[SourceFile]):List[scala.tools.nsc.interactive.Global.Tree]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">treesFrom</span><span class="params">(<span name="sources">sources: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.tools.nsc.util.SourceFile">SourceFile</span>]</span>)</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeCreationMethods</dd></dl></div>
-    </li><li name="scala.tools.refactoring.transformation.TreeTransformations#treesToTraversalFunction" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="treesToTraversalFunction(tree:TreeTransformations.this.global.Tree):(TreeTransformations.this.global.Tree=&gt;TreeTransformations.this.global.Tree)=&gt;TreeTransformations.this.global.Tree"></a>
-      <a id="treesToTraversalFunction(scala.tools.nsc.interactive.Global.Tree):((scala.tools.nsc.interactive.Global.Tree)⇒scala.tools.nsc.interactive.Global.Tree)⇒scala.tools.nsc.interactive.Global.Tree"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">treesToTraversalFunction</span><span class="params">(<span name="tree">tree: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: ((<span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>) ⇒ <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span>) ⇒ <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeTransformations</dd></dl></div>
-    </li><li name="scala.tools.refactoring.transformation.TreeFactory#typeFromTree" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="typeFromTree(t1:TreeFactory.this.global.Tree):TreeFactory.this.CopyTypeFromOtherTree"></a>
-      <a id="typeFromTree(scala.tools.nsc.interactive.Global.Tree):CopyTypeFromOtherTree"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">typeFromTree</span><span class="params">(<span name="t1">t1: <span class="extype" name="scala.reflect.internal.Trees.Tree">scala.tools.nsc.interactive.Global.Tree</span></span>)</span><span class="result">: <a href="#CopyTypeFromOtherTreeextendsObject" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.CopyTypeFromOtherTree">CopyTypeFromOtherTree</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TreeFactory</dd></dl></div>
     </li><li name="scala.tools.refactoring.sourcegen.CommonPrintUtils#typeToString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="typeToString(tree:&lt;?&gt;,t:&lt;?&gt;)(implicitctx:&lt;?&gt;):String"></a>
       <a id="typeToString(scala.tools.nsc.interactive.Global.TypeTree,scala.tools.nsc.interactive.Global.Type)(PrintingContext):String"></a>
@@ -2565,28 +2595,28 @@
               
         </dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#↑" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="↑[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$6:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="↑[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="↑(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="↑(⇒T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $u2191" class="name">↑</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↑.X">X</span>]</span>
+        <span title="gt4s: $u2191" class="name">↑</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
     </li><li name="scala.tools.refactoring.transformation.Transformations#↓" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="↓[X&lt;:&lt;?&gt;](t:&lt;?&gt;)(implicitevidence$3:&lt;?&gt;):Transformations.this.T[X,X]"></a>
-      <a id="↓[X](⇒T[X,X])((X)⇒((X)⇒X)⇒X):T[X,X]"></a>
+      <a id="↓(t:&lt;?&gt;):Transformations.this.T[Transformations.this.X,Transformations.this.X]"></a>
+      <a id="↓(⇒T[X,X]):T[X,X]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: $u2193" class="name">↓</span><span class="tparams">[<span name="X">X</span>]</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>]</span>)</span><span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: (<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>) ⇒ ((<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>) ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span></span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>, <span class="extype" name="scala.tools.refactoring.transformation.Transformations.↓.X">X</span>]</span>
+        <span title="gt4s: $u2193" class="name">↓</span><span class="params">(<span name="t">t: ⇒ <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>)</span><span class="result">: <span class="extype" name="scala.tools.refactoring.transformation.Transformations.T">T</span>[<a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>, <a href="#X=Transformations.this.global.Tree" class="extmbr" name="de.sciss.synth.ugen.ClassGenerator.X">X</a>]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Transformations</dd></dl></div>
@@ -2663,6 +2693,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

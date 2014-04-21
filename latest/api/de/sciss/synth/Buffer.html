@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Buffer - de.sciss.synth.Buffer</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -102,19 +106,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -126,7 +117,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -141,19 +132,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -165,17 +143,17 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.model.impl.ModelImpl#addListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addListener(pf:de.sciss.model.Model.Listener[U]):pf.type"></a>
-      <a id="addListener(model.Model.Listener[BufferInfo]):pf.type"></a>
+      <a id="addListener(Listener[BufferInfo]):pf.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">model.Model.Listener</span>[<a href="BufferManager$$BufferInfo.html" class="extype" name="de.sciss.synth.BufferManager.BufferInfo">BufferInfo</a>]</span>)</span><span class="result">: <span class="extype" name="de.sciss.model.impl.ModelImpl.addListener.pf">pf</span>.type</span>
+        <span class="name">addListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">Listener</span>[<a href="BufferManager$$BufferInfo.html" class="extype" name="de.sciss.synth.BufferManager.BufferInfo">BufferInfo</a>]</span>)</span><span class="result">: <span class="extype" name="de.sciss.model.impl.ModelImpl.addListener.pf">pf</span>.type</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelImpl → Model</dd></dl></div>
@@ -277,15 +255,15 @@
       </h4>
       
     </li><li name="de.sciss.synth.Buffer#cueMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="cueMsg(path:String,startFrame:Int,completion:de.sciss.synth.Buffer.Completion):de.sciss.synth.message.BufferRead"></a>
-      <a id="cueMsg(String,Int,Buffer.Completion):BufferRead"></a>
+      <a id="cueMsg(path:String,startFrame:Int,completion:de.sciss.synth.Optional[de.sciss.osc.Packet]):de.sciss.synth.message.BufferRead"></a>
+      <a id="cueMsg(String,Int,Optional[Packet]):BufferRead"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">cueMsg</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="startFrame">startFrame: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="completion">completion: <a href="Buffer$.html#Completion=de.sciss.synth.Completion[de.sciss.synth.Buffer]" class="extmbr" name="de.sciss.synth.Buffer.Completion">Buffer.Completion</a> = <span class="symbol"><span class="name"><a href="Buffer$.html">NoCompletion</a></span></span></span>)</span><span class="result">: <a href="message/BufferRead.html" class="extype" name="de.sciss.synth.message.BufferRead">BufferRead</a></span>
+        <span class="name">cueMsg</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="startFrame">startFrame: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>, <span name="completion">completion: <a href="Optional.html" class="extype" name="de.sciss.synth.Optional">Optional</a>[<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>] = <span class="symbol"><span class="name"><a href="Optional$.html">None</a></span></span></span>)</span><span class="result">: <a href="message/BufferRead.html" class="extype" name="de.sciss.synth.message.BufferRead">BufferRead</a></span>
       </span>
       </h4>
       
@@ -316,31 +294,31 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="de.sciss.synth.Buffer#fillMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="fillMsg(infos:de.sciss.synth.message.BufferFill.Info*):de.sciss.synth.message.BufferFill"></a>
-      <a id="fillMsg(Info*):BufferFill"></a>
+      <a id="fillMsg(ranges:de.sciss.synth.FillRange*):de.sciss.synth.message.BufferFill"></a>
+      <a id="fillMsg(FillRange*):BufferFill"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fillMsg</span><span class="params">(<span name="infos">infos: <a href="message/BufferFill$$Info.html" class="extype" name="de.sciss.synth.message.BufferFill.Info">Info</a>*</span>)</span><span class="result">: <a href="message/BufferFill.html" class="extype" name="de.sciss.synth.message.BufferFill">BufferFill</a></span>
+        <span class="name">fillMsg</span><span class="params">(<span name="ranges">ranges: <a href="FillRange.html" class="extype" name="de.sciss.synth.FillRange">FillRange</a>*</span>)</span><span class="result">: <a href="message/BufferFill.html" class="extype" name="de.sciss.synth.message.BufferFill">BufferFill</a></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.synth.Buffer#fillMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="fillMsg(index:Int,num:Int,value:Float):de.sciss.synth.message.BufferFill"></a>
-      <a id="fillMsg(Int,Int,Float):BufferFill"></a>
+      <a id="fillMsg(value:Float):de.sciss.synth.message.BufferFill"></a>
+      <a id="fillMsg(Float):BufferFill"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fillMsg</span><span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>, <span name="num">num: <span class="extype" name="scala.Int">Int</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="message/BufferFill.html" class="extype" name="de.sciss.synth.message.BufferFill">BufferFill</a></span>
+        <span class="name">fillMsg</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="message/BufferFill.html" class="extype" name="de.sciss.synth.message.BufferFill">BufferFill</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Convenience method for creating a fill message for one given range</p>
+      
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -391,6 +369,19 @@
       </span>
       </h4>
       
+    </li><li name="de.sciss.synth.Buffer#genMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="genMsg(command:de.sciss.synth.message.BufferGen.Command):de.sciss.synth.message.BufferGen"></a>
+      <a id="genMsg(Command):BufferGen"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">genMsg</span><span class="params">(<span name="command">command: <a href="message/BufferGen$$Command.html" class="extype" name="de.sciss.synth.message.BufferGen.Command">Command</a></span>)</span><span class="result">: <a href="message/BufferGen.html" class="extype" name="de.sciss.synth.message.BufferGen">BufferGen</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -404,6 +395,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.Buffer#getMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getMsg(indices:Int*):de.sciss.synth.message.BufferGet"></a>
+      <a id="getMsg(Int*):BufferGet"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getMsg</span><span class="params">(<span name="indices">indices: <span class="extype" name="scala.Int">Int</span>*</span>)</span><span class="result">: <a href="message/BufferGet.html" class="extype" name="de.sciss.synth.message.BufferGet">BufferGet</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Buffer#getnMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getnMsg(ranges:Range*):de.sciss.synth.message.BufferGetn"></a>
+      <a id="getnMsg(Range*):BufferGetn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getnMsg</span><span class="params">(<span name="ranges">ranges: <span class="extype" name="scala.Range">Range</span>*</span>)</span><span class="result">: <a href="message/BufferGetn.html" class="extype" name="de.sciss.synth.message.BufferGetn">BufferGetn</a></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.Buffer#id" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="id:Int"></a>
       <a id="id:Int"></a>
@@ -430,19 +447,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.Buffer#makePacket" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="makePacket(completion:de.sciss.synth.Buffer.Completion,forceQuery:Boolean):Option[de.sciss.osc.Packet]"></a>
-      <a id="makePacket(Buffer.Completion,Boolean):Option[Packet]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">makePacket</span><span class="params">(<span name="completion">completion: <a href="Buffer$.html#Completion=de.sciss.synth.Completion[de.sciss.synth.Buffer]" class="extmbr" name="de.sciss.synth.Buffer.Completion">Buffer.Completion</a></span>, <span name="forceQuery">forceQuery: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -494,7 +498,9 @@
         <span class="name">numChannels</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The number of channels allocated for this buffer, or <code>-1</code> if
+the buffer was not allocated or its number of channels is
+not yet known.</p>
     </li><li name="de.sciss.synth.Buffer#numFrames" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="numFrames:Int"></a>
       <a id="numFrames:Int"></a>
@@ -507,7 +513,9 @@
         <span class="name">numFrames</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The number of frames allocated for this buffer, or <code>-1</code> if
+the buffer was not allocated or its number of frames is
+not yet known.</p>
     </li><li name="de.sciss.synth.Buffer#queryMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="queryMsg:de.sciss.synth.message.BufferQuery"></a>
       <a id="queryMsg:BufferQuery"></a>
@@ -547,7 +555,7 @@
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.Buffer#register" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.Buffer#register" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="register():Unit"></a>
       <a id="register():Unit"></a>
       <h4 class="signature">
@@ -559,7 +567,10 @@
         <span class="name">register</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Adds this buffer to the server's buffer manager so that
+its information fields will be tracked and updated.</p><div class="fullcomment"><div class="comment cmt"><p>Adds this buffer to the server's buffer manager so that
+its information fields will be tracked and updated.</p><p>It is safe to call this method more than once.
+</p></div></div>
     </li><li name="de.sciss.synth.Buffer#release" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="release():Unit"></a>
       <a id="release():Unit"></a>
@@ -573,8 +584,8 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Releases the buffer id to the id-allocator pool, without sending any
-OSCMessage.</p><div class="fullcomment"><div class="comment cmt"><p>Releases the buffer id to the id-allocator pool, without sending any
-OSCMessage. Use with great care.
+OSC message.</p><div class="fullcomment"><div class="comment cmt"><p>Releases the buffer id to the id-allocator pool, without sending any
+OSC message. Use with great care.
 </p></div></div>
     </li><li name="de.sciss.model.impl.ModelImpl#releaseListeners" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="releaseListeners():Unit"></a>
@@ -591,14 +602,14 @@ OSCMessage. Use with great care.
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>ModelImpl</dd></dl></div>
     </li><li name="de.sciss.model.impl.ModelImpl#removeListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="removeListener(pf:de.sciss.model.Model.Listener[U]):Unit"></a>
-      <a id="removeListener(model.Model.Listener[BufferInfo]):Unit"></a>
+      <a id="removeListener(Listener[BufferInfo]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">removeListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">model.Model.Listener</span>[<a href="BufferManager$$BufferInfo.html" class="extype" name="de.sciss.synth.BufferManager.BufferInfo">BufferInfo</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">removeListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">Listener</span>[<a href="BufferManager$$BufferInfo.html" class="extype" name="de.sciss.synth.BufferManager.BufferInfo">BufferInfo</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelImpl → Model</dd></dl></div>
@@ -614,7 +625,9 @@ OSCMessage. Use with great care.
         <span class="name">sampleRate</span><span class="result">: <span class="extype" name="scala.Float">Float</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The sample-rate for this buffer, or <code>0</code> if
+the buffer was not allocated or its sample-rate is
+not yet known.</p>
     </li><li name="de.sciss.synth.Buffer#server" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="server:de.sciss.synth.Server"></a>
       <a id="server:Server"></a>
@@ -629,20 +642,20 @@ OSCMessage. Use with great care.
       </h4>
       
     </li><li name="de.sciss.synth.Buffer#setMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setMsg(pairs:(Int,Float)*):de.sciss.synth.message.BufferSet"></a>
-      <a id="setMsg((Int,Float)*):BufferSet"></a>
+      <a id="setMsg(pairs:de.sciss.synth.FillValue*):de.sciss.synth.message.BufferSet"></a>
+      <a id="setMsg(FillValue*):BufferSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setMsg</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Float">Float</span>)*</span>)</span><span class="result">: <a href="message/BufferSet.html" class="extype" name="de.sciss.synth.message.BufferSet">BufferSet</a></span>
+        <span class="name">setMsg</span><span class="params">(<span name="pairs">pairs: <a href="FillValue.html" class="extype" name="de.sciss.synth.FillValue">FillValue</a>*</span>)</span><span class="result">: <a href="message/BufferSet.html" class="extype" name="de.sciss.synth.message.BufferSet">BufferSet</a></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.synth.Buffer#setnMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setnMsg(pairs:(Int,scala.collection.immutable.IndexedSeq[Float])*):de.sciss.synth.message.BufferSetn"></a>
+      <a id="setnMsg(pairs:(Int,IndexedSeq[Float])*):de.sciss.synth.message.BufferSetn"></a>
       <a id="setnMsg((Int,IndexedSeq[Float])*):BufferSetn"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -650,12 +663,12 @@ OSCMessage. Use with great care.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setnMsg</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>])*</span>)</span><span class="result">: <a href="message/BufferSetn.html" class="extype" name="de.sciss.synth.message.BufferSetn">BufferSetn</a></span>
+        <span class="name">setnMsg</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>])*</span>)</span><span class="result">: <a href="message/BufferSetn.html" class="extype" name="de.sciss.synth.message.BufferSetn">BufferSetn</a></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.synth.Buffer#setnMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setnMsg(v:scala.collection.immutable.IndexedSeq[Float]):de.sciss.synth.message.BufferSetn"></a>
+      <a id="setnMsg(values:IndexedSeq[Float]):de.sciss.synth.message.BufferSetn"></a>
       <a id="setnMsg(IndexedSeq[Float]):BufferSetn"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -663,7 +676,7 @@ OSCMessage. Use with great care.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setnMsg</span><span class="params">(<span name="v">v: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result">: <a href="message/BufferSetn.html" class="extype" name="de.sciss.synth.message.BufferSetn">BufferSetn</a></span>
+        <span class="name">setnMsg</span><span class="params">(<span name="values">values: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result">: <a href="message/BufferSetn.html" class="extype" name="de.sciss.synth.message.BufferSetn">BufferSetn</a></span>
       </span>
       </h4>
       
@@ -715,7 +728,7 @@ OSCMessage. Use with great care.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Buffer">Buffer</a> → AnyRef → Any</dd></dl></div>
@@ -856,6 +869,7 @@ OSCMessage. Use with great care.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

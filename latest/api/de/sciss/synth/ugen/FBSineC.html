@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>FBSineC - de.sciss.synth.ugen.FBSineC</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -35,12 +39,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">FBSineC</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">ugen.this.`package`.nyquist</span></span>, <span name="im">im: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="fb">fb: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.1)</span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.1)</span></span>, <span name="c">c: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.5)</span></span>, <span name="xi">xi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.1)</span></span>, <span name="yi">yi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.1)</span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">FBSineC</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">nyquist</span></span>, <span name="im">im: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="fb">fb: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.1f</a></span></span></span>, <span name="c">c: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>, <span name="xi">xi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>, <span name="yi">yi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A non-interpolating sound generator based on the difference equations:</p><pre>x[n+<span class="num">1</span>] = sin(im * y[n] + fb * x[n])
-y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi</pre><p> This uses a linear congruential function to drive the phase indexing of a sine wave. For  im = 1 ,  fb = 0 , and  a = 1 a normal sinewave results.
+y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi</pre><p>This uses a linear congruential function to drive the phase indexing of a sine
+wave. For im = 1, fb = 0 , and a = 1 a normal sine wave results.
 </p></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>Iteration frequency in Hertz</p></dd><dt class="param">im</dt><dd class="cmt"><p>Index multiplier amount</p></dd><dt class="param">fb</dt><dd class="cmt"><p>Feedback amount</p></dd><dt class="param">a</dt><dd class="cmt"><p>Phase multiplier amount</p></dd><dt class="param">c</dt><dd class="cmt"><p>Phase increment amount</p></dd><dt class="param">xi</dt><dd class="cmt"><p>Initial value of x</p></dd><dt class="param">yi</dt><dd class="cmt"><p>Initial value of y
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="FBSineL$.html" class="extype" name="de.sciss.synth.ugen.FBSineL">FBSineL</a>
 </p></span><span class="cmt"><p><a href="FBSineN$.html" class="extype" name="de.sciss.synth.ugen.FBSineN">FBSineN</a></p></span></dd></dl><div class="toggleContainer block">
@@ -92,7 +97,7 @@ y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi<
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">FBSineC</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">ugen.this.`package`.nyquist</span></span>, <span name="im">im: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="fb">fb: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.1)</span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.1)</span></span>, <span name="c">c: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.5)</span></span>, <span name="xi">xi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.1)</span></span>, <span name="yi">yi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.1)</span></span>)</span>
+        <span class="name">FBSineC</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">nyquist</span></span>, <span name="im">im: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="fb">fb: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.1f</a></span></span></span>, <span name="c">c: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>, <span name="xi">xi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>, <span name="yi">yi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>Iteration frequency in Hertz</p></dd><dt class="param">im</dt><dd class="cmt"><p>Index multiplier amount</p></dd><dt class="param">fb</dt><dd class="cmt"><p>Feedback amount</p></dd><dt class="param">a</dt><dd class="cmt"><p>Phase multiplier amount</p></dd><dt class="param">c</dt><dd class="cmt"><p>Phase increment amount</p></dd><dt class="param">xi</dt><dd class="cmt"><p>Initial value of x</p></dd><dt class="param">yi</dt><dd class="cmt"><p>Initial value of y
@@ -107,19 +112,6 @@ y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi<
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -131,7 +123,7 @@ y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi<
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -146,19 +138,6 @@ y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi<
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -170,7 +149,7 @@ y[n+<span class="num">1</span>] = (a * y[n] + c) % <span class="num">2</span>pi<
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.FBSineC#a" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="a:de.sciss.synth.GE"></a>
       <a id="a:GE"></a>
@@ -596,6 +575,7 @@ expansion
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

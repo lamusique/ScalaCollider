@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>BeatTrack2 - de.sciss.synth.ugen.BeatTrack2</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -35,7 +39,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">BeatTrack2</span><span class="params">(<span name="bus">bus: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="winSize">winSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(2)</span></span>, <span name="phaseSpacing">phaseSpacing: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.02)</span></span>, <span name="lock">lock: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0)</span></span>, <span name="weighting">weighting: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(-2.1)</span></span>)</span><span class="result"> extends <a href="../UGenSource$$MultiOut.html" class="extype" name="de.sciss.synth.UGenSource.MultiOut">MultiOut</a> with <a href="../ControlRated.html" class="extype" name="de.sciss.synth.ControlRated">ControlRated</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">BeatTrack2</span><span class="params">(<span name="bus">bus: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="winSize">winSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">2</a></span></span></span>, <span name="phaseSpacing">phaseSpacing: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.02f</a></span></span></span>, <span name="lock">lock: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="weighting">weighting: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">2.1f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$MultiOut.html" class="extype" name="de.sciss.synth.UGenSource.MultiOut">MultiOut</a> with <a href="../ControlRated.html" class="extype" name="de.sciss.synth.ControlRated">ControlRated</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -43,13 +47,13 @@
 exhaustively testing particular template patterns against feature streams; the
 testing takes place every 0.5 seconds. The two basic templates are a straight
 (groove=0) and a swung triplet (groove=1) pattern of 16th notes; this pattern is
-tried out at scalings corresponding to the tempi from 60 to 180 bpm. This is the
-cross-corellation method of beat tracking. A majority vote is taken on the best
-tempo detected, but this must be confirmed by a consistency check after a phase
-estimate. Such a consistency check helps to avoid wild fluctuating estimates,
-but is at the expense of an additional half second delay. The latency of the
-beat tracker with default settings is thus at least 2.5 seconds; because of
-block-based amortisation of calculation, it is actually around 2.8 seconds
+tried out at scaling factors corresponding to the tempi from 60 to 180 bpm. This
+is the cross-correlation method of beat tracking. A majority vote is taken on
+the best tempo detected, but this must be confirmed by a consistency check after
+a phase estimate. Such a consistency check helps to avoid wild fluctuating
+estimates, but is at the expense of an additional half second delay. The latency
+of the beat tracker with default settings is thus at least 2.5 seconds; because
+of block-based amortisation of calculation, it is actually around 2.8 seconds
 latency for a 2.0 second temporal window.</p><p>This beat tracker is designed to be flexible for user needs; you can try out
 different window sizes, tempo weights and combinations of features. However,
 there are no guarantees on stability and effectiveness, and you will need to
@@ -133,7 +137,7 @@ argument!
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">BeatTrack2</span><span class="params">(<span name="bus">bus: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="winSize">winSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(2)</span></span>, <span name="phaseSpacing">phaseSpacing: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.02)</span></span>, <span name="lock">lock: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0)</span></span>, <span name="weighting">weighting: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(-2.1)</span></span>)</span>
+        <span class="name">BeatTrack2</span><span class="params">(<span name="bus">bus: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="winSize">winSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">2</a></span></span></span>, <span name="phaseSpacing">phaseSpacing: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.02f</a></span></span></span>, <span name="lock">lock: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="weighting">weighting: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">2.1f</a></span></span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">bus</dt><dd class="cmt"><p>index of a control bus to read from. the number of
@@ -174,19 +178,6 @@ argument!
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -198,7 +189,7 @@ argument!
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -213,19 +204,6 @@ argument!
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -237,7 +215,7 @@ argument!
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -251,6 +229,19 @@ argument!
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.BeatTrack2#beatTick" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="beatTick:de.sciss.synth.GE"></a>
+      <a id="beatTick:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">beatTick</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.ugen.BeatTrack2#bus" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="bus:de.sciss.synth.GE"></a>
       <a id="bus:GE"></a>
@@ -289,6 +280,19 @@ argument!
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.BeatTrack2#eighthTick" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="eighthTick:de.sciss.synth.GE"></a>
+      <a id="eighthTick:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">eighthTick</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -334,6 +338,32 @@ argument!
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.BeatTrack2#groove" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="groove:de.sciss.synth.GE"></a>
+      <a id="groove:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">groove</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.ugen.BeatTrack2#grooveTick" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="grooveTick:de.sciss.synth.GE"></a>
+      <a id="grooveTick:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">grooveTick</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -461,6 +491,19 @@ expansion
       </h4>
       <p class="shortcomment cmt">(scalar) How many features (ie how many control bus
                         channels) are provided</p>
+    </li><li name="de.sciss.synth.ugen.BeatTrack2#phase" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="phase:de.sciss.synth.GE"></a>
+      <a id="phase:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">phase</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.ugen.BeatTrack2#phaseSpacing" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="phaseSpacing:de.sciss.synth.GE"></a>
       <a id="phaseSpacing:GE"></a>
@@ -517,6 +560,19 @@ expansion
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.BeatTrack2#tempo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tempo:de.sciss.synth.GE"></a>
+      <a id="tempo:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tempo</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.UGenSource#unwrap" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="unwrap(args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenInLike]):U"></a>
       <a id="unwrap(IndexedSeq[UGenInLike]):UGenInLike"></a>
@@ -680,6 +736,7 @@ expansion
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

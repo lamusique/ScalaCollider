@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>SynthDefConstructors - de.sciss.synth.Ops.SynthDefConstructors</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -41,7 +45,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.NotNull">NotNull</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.Ops.SynthDefConstructors"><span>SynthDefConstructors</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.NotNull"><span>NotNull</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.Ops.SynthDefConstructors"><span>SynthDefConstructors</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -80,7 +84,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.Ops.SynthDefConstructors#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(d:de.sciss.synth.SynthDef.type):de.sciss.synth.Ops.SynthDefConstructors"></a>
+      <a id="&lt;init&gt;(this:de.sciss.synth.SynthDef.type):de.sciss.synth.Ops.SynthDefConstructors"></a>
       <a id="&lt;init&gt;:SynthDefConstructors"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -88,7 +92,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">SynthDefConstructors</span><span class="params">(<span name="d">d: <a href="SynthDef$.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a>.type</span>)</span>
+        <span class="name">SynthDefConstructors</span><span class="params">(<span name="this">this: <a href="SynthDef$.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a>.type</span>)</span>
       </span>
       </h4>
       
@@ -153,19 +157,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.Ops.SynthDefConstructors#d" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="d:de.sciss.synth.SynthDef.type"></a>
-      <a id="d:SynthDef.type"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">d</span><span class="result">: <a href="SynthDef$.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a>.type</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyVal#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
@@ -192,6 +183,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="de.sciss.synth.Ops.SynthDefConstructors#load" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="load(path:String,server:de.sciss.synth.Server,completion:de.sciss.synth.Completion[Unit]):Unit"></a>
+      <a id="load(String,Server,Completion[Unit]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">load</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="server">server: <a href="Server.html" class="extype" name="de.sciss.synth.Server">Server</a> = <span class="symbol"><span class="name"><a href="Server$.html">Server.default</a></span></span></span>, <span name="completion">completion: <a href="Completion.html" class="extype" name="de.sciss.synth.Completion">Completion</a>[<span class="extype" name="scala.Unit">Unit</span>] = <span class="symbol"><span class="name"><a href="Completion$.html">Completion.None</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Ops.SynthDefConstructors#loadDir" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="loadDir(path:String,server:de.sciss.synth.Server,completion:de.sciss.synth.Completion[Unit]):Unit"></a>
+      <a id="loadDir(String,Server,Completion[Unit]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">loadDir</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="server">server: <a href="Server.html" class="extype" name="de.sciss.synth.Server">Server</a> = <span class="symbol"><span class="name"><a href="Server$.html">Server.default</a></span></span></span>, <span name="completion">completion: <a href="Completion.html" class="extype" name="de.sciss.synth.Completion">Completion</a>[<span class="extype" name="scala.Unit">Unit</span>] = <span class="symbol"><span class="name"><a href="Completion$.html">Completion.None</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.Ops.SynthDefConstructors#recv" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="recv(name:String,server:de.sciss.synth.Server,completion:de.sciss.synth.SynthDef.Completion)(thunk:=&gt;Unit):de.sciss.synth.SynthDef"></a>
       <a id="recv(String,Server,SynthDef.Completion)(⇒Unit):SynthDef"></a>
@@ -201,7 +218,20 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">recv</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="server">server: <a href="Server.html" class="extype" name="de.sciss.synth.Server">Server</a> = <span class="symbol"><span class="name"><a href="Server$.html">Server.default</a></span></span></span>, <span name="completion">completion: <a href="SynthDef$.html#Completion=de.sciss.synth.Completion[de.sciss.synth.SynthDef]" class="extmbr" name="de.sciss.synth.SynthDef.Completion">SynthDef.Completion</a> = <span class="symbol"><span class="name"><a href="SynthDef$.html">NoCompletion</a></span></span></span>)</span><span class="params">(<span name="thunk">thunk: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="SynthDef.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a></span>
+        <span class="name">recv</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="server">server: <a href="Server.html" class="extype" name="de.sciss.synth.Server">Server</a> = <span class="symbol"><span class="name"><a href="Server$.html">Server.default</a></span></span></span>, <span name="completion">completion: <a href="SynthDef$.html#Completion=de.sciss.synth.Completion[de.sciss.synth.SynthDef]" class="extmbr" name="de.sciss.synth.SynthDef.Completion">SynthDef.Completion</a> = <span class="symbol"><span class="name"><a href="Completion$.html">Completion.None</a></span></span></span>)</span><span class="params">(<span name="thunk">thunk: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <a href="SynthDef.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Ops.SynthDefConstructors#this" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="this:de.sciss.synth.SynthDef.type"></a>
+      <a id="this:SynthDef.type"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">this</span><span class="result">: <a href="SynthDef$.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a>.type</span>
       </span>
       </h4>
       
@@ -229,8 +259,6 @@
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyVal">
               <h3>Inherited from <span class="extype" name="scala.AnyVal">AnyVal</span></h3>
-            </div><div class="parent" name="scala.NotNull">
-              <h3>Inherited from <span class="extype" name="scala.NotNull">NotNull</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
@@ -249,6 +277,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,18 +1,22 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
-          <title>ControlSetMap - de.sciss.synth.ControlSetMap</title>
-          <meta name="description" content="ControlSetMap - de.sciss.synth.ControlSetMap" />
-          <meta name="keywords" content="ControlSetMap de.sciss.synth.ControlSetMap" />
+          <title>ControlFillRange - de.sciss.synth.ControlFillRange</title>
+          <meta name="description" content="ControlFillRange - de.sciss.synth.ControlFillRange" />
+          <meta name="keywords" content="ControlFillRange de.sciss.synth.ControlFillRange" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
-            var hash = 'de.sciss.synth.ControlSetMap$';
+            var hash = 'de.sciss.synth.ControlFillRange$';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -24,9 +28,9 @@
         </head>
         <body class="value">
       <div id="definition">
-        <a href="ControlSetMap.html" title="Go to companion"><img src="../../../lib/object_to_trait_big.png" /></a>
+        <a href="ControlFillRange.html" title="Go to companion"><img src="../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="de">de</a>.<a href="../package.html" class="extype" name="de.sciss">sciss</a>.<a href="package.html" class="extype" name="de.sciss.synth">synth</a></p>
-        <h1><a href="ControlSetMap.html" title="Go to companion">ControlSetMap</a></h1>
+        <h1><a href="ControlFillRange.html" title="Go to companion">ControlFillRange</a></h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,13 +39,13 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <span class="name">ControlSetMap</span><span class="result"> extends <span class="extype" name="de.sciss.synth.SingleControlSetMapImplicits">SingleControlSetMapImplicits</span> with <span class="extype" name="de.sciss.synth.MultiControlSetMapImplicits">MultiControlSetMapImplicits</span></span>
+        <span class="name">ControlFillRange</span><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="de.sciss.synth.MultiControlSetMapImplicits">MultiControlSetMapImplicits</span>, <span class="extype" name="de.sciss.synth.SingleControlSetMapImplicits">SingleControlSetMapImplicits</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.ControlSetMap"><span>ControlSetMap</span></li><li class="in" name="de.sciss.synth.MultiControlSetMapImplicits"><span>MultiControlSetMapImplicits</span></li><li class="in" name="de.sciss.synth.SingleControlSetMapImplicits"><span>SingleControlSetMapImplicits</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.ControlFillRange"><span>ControlFillRange</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -79,55 +83,13 @@
         <div id="allMembers">
         
 
-        <div id="types" class="types members">
-              <h3>Type Members</h3>
-              <ol><li name="de.sciss.synth.ControlSetMap.Multi" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="MultiextendsControlSetMapwithProductwithSerializable"></a>
-      <a id="Multi:Multi"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="ControlSetMap$$Multi.html"><span class="name">Multi</span></a><span class="params">(<span name="key">key: <span class="extype" name="scala.Any">Any</span></span>, <span name="values">values: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result"> extends <a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="de.sciss.synth.ControlSetMap.Single" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="SingleextendsControlSetMapwithProductwithSerializable"></a>
-      <a id="Single:Single"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="ControlSetMap$$Single.html"><span class="name">Single</span></a><span class="params">(<span name="key">key: <span class="extype" name="scala.Any">Any</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result"> extends <a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
+        
 
         
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -139,7 +101,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -154,19 +116,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -178,30 +127,30 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ControlSetMap.Multi" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Multi"></a>
-      <a id="Multi:Multi"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.ControlFillRange#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="apply(key:Int,numChannels:Int,value:Float):de.sciss.synth.ControlFillRange"></a>
+      <a id="apply(Int,Int,Float):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <a href="ControlSetMap$$Multi$.html"><span class="name">Multi</span></a><span class="result"> extends <span class="extype" name="de.sciss.synth.MultiControlSetMapImplicits">MultiControlSetMapImplicits</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">apply</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Int">Int</span></span>, <span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.ControlSetMap.Single" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Single"></a>
-      <a id="Single:Single"></a>
+    </li><li name="de.sciss.synth.ControlFillRange#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="apply(key:String,numChannels:Int,value:Float):de.sciss.synth.ControlFillRange"></a>
+      <a id="apply(String,Int,Float):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">object</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <a href="ControlSetMap$$Single$.html"><span class="name">Single</span></a><span class="result"> extends <span class="extype" name="de.sciss.synth.SingleControlSetMapImplicits">SingleControlSetMapImplicits</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">apply</span><span class="params">(<span name="key">key: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
       
@@ -308,58 +257,45 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.SingleControlSetMapImplicits#intDoubleControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="intDoubleControlSet(tup:(Int,Double)):de.sciss.synth.ControlSetMap.Single"></a>
-      <a id="intDoubleControlSet((Int,Double)):Single"></a>
+    </li><li name="de.sciss.synth.ControlFillRange#intDoubleControlFill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="intDoubleControlFill(tup:(Int,Int,Double)):de.sciss.synth.ControlFillRange"></a>
+      <a id="intDoubleControlFill((Int,Int,Double)):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">intDoubleControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Double">Double</span>)</span>)</span><span class="result">: <a href="ControlSetMap$$Single.html" class="extype" name="de.sciss.synth.ControlSetMap.Single">Single</a></span>
+        <span class="name">intDoubleControlFill</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Double">Double</span>)</span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SingleControlSetMapImplicits</dd></dl></div>
-    </li><li name="de.sciss.synth.SingleControlSetMapImplicits#intFloatControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="intFloatControlSet(tup:(Int,Float)):de.sciss.synth.ControlSetMap.Single"></a>
-      <a id="intFloatControlSet((Int,Float)):Single"></a>
+      
+    </li><li name="de.sciss.synth.ControlFillRange#intFloatControlFill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="intFloatControlFill(tup:(Int,Int,Float)):de.sciss.synth.ControlFillRange"></a>
+      <a id="intFloatControlFill((Int,Int,Float)):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">intFloatControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Float">Float</span>)</span>)</span><span class="result">: <a href="ControlSetMap$$Single.html" class="extype" name="de.sciss.synth.ControlSetMap.Single">Single</a></span>
+        <span class="name">intFloatControlFill</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Float">Float</span>)</span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SingleControlSetMapImplicits</dd></dl></div>
-    </li><li name="de.sciss.synth.MultiControlSetMapImplicits#intFloatsControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="intFloatsControlSet(tup:(Int,Seq[Float])):de.sciss.synth.ControlSetMap.Multi"></a>
-      <a id="intFloatsControlSet((Int,Seq[Float])):Multi"></a>
+      
+    </li><li name="de.sciss.synth.ControlFillRange#intIntControlFill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="intIntControlFill(tup:(Int,Int,Int)):de.sciss.synth.ControlFillRange"></a>
+      <a id="intIntControlFill((Int,Int,Int)):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">intFloatsControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Float">Float</span>])</span>)</span><span class="result">: <a href="ControlSetMap$$Multi.html" class="extype" name="de.sciss.synth.ControlSetMap.Multi">Multi</a></span>
+        <span class="name">intIntControlFill</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>MultiControlSetMapImplicits</dd></dl></div>
-    </li><li name="de.sciss.synth.SingleControlSetMapImplicits#intIntControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="intIntControlSet(tup:(Int,Int)):de.sciss.synth.ControlSetMap.Single"></a>
-      <a id="intIntControlSet((Int,Int)):Single"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">intIntControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>)</span><span class="result">: <a href="ControlSetMap$$Single.html" class="extype" name="de.sciss.synth.ControlSetMap.Single">Single</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SingleControlSetMapImplicits</dd></dl></div>
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -412,58 +348,45 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="de.sciss.synth.SingleControlSetMapImplicits#stringDoubleControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stringDoubleControlSet(tup:(String,Double)):de.sciss.synth.ControlSetMap.Single"></a>
-      <a id="stringDoubleControlSet((String,Double)):Single"></a>
+    </li><li name="de.sciss.synth.ControlFillRange#stringDoubleControlFill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stringDoubleControlFill(tup:(String,Int,Double)):de.sciss.synth.ControlFillRange"></a>
+      <a id="stringDoubleControlFill((String,Int,Double)):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stringDoubleControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Double">Double</span>)</span>)</span><span class="result">: <a href="ControlSetMap$$Single.html" class="extype" name="de.sciss.synth.ControlSetMap.Single">Single</a></span>
+        <span class="name">stringDoubleControlFill</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Double">Double</span>)</span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SingleControlSetMapImplicits</dd></dl></div>
-    </li><li name="de.sciss.synth.SingleControlSetMapImplicits#stringFloatControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stringFloatControlSet(tup:(String,Float)):de.sciss.synth.ControlSetMap.Single"></a>
-      <a id="stringFloatControlSet((String,Float)):Single"></a>
+      
+    </li><li name="de.sciss.synth.ControlFillRange#stringFloatControlFill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stringFloatControlFill(tup:(String,Int,Float)):de.sciss.synth.ControlFillRange"></a>
+      <a id="stringFloatControlFill((String,Int,Float)):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stringFloatControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Float">Float</span>)</span>)</span><span class="result">: <a href="ControlSetMap$$Single.html" class="extype" name="de.sciss.synth.ControlSetMap.Single">Single</a></span>
+        <span class="name">stringFloatControlFill</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Float">Float</span>)</span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SingleControlSetMapImplicits</dd></dl></div>
-    </li><li name="de.sciss.synth.MultiControlSetMapImplicits#stringFloatsControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stringFloatsControlSet(tup:(String,Seq[Float])):de.sciss.synth.ControlSetMap.Multi"></a>
-      <a id="stringFloatsControlSet((String,Seq[Float])):Multi"></a>
+      
+    </li><li name="de.sciss.synth.ControlFillRange#stringIntControlFill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stringIntControlFill(tup:(String,Int,Int)):de.sciss.synth.ControlFillRange"></a>
+      <a id="stringIntControlFill((String,Int,Int)):ControlFillRange"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">implicit </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">stringFloatsControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Float">Float</span>])</span>)</span><span class="result">: <a href="ControlSetMap$$Multi.html" class="extype" name="de.sciss.synth.ControlSetMap.Multi">Multi</a></span>
+        <span class="name">stringIntControlFill</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Int">Int</span>)</span>)</span><span class="result">: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>MultiControlSetMapImplicits</dd></dl></div>
-    </li><li name="de.sciss.synth.SingleControlSetMapImplicits#stringIntControlSet" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="stringIntControlSet(tup:(String,Int)):de.sciss.synth.ControlSetMap.Single"></a>
-      <a id="stringIntControlSet((String,Int)):Single"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">implicit </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">stringIntControlSet</span><span class="params">(<span name="tup">tup: (<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Int">Int</span>)</span>)</span><span class="result">: <a href="ControlSetMap$$Single.html" class="extype" name="de.sciss.synth.ControlSetMap.Single">Single</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SingleControlSetMapImplicits</dd></dl></div>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -556,10 +479,10 @@
         </div>
 
         <div id="inheritedMembers">
-        <div class="parent" name="de.sciss.synth.MultiControlSetMapImplicits">
-              <h3>Inherited from <span class="extype" name="de.sciss.synth.MultiControlSetMapImplicits">MultiControlSetMapImplicits</span></h3>
-            </div><div class="parent" name="de.sciss.synth.SingleControlSetMapImplicits">
-              <h3>Inherited from <span class="extype" name="de.sciss.synth.SingleControlSetMapImplicits">SingleControlSetMapImplicits</span></h3>
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
@@ -580,6 +503,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

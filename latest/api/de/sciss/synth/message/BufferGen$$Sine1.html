@@ -1,18 +1,22 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
-          <title>Info - de.sciss.synth.message.GroupNew.Info</title>
-          <meta name="description" content="Info - de.sciss.synth.message.GroupNew.Info" />
-          <meta name="keywords" content="Info de.sciss.synth.message.GroupNew.Info" />
+          <title>Sine1 - de.sciss.synth.message.BufferGen.Sine1</title>
+          <meta name="description" content="Sine1 - de.sciss.synth.message.BufferGen.Sine1" />
+          <meta name="keywords" content="Sine1 de.sciss.synth.message.BufferGen.Sine1" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
-            var hash = 'de.sciss.synth.message.GroupNew$$Info';
+            var hash = 'de.sciss.synth.message.BufferGen$$Sine1';
             var anchor = window.location.hash;
             var anchor_opt = '';
             if (anchor.length >= 1)
@@ -25,8 +29,8 @@
         <body class="type">
       <div id="definition">
         <img src="../../../../lib/class_big.png" />
-        <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a>.<a href="package.html" class="extype" name="de.sciss.synth.message">message</a>.<a href="GroupNew$.html" class="extype" name="de.sciss.synth.message.GroupNew">GroupNew</a></p>
-        <h1>Info</h1>
+        <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a>.<a href="package.html" class="extype" name="de.sciss.synth.message">message</a>.<a href="BufferGen$.html" class="extype" name="de.sciss.synth.message.BufferGen">BufferGen</a></p>
+        <h1>Sine1</h1>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,13 +39,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Info</span><span class="params">(<span name="groupID">groupID: <span class="extype" name="scala.Int">Int</span></span>, <span name="addAction">addAction: <span class="extype" name="scala.Int">Int</span></span>, <span name="targetID">targetID: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">Sine1</span><span class="params">(<span name="flags">flags: <a href="BufferGen$$WaveFill$$Flags.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill.Flags">Flags</a></span>, <span name="partials">partials: <span class="extype" name="scala.Float">Float</span>*</span>)</span><span class="result"> extends <a href="BufferGen$$WaveFill.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill">WaveFill</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">partials</dt><dd class="cmt"><p>frequencies</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="BufferGen$$WaveFill.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill">WaveFill</a>, <a href="BufferGen$$Command.html" class="extype" name="de.sciss.synth.message.BufferGen.Command">Command</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.message.GroupNew.Info"><span>Info</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.message.BufferGen.Sine1"><span>Sine1</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="de.sciss.synth.message.BufferGen.WaveFill"><span>WaveFill</span></li><li class="in" name="de.sciss.synth.message.BufferGen.Command"><span>Command</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -79,19 +83,19 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="de.sciss.synth.message.GroupNew.Info#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(groupID:Int,addAction:Int,targetID:Int):de.sciss.synth.message.GroupNew.Info"></a>
-      <a id="&lt;init&gt;:Info"></a>
+              <ol><li name="de.sciss.synth.message.BufferGen.Sine1#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(flags:de.sciss.synth.message.BufferGen.WaveFill.Flags,partials:Float*):de.sciss.synth.message.BufferGen.Sine1"></a>
+      <a id="&lt;init&gt;:Sine1"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Info</span><span class="params">(<span name="groupID">groupID: <span class="extype" name="scala.Int">Int</span></span>, <span name="addAction">addAction: <span class="extype" name="scala.Int">Int</span></span>, <span name="targetID">targetID: <span class="extype" name="scala.Int">Int</span></span>)</span>
+        <span class="name">Sine1</span><span class="params">(<span name="flags">flags: <a href="BufferGen$$WaveFill$$Flags.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill.Flags">Flags</a></span>, <span name="partials">partials: <span class="extype" name="scala.Float">Float</span>*</span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">partials</dt><dd class="cmt"><p>frequencies</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -102,19 +106,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -126,7 +117,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -141,19 +132,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -165,20 +143,20 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.message.GroupNew.Info#addAction" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="addAction:Int"></a>
-      <a id="addAction:Int"></a>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.message.BufferGen.Sine1#args" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="args:Seq[Any]"></a>
+      <a id="args:Seq[Any]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addAction</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+        <span class="name">args</span><span class="result">: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Any">Any</span>]</span>
       </span>
       </h4>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.message.BufferGen.Sine1">Sine1</a> → <a href="BufferGen$$Command.html" class="extype" name="de.sciss.synth.message.BufferGen.Command">Command</a></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -243,6 +221,19 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="de.sciss.synth.message.BufferGen.Sine1#flags" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="flags:de.sciss.synth.message.BufferGen.WaveFill.Flags"></a>
+      <a id="flags:Flags"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">flags</span><span class="result">: <a href="BufferGen$$WaveFill$$Flags.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill.Flags">Flags</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -256,19 +247,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.message.GroupNew.Info#groupID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="groupID:Int"></a>
-      <a id="groupID:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">groupID</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -282,6 +260,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="de.sciss.synth.message.BufferGen.WaveFill#isSynchronous" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isSynchronous:Boolean"></a>
+      <a id="isSynchronous:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">isSynchronous</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="BufferGen$$WaveFill.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill">WaveFill</a> → <a href="BufferGen$$Command.html" class="extype" name="de.sciss.synth.message.BufferGen.Command">Command</a></dd></dl></div>
+    </li><li name="de.sciss.synth.message.BufferGen.Sine1#name" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="name:String"></a>
+      <a id="name:String"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">name</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.message.BufferGen.Sine1">Sine1</a> → <a href="BufferGen$$Command.html" class="extype" name="de.sciss.synth.message.BufferGen.Command">Command</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -321,6 +325,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="de.sciss.synth.message.BufferGen.Sine1#partials" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="partials:Float*"></a>
+      <a id="partials:Float*"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">partials</span><span class="result">: <span class="extype" name="scala.Float">Float</span>*</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">frequencies</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -334,19 +351,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="de.sciss.synth.message.GroupNew.Info#targetID" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="targetID:Int"></a>
-      <a id="targetID:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">targetID</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -421,6 +425,10 @@
               <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
             </div><div class="parent" name="scala.Equals">
               <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="de.sciss.synth.message.BufferGen.WaveFill">
+              <h3>Inherited from <a href="BufferGen$$WaveFill.html" class="extype" name="de.sciss.synth.message.BufferGen.WaveFill">WaveFill</a></h3>
+            </div><div class="parent" name="de.sciss.synth.message.BufferGen.Command">
+              <h3>Inherited from <a href="BufferGen$$Command.html" class="extype" name="de.sciss.synth.message.BufferGen.Command">Command</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
@@ -441,6 +449,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

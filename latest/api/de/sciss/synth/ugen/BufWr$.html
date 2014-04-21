@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>BufWr - de.sciss.synth.ugen.BufWr</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -39,7 +43,34 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that writes a signal to a buffer, using an index pointer.</p><p>Warning: if the supplied <code>bufID</code> refers to a buffer whose number of channels
+differs from those of the input signal, the UGen will fail silently.</p><p>An alternative to <code>BufWr</code> is <code>RecordBuf</code> . While <code>RecordBuf</code> advances the index
+into the buffer by itself, <code>BufWr</code> only moves its write point by the index
+input, making it possible to adjust the writing speed or to access the buffer in
+a non-linear way. <code>RecordBuf</code> can determine the end of the buffer and issue a
+done-action.</p><h5>Examples</h5><pre><span class="cmt">// record and playback</span>
+<span class="cmt">// a two second mono buffer</span>
+<span class="kw">val</span> b = Buffer.alloc(s, numFrames = s.sampleRate.toInt * <span class="num">2</span>)
+
+<span class="kw">val</span> y = play {
+  <span class="kw">val</span> sig  = SinOsc.ar(LFNoise1.kr(<span class="num">2</span>).madd(<span class="num">300</span>, <span class="num">400</span>)) * <span class="num">0.1</span>
+  <span class="kw">val</span> rate = <span class="lit">"rate"</span> kr <span class="num">1</span>
+  BufWr.ar(in = sig, buf = b.id, index =
+    Phasor.ar(speed = BufRateScale.kr(b.id) * rate, lo = <span class="num">0</span>, hi = BufFrames.kr(b.id)))
+  <span class="num">0.0</span> <span class="cmt">// quiet</span>
+}
+
+<span class="cmt">// read it with a BufRd</span>
+<span class="kw">val</span> x = play {
+  <span class="kw">val</span> rate = <span class="lit">"rate"</span> kr <span class="num">1</span>
+  BufRd.ar(<span class="num">1</span>, buf = b.id, index =
+    Phasor.ar(speed = BufRateScale.kr(b.id) * rate, lo = <span class="num">0</span>, hi = BufFrames.kr(b.id)))
+}
+
+x.set(<span class="lit">"rate"</span> -&gt; <span class="num">5</span>)
+y.set(<span class="lit">"rate"</span> -&gt; <span class="num">3</span>)
+x.set(<span class="lit">"rate"</span> -&gt; <span class="num">2</span>)</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="BufRateScale$.html" class="extype" name="de.sciss.synth.ugen.BufRateScale">BufRateScale</a>
+</p></span><span class="cmt"><p><a href="BufFrames$.html" class="extype" name="de.sciss.synth.ugen.BufFrames">BufFrames</a></p></span><span class="cmt"><p><a href="Phasor$.html" class="extype" name="de.sciss.synth.ugen.Phasor">Phasor</a></p></span><span class="cmt"><p><a href="BufRd$.html" class="extype" name="de.sciss.synth.ugen.BufRd">BufRd</a></p></span><span class="cmt"><p><a href="RecordBuf$.html" class="extype" name="de.sciss.synth.ugen.RecordBuf">RecordBuf</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -86,19 +117,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -110,7 +128,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -125,19 +143,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -149,8 +154,8 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.BufWr#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.BufWr#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(in:de.sciss.synth.GE,buf:de.sciss.synth.GE,index:de.sciss.synth.GE,loop:de.sciss.synth.GE):de.sciss.synth.ugen.BufWr"></a>
       <a id="ar(GE,GE,GE,GE):BufWr"></a>
       <h4 class="signature">
@@ -162,7 +167,9 @@
         <span class="name">ar</span><span class="params">(<span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="index">index: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span><span class="result">: <a href="BufWr.html" class="extype" name="de.sciss.synth.ugen.BufWr">BufWr</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>the identifier of the buffer to use</p></dd><dt class="param">index</dt><dd class="cmt"><p>audio rate frame-index into the buffer.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to enable looping, 0 to disable looping. this can be
+                        modulated.
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -266,7 +273,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.BufWr#ir" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.BufWr#ir" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ir(in:de.sciss.synth.GE,buf:de.sciss.synth.GE,index:de.sciss.synth.GE,loop:de.sciss.synth.GE):de.sciss.synth.ugen.BufWr"></a>
       <a id="ir(GE,GE,GE,GE):BufWr"></a>
       <h4 class="signature">
@@ -278,7 +285,9 @@
         <span class="name">ir</span><span class="params">(<span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="index">index: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span><span class="result">: <a href="BufWr.html" class="extype" name="de.sciss.synth.ugen.BufWr">BufWr</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>the identifier of the buffer to use</p></dd><dt class="param">index</dt><dd class="cmt"><p>audio rate frame-index into the buffer.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to enable looping, 0 to disable looping. this can be
+                        modulated.
+</p></dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -292,7 +301,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.BufWr#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.BufWr#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(in:de.sciss.synth.GE,buf:de.sciss.synth.GE,index:de.sciss.synth.GE,loop:de.sciss.synth.GE):de.sciss.synth.ugen.BufWr"></a>
       <a id="kr(GE,GE,GE,GE):BufWr"></a>
       <h4 class="signature">
@@ -304,7 +313,9 @@
         <span class="name">kr</span><span class="params">(<span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="index">index: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span><span class="result">: <a href="BufWr.html" class="extype" name="de.sciss.synth.ugen.BufWr">BufWr</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>the identifier of the buffer to use</p></dd><dt class="param">index</dt><dd class="cmt"><p>audio rate frame-index into the buffer.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to enable looping, 0 to disable looping. this can be
+                        modulated.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -460,6 +471,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

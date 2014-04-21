@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Mix - de.sciss.synth.ugen.Mix</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -115,19 +119,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -139,7 +130,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -154,19 +145,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -178,7 +156,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -237,7 +215,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Mix#fill" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Mix#fill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="fill(n:Int)(thunk:=&gt;de.sciss.synth.GE):de.sciss.synth.GE"></a>
       <a id="fill(Int)(⇒GE):GE"></a>
       <h4 class="signature">
@@ -249,8 +227,7 @@
         <span class="name">fill</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span name="thunk">thunk: ⇒ <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A mixing idiom that corresponds to @Seq.</p><div class="fullcomment"><div class="comment cmt"><p>A mixing idiom that corresponds to @Seq.fill@.
-</p></div></div>
+      <p class="shortcomment cmt">A mixing idiom that corresponds to <code>Seq.fill</code>.</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -270,6 +247,22 @@
     </span>)</span>
               
         </dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.Mix#fold" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fold(elem:de.sciss.synth.GE,n:Int)(fun:de.sciss.synth.GE=&gt;de.sciss.synth.GE):de.sciss.synth.GE"></a>
+      <a id="fold(GE,Int)((GE)⇒GE):GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fold</span><span class="params">(<span name="elem">elem: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span name="fun">fun: (<a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a>) ⇒ <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A mixing idiom that is not actually adding elements, but recursively folding them.</p><div class="fullcomment"><div class="comment cmt"><p>A mixing idiom that is not actually adding elements, but recursively folding them.</p><p>Calling this method is equivalent to</p><pre>(<span class="num">1</span> to n).foldLeft(elem) { (res, _) <span class="kw">=&gt;</span> fun(res) }</pre><p>It is often used in the SuperCollider examples to apply a filtering process such as reverberation
+several times,
+</p></div><dl class="paramcmts block"><dt class="param">elem</dt><dd class="cmt"><p>the input element</p></dd><dt class="param">n</dt><dd class="cmt"><p>the number of iterations</p></dd><dt class="param">fun</dt><dd class="cmt"><p>a function that is recursively applied to produce the output
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -387,7 +380,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Mix#tabulate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Mix#tabulate" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="tabulate(n:Int)(fun:Int=&gt;de.sciss.synth.GE):de.sciss.synth.GE"></a>
       <a id="tabulate(Int)((Int)⇒GE):GE"></a>
       <h4 class="signature">
@@ -399,7 +392,7 @@
         <span class="name">tabulate</span><span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="params">(<span name="fun">fun: (<span class="extype" name="scala.Int">Int</span>) ⇒ <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A mixing idiom that corresponds to @Seq.</p><div class="fullcomment"><div class="comment cmt"><p>A mixing idiom that corresponds to @Seq.tabulate@ and to @Array.fill@ in sclang.</p></div></div>
+      <p class="shortcomment cmt">A mixing idiom that corresponds to <code>Seq.tabulate</code> and to <code>Array.fill</code> in sclang.</p>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -503,6 +496,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

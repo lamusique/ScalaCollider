@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>ControlBus - de.sciss.synth.ControlBus</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -102,19 +106,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -126,7 +117,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -141,19 +132,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -165,7 +143,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -211,6 +189,38 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#fillMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="fillMsg(data:de.sciss.synth.FillRange*):de.sciss.synth.message.ControlBusFill"></a>
+      <a id="fillMsg(FillRange*):ControlBusFill"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fillMsg</span><span class="params">(<span name="data">data: <a href="FillRange.html" class="extype" name="de.sciss.synth.FillRange">FillRange</a>*</span>)</span><span class="result">: <a href="message/ControlBusFill.html" class="extype" name="de.sciss.synth.message.ControlBusFill">ControlBusFill</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a <code>ControlBusFill</code> message using relative offsets.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>ControlBusFill</code> message using relative offsets.
+</p></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>tuples of offsets, number of consecutive channels and fill values.
+                The offsets are relative to the index of this bus.
+                All offsets must be &gt;= 0 and less than the number
+                of channels, otherwise an exception is thrown
+</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>ControlBusFill</code> message with absolute indices
+</p></dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#fillMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fillMsg(value:Float):de.sciss.synth.message.ControlBusFill"></a>
+      <a id="fillMsg(Float):ControlBusFill"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fillMsg</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="message/ControlBusFill.html" class="extype" name="de.sciss.synth.message.ControlBusFill">ControlBusFill</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A convenience method that fills all channels of the control bus with one value.</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -242,7 +252,9 @@
         <span class="name">free</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Frees the bus.</p><div class="fullcomment"><div class="comment cmt"><p>Frees the bus. This is a client-side only operation which makes the <code>index</code> available again for re-allocation.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a> → <a href="Bus.html" class="extype" name="de.sciss.synth.Bus">Bus</a></dd></dl></div>
+      <p class="shortcomment cmt">Frees the bus.</p><div class="fullcomment"><div class="comment cmt"><p>Frees the bus. This is a client-side only operation which makes the <code>index</code> available
+again for re-allocation.
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a> → <a href="Bus.html" class="extype" name="de.sciss.synth.Bus">Bus</a></dd></dl></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -256,7 +268,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ControlBus#getMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ControlBus#getMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getMsg(offsets:Int*):de.sciss.synth.message.ControlBusGet"></a>
       <a id="getMsg(Int*):ControlBusGet"></a>
       <h4 class="signature">
@@ -268,21 +280,13 @@
         <span class="name">getMsg</span><span class="params">(<span name="offsets">offsets: <span class="extype" name="scala.Int">Int</span>*</span>)</span><span class="result">: <a href="message/ControlBusGet.html" class="extype" name="de.sciss.synth.message.ControlBusGet">ControlBusGet</a></span>
       </span>
       </h4>
-      
-    </li><li name="de.sciss.synth.ControlBus#getMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="getMsg(offset:Int):de.sciss.synth.message.ControlBusGet"></a>
-      <a id="getMsg(Int):ControlBusGet"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">getMsg</span><span class="params">(<span name="offset">offset: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">0</span></span>)</span><span class="result">: <a href="message/ControlBusGet.html" class="extype" name="de.sciss.synth.message.ControlBusGet">ControlBusGet</a></span>
-      </span>
-      </h4>
-      
-    </li><li name="de.sciss.synth.ControlBus#getMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">Creates a <code>ControlBusGet</code> message using relative offsets.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>ControlBusGet</code> message using relative offsets.
+</p></div><dl class="paramcmts block"><dt class="param">offsets</dt><dd class="cmt"><p>the offsets are relative to the index of this bus.
+                All offsets must be &gt;= 0 and less than the number
+                of channels, otherwise an exception is thrown
+</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>ControlBusGet</code> message with absolute indices
+</p></dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#getMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getMsg:de.sciss.synth.message.ControlBusGet"></a>
       <a id="getMsg:ControlBusGet"></a>
       <h4 class="signature">
@@ -294,7 +298,42 @@
         <span class="name">getMsg</span><span class="result">: <a href="message/ControlBusGet.html" class="extype" name="de.sciss.synth.message.ControlBusGet">ControlBusGet</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">A convenience method that gets the control bus value.</p><div class="fullcomment"><div class="comment cmt"><p>A convenience method that gets the control bus value.
+It requires that the bus has exactly one channel, otherwise
+an exception is thrown.
+</p></div></div>
+    </li><li name="de.sciss.synth.ControlBus#getnMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getnMsg(ranges:Range*):de.sciss.synth.message.ControlBusGetn"></a>
+      <a id="getnMsg(Range*):ControlBusGetn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getnMsg</span><span class="params">(<span name="ranges">ranges: <span class="extype" name="scala.Range">Range</span>*</span>)</span><span class="result">: <a href="message/ControlBusGetn.html" class="extype" name="de.sciss.synth.message.ControlBusGetn">ControlBusGetn</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Creates a <code>ControlBusGetn</code> message using relative offsets.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>ControlBusGetn</code> message using relative offsets.
+</p></div><dl class="paramcmts block"><dt class="param">ranges</dt><dd class="cmt"><p>ranges of offsets and number of consecutive channels to read.
+                The offsets are relative to the index of this bus.
+                All offsets must be &gt;= 0 and less than the number
+                of channels, otherwise an exception is thrown
+</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>ControlBusGetn</code> message with absolute indices
+</p></dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#getnMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getnMsg:de.sciss.synth.message.ControlBusGetn"></a>
+      <a id="getnMsg:ControlBusGetn"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getnMsg</span><span class="result">: <a href="message/ControlBusGetn.html" class="extype" name="de.sciss.synth.message.ControlBusGetn">ControlBusGetn</a></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">A convenience method that queries all channels of the control bus.</p>
     </li><li name="de.sciss.synth.ControlBus#index" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="index:Int"></a>
       <a id="index:Int"></a>
@@ -412,21 +451,26 @@
       </span>
       </h4>
       <p class="shortcomment cmt">The server to which this bus belongs.</p><div class="fullcomment"><div class="comment cmt"><p>The server to which this bus belongs.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a> → <a href="Bus.html" class="extype" name="de.sciss.synth.Bus">Bus</a></dd></dl></div>
-    </li><li name="de.sciss.synth.ControlBus#setMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setMsg(pairs:(Int,Float)*):de.sciss.synth.message.ControlBusSet"></a>
-      <a id="setMsg((Int,Float)*):ControlBusSet"></a>
+    </li><li name="de.sciss.synth.ControlBus#setMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setMsg(pairs:de.sciss.synth.FillValue*):de.sciss.synth.message.ControlBusSet"></a>
+      <a id="setMsg(FillValue*):ControlBusSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setMsg</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Float">Float</span>)*</span>)</span><span class="result">: <a href="message/ControlBusSet.html" class="extype" name="de.sciss.synth.message.ControlBusSet">ControlBusSet</a></span>
+        <span class="name">setMsg</span><span class="params">(<span name="pairs">pairs: <a href="FillValue.html" class="extype" name="de.sciss.synth.FillValue">FillValue</a>*</span>)</span><span class="result">: <a href="message/ControlBusSet.html" class="extype" name="de.sciss.synth.message.ControlBusSet">ControlBusSet</a></span>
       </span>
       </h4>
-      
-    </li><li name="de.sciss.synth.ControlBus#setMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setMsg(v:Float):de.sciss.synth.message.ControlBusSet"></a>
+      <p class="shortcomment cmt">Creates a <code>ControlBusSet</code> message using relative offsets.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>ControlBusSet</code> message using relative offsets.
+</p></div><dl class="paramcmts block"><dt class="param">pairs</dt><dd class="cmt"><p>pairs of offsets and values. the offsets are relative to the index of this bus.
+                All offsets must be &gt;= 0 and less than the number
+                of channels, otherwise an exception is thrown
+</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>ControlBusSet</code> message with absolute indices
+</p></dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#setMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setMsg(value:Float):de.sciss.synth.message.ControlBusSet"></a>
       <a id="setMsg(Float):ControlBusSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -434,11 +478,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setMsg</span><span class="params">(<span name="v">v: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="message/ControlBusSet.html" class="extype" name="de.sciss.synth.message.ControlBusSet">ControlBusSet</a></span>
+        <span class="name">setMsg</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="message/ControlBusSet.html" class="extype" name="de.sciss.synth.message.ControlBusSet">ControlBusSet</a></span>
       </span>
       </h4>
-      
-    </li><li name="de.sciss.synth.ControlBus#setnMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <p class="shortcomment cmt">A convenience method that sets the control bus to one value.</p><div class="fullcomment"><div class="comment cmt"><p>A convenience method that sets the control bus to one value.
+It requires that the bus has exactly one channel, otherwise
+an exception is thrown.
+</p></div><dl class="paramcmts block"><dt class="param">value</dt><dd class="cmt"><p>the value to set the bus to
+</p></dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#setnMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="setnMsg(pairs:(Int,IndexedSeq[Float])*):de.sciss.synth.message.ControlBusSetn"></a>
       <a id="setnMsg((Int,IndexedSeq[Float])*):ControlBusSetn"></a>
       <h4 class="signature">
@@ -450,9 +498,14 @@
         <span class="name">setnMsg</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>])*</span>)</span><span class="result">: <a href="message/ControlBusSetn.html" class="extype" name="de.sciss.synth.message.ControlBusSetn">ControlBusSetn</a></span>
       </span>
       </h4>
-      
-    </li><li name="de.sciss.synth.ControlBus#setnMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setnMsg(v:IndexedSeq[Float]):de.sciss.synth.message.ControlBusSetn"></a>
+      <p class="shortcomment cmt">Creates a <code>ControlBusSetn</code> message using relative offsets.</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <code>ControlBusSetn</code> message using relative offsets.
+</p></div><dl class="paramcmts block"><dt class="param">pairs</dt><dd class="cmt"><p>pairs of offsets and values. the offsets are relative to the index of this bus.
+                All offsets must be &gt;= 0 and less than the number
+                of channels, otherwise an exception is thrown
+</p></dd><dt>returns</dt><dd class="cmt"><p>the <code>ControlBusSetn</code> message with absolute indices
+</p></dd></dl></div>
+    </li><li name="de.sciss.synth.ControlBus#setnMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="setnMsg(values:IndexedSeq[Float]):de.sciss.synth.message.ControlBusSetn"></a>
       <a id="setnMsg(IndexedSeq[Float]):ControlBusSetn"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -460,10 +513,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setnMsg</span><span class="params">(<span name="v">v: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result">: <a href="message/ControlBusSetn.html" class="extype" name="de.sciss.synth.message.ControlBusSetn">ControlBusSetn</a></span>
+        <span class="name">setnMsg</span><span class="params">(<span name="values">values: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result">: <a href="message/ControlBusSetn.html" class="extype" name="de.sciss.synth.message.ControlBusSetn">ControlBusSetn</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">A convenience method that creates a <code>ControlBusSetn</code> message for setting the control bus to a
+sequence of values.</p><div class="fullcomment"><div class="comment cmt"><p>A convenience method that creates a <code>ControlBusSetn</code> message for setting the control bus to a
+sequence of values. It requires that the bus's number of channels is equal to the argument's
+size, otherwise an exception is thrown.
+</p></div><dl class="paramcmts block"><dt class="param">values</dt><dd class="cmt"><p>the vector of values to set the bus to
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.Bus#sync" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sync:Object"></a>
       <a id="sync:AnyRef"></a>
@@ -586,6 +644,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

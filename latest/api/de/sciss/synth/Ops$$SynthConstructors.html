@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>SynthConstructors - de.sciss.synth.Ops.SynthConstructors</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -41,7 +45,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.NotNull">NotNull</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.Ops.SynthConstructors"><span>SynthConstructors</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.NotNull"><span>NotNull</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.Ops.SynthConstructors"><span>SynthConstructors</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -80,7 +84,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.Ops.SynthConstructors#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(s:de.sciss.synth.Synth.type):de.sciss.synth.Ops.SynthConstructors"></a>
+      <a id="&lt;init&gt;(this:de.sciss.synth.Synth.type):de.sciss.synth.Ops.SynthConstructors"></a>
       <a id="&lt;init&gt;:SynthConstructors"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -88,7 +92,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">SynthConstructors</span><span class="params">(<span name="s">s: <a href="Synth$.html" class="extype" name="de.sciss.synth.Synth">Synth</a>.type</span>)</span>
+        <span class="name">SynthConstructors</span><span class="params">(<span name="this">this: <a href="Synth$.html" class="extype" name="de.sciss.synth.Synth">Synth</a>.type</span>)</span>
       </span>
       </h4>
       
@@ -141,15 +145,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.Ops.SynthConstructors#after" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="after(target:de.sciss.synth.Node,defName:String,args:Seq[de.sciss.synth.ControlSetMap]):de.sciss.synth.Synth"></a>
-      <a id="after(Node,String,Seq[ControlSetMap]):Synth"></a>
+      <a id="after(target:de.sciss.synth.Node,defName:String,args:Seq[de.sciss.synth.ControlSet]):de.sciss.synth.Synth"></a>
+      <a id="after(Node,String,Seq[ControlSet]):Synth"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">after</span><span class="params">(<span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+        <span class="name">after</span><span class="params">(<span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
       </span>
       </h4>
       
@@ -167,15 +171,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.Ops.SynthConstructors#before" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="before(target:de.sciss.synth.Node,defName:String,args:Seq[de.sciss.synth.ControlSetMap]):de.sciss.synth.Synth"></a>
-      <a id="before(Node,String,Seq[ControlSetMap]):Synth"></a>
+      <a id="before(target:de.sciss.synth.Node,defName:String,args:Seq[de.sciss.synth.ControlSet]):de.sciss.synth.Synth"></a>
+      <a id="before(Node,String,Seq[ControlSet]):Synth"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">before</span><span class="params">(<span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+        <span class="name">before</span><span class="params">(<span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
       </span>
       </h4>
       
@@ -193,15 +197,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyVal → Any</dd></dl></div>
     </li><li name="de.sciss.synth.Ops.SynthConstructors#head" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="head(target:de.sciss.synth.Group,defName:String,args:Seq[de.sciss.synth.ControlSetMap]):de.sciss.synth.Synth"></a>
-      <a id="head(Group,String,Seq[ControlSetMap]):Synth"></a>
+      <a id="head(target:de.sciss.synth.Group,defName:String,args:Seq[de.sciss.synth.ControlSet]):de.sciss.synth.Synth"></a>
+      <a id="head(Group,String,Seq[ControlSet]):Synth"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">head</span><span class="params">(<span name="target">target: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+        <span class="name">head</span><span class="params">(<span name="target">target: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
       </span>
       </h4>
       
@@ -219,54 +223,54 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.Ops.SynthConstructors#play" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="play(defName:String,args:Seq[de.sciss.synth.ControlSetMap],target:de.sciss.synth.Node,addAction:de.sciss.synth.AddAction):de.sciss.synth.Synth"></a>
-      <a id="play(String,Seq[ControlSetMap],Node,AddAction):Synth"></a>
+      <a id="play(defName:String,args:Seq[de.sciss.synth.ControlSet],target:de.sciss.synth.Node,addAction:de.sciss.synth.AddAction):de.sciss.synth.Synth"></a>
+      <a id="play(String,Seq[ControlSet],Node,AddAction):Synth"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">play</span><span class="params">(<span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>, <span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a> = <span class="symbol"><span class="name"><a href="Server$.html">Server.default.defaultGroup</a></span></span></span>, <span name="addAction">addAction: <a href="AddAction.html" class="extype" name="de.sciss.synth.AddAction">AddAction</a> = <span class="symbol"><span class="name"><a href="addToHead$.html">addToHead</a></span></span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+        <span class="name">play</span><span class="params">(<span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>, <span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a> = <span class="symbol"><span class="name"><a href="Server$.html">Server.default.defaultGroup</a></span></span></span>, <span name="addAction">addAction: <a href="AddAction.html" class="extype" name="de.sciss.synth.AddAction">AddAction</a> = <span class="symbol"><span class="name"><a href="addToHead$.html">addToHead</a></span></span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.synth.Ops.SynthConstructors#replace" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="replace(target:de.sciss.synth.Node,defName:String,args:Seq[de.sciss.synth.ControlSetMap]):de.sciss.synth.Synth"></a>
-      <a id="replace(Node,String,Seq[ControlSetMap]):Synth"></a>
+      <a id="replace(target:de.sciss.synth.Node,defName:String,args:Seq[de.sciss.synth.ControlSet]):de.sciss.synth.Synth"></a>
+      <a id="replace(Node,String,Seq[ControlSet]):Synth"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">replace</span><span class="params">(<span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+        <span class="name">replace</span><span class="params">(<span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.Ops.SynthConstructors#s" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="s:de.sciss.synth.Synth.type"></a>
-      <a id="s:Synth.type"></a>
+    </li><li name="de.sciss.synth.Ops.SynthConstructors#tail" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="tail(target:de.sciss.synth.Group,defName:String,args:Seq[de.sciss.synth.ControlSet]):de.sciss.synth.Synth"></a>
+      <a id="tail(Group,String,Seq[ControlSet]):Synth"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">tail</span><span class="params">(<span name="target">target: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Ops.SynthConstructors#this" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="this:de.sciss.synth.Synth.type"></a>
+      <a id="this:Synth.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">s</span><span class="result">: <a href="Synth$.html" class="extype" name="de.sciss.synth.Synth">Synth</a>.type</span>
-      </span>
-      </h4>
-      
-    </li><li name="de.sciss.synth.Ops.SynthConstructors#tail" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="tail(target:de.sciss.synth.Group,defName:String,args:Seq[de.sciss.synth.ControlSetMap]):de.sciss.synth.Synth"></a>
-      <a id="tail(Group,String,Seq[ControlSetMap]):Synth"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">tail</span><span class="params">(<span name="target">target: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>, <span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>)</span><span class="result">: <a href="Synth.html" class="extype" name="de.sciss.synth.Synth">Synth</a></span>
+        <span class="name">this</span><span class="result">: <a href="Synth$.html" class="extype" name="de.sciss.synth.Synth">Synth</a>.type</span>
       </span>
       </h4>
       
@@ -294,8 +298,6 @@
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyVal">
               <h3>Inherited from <span class="extype" name="scala.AnyVal">AnyVal</span></h3>
-            </div><div class="parent" name="scala.NotNull">
-              <h3>Inherited from <span class="extype" name="scala.NotNull">NotNull</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
@@ -314,6 +316,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Balance2 - de.sciss.synth.ugen.Balance2</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -90,19 +94,6 @@ stereophonic output.
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -114,7 +105,7 @@ stereophonic output.
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -129,19 +120,6 @@ stereophonic output.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -153,9 +131,9 @@ stereophonic output.
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Balance2#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ar(left:de.sciss.synth.GE,right:de.sciss.synth.GE,pos:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.Balance2"></a>
+      <a id="ar(inL:de.sciss.synth.GE,inR:de.sciss.synth.GE,pos:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.Balance2"></a>
       <a id="ar(GE,GE,GE,GE):Balance2"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -163,10 +141,10 @@ stereophonic output.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ar</span><span class="params">(<span name="left">left: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="right">right: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="pos">pos: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>)</span><span class="result">: <a href="Balance2.html" class="extype" name="de.sciss.synth.ugen.Balance2">Balance2</a></span>
+        <span class="name">ar</span><span class="params">(<span name="inL">inL: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="inR">inR: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="pos">pos: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>)</span><span class="result">: <a href="Balance2.html" class="extype" name="de.sciss.synth.ugen.Balance2">Balance2</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">left</dt><dd class="cmt"><p>The left input signal</p></dd><dt class="param">right</dt><dd class="cmt"><p>The right input signal</p></dd><dt class="param">pos</dt><dd class="cmt"><p>The balance position from <code>-1</code> (left only, right muted)
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">inL</dt><dd class="cmt"><p>The left input signal</p></dd><dt class="param">inR</dt><dd class="cmt"><p>The right input signal</p></dd><dt class="param">pos</dt><dd class="cmt"><p>The balance position from <code>-1</code> (left only, right muted)
                         to <code>+1</code> (right only, left muted). The curve follows an
                         equal power law, such that
                         <code>left.squared + right.squared == 1</code> , e.g. at the middle
@@ -290,7 +268,7 @@ stereophonic output.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Balance2#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="kr(left:de.sciss.synth.GE,right:de.sciss.synth.GE,pos:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.Balance2"></a>
+      <a id="kr(inL:de.sciss.synth.GE,inR:de.sciss.synth.GE,pos:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.Balance2"></a>
       <a id="kr(GE,GE,GE,GE):Balance2"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -298,10 +276,10 @@ stereophonic output.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">kr</span><span class="params">(<span name="left">left: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="right">right: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="pos">pos: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>)</span><span class="result">: <a href="Balance2.html" class="extype" name="de.sciss.synth.ugen.Balance2">Balance2</a></span>
+        <span class="name">kr</span><span class="params">(<span name="inL">inL: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="inR">inR: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="pos">pos: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>)</span><span class="result">: <a href="Balance2.html" class="extype" name="de.sciss.synth.ugen.Balance2">Balance2</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">left</dt><dd class="cmt"><p>The left input signal</p></dd><dt class="param">right</dt><dd class="cmt"><p>The right input signal</p></dd><dt class="param">pos</dt><dd class="cmt"><p>The balance position from <code>-1</code> (left only, right muted)
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">inL</dt><dd class="cmt"><p>The left input signal</p></dd><dt class="param">inR</dt><dd class="cmt"><p>The right input signal</p></dd><dt class="param">pos</dt><dd class="cmt"><p>The balance position from <code>-1</code> (left only, right muted)
                         to <code>+1</code> (right only, left muted). The curve follows an
                         equal power law, such that
                         <code>left.squared + right.squared == 1</code> , e.g. at the middle
@@ -463,6 +441,7 @@ stereophonic output.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

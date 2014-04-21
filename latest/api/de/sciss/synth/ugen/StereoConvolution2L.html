@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>StereoConvolution2L - de.sciss.synth.ugen.StereoConvolution2L</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -35,25 +39,25 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">StereoConvolution2L</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelL">kernelL: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelR">kernelR: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1)</span></span>, <span name="frameSize">frameSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="fadePeriods">fadePeriods: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1)</span></span>)</span><span class="result"> extends <a href="../UGenSource$$MultiOut.html" class="extype" name="de.sciss.synth.UGenSource.MultiOut">MultiOut</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">StereoConvolution2L</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelL">kernelL: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelR">kernelR: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="frameSize">frameSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="fadePeriods">fadePeriods: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$MultiOut.html" class="extype" name="de.sciss.synth.UGenSource.MultiOut">MultiOut</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A frequency domain stereo convolution UGen, capable of performing linear
-crossfades between kernel updates. When receiving a trigger, there is a linear
-crossfade between the old kernel the new buffer contents. It operates similar to
-Convolution2L, however uses two buffers and outputs a stereo signal, resulting
-in better CPU usage than two discrete instances of Convolution2L as this way one
-FFT transformation per period is saved.
+cross-fades between kernel updates. When receiving a trigger, there is a linear
+cross-fade between the old kernel the new buffer contents. It operates similar
+to Convolution2L, however uses two buffers and outputs a stereo signal,
+resulting in better CPU usage than two discrete instances of Convolution2L as
+this way one FFT transformation per period is saved.
 </p></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>the realtime input to be convolved</p></dd><dt class="param">kernelL</dt><dd class="cmt"><p>buffer identifier for the left channel's fixed kernel,
                         which may be modulated in combination with the trigger</p></dd><dt class="param">kernelR</dt><dd class="cmt"><p>buffer identifier for the right channel's fixed kernel,
                         which may be modulated in combination with the trigger</p></dd><dt class="param">trig</dt><dd class="cmt"><p>updates the kernel on a change from non-positive to
-                        positive (&lt;= 0 to &gt;0), and starts a new crossfade from
+                        positive (&lt;= 0 to &gt;0), and starts a new cross-fade from
                         the previous kernel to the new one over the given amount
                         of periods.</p></dd><dt class="param">frameSize</dt><dd class="cmt"><p>size of each kernel. this must be a power of two. the
                         FFT calculated internally by the UGen has a size of
                         twice this value. The maximum allowed frameSize is
-                        65536(?).</p></dd><dt class="param">fadePeriods</dt><dd class="cmt"><p>The number of periods over which a crossfade is
+                        65536(?).</p></dd><dt class="param">fadePeriods</dt><dd class="cmt"><p>The number of periods over which a cross-fade is
                         performed. This must be an integer
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Convolution2L$.html" class="extype" name="de.sciss.synth.ugen.Convolution2L">Convolution2L</a>
 </p></span><span class="cmt"><p><a href="Convolution$.html" class="extype" name="de.sciss.synth.ugen.Convolution">Convolution</a></p></span><span class="cmt"><p><a href="Convolution3$.html" class="extype" name="de.sciss.synth.ugen.Convolution3">Convolution3</a></p></span><span class="cmt"><p><a href="Convolution2$.html" class="extype" name="de.sciss.synth.ugen.Convolution2">Convolution2</a></p></span></dd></dl><div class="toggleContainer block">
@@ -105,18 +109,18 @@ FFT transformation per period is saved.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">StereoConvolution2L</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelL">kernelL: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelR">kernelR: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1)</span></span>, <span name="frameSize">frameSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="fadePeriods">fadePeriods: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1)</span></span>)</span>
+        <span class="name">StereoConvolution2L</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelL">kernelL: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="kernelR">kernelR: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="frameSize">frameSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="fadePeriods">fadePeriods: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>the realtime input to be convolved</p></dd><dt class="param">kernelL</dt><dd class="cmt"><p>buffer identifier for the left channel's fixed kernel,
                         which may be modulated in combination with the trigger</p></dd><dt class="param">kernelR</dt><dd class="cmt"><p>buffer identifier for the right channel's fixed kernel,
                         which may be modulated in combination with the trigger</p></dd><dt class="param">trig</dt><dd class="cmt"><p>updates the kernel on a change from non-positive to
-                        positive (&lt;= 0 to &gt;0), and starts a new crossfade from
+                        positive (&lt;= 0 to &gt;0), and starts a new cross-fade from
                         the previous kernel to the new one over the given amount
                         of periods.</p></dd><dt class="param">frameSize</dt><dd class="cmt"><p>size of each kernel. this must be a power of two. the
                         FFT calculated internally by the UGen has a size of
                         twice this value. The maximum allowed frameSize is
-                        65536(?).</p></dd><dt class="param">fadePeriods</dt><dd class="cmt"><p>The number of periods over which a crossfade is
+                        65536(?).</p></dd><dt class="param">fadePeriods</dt><dd class="cmt"><p>The number of periods over which a cross-fade is
                         performed. This must be an integer
 </p></dd></dl></div>
     </li></ol>
@@ -129,19 +133,6 @@ FFT transformation per period is saved.
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -153,7 +144,7 @@ FFT transformation per period is saved.
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -168,19 +159,6 @@ FFT transformation per period is saved.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -192,7 +170,7 @@ FFT transformation per period is saved.
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -250,8 +228,8 @@ FFT transformation per period is saved.
         <span class="name">fadePeriods</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The number of periods over which a crossfade is
-                        performed.</p><div class="fullcomment"><div class="comment cmt"><p>The number of periods over which a crossfade is
+      <p class="shortcomment cmt">The number of periods over which a cross-fade is
+                        performed.</p><div class="fullcomment"><div class="comment cmt"><p>The number of periods over which a cross-fade is
                         performed. This must be an integer
 </p></div></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -356,6 +334,19 @@ FFT transformation per period is saved.
       </h4>
       <p class="shortcomment cmt">buffer identifier for the right channel's fixed kernel,
                         which may be modulated in combination with the trigger</p>
+    </li><li name="de.sciss.synth.ugen.StereoConvolution2L#left" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="left:de.sciss.synth.GE"></a>
+      <a id="left:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">left</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.ugen.StereoConvolution2L#makeUGen" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="makeUGen(_args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenIn]):de.sciss.synth.UGenInLike"></a>
       <a id="makeUGen(IndexedSeq[UGenIn]):UGenInLike"></a>
@@ -465,6 +456,19 @@ expansion
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../UGenSource$$SomeOut.html" class="extype" name="de.sciss.synth.UGenSource.SomeOut">SomeOut</a> → <a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a></dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.StereoConvolution2L#right" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="right:de.sciss.synth.GE"></a>
+      <a id="right:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">right</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -491,7 +495,7 @@ expansion
       </span>
       </h4>
       <p class="shortcomment cmt">updates the kernel on a change from non-positive to
-                        positive (&lt;= 0 to &gt;0), and starts a new crossfade from
+                        positive (&lt;= 0 to &gt;0), and starts a new cross-fade from
                         the previous kernel to the new one over the given amount
                         of periods.</p>
     </li><li name="de.sciss.synth.UGenSource#unwrap" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -617,6 +621,7 @@ expansion
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

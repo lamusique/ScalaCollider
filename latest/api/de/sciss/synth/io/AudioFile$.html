@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>AudioFile - de.sciss.synth.io.AudioFile</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -39,25 +43,25 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p> The <code>AudioFile</code> allows reading and writing
- of sound files. It can operate both on a <code>RandomAccessFile</code>
- created from a <code>File</code> instance, or on
- an kind of <code>InputStream</code> (not every codec will
- support this though, and functionality might be limited, for example
- seeking is not possible with a plain <code>InputStream</code>).</p><p> The codecs are registered with <code>AudioFileType</code>.
- The codecs that come with ScalaAudioFile are found in the <code>impl</code>
- package.</p><p> Reading and writing data requires a user-buffer which holds de-interleaved
- floating point data, that is a two dimensional <code>Array</code> which
- holds <code>Float</code> data. A type alias <code>Frames</code> is provided
- for this, and two helper methods <code>buffer</code>: one static to
- construct an arbitrary user-buffer, one in class <code>AudioFile</code>
- which creates a buffer with the appropriate channel number.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The <code>AudioFile</code> allows reading and writing
+of sound files. It can operate both on a <code>RandomAccessFile</code>
+created from a <code>File</code> instance, or on
+an kind of <code>InputStream</code> (not every codec will
+support this though, and functionality might be limited, for example
+seeking is not possible with a plain <code>InputStream</code>).</p><p>The codecs are registered with <code>AudioFileType</code>.
+The codecs that come with ScalaAudioFile are found in the <code>impl</code>
+package.</p><p>Reading and writing data requires a user-buffer which holds de-interleaved
+floating point data, that is a two dimensional <code>Array</code> which
+holds <code>Float</code> data. A type alias <code>Frames</code> is provided
+for this, and two helper methods <code>buffer</code>: one static to
+construct an arbitrary user-buffer, one in class <code>AudioFile</code>
+which creates a buffer with the appropriate channel number.
 </p></div><dl class="attributes block"> <dt>To do</dt><dd><span class="cmt"><p>the copyTo method uses a user-buffer. it should
-         check for the possibility to directly transfer data
-         if input and output are compatible.
+        check for the possibility to directly transfer data
+        if input and output are compatible.
 </p></span>, <span class="cmt"><p>openWrite is currently missing
-         the goodies of ScissLib are missing, e.g. support for
-         markers, comments, app-code.
+        the goodies of ScissLib are missing, e.g. support for
+        markers, comments, app-code.
 </p></span></dd><dt>See also</dt><dd><span class="cmt"><p>AudioFileType
 </p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -106,19 +110,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -130,7 +121,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -145,19 +136,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -169,7 +147,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -301,7 +279,7 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -317,14 +295,14 @@
         <span class="name">identify</span><span class="params">(<span name="f">f: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<a href="AudioFileType$$CanIdentify.html" class="extype" name="de.sciss.synth.io.AudioFileType.CanIdentify">CanIdentify</a>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Determines the type of audio file.</p><div class="fullcomment"><div class="comment cmt"><p> Determines the type of audio file.
+      <p class="shortcomment cmt">Determines the type of audio file.</p><div class="fullcomment"><div class="comment cmt"><p>Determines the type of audio file.
 </p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the pathname of the file</p></dd><dt>returns</dt><dd class="cmt"><p>the type code as defined in <code>AudioFileInfo</code>,
-			e.g. <code>TYPE_AIFF</code>. Returns <code>TYPE_UNKNOWN</code>
-			if the file could not be identified.
+           e.g. <code>TYPE_AIFF</code>. Returns <code>TYPE_UNKNOWN</code>
+           if the file could not be identified.
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if the file could not be reader
@@ -344,7 +322,7 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -415,7 +393,7 @@
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a> → <a href="ReaderFactory.html" class="extype" name="de.sciss.synth.io.ReaderFactory">ReaderFactory</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -431,18 +409,18 @@
         <span class="name">openRead</span><span class="params">(<span name="f">f: <span class="extype" name="java.io.File">File</span></span>)</span><span class="result">: <a href="AudioFile.html" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Opens an audio file for reading.</p><div class="fullcomment"><div class="comment cmt"><p> Opens an audio file for reading.
+      <p class="shortcomment cmt">Opens an audio file for reading.</p><div class="fullcomment"><div class="comment cmt"><p>Opens an audio file for reading.
 </p></div><dl class="paramcmts block"><dt class="param">f</dt><dd class="cmt"><p>the path name of the file</p></dd><dt>returns</dt><dd class="cmt"><p>a new <code>AudioFile</code> object
-         whose header is already parsed and can
-		   be obtained through the <code>getDescr</code> method.
+        whose header is already parsed and can
+        be obtained through the <code>getDescr</code> method.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a> → <a href="ReaderFactory.html" class="extype" name="de.sciss.synth.io.ReaderFactory">ReaderFactory</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if the file was not found, could not be reader
-					      or has an unknown or unsupported format
+                    or has an unknown or unsupported format
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.io.ReaderFactory#openRead" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="openRead(path:String):de.sciss.synth.io.AudioFile"></a>
@@ -544,15 +522,15 @@
         <span class="name">readSpec</span><span class="params">(<span name="dis">dis: <span class="extype" name="java.io.DataInputStream">DataInputStream</span></span>)</span><span class="result">: <a href="AudioFileSpec.html" class="extype" name="de.sciss.synth.io.AudioFileSpec">AudioFileSpec</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">   Note that this method advances in
-   the provided input stream, its
-   previous position is not reset.</p><div class="fullcomment"><div class="comment cmt"><p>   Note that this method advances in
-   the provided input stream, its
-   previous position is not reset.
+      <p class="shortcomment cmt">Note that this method advances in
+the provided input stream, its
+previous position is not reset.</p><div class="fullcomment"><div class="comment cmt"><p>Note that this method advances in
+the provided input stream, its
+previous position is not reset.
 </p></div><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -696,6 +674,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>HenonN - de.sciss.synth.ugen.HenonN</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -35,11 +39,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">HenonN</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">ugen.this.`package`.nyquist</span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.4)</span></span>, <span name="b">b: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.3)</span></span>, <span name="x0">x0: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>, <span name="x1">x1: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">HenonN</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">nyquist</span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.4f</a></span></span></span>, <span name="b">b: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.3f</a></span></span></span>, <span name="x0">x0: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="x1">x1: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A non-interpolating sound generator based on the difference equation:</p><pre>x[n+<span class="num">2</span>] = <span class="num">1</span> - a * pow(x[n+<span class="num">1</span>], <span class="num">2</span>) + b * x[n]</pre><p> This equation was discovered by French astronomer Michel Hénon while studying the orbits of stars in globular clusters.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A non-interpolating sound generator based on the difference equation:</p><pre>x[n+<span class="num">2</span>] = <span class="num">1</span> - a * pow(x[n+<span class="num">1</span>], <span class="num">2</span>) + b * x[n]</pre><p>This equation was discovered by French astronomer Michel Hénon while studying
+the orbits of stars in globular clusters.
 </p></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>Iteration frequency in Hertz</p></dd><dt class="param">a</dt><dd class="cmt"><p>Equation variable</p></dd><dt class="param">b</dt><dd class="cmt"><p>Equation variable</p></dd><dt class="param">x0</dt><dd class="cmt"><p>Initial value of x</p></dd><dt class="param">x1</dt><dd class="cmt"><p>Second value of x
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="HenonC$.html" class="extype" name="de.sciss.synth.ugen.HenonC">HenonC</a>
 </p></span><span class="cmt"><p><a href="HenonL$.html" class="extype" name="de.sciss.synth.ugen.HenonL">HenonL</a></p></span></dd></dl><div class="toggleContainer block">
@@ -91,7 +96,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">HenonN</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">ugen.this.`package`.nyquist</span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.4)</span></span>, <span name="b">b: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.3)</span></span>, <span name="x0">x0: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>, <span name="x1">x1: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>)</span>
+        <span class="name">HenonN</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="freq">freq: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">nyquist</span></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.4f</a></span></span></span>, <span name="b">b: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.3f</a></span></span></span>, <span name="x0">x0: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="x1">x1: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>Iteration frequency in Hertz</p></dd><dt class="param">a</dt><dd class="cmt"><p>Equation variable</p></dd><dt class="param">b</dt><dd class="cmt"><p>Equation variable</p></dd><dt class="param">x0</dt><dd class="cmt"><p>Initial value of x</p></dd><dt class="param">x1</dt><dd class="cmt"><p>Second value of x
@@ -106,19 +111,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -130,7 +122,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -145,19 +137,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -169,7 +148,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.HenonN#a" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="a:de.sciss.synth.GE"></a>
       <a id="a:GE"></a>
@@ -569,6 +548,7 @@ expansion
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>synth - de.sciss.synth</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -39,7 +43,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The <code>synth</code> package provides some type enrichments. In particular converting numbers to
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The <code>synth</code> package provides some extension methods. In particular converting numbers to
 constant graph elements, operators on graph elements and allowing succinct creation of named controls.
 Furthermore, it contains the <code>play</code> function to quickly test graph functions.
 </p></div><div class="toggleContainer block">
@@ -177,15 +181,15 @@ respect to other nodes.</p>
       </h4>
       
     </li><li name="de.sciss.synth.Completion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Completion[T]extendsProductwithSerializable"></a>
-      <a id="Completion[T]:Completion[T]"></a>
+      <a id="Completion[-T]extendsProductwithSerializable"></a>
+      <a id="Completion[-T]:Completion[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Completion.html"><span class="name">Completion</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="message">message: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="de.sciss.synth.Completion.T">T</span>) ⇒ <a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>]</span>, <span name="action">action: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="de.sciss.synth.Completion.T">T</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Completion.html"><span class="name">Completion</span></a><span class="tparams">[<span name="T">-T</span>]</span><span class="params">(<span name="message">message: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="de.sciss.synth.Completion.T">T</span>) ⇒ <a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>]</span>, <span name="action">action: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="de.sciss.synth.Completion.T">T</span>) ⇒ <span class="extype" name="scala.Unit">Unit</span>]</span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -215,6 +219,19 @@ respect to other nodes.</p>
       </span>
       </h4>
       
+    </li><li name="de.sciss.synth.ControlFillRange" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ControlFillRangeextendsProductwithSerializable"></a>
+      <a id="ControlFillRange:ControlFillRange"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ControlFillRange.html"><span class="name">ControlFillRange</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.ControlKBusMap" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ControlKBusMapextendsAnyRef"></a>
       <a id="ControlKBusMap:ControlKBusMap"></a>
@@ -241,16 +258,16 @@ respect to other nodes.</p>
       </span>
       </h4>
       <p class="comment cmt">Utility trait that defines a <code>rate</code> method returning <code>control</code>.</p>
-    </li><li name="de.sciss.synth.ControlSetMap" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="ControlSetMapextendsAnyRef"></a>
-      <a id="ControlSetMap:ControlSetMap"></a>
+    </li><li name="de.sciss.synth.ControlSet" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ControlSetextendsAnyRef"></a>
+      <a id="ControlSet:ControlSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">sealed </span>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ControlSetMap.html"><span class="name">ControlSetMap</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+        <a href="ControlSet.html"><span class="name">ControlSet</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
@@ -293,6 +310,32 @@ respect to other nodes.</p>
       </span>
       </h4>
       <p class="comment cmt">An enumeration of special codes used by some UGens to issue a related action when they they are &quot;done&quot;.</p>
+    </li><li name="de.sciss.synth.FillRange" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FillRangeextendsProductwithSerializable"></a>
+      <a id="FillRange:FillRange"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FillRange.html"><span class="name">FillRange</span></a><span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>, <span name="num">num: <span class="extype" name="scala.Int">Int</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A fill range for control buses or buffers.</p>
+    </li><li name="de.sciss.synth.FillValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FillValueextendsProductwithSerializable"></a>
+      <a id="FillValue:FillValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="FillValue.html"><span class="name">FillValue</span></a><span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">A tuple consisting of an index and value for that index.</p>
     </li><li name="de.sciss.synth.GE" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="GEextendsProduct"></a>
       <a id="GE:GE"></a>
@@ -585,7 +628,7 @@ respect to other nodes.</p>
         <a href="SynthDef.html"><span class="name">SynthDef</span></a><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="graph">graph: <a href="UGenGraph.html" class="extype" name="de.sciss.synth.UGenGraph">UGenGraph</a></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt"></p>
+      
     </li><li name="de.sciss.synth.SynthGraph" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SynthGraphextendsProductwithSerializable"></a>
       <a id="SynthGraph:SynthGraph"></a>
@@ -637,7 +680,7 @@ respect to other nodes.</p>
         <a href="UGenIn.html"><span class="name">UGenIn</span></a><span class="result"> extends <a href="UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a></span>
       </span>
       </h4>
-      <p class="comment cmt">   An element that can be used as an input to a UGen.</p>
+      <p class="comment cmt">An element that can be used as an input to a UGen.</p>
     </li><li name="de.sciss.synth.UGenInLike" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="UGenInLikeextendsGE"></a>
       <a id="UGenInLike:UGenInLike"></a>
@@ -726,6 +769,19 @@ respect to other nodes.</p>
       </span>
       <span class="symbol">
         <a href="WritesFFT.html"><span class="name">WritesFFT</span></a><span class="result"> extends <a href="HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <a href="IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.rangeOps" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="rangeOpsextendsAnyVal"></a>
+      <a id="rangeOps:rangeOps"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">implicit final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="package$$rangeOps.html"><span class="name">rangeOps</span></a><span class="result"> extends <span class="extype" name="scala.AnyVal">AnyVal</span></span>
       </span>
       </h4>
       
@@ -827,6 +883,19 @@ respect to other nodes.</p>
       </span>
       </h4>
       
+    </li><li name="de.sciss.synth.ControlFillRange" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ControlFillRange"></a>
+      <a id="ControlFillRange:ControlFillRange"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ControlFillRange$.html"><span class="name">ControlFillRange</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.ControlKBusMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ControlKBusMap"></a>
       <a id="ControlKBusMap:ControlKBusMap"></a>
@@ -840,16 +909,16 @@ respect to other nodes.</p>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.ControlSetMap" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="ControlSetMap"></a>
-      <a id="ControlSetMap:ControlSetMap"></a>
+    </li><li name="de.sciss.synth.ControlSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ControlSet"></a>
+      <a id="ControlSet:ControlSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="ControlSetMap$.html"><span class="name">ControlSetMap</span></a><span class="result"> extends <span class="extype" name="de.sciss.synth.SingleControlSetMapImplicits">SingleControlSetMapImplicits</span> with <span class="extype" name="de.sciss.synth.MultiControlSetMapImplicits">MultiControlSetMapImplicits</span></span>
+        <a href="ControlSet$.html"><span class="name">ControlSet</span></a><span class="result"> extends <span class="extype" name="de.sciss.synth.ControlSetValueImplicits">ControlSetValueImplicits</span> with <span class="extype" name="de.sciss.synth.ControlSetVectorImplicits">ControlSetVectorImplicits</span></span>
       </span>
       </h4>
       
@@ -876,6 +945,32 @@ respect to other nodes.</p>
       </span>
       <span class="symbol">
         <a href="DoneAction$.html"><span class="name">DoneAction</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.FillRange" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FillRange"></a>
+      <a id="FillRange:FillRange"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FillRange$.html"><span class="name">FillRange</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.FillValue" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FillValue"></a>
+      <a id="FillValue:FillValue"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="FillValue$.html"><span class="name">FillValue</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -1289,7 +1384,7 @@ of a target group.</p>
       </span>
       </h4>
       <p class="comment cmt">A <code>DoneAction</code> with id <code>0</code>, signifying that nothing should be done in particular when the UGen is finished.</p>
-    </li><li name="de.sciss.synth.package#doubleGEWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#doubleGEWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="doubleGEWrapper(d:Double):de.sciss.synth.RichDouble"></a>
       <a id="doubleGEWrapper(Double):RichDouble"></a>
       <h4 class="signature">
@@ -1302,7 +1397,7 @@ of a target group.</p>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.package#doubleNumberWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#doubleNumberWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="doubleNumberWrapper(d:Double):de.sciss.numbers.RichDouble"></a>
       <a id="doubleNumberWrapper(Double):numbers.RichDouble"></a>
       <h4 class="signature">
@@ -1315,7 +1410,7 @@ of a target group.</p>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.package#floatGEWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#floatGEWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="floatGEWrapper(f:Float):de.sciss.synth.RichFloat"></a>
       <a id="floatGEWrapper(Float):RichFloat"></a>
       <h4 class="signature">
@@ -1328,7 +1423,7 @@ of a target group.</p>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.package#floatNumberWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#floatNumberWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="floatNumberWrapper(f:Float):de.sciss.numbers.RichFloat"></a>
       <a id="floatNumberWrapper(Float):numbers.RichFloat"></a>
       <h4 class="signature">
@@ -1519,7 +1614,7 @@ in its group when the UGen is finished.</p>
       </h4>
       <p class="comment cmt">A <code>DoneAction</code> with id <code>8</code>, freeing the enclosing synth and all succeeding nodes
  in its group when the UGen is finished.</p>
-    </li><li name="de.sciss.synth.package#geOps" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#geOps" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="geOps(g:de.sciss.synth.GE):de.sciss.synth.GEOps"></a>
       <a id="geOps(GE):GEOps"></a>
       <h4 class="signature">
@@ -1545,7 +1640,7 @@ in its group when the UGen is finished.</p>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.package#inf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="de.sciss.synth#inf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="inf:Float(Infinity)"></a>
       <a id="inf:Float(Infinity)"></a>
       <h4 class="signature">
@@ -1560,7 +1655,7 @@ in its group when the UGen is finished.</p>
       <p class="shortcomment cmt">Positive <code>Float</code> infinity.</p><div class="fullcomment"><div class="comment cmt"><p>Positive <code>Float</code> infinity. Useful for sequence based demand UGens.
 <code>-inf</code> gives you negative infinity.
 </p></div></div>
-    </li><li name="de.sciss.synth.package#intGEWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#intGEWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="intGEWrapper(i:Int):de.sciss.synth.RichInt"></a>
       <a id="intGEWrapper(Int):RichInt"></a>
       <h4 class="signature">
@@ -1573,7 +1668,7 @@ in its group when the UGen is finished.</p>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.package#intNumberWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#intNumberWrapper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="intNumberWrapper(i:Int):de.sciss.numbers.RichInt"></a>
       <a id="intNumberWrapper(Int):numbers.RichInt"></a>
       <h4 class="signature">
@@ -1625,7 +1720,7 @@ in its group when the UGen is finished.</p>
       </span>
       </h4>
       <p class="comment cmt">A <code>DoneAction</code> with id <code>1</code>, pausing the enclosing synth when the UGen is finished.</p>
-    </li><li name="de.sciss.synth.package#play" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="de.sciss.synth#play" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="play[T](target:de.sciss.synth.Node,outBus:Int,fadeTime:de.sciss.synth.Optional[Float],addAction:de.sciss.synth.AddAction)(thunk:=&gt;T)(implicitevidence$2:de.sciss.synth.GraphFunction.Result[T]):de.sciss.synth.Synth"></a>
       <a id="play[T](Node,Int,Optional[Float],AddAction)(⇒T)(Result[T]):Synth"></a>
       <h4 class="signature">
@@ -1642,7 +1737,7 @@ in a synth attached to a given target.</p><div class="fullcomment"><div class="c
 in a synth attached to a given target.
 </p></div><dl class="paramcmts block"><dt class="param">target</dt><dd class="cmt"><p>the target with respect to which to place the synth</p></dd><dt class="param">outBus</dt><dd class="cmt"><p>audio bus index which is used for the synthetically generated <code>Out</code> UGen.</p></dd><dt class="param">fadeTime</dt><dd class="cmt"><p>if defined, specifies the fade-in time for a synthetically added amplitude envelope.</p></dd><dt class="param">addAction</dt><dd class="cmt"><p>the relation between the new synth and the target</p></dd><dt class="param">thunk</dt><dd class="cmt"><p>the thunk which produces the UGens to play</p></dd><dt>returns</dt><dd class="cmt"><p>a reference to the spawned Synth
 </p></dd></dl></div>
-    </li><li name="de.sciss.synth.package#play" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+    </li><li name="de.sciss.synth#play" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="play[T](thunk:=&gt;T)(implicitevidence$1:de.sciss.synth.GraphFunction.Result[T]):de.sciss.synth.Synth"></a>
       <a id="play[T](⇒T)(Result[T]):Synth"></a>
       <h4 class="signature">
@@ -1672,7 +1767,7 @@ on the default group of the default server.
       </span>
       </h4>
       <p class="comment cmt">Scalar rated calculation (id <code>0</code>) means that a value is only calculated once when a <code>Synth</code> is initialized.</p>
-    </li><li name="de.sciss.synth.package#stringToControlProxyFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth#stringToControlProxyFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="stringToControlProxyFactory(name:String):de.sciss.synth.ugen.ControlProxyFactory"></a>
       <a id="stringToControlProxyFactory(String):ControlProxyFactory"></a>
       <h4 class="signature">
@@ -1727,6 +1822,7 @@ on the default group of the default server.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

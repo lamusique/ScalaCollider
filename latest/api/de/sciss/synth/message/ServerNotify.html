@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>ServerNotify - de.sciss.synth.message.ServerNotify</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -39,7 +43,11 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>The <code>/notify</code> messages registers or de-registers a client with respect
+to receiving reply messages from the server.</p><p>Booting or connecting a server through the regular API automatically handles and does
+not require the explicit use of this message.
+</p></div><dl class="paramcmts block"><dt class="param">on</dt><dd class="cmt"><p>if <code>true</code>, the client is registered, if <code>false</code> it is de-registered.
+</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <a href="AsyncSend.html" class="extype" name="de.sciss.synth.message.AsyncSend">AsyncSend</a>, <a href="Send.html" class="extype" name="de.sciss.synth.message.Send">Send</a>, <a href="ServerMessage.html" class="extype" name="de.sciss.synth.message.ServerMessage">ServerMessage</a>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>, <span class="extype" name="scala.collection.LinearSeq">LinearSeq</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.LinearSeqLike">LinearSeqLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.SeqLike">SeqLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.GenSeq">GenSeq</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.GenSeqLike">GenSeqLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.Iterable">Iterable</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.IterableLike">IterableLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.collection.GenIterable">GenIterable</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.GenIterableLike">GenIterableLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.Traversable">Traversable</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.GenTraversable">GenTraversable</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.generic.GenericTraversableTemplate">GenericTraversableTemplate</span>[<span class="extype" name="scala.Any">Any</span>, <span class="extype" name="scala.collection.LinearSeq">LinearSeq</span>], <span class="extype" name="scala.collection.TraversableLike">TraversableLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.GenTraversableLike">GenTraversableLike</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.Parallelizable">Parallelizable</span>[<span class="extype" name="scala.Any">Any</span>, <span class="extype" name="scala.collection.parallel.ParSeq">ParSeq</span>[<span class="extype" name="scala.Any">Any</span>]], <span class="extype" name="scala.collection.TraversableOnce">TraversableOnce</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.GenTraversableOnce">GenTraversableOnce</span>[<span class="extype" name="scala.Any">Any</span>], <span class="extype" name="scala.collection.generic.FilterMonadic">FilterMonadic</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.collection.generic.HasNewBuilder">HasNewBuilder</span>[<span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>], <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Any">Any</span>], (<span class="extype" name="scala.Int">Int</span>) ⇒ <span class="extype" name="scala.Any">Any</span>, <a href="../../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -79,7 +87,7 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="de.sciss.synth.message.ServerNotify#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="de.sciss.synth.message.ServerNotify#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(on:Boolean):de.sciss.synth.message.ServerNotify"></a>
       <a id="&lt;init&gt;:ServerNotify"></a>
       <h4 class="signature">
@@ -91,7 +99,8 @@
         <span class="name">ServerNotify</span><span class="params">(<span name="on">on: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">on</dt><dd class="cmt"><p>if <code>true</code>, the client is registered, if <code>false</code> it is de-registered.
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -109,7 +118,7 @@
         <span class="name">Self</span><span class="result"> = <a href="../../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd>TraversableLike</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[this] </dd><dt>Definition Classes</dt><dd>TraversableLike</dd></dl></div>
     </li><li name="scala.collection.TraversableLike.WithFilter" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="WithFilterextendsFilterMonadic[A,Repr]"></a>
       <a id="WithFilter:WithFilter"></a>
@@ -131,19 +140,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -155,7 +151,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -261,19 +257,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TraversableOnce → GenTraversableOnce</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -285,7 +268,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.collection.TraversableOnce#addString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addString(b:StringBuilder):StringBuilder"></a>
       <a id="addString(StringBuilder):StringBuilder"></a>
@@ -326,15 +309,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TraversableOnce</dd></dl></div>
     </li><li name="scala.collection.TraversableOnce#aggregate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="aggregate[B](z:B)(seqop:(B,A)=&gt;B,combop:(B,B)=&gt;B):B"></a>
-      <a id="aggregate[B](B)((B,Any)⇒B,(B,B)⇒B):B"></a>
+      <a id="aggregate[B](z:=&gt;B)(seqop:(B,A)=&gt;B,combop:(B,B)=&gt;B):B"></a>
+      <a id="aggregate[B](⇒B)((B,Any)⇒B,(B,B)⇒B):B"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">aggregate</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="z">z: <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>)</span><span class="params">(<span name="seqop">seqop: (<span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span>, <span class="extype" name="scala.Any">Any</span>) ⇒ <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>, <span name="combop">combop: (<span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span>, <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span>) ⇒ <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>
+        <span class="name">aggregate</span><span class="tparams">[<span name="B">B</span>]</span><span class="params">(<span name="z">z: ⇒ <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>)</span><span class="params">(<span name="seqop">seqop: (<span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span>, <span class="extype" name="scala.Any">Any</span>) ⇒ <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>, <span name="combop">combop: (<span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span>, <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span>) ⇒ <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.TraversableOnce.aggregate.B">B</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TraversableOnce → GenTraversableOnce</dd></dl></div>
@@ -504,15 +487,15 @@
               
         </dd></dl></div>
     </li><li name="scala.collection.SeqLike#contains" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="contains(elem:Any):Boolean"></a>
-      <a id="contains(Any):Boolean"></a>
+      <a id="contains[A1&gt;:A](elem:A1):Boolean"></a>
+      <a id="contains[A1&gt;:Any](A1):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">contains</span><span class="params">(<span name="elem">elem: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">contains</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.Any">Any</span></span>]</span><span class="params">(<span name="elem">elem: <span class="extype" name="scala.collection.SeqLike.contains.A1">A1</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>SeqLike</dd></dl></div>
@@ -1564,7 +1547,7 @@
         <span class="name">on</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">if <code>true</code>, the client is registered, if <code>false</code> it is de-registered.</p>
     </li><li name="scala.PartialFunction#orElse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="orElse[A1&lt;:A,B1&gt;:B](that:PartialFunction[A1,B1]):PartialFunction[A1,B1]"></a>
       <a id="orElse[A1&lt;:Int,B1&gt;:Any](PartialFunction[A1,B1]):PartialFunction[A1,B1]"></a>
@@ -2269,7 +2252,16 @@
         <span class="name">toIterator</span><span class="result">: <span class="extype" name="scala.collection.Iterator">Iterator</span>[<span class="extype" name="scala.Any">Any</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>IterableLike → TraversableLike → GenTraversableOnce</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>IterableLike → TraversableLike → GenTraversableOnce</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecatedOverriding</span><span class="args">(<span>
+      
+      <span class="defval" name="&quot;toIterator should stay consistent with iterator for all Iterables: override iterator instead.&quot;">...</span>
+    </span>, <span>
+      
+      <span class="symbol">&quot;2.11.0&quot;</span>
+    </span>)</span>
+              
+        </dd></dl></div>
     </li><li name="scala.collection.TraversableOnce#toList" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toList:List[A]"></a>
       <a id="toList:List[Any]"></a>
@@ -2360,7 +2352,16 @@
         <span class="name">toTraversable</span><span class="result">: <span class="extype" name="scala.collection.Traversable">Traversable</span>[<span class="extype" name="scala.Any">Any</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TraversableLike → TraversableOnce → GenTraversableOnce</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>TraversableLike → TraversableOnce → GenTraversableOnce</dd><dt>Annotations</dt><dd>
+                <span class="name">@deprecatedOverriding</span><span class="args">(<span>
+      
+      <span class="defval" name="&quot;Enforce contract of toTraversable that if it is Traversable it returns itself.&quot;">...</span>
+    </span>, <span>
+      
+      <span class="symbol">&quot;2.11.0&quot;</span>
+    </span>)</span>
+              
+        </dd></dl></div>
     </li><li name="scala.collection.TraversableOnce#toVector" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toVector:Vector[A]"></a>
       <a id="toVector:Vector[Any]"></a>
@@ -2582,26 +2583,7 @@
 
         
 
-        <div id="values" class="values members">
-              <h3>Deprecated Value Members</h3>
-              <ol><li name="scala.collection.GenTraversableOnce#/:\" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="/:\[A1&gt;:A](z:A1)(op:(A1,A1)=&gt;A1):A1"></a>
-      <a id="/:\[A1&gt;:Any](A1)((A1,A1)⇒A1):A1"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $div$colon$bslash. Deprecated: (Since version 2.10.0) use fold instead" class="name deprecated">/:\</span><span class="tparams">[<span name="A1">A1 &gt;: <span class="extype" name="scala.Any">Any</span></span>]</span><span class="params">(<span name="z">z: <span class="extype" name="scala.collection.GenTraversableOnce./:\.A1">A1</span></span>)</span><span class="params">(<span name="op">op: (<span class="extype" name="scala.collection.GenTraversableOnce./:\.A1">A1</span>, <span class="extype" name="scala.collection.GenTraversableOnce./:\.A1">A1</span>) ⇒ <span class="extype" name="scala.collection.GenTraversableOnce./:\.A1">A1</span></span>)</span><span class="result">: <span class="extype" name="scala.collection.GenTraversableOnce./:\.A1">A1</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>GenTraversableOnce</dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.10.0)</i> use fold instead</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
         </div>
 
         <div id="inheritedMembers">
@@ -2687,6 +2669,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

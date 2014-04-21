@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>GroupOps - de.sciss.synth.Ops.GroupOps</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -39,9 +43,9 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="de.sciss.synth.Ops.GroupOps">GroupOps</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.NotNull">NotNull</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.Ops.GroupOps"><span>GroupOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.NotNull"><span>NotNull</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.Ops.GroupOps"><span>GroupOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -80,7 +84,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.Ops.GroupOps#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(g:de.sciss.synth.Group):de.sciss.synth.Ops.GroupOps"></a>
+      <a id="&lt;init&gt;(this:de.sciss.synth.Group):de.sciss.synth.Ops.GroupOps"></a>
       <a id="&lt;init&gt;:GroupOps"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -88,7 +92,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">GroupOps</span><span class="params">(<span name="g">g: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>)</span>
+        <span class="name">GroupOps</span><span class="params">(<span name="this">this: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>)</span>
       </span>
       </h4>
       
@@ -192,19 +196,6 @@
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.Ops.GroupOps#g" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="g:de.sciss.synth.Group"></a>
-      <a id="g:Group"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">g</span><span class="result">: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyVal#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
@@ -231,6 +222,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="de.sciss.synth.Ops.GroupOps#queryTree" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="queryTree(postControls:Boolean):Unit"></a>
+      <a id="queryTree(Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">queryTree</span><span class="params">(<span name="postControls">postControls: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Ops.GroupOps#this" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="this:de.sciss.synth.Group"></a>
+      <a id="this:Group"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">this</span><span class="result">: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -255,8 +272,6 @@
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyVal">
               <h3>Inherited from <span class="extype" name="scala.AnyVal">AnyVal</span></h3>
-            </div><div class="parent" name="scala.NotNull">
-              <h3>Inherited from <span class="extype" name="scala.NotNull">NotNull</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
@@ -275,6 +290,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

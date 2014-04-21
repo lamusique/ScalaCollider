@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Packet - de.sciss.osc.Packet</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -102,19 +106,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -126,7 +117,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -141,19 +132,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -165,7 +143,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.osc.Packet.Atom" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Atom"></a>
       <a id="Atom:Atom"></a>
@@ -346,20 +324,20 @@
         <span class="name">padToAlign</span><span class="params">(<span name="b">b: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Adds as many zero padding bytes as necessary to
- stop on a 4 byte alignment.</p><div class="fullcomment"><div class="comment cmt"><p> Adds as many zero padding bytes as necessary to
- stop on a 4 byte alignment. if the buffer position
- is already on a 4 byte alignment when calling this
- function, this method does nothing.
+      <p class="shortcomment cmt">Adds as many zero padding bytes as necessary to
+stop on a 4 byte alignment.</p><div class="fullcomment"><div class="comment cmt"><p>Adds as many zero padding bytes as necessary to
+stop on a 4 byte alignment. if the buffer position
+is already on a 4 byte alignment when calling this
+function, this method does nothing.
 </p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>the buffer to align
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ BufferOverflowException ]</span>
+      <span class="symbol">classOf[BufferOverflowException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">BufferOverflowException<p>in case the padding exceeds
-									the provided buffer limit
+                                   the provided buffer limit
 </p></span></dd></dl></div>
     </li><li name="de.sciss.osc.Packet#printEscapedStringOn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="printEscapedStringOn(stream:java.io.PrintStream,str:String):Unit"></a>
@@ -386,14 +364,14 @@
         <span class="name">printHexOn</span><span class="params">(<span name="b">b: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Prints a hexdump version of a packet to a given stream.</p><div class="fullcomment"><div class="comment cmt"><p>Prints a hexdump version of a packet to a given stream.
+      <p class="shortcomment cmt">Prints a hex-dump version of a packet to a given stream.</p><div class="fullcomment"><div class="comment cmt"><p>Prints a hex-dump version of a packet to a given stream.
 The format is similar to scsynth using dump mode 2.
 Unlike <code>printTextOn</code> this takes a raw received
 or encoded byte buffer and not a decoded instance
 of <code>Packet</code>.
 </p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>the byte buffer containing the packet. the current position
-                  is saved, and the printing is performed from position 0 to
-                  the limit of the buffer. the previous position is restored.
+                is saved, and the printing is performed from position 0 to
+                the limit of the buffer. the previous position is restored.
 </p></dd><dt class="param">stream</dt><dd class="cmt"><p>the print stream to use, for example <code>System.out</code></p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>java.nio.Buffer#position()
 </p></span><span class="cmt"><p>java.nio.Buffer#limit()</p></span></dd></dl></div>
     </li><li name="de.sciss.osc.Packet#printTextOn" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -426,21 +404,21 @@ line and increasing indent.
         <span class="name">readString</span><span class="params">(<span name="b">b: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>)</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Reads a null terminated string from
- the current buffer position
-</p><div class="fullcomment"><div class="comment cmt"><p> Reads a null terminated string from
- the current buffer position
+      <p class="shortcomment cmt">Reads a null terminated string from
+the current buffer position
+</p><div class="fullcomment"><div class="comment cmt"><p>Reads a null terminated string from
+the current buffer position
 </p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>buffer to read from. position and limit must be
-			set appropriately. new position will be right after
-			the terminating zero byte when the method returns
+            set appropriately. new position will be right after
+            the terminating zero byte when the method returns
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ BufferUnderflowException ]</span>
+      <span class="symbol">classOf[BufferUnderflowException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">BufferUnderflowException<p>in case the string exceeds
-									the provided buffer limit
+                                  the provided buffer limit
 </p></span></dd></dl></div>
     </li><li name="de.sciss.osc.Packet#skipToAlign" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="skipToAlign(b:java.nio.ByteBuffer):Unit"></a>
@@ -454,20 +432,20 @@ line and increasing indent.
         <span class="name">skipToAlign</span><span class="params">(<span name="b">b: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Advances the current buffer position
- to an integer of four bytes.</p><div class="fullcomment"><div class="comment cmt"><p> Advances the current buffer position
- to an integer of four bytes. The position
- is not altered if it is already
- aligned to a four byte boundary.
+      <p class="shortcomment cmt">Advances the current buffer position
+to an integer of four bytes.</p><div class="fullcomment"><div class="comment cmt"><p>Advances the current buffer position
+to an integer of four bytes. The position
+is not altered if it is already
+aligned to a four byte boundary.
 </p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>the buffer to advance
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ BufferUnderflowException ]</span>
+      <span class="symbol">classOf[BufferUnderflowException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">BufferUnderflowException<p>in case the skipping exceeds
-									the provided buffer limit
+                                  the provided buffer limit
 </p></span></dd></dl></div>
     </li><li name="de.sciss.osc.Packet#skipToValues" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="skipToValues(b:java.nio.ByteBuffer):Unit"></a>
@@ -481,20 +459,20 @@ line and increasing indent.
         <span class="name">skipToValues</span><span class="params">(<span name="b">b: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Advances in the buffer as long there
- are non-zero bytes, then advance to a
- four byte alignment.</p><div class="fullcomment"><div class="comment cmt"><p> Advances in the buffer as long there
- are non-zero bytes, then advance to a
- four byte alignment.
+      <p class="shortcomment cmt">Advances in the buffer as long there
+are non-zero bytes, then advance to a
+four byte alignment.</p><div class="fullcomment"><div class="comment cmt"><p>Advances in the buffer as long there
+are non-zero bytes, then advance to a
+four byte alignment.
 </p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>the buffer to advance
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ BufferUnderflowException ]</span>
+      <span class="symbol">classOf[BufferUnderflowException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">BufferUnderflowException<p>in case the reads exceed
-									the provided buffer limit
+                                  the provided buffer limit
 </p></span></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -521,22 +499,22 @@ line and increasing indent.
         <span class="name">terminateAndPadToAlign</span><span class="params">(<span name="b">b: <span class="extype" name="java.nio.ByteBuffer">ByteBuffer</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Adds as many zero padding bytes as necessary to
- stop on a 4 byte alignment.</p><div class="fullcomment"><div class="comment cmt"><p> Adds as many zero padding bytes as necessary to
- stop on a 4 byte alignment. if the buffer position
- is already on a 4 byte alignment when calling this
- function, another 4 zero padding bytes are added.
- buffer position will be on the new aligned boundary
- when return from this method
+      <p class="shortcomment cmt">Adds as many zero padding bytes as necessary to
+stop on a 4 byte alignment.</p><div class="fullcomment"><div class="comment cmt"><p>Adds as many zero padding bytes as necessary to
+stop on a 4 byte alignment. if the buffer position
+is already on a 4 byte alignment when calling this
+function, another 4 zero padding bytes are added.
+buffer position will be on the new aligned boundary
+when return from this method
 </p></div><dl class="paramcmts block"><dt class="param">b</dt><dd class="cmt"><p>the buffer to pad
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ BufferOverflowException ]</span>
+      <span class="symbol">classOf[BufferOverflowException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">BufferOverflowException<p>in case the padding exceeds
-									the provided buffer limit
+                                   the provided buffer limit
 </p></span></dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -637,6 +615,7 @@ line and increasing indent.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

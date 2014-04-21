@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>TDuty - de.sciss.synth.ugen.TDuty</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -35,16 +39,16 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">TDuty</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="dur">dur: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0)</span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="defval" name="synth.this.DoneAction.toGE(doNothing)">...</span></span>, <span name="gapFirst">gapFirst: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0)</span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">TDuty</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="dur">dur: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>, <span name="gapFirst">gapFirst: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen which polls results from demand-rate ugens in intervals specified by a
-durational input, and outputs them as trigger values. A value from the <code>level</code>
+duration input, and outputs them as trigger values. A value from the <code>level</code>
 ugen is demanded and output for one sample (when running at audio-rate) or one
 block (when running at control-rate) according to a stream of duration values.
 When there is a trigger at the reset input, the <code>level</code> and the <code>dur</code> input are
-reset.</p><p><b>Warning</b>: The argument order is different from its sclang counterpart.
+reset.
 </p></div><dl class="paramcmts block"><dt class="param">dur</dt><dd class="cmt"><p>the provider of time values. Can be a demand-rate ugen
                         or any signal. The next poll is acquired after the
                         previous duration.</p></dd><dt class="param">level</dt><dd class="cmt"><p>a demand-rate ugen providing the output values.</p></dd><dt class="param">reset</dt><dd class="cmt"><p>a trigger which resets the dur input (if demand-rated)
@@ -52,12 +56,13 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
                         be a demand-rate ugen, in this case providing a stream
                         of reset times.</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>a doneAction that is evaluated when the duration stream
                         ends.</p></dd><dt class="param">gapFirst</dt><dd class="cmt"><p>when 0 (default), the UGen does the first level poll
-                        immediately and then waits for the first durational
-                        value. When this is 1, the UGen initially polls the
-                        first durational value, waits for that duration, and
-                        then polls the first level (along with polling the next
-                        durational value).
-</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="../DoneAction.html" class="extype" name="de.sciss.synth.DoneAction">DoneAction</a>
+                        immediately and then waits for the first duration value.
+                        When this is 1, the UGen initially polls the first
+                        duration value, waits for that duration, and then polls
+                        the first level (along with polling the next duration
+                        value).
+</p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>The argument order is different from its sclang counterpart.
+</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="../DoneAction.html" class="extype" name="de.sciss.synth.DoneAction">DoneAction</a>
 </p></span><span class="cmt"><p><a href="Demand$.html" class="extype" name="de.sciss.synth.ugen.Demand">Demand</a></p></span><span class="cmt"><p><a href="Duty$.html" class="extype" name="de.sciss.synth.ugen.Duty">Duty</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a>, <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a>, <a href="../UGenSource$$SomeOut.html" class="extype" name="de.sciss.synth.UGenSource.SomeOut">SomeOut</a>, <a href="../GE$$Lazy.html" class="extype" name="de.sciss.synth.GE.Lazy">GE.Lazy</a>, <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a>, <a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>], <a href="../Lazy$$Expander.html" class="extype" name="de.sciss.synth.Lazy.Expander">Expander</a>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>], <a href="../Lazy.html" class="extype" name="de.sciss.synth.Lazy">Lazy</a>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
@@ -107,7 +112,7 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">TDuty</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="dur">dur: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0)</span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="defval" name="synth.this.DoneAction.toGE(doNothing)">...</span></span>, <span name="gapFirst">gapFirst: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0)</span></span>)</span>
+        <span class="name">TDuty</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="dur">dur: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="level">level: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>, <span name="gapFirst">gapFirst: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">dur</dt><dd class="cmt"><p>the provider of time values. Can be a demand-rate ugen
@@ -117,11 +122,11 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
                         be a demand-rate ugen, in this case providing a stream
                         of reset times.</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>a doneAction that is evaluated when the duration stream
                         ends.</p></dd><dt class="param">gapFirst</dt><dd class="cmt"><p>when 0 (default), the UGen does the first level poll
-                        immediately and then waits for the first durational
-                        value. When this is 1, the UGen initially polls the
-                        first durational value, waits for that duration, and
-                        then polls the first level (along with polling the next
-                        durational value).
+                        immediately and then waits for the first duration value.
+                        When this is 1, the UGen initially polls the first
+                        duration value, waits for that duration, and then polls
+                        the first level (along with polling the next duration
+                        value).
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -133,19 +138,6 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -157,7 +149,7 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -172,19 +164,6 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -196,7 +175,7 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -303,13 +282,12 @@ reset.</p><p><b>Warning</b>: The argument order is different from its sclang cou
       </span>
       </h4>
       <p class="shortcomment cmt">when 0 (default), the UGen does the first level poll
-                        immediately and then waits for the first durational
-                        value.</p><div class="fullcomment"><div class="comment cmt"><p>when 0 (default), the UGen does the first level poll
-                        immediately and then waits for the first durational
-                        value. When this is 1, the UGen initially polls the
-                        first durational value, waits for that duration, and
-                        then polls the first level (along with polling the next
-                        durational value).
+                        immediately and then waits for the first duration value.</p><div class="fullcomment"><div class="comment cmt"><p>when 0 (default), the UGen does the first level poll
+                        immediately and then waits for the first duration value.
+                        When this is 1, the UGen initially polls the first
+                        duration value, waits for that duration, and then polls
+                        the first level (along with polling the next duration
+                        value).
 </p></div></div>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
@@ -612,6 +590,7 @@ expansion
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

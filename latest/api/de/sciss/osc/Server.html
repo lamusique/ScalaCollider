@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Server - de.sciss.osc.Server</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -41,7 +45,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><a href="Channel$$Bidi.html" class="extype" name="de.sciss.osc.Channel.Bidi">Bidi</a>, <a href="Channel.html" class="extype" name="de.sciss.osc.Channel">Channel</a>, <span class="extype" name="java.nio.channels.Channel">java.nio.channels.Channel</span>, <span class="extype" name="java.io.Closeable">Closeable</span>, <a href="Channel$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.ConfigLike">ConfigLike</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><a href="Channel$$Bidi.html" class="extype" name="de.sciss.osc.Channel.Bidi">Bidi</a>, <a href="Channel.html" class="extype" name="de.sciss.osc.Channel">Channel</a>, <span class="extype" name="java.nio.channels.Channel">java.nio.channels.Channel</span>, <span class="extype" name="java.io.Closeable">Closeable</span>, <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span>, <a href="Channel$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.ConfigLike">ConfigLike</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.osc.Server"><span>Server</span></li><li class="in" name="de.sciss.osc.Channel.Bidi"><span>Bidi</span></li><li class="in" name="de.sciss.osc.Channel"><span>Channel</span></li><li class="in" name="java.nio.channels.Channel"><span>Channel</span></li><li class="in" name="java.io.Closeable"><span>Closeable</span></li><li class="in" name="de.sciss.osc.Channel.ConfigLike"><span>ConfigLike</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.osc.Server"><span>Server</span></li><li class="in" name="de.sciss.osc.Channel.Bidi"><span>Bidi</span></li><li class="in" name="de.sciss.osc.Channel"><span>Channel</span></li><li class="in" name="java.nio.channels.Channel"><span>Channel</span></li><li class="in" name="java.io.Closeable"><span>Closeable</span></li><li class="in" name="java.lang.AutoCloseable"><span>AutoCloseable</span></li><li class="in" name="de.sciss.osc.Channel.ConfigLike"><span>ConfigLike</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -83,7 +87,7 @@
               <h3>Type Members</h3>
               <ol><li name="de.sciss.osc.Server.Action" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Action=(de.sciss.osc.Packet,Server.this.Connection)=&gt;Unit"></a>
-      <a id="Action:(Packet,Connection)⇒Unit"></a>
+      <a id="Action:Action"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
@@ -113,28 +117,28 @@
         <div id="values" class="values members">
               <h3>Abstract Value Members</h3>
               <ol><li name="de.sciss.osc.Server#action" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="action:(de.sciss.osc.Packet,Server.this.Connection)=&gt;Unit"></a>
-      <a id="action:(Packet,Connection)⇒Unit"></a>
+      <a id="action:Server.this.Action"></a>
+      <a id="action:Action"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">action</span><span class="result">: (<a href="Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>, <a href="#Connection&lt;:de.sciss.osc.Channel.Directed.Output" class="extmbr" name="de.sciss.osc.Server.Connection">Connection</a>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">action</span><span class="result">: <a href="#Action=(de.sciss.osc.Packet,Server.this.Connection)=&gt;Unit" class="extmbr" name="de.sciss.osc.Server.Action">Action</a></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.osc.Server#action_=" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="action_=(value:(de.sciss.osc.Packet,Server.this.Connection)=&gt;Unit):Unit"></a>
-      <a id="action_=((Packet,Connection)⇒Unit):Unit"></a>
+      <a id="action_=(value:Server.this.Action):Unit"></a>
+      <a id="action_=(Action):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span title="gt4s: action_$eq" class="name">action_=</span><span class="params">(<span name="value">value: (<a href="Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>, <a href="#Connection&lt;:de.sciss.osc.Channel.Directed.Output" class="extmbr" name="de.sciss.osc.Server.Connection">Connection</a>) ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span title="gt4s: action_$eq" class="name">action_=</span><span class="params">(<span name="value">value: <a href="#Action=(de.sciss.osc.Packet,Server.this.Connection)=&gt;Unit" class="extmbr" name="de.sciss.osc.Server.Action">Action</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
@@ -180,7 +184,7 @@ This is the maximum size an OSC packet (bundle or message) can grow to.
         <span class="name">close</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Channel → Closeable</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Channel → Closeable → AutoCloseable</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
       <span class="symbol">classOf[java.io.IOException]</span>
@@ -216,7 +220,7 @@ This is the maximum size an OSC packet (bundle or message) can grow to.
 connectivity (e.</p><div class="fullcomment"><div class="comment cmt"><p>Establishes connection for transports requiring
 connectivity (e.g. TCP). For transports that do not require connectivity (e.g. UDP),
 this ensures the communication channel is created and bound.
- &lt;P&gt;
+&lt;P&gt;
 When a &lt;B&gt;UDP&lt;/B&gt; transmitter
 is created without an explicit <code>DatagramChannel</code> &ndash; say by
 calling <code>Transmitter.newUsing( &quot;udp&quot; )</code>, you are required
@@ -229,57 +233,57 @@ was already connected, therefore be sure to check <code>isConnected()</code> bef
 </p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel.html" class="extype" name="de.sciss.osc.Channel">Channel</a></dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if a networking error occurs. Possible reasons: - the underlying
-					network channel had been closed by the server. - the transport
-					is TCP and the server is not available. - the transport is TCP
-					and an <code>Receiver</code> sharing the same socket was stopped before (unable to revive).
+                      network channel had been closed by the server. - the transport
+                      is TCP and the server is not available. - the transport is TCP
+                      and an <code>Receiver</code> sharing the same socket was stopped before (unable to revive).
 </p></span></dd><dt>See also</dt><dd><span class="cmt"><p>#isConnected()
 </p></span></dd></dl></div>
     </li><li name="de.sciss.osc.Channel#dump" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="dump(mode:de.sciss.osc.Dump,stream:java.io.PrintStream,filter:de.sciss.osc.Packet=&gt;Boolean):Unit"></a>
-      <a id="dump(Dump,PrintStream,(Packet)⇒Boolean):Unit"></a>
+      <a id="dump(mode:de.sciss.osc.Dump,stream:java.io.PrintStream,filter:de.sciss.osc.Dump.Filter):Unit"></a>
+      <a id="dump(Dump,PrintStream,Filter):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dump</span><span class="params">(<span name="mode">mode: <a href="Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.Text</a></span></span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span> = <span class="symbol">Console.err</span></span>, <span name="filter">filter: (<a href="Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.AllPackets</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">dump</span><span class="params">(<span name="mode">mode: <a href="Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.Text</a></span></span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span> = <span class="symbol">Console.err</span></span>, <span name="filter">filter: <a href="Dump$.html#Filter=de.sciss.osc.Packet=&gt;Boolean" class="extmbr" name="de.sciss.osc.Dump.Filter">Filter</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.AllPackets</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">Changes the way processed OSC messages are printed to the standard err console.</p><div class="fullcomment"><div class="comment cmt"><p>Changes the way processed OSC messages are printed to the standard err console.
 By default messages are not printed.
 </p></div><dl class="paramcmts block"><dt class="param">mode</dt><dd class="cmt"><p>one of <code>Dump.Off</code> (don't dump, default),
-				<code>Dump.Text</code> (dump human readable string),
-				<code>Dump.Hex</code> (hexdump), or
-				<code>Dump.Both</code> (both text and hex)</p></dd><dt class="param">stream</dt><dd class="cmt"><p>the stream to print on
+              <code>Dump.Text</code> (dump human readable string),
+              <code>Dump.Hex</code> (hexdump), or
+              <code>Dump.Both</code> (both text and hex)</p></dd><dt class="param">stream</dt><dd class="cmt"><p>the stream to print on
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel.html" class="extype" name="de.sciss.osc.Channel">Channel</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Bidi#dumpIn" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="dumpIn(mode:de.sciss.osc.Dump,stream:java.io.PrintStream,filter:de.sciss.osc.Packet=&gt;Boolean):Unit"></a>
-      <a id="dumpIn(Dump,PrintStream,(Packet)⇒Boolean):Unit"></a>
+      <a id="dumpIn(mode:de.sciss.osc.Dump,stream:java.io.PrintStream,filter:de.sciss.osc.Dump.Filter):Unit"></a>
+      <a id="dumpIn(Dump,PrintStream,Filter):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dumpIn</span><span class="params">(<span name="mode">mode: <a href="Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.Text</a></span></span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span> = <span class="symbol">Console.err</span></span>, <span name="filter">filter: (<a href="Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.AllPackets</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">dumpIn</span><span class="params">(<span name="mode">mode: <a href="Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.Text</a></span></span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span> = <span class="symbol">Console.err</span></span>, <span name="filter">filter: <a href="Dump$.html#Filter=de.sciss.osc.Packet=&gt;Boolean" class="extmbr" name="de.sciss.osc.Dump.Filter">Filter</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.AllPackets</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Bidi.html" class="extype" name="de.sciss.osc.Channel.Bidi">Bidi</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Bidi#dumpOut" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
-      <a id="dumpOut(mode:de.sciss.osc.Dump,stream:java.io.PrintStream,filter:de.sciss.osc.Packet=&gt;Boolean):Unit"></a>
-      <a id="dumpOut(Dump,PrintStream,(Packet)⇒Boolean):Unit"></a>
+      <a id="dumpOut(mode:de.sciss.osc.Dump,stream:java.io.PrintStream,filter:de.sciss.osc.Dump.Filter):Unit"></a>
+      <a id="dumpOut(Dump,PrintStream,Filter):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dumpOut</span><span class="params">(<span name="mode">mode: <a href="Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.Text</a></span></span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span> = <span class="symbol">Console.err</span></span>, <span name="filter">filter: (<a href="Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.AllPackets</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">dumpOut</span><span class="params">(<span name="mode">mode: <a href="Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.Text</a></span></span></span>, <span name="stream">stream: <span class="extype" name="java.io.PrintStream">PrintStream</span> = <span class="symbol">Console.err</span></span>, <span name="filter">filter: <a href="Dump$.html#Filter=de.sciss.osc.Packet=&gt;Boolean" class="extmbr" name="de.sciss.osc.Dump.Filter">Filter</a> = <span class="symbol"><span class="name"><a href="Dump$.html">Dump.AllPackets</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Bidi.html" class="extype" name="de.sciss.osc.Channel.Bidi">Bidi</a></dd></dl></div>
@@ -308,8 +312,7 @@ By default messages are not printed.
         <span class="name">isOpen</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Queries whether the channel is still open.</p><div class="fullcomment"><div class="comment cmt"><p>Queries whether the channel is still open.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel.html" class="extype" name="de.sciss.osc.Channel">Channel</a> → Channel</dd></dl></div>
+      <p class="shortcomment cmt">Queries whether the channel is still open.</p><div class="fullcomment"><div class="comment cmt"><p>Queries whether the channel is still open.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel.html" class="extype" name="de.sciss.osc.Channel">Channel</a> → Channel</dd></dl></div>
     </li><li name="de.sciss.osc.Channel.ConfigLike#transport" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="transport:de.sciss.osc.Transport"></a>
       <a id="transport:Transport"></a>
@@ -332,19 +335,6 @@ By default messages are not printed.
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -356,7 +346,7 @@ By default messages are not printed.
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -371,19 +361,6 @@ By default messages are not printed.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -395,7 +372,7 @@ By default messages are not printed.
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -651,6 +628,8 @@ By default messages are not printed.
               <h3>Inherited from <span class="extype" name="java.nio.channels.Channel">java.nio.channels.Channel</span></h3>
             </div><div class="parent" name="java.io.Closeable">
               <h3>Inherited from <span class="extype" name="java.io.Closeable">Closeable</span></h3>
+            </div><div class="parent" name="java.lang.AutoCloseable">
+              <h3>Inherited from <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span></h3>
             </div><div class="parent" name="de.sciss.osc.Channel.ConfigLike">
               <h3>Inherited from <a href="Channel$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.ConfigLike">ConfigLike</a></h3>
             </div><div class="parent" name="scala.AnyRef">
@@ -673,6 +652,7 @@ By default messages are not printed.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

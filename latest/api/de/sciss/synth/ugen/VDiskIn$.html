@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>VDiskIn - de.sciss.synth.ugen.VDiskIn</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -92,19 +96,6 @@ size). See <code>Buffer#cue</code> for details.</p><p>If the speed is too high, 
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -116,7 +107,7 @@ size). See <code>Buffer#cue</code> for details.</p><p>If the speed is too high, 
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -131,19 +122,6 @@ size). See <code>Buffer#cue</code> for details.</p><p>If the speed is too high, 
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -155,7 +133,7 @@ size). See <code>Buffer#cue</code> for details.</p><p>If the speed is too high, 
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.VDiskIn#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(numChannels:Int,buf:de.sciss.synth.GE,speed:de.sciss.synth.GE,loop:de.sciss.synth.GE,sendID:de.sciss.synth.GE):de.sciss.synth.ugen.VDiskIn"></a>
       <a id="ar(Int,GE,GE,GE,GE):VDiskIn"></a>
@@ -172,15 +150,17 @@ size). See <code>Buffer#cue</code> for details.</p><p>If the speed is too high, 
                         have. This is an Int and hence must be pre-determined.
                         Different SynthDefs must be created for different
                         numbers of channels</p></dd><dt class="param">buf</dt><dd class="cmt"><p>the id of the buffer with the correct number of
-                        channels and frames</p></dd><dt class="param">speed</dt><dd class="cmt"><p>controls the speed of playback. Values below 4 are
-                        probably fine, but the higher the value, the more disk
-                        activity there is, and the more likelihood there will be
-                        a problem. The following must be true:
+                        channels and frames</p></dd><dt class="param">speed</dt><dd class="cmt"><p>controls the speed of playback. The buffer is always
+                        streamed at a frequency of <code>SampleRate.ir * speed</code> , so
+                        the buffer's own sample rate is irrelevant. Factors
+                        below 4 are probably fine, but the higher the value, the
+                        more disk activity there is, and the more likelihood
+                        there will be a problem. The following must be true:
                         <code>rate &lt; bufFrames / (2 * blockSize)</code> , e.g with typical
                         default values, this will be <code>32768 / (2 * 64) = 256</code> .</p></dd><dt class="param">loop</dt><dd class="cmt"><p>whether the file should loop when its end is reached</p></dd><dt class="param">sendID</dt><dd class="cmt"><p>If a value other than zero is used, the UGen sends an
                         OSC message with this id and the file position each time
                         it reloads the buffer:
-                        <code>OSCMessage( &quot;/diskin&quot;, nodeID, sendID, frame )</code>
+                        <code>OSCMessage(&quot;/diskin&quot;, nodeID, sendID, frame)</code>
 </p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
@@ -453,6 +433,7 @@ size). See <code>Buffer#cue</code> for details.</p><p>If the speed is too high, 
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

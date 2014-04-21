@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>RecordBuf - de.sciss.synth.ugen.RecordBuf</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -41,8 +45,21 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Records input into a Buffer. If recLevel is 1.0 and preLevel is 0.0 then the
 new input overwrites the old data. If they are both 1.0 then the new data is
-added to the existing data. (Any other settings are also valid.)
-</p></div><div class="toggleContainer block">
+added to the existing data. (Any other settings are also valid.)</p><h5>Examples</h5><pre><span class="cmt">// record and replay</span>
+<span class="cmt">// a four second mono buffer</span>
+<span class="kw">val</span> b = Buffer.alloc(s, s.sampleRate.toInt * <span class="num">4</span>)
+
+<span class="cmt">// record for four seconds</span>
+play {
+  <span class="kw">val</span> sig = Formant.ar(XLine.kr(<span class="num">400</span>, <span class="num">1000</span>, <span class="num">4</span>), <span class="num">2000</span>, <span class="num">800</span>) * <span class="num">0.125</span>
+  RecordBuf.ar(sig, b.id, doneAction = freeSelf, loop = <span class="num">0</span>)
+}
+
+<span class="cmt">// play it back</span>
+play {
+  PlayBuf.ar(<span class="num">1</span>, b.id, doneAction = freeSelf, loop = <span class="num">0</span>)
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="BufFrames$.html" class="extype" name="de.sciss.synth.ugen.BufFrames">BufFrames</a>
+</p></span><span class="cmt"><p><a href="BufRateScale$.html" class="extype" name="de.sciss.synth.ugen.BufRateScale">BufRateScale</a></p></span><span class="cmt"><p><a href="Done$.html" class="extype" name="de.sciss.synth.ugen.Done">Done</a></p></span><span class="cmt"><p><a href="../DoneAction.html" class="extype" name="de.sciss.synth.DoneAction">DoneAction</a></p></span><span class="cmt"><p><a href="PlayBuf$.html" class="extype" name="de.sciss.synth.ugen.PlayBuf">PlayBuf</a></p></span><span class="cmt"><p><a href="DiskOut$.html" class="extype" name="de.sciss.synth.ugen.DiskOut">DiskOut</a></p></span><span class="cmt"><p><a href="BufWr$.html" class="extype" name="de.sciss.synth.ugen.BufWr">BufWr</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -89,19 +106,6 @@ added to the existing data. (Any other settings are also valid.)
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -113,7 +117,7 @@ added to the existing data. (Any other settings are also valid.)
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -128,19 +132,6 @@ added to the existing data. (Any other settings are also valid.)
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -152,8 +143,8 @@ added to the existing data. (Any other settings are also valid.)
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.RecordBuf#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.RecordBuf#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(in:de.sciss.synth.GE,buf:de.sciss.synth.GE,offset:de.sciss.synth.GE,recLevel:de.sciss.synth.GE,preLevel:de.sciss.synth.GE,run:de.sciss.synth.GE,loop:de.sciss.synth.GE,trig:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.RecordBuf"></a>
       <a id="ar(GE,GE,GE,GE,GE,GE,GE,GE,GE):RecordBuf"></a>
       <h4 class="signature">
@@ -165,7 +156,20 @@ added to the existing data. (Any other settings are also valid.)
         <span class="name">ar</span><span class="params">(<span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="offset">offset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="recLevel">recLevel: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="preLevel">preLevel: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="run">run: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result">: <a href="RecordBuf.html" class="extype" name="de.sciss.synth.ugen.RecordBuf">RecordBuf</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>the signal to record</p></dd><dt class="param">buf</dt><dd class="cmt"><p>the identifier of the buffer to use</p></dd><dt class="param">offset</dt><dd class="cmt"><p>sample frame to begin writing from. This is read when a
+                        trigger occurs.</p></dd><dt class="param">recLevel</dt><dd class="cmt"><p>value to multiply by input before mixing with existing
+                        data.</p></dd><dt class="param">preLevel</dt><dd class="cmt"><p>value by which the previous buffer contents is
+                        multiplied when recording. If this value is zero, the
+                        buffer contents is completely overwritten. If this value
+                        is one, the new signal is added to the previous content.</p></dd><dt class="param">run</dt><dd class="cmt"><p>if zero the recording pauses, otherwise it resumes. The
+                        value of run is only read at control-rate! When the
+                        recording is paused, the &quot;write-head&quot; remains in its
+                        current position and does not advance.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to loop after the write head reaches the buffer end,
+                        0 to not loop. This can be modulated.</p></dd><dt class="param">trig</dt><dd class="cmt"><p>a trigger which causes a jump to the given <code>offset</code> . A
+                        trigger occurs when a signal changes from non-positive
+                        to positive (e.g. &lt;= 0 to &gt; 0).</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>what to do when the write head reaches the buffer end.
+                        This is only effective when <code>loop</code> is zero.
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -282,7 +286,7 @@ added to the existing data. (Any other settings are also valid.)
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.RecordBuf#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.RecordBuf#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(in:de.sciss.synth.GE,buf:de.sciss.synth.GE,offset:de.sciss.synth.GE,recLevel:de.sciss.synth.GE,preLevel:de.sciss.synth.GE,run:de.sciss.synth.GE,loop:de.sciss.synth.GE,trig:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.RecordBuf"></a>
       <a id="kr(GE,GE,GE,GE,GE,GE,GE,GE,GE):RecordBuf"></a>
       <h4 class="signature">
@@ -294,7 +298,20 @@ added to the existing data. (Any other settings are also valid.)
         <span class="name">kr</span><span class="params">(<span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="offset">offset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="recLevel">recLevel: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="preLevel">preLevel: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="run">run: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result">: <a href="RecordBuf.html" class="extype" name="de.sciss.synth.ugen.RecordBuf">RecordBuf</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>the signal to record</p></dd><dt class="param">buf</dt><dd class="cmt"><p>the identifier of the buffer to use</p></dd><dt class="param">offset</dt><dd class="cmt"><p>sample frame to begin writing from. This is read when a
+                        trigger occurs.</p></dd><dt class="param">recLevel</dt><dd class="cmt"><p>value to multiply by input before mixing with existing
+                        data.</p></dd><dt class="param">preLevel</dt><dd class="cmt"><p>value by which the previous buffer contents is
+                        multiplied when recording. If this value is zero, the
+                        buffer contents is completely overwritten. If this value
+                        is one, the new signal is added to the previous content.</p></dd><dt class="param">run</dt><dd class="cmt"><p>if zero the recording pauses, otherwise it resumes. The
+                        value of run is only read at control-rate! When the
+                        recording is paused, the &quot;write-head&quot; remains in its
+                        current position and does not advance.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to loop after the write head reaches the buffer end,
+                        0 to not loop. This can be modulated.</p></dd><dt class="param">trig</dt><dd class="cmt"><p>a trigger which causes a jump to the given <code>offset</code> . A
+                        trigger occurs when a signal changes from non-positive
+                        to positive (e.g. &lt;= 0 to &gt; 0).</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>what to do when the write head reaches the buffer end.
+                        This is only effective when <code>loop</code> is zero.
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -450,6 +467,7 @@ added to the existing data. (Any other settings are also valid.)
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

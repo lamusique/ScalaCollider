@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>SynthDef - de.sciss.synth.SynthDef</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -102,19 +106,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -126,7 +117,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -141,19 +132,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -165,20 +143,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.SynthDef#NoCompletion" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="NoCompletion:de.sciss.synth.Completion[de.sciss.synth.SynthDef]"></a>
-      <a id="NoCompletion:synth.Completion[SynthDef]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">NoCompletion</span><span class="result">: <a href="Completion.html" class="extype" name="de.sciss.synth.Completion">synth.Completion</a>[<a href="SynthDef.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a>]</span>
-      </span>
-      </h4>
-      
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.SynthDef#apply" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="apply(name:String)(thunk:=&gt;Unit)(implicitfactory:de.sciss.synth.UGenGraph.BuilderFactory):de.sciss.synth.SynthDef"></a>
       <a id="apply(String)(⇒Unit)(BuilderFactory):SynthDef"></a>
@@ -191,7 +156,8 @@
         <span class="name">apply</span><span class="params">(<span name="name">name: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="params">(<span name="thunk">thunk: ⇒ <span class="extype" name="scala.Unit">Unit</span></span>)</span><span class="params">(<span class="implicit">implicit </span><span name="factory">factory: <a href="UGenGraph$$BuilderFactory.html" class="extype" name="de.sciss.synth.UGenGraph.BuilderFactory">BuilderFactory</a> = <span class="symbol"><span class="name"><a href="impl/package.html">impl.DefaultUGenGraphBuilderFactory</a></span></span></span>)</span><span class="result">: <a href="SynthDef.html" class="extype" name="de.sciss.synth.SynthDef">SynthDef</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a new <code>SynthDef</code> with a given name and a thunk parameter that
+creates the expanded UGen graph structure.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -236,7 +202,9 @@
         <span class="name">defaultDir</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">The default directory for writing synth defs is the
+temporary directory given by the system property <code>&quot;java.io.tmpdir&quot;</code>
+</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -263,6 +231,19 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.SynthDef#extension" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="extension:String(&quot;scsyndef&quot;)"></a>
+      <a id="extension:String(&quot;scsyndef&quot;)"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">extension</span><span class="result">: String(&quot;scsyndef&quot;)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">The <code>SynthDef</code> file name extension (without leading period).</p>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -321,6 +302,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="de.sciss.synth.SynthDef#loadDirMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="loadDirMsg(path:String,completion:de.sciss.synth.Optional[de.sciss.osc.Packet]):de.sciss.synth.message.SynthDefLoadDir"></a>
+      <a id="loadDirMsg(String,Optional[Packet]):SynthDefLoadDir"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">loadDirMsg</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="completion">completion: <a href="Optional.html" class="extype" name="de.sciss.synth.Optional">Optional</a>[<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>] = <span class="symbol"><span class="name"><a href="Optional$.html">None</a></span></span></span>)</span><span class="result">: <a href="message/SynthDefLoadDir.html" class="extype" name="de.sciss.synth.message.SynthDefLoadDir">SynthDefLoadDir</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.SynthDef#loadMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="loadMsg(path:String,completion:de.sciss.synth.Optional[de.sciss.osc.Packet]):de.sciss.synth.message.SynthDefLoad"></a>
+      <a id="loadMsg(String,Optional[Packet]):SynthDefLoad"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">loadMsg</span><span class="params">(<span name="path">path: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="completion">completion: <a href="Optional.html" class="extype" name="de.sciss.synth.Optional">Optional</a>[<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>] = <span class="symbol"><span class="name"><a href="Optional$.html">None</a></span></span></span>)</span><span class="result">: <a href="message/SynthDefLoad.html" class="extype" name="de.sciss.synth.message.SynthDefLoad">SynthDefLoad</a></span>
+      </span>
+      </h4>
+      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -489,6 +496,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

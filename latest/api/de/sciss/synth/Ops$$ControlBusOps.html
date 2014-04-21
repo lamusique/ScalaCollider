@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>ControlBusOps - de.sciss.synth.Ops.ControlBusOps</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -39,9 +43,9 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="de.sciss.synth.Ops.ControlBusOps">ControlBusOps</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.NotNull">NotNull</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.Ops.ControlBusOps"><span>ControlBusOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.NotNull"><span>NotNull</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.Ops.ControlBusOps"><span>ControlBusOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -80,7 +84,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.Ops.ControlBusOps#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(b:de.sciss.synth.ControlBus):de.sciss.synth.Ops.ControlBusOps"></a>
+      <a id="&lt;init&gt;(this:de.sciss.synth.ControlBus):de.sciss.synth.Ops.ControlBusOps"></a>
       <a id="&lt;init&gt;:ControlBusOps"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -88,7 +92,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">ControlBusOps</span><span class="params">(<span name="b">b: <a href="ControlBus.html" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a></span>)</span>
+        <span class="name">ControlBusOps</span><span class="params">(<span name="this">this: <a href="ControlBus.html" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a></span>)</span>
       </span>
       </h4>
       
@@ -153,19 +157,60 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.Ops.ControlBusOps#b" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="b:de.sciss.synth.ControlBus"></a>
-      <a id="b:ControlBus"></a>
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#fill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fill(data:de.sciss.synth.FillRange*):Unit"></a>
+      <a id="fill(FillRange*):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">val</span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">b</span><span class="result">: <a href="ControlBus.html" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a></span>
+        <span class="name">fill</span><span class="params">(<span name="data">data: <a href="FillRange.html" class="extype" name="de.sciss.synth.FillRange">FillRange</a>*</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#fill" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="fill(value:Float):Unit"></a>
+      <a id="fill(Float):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">fill</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#get" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="get(indices:Int*):scala.concurrent.Future[scala.collection.immutable.IndexedSeq[Float]]"></a>
+      <a id="get(Int*):Future[IndexedSeq[Float]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">(<span name="indices">indices: <span class="extype" name="scala.Int">Int</span>*</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Gets multiple bus values specified as relative channel offsets.</p>
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#get" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="get():scala.concurrent.Future[Float]"></a>
+      <a id="get():Future[Float]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">get</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.Float">Float</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convenience method that gets a single bus value.</p><div class="fullcomment"><div class="comment cmt"><p>Convenience method that gets a single bus value.
+The bus must have exactly one channel, otherwise an exception is thrown.
+</p></div></div>
     </li><li name="scala.AnyVal#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
       <a id="getClass():Class[_&lt;:AnyVal]"></a>
@@ -179,6 +224,32 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyVal → Any</dd></dl></div>
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#getData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getData():scala.concurrent.Future[scala.collection.immutable.IndexedSeq[Float]]"></a>
+      <a id="getData():Future[IndexedSeq[Float]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getData</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]]</span>
+      </span>
+      </h4>
+      
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#getn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="getn(pairs:Range*):scala.concurrent.Future[scala.collection.immutable.IndexedSeq[Float]]"></a>
+      <a id="getn(Range*):Future[IndexedSeq[Float]]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">getn</span><span class="params">(<span name="pairs">pairs: <span class="extype" name="scala.Range">Range</span>*</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -193,33 +264,48 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.Ops.ControlBusOps#set" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="set(pairs:(Int,Float)*):Unit"></a>
-      <a id="set((Int,Float)*):Unit"></a>
+      <a id="set(pairs:de.sciss.synth.FillValue*):Unit"></a>
+      <a id="set(FillValue*):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">set</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.Float">Float</span>)*</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">set</span><span class="params">(<span name="pairs">pairs: <a href="FillValue.html" class="extype" name="de.sciss.synth.FillValue">FillValue</a>*</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.Ops.ControlBusOps#set" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="set(v:Float):Unit"></a>
-      <a id="set(Float):Unit"></a>
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#set" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="set(value:Double):Unit"></a>
+      <a id="set(Double):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">set</span><span class="params">(<span name="v">v: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">set</span><span class="params">(<span name="value">value: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convenience method that sets a single bus value.</p><div class="fullcomment"><div class="comment cmt"><p>Convenience method that sets a single bus value.
+The bus must have exactly one channel, otherwise an exception is thrown.
+</p></div></div>
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#setData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="setData(values:IndexedSeq[Float]):Unit"></a>
+      <a id="setData(IndexedSeq[Float]):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">setData</span><span class="params">(<span name="values">values: <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
     </li><li name="de.sciss.synth.Ops.ControlBusOps#setn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setn(pairs:(Int,scala.collection.immutable.IndexedSeq[Float])*):Unit"></a>
+      <a id="setn(pairs:(Int,IndexedSeq[Float])*):Unit"></a>
       <a id="setn((Int,IndexedSeq[Float])*):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -227,20 +313,20 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setn</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>])*</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">setn</span><span class="params">(<span name="pairs">pairs: (<span class="extype" name="scala.Int">Int</span>, <span class="extype" name="scala.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>])*</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.Ops.ControlBusOps#setn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="setn(v:scala.collection.immutable.IndexedSeq[Float]):Unit"></a>
-      <a id="setn(IndexedSeq[Float]):Unit"></a>
+    </li><li name="de.sciss.synth.Ops.ControlBusOps#this" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="this:de.sciss.synth.ControlBus"></a>
+      <a id="this:ControlBus"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">setn</span><span class="params">(<span name="v">v: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Float">Float</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">this</span><span class="result">: <a href="ControlBus.html" class="extype" name="de.sciss.synth.ControlBus">ControlBus</a></span>
       </span>
       </h4>
       
@@ -268,8 +354,6 @@
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyVal">
               <h3>Inherited from <span class="extype" name="scala.AnyVal">AnyVal</span></h3>
-            </div><div class="parent" name="scala.NotNull">
-              <h3>Inherited from <span class="extype" name="scala.NotNull">NotNull</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
@@ -288,6 +372,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

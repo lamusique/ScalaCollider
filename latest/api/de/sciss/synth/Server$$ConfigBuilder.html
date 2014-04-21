@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>ConfigBuilder - de.sciss.synth.Server.ConfigBuilder</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -87,19 +91,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -111,7 +102,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -126,19 +117,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -150,7 +128,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -176,9 +154,7 @@
         <span class="name">audioBuffers</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default number of audio buffers is <code>1024</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default number of audio buffers is <code>1024</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default number of audio buffers is <code>1024</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default number of audio buffers is <code>1024</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#audioBusChannels" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="audioBusChannels:Int"></a>
       <a id="audioBusChannels:Int"></a>
@@ -191,9 +167,7 @@
         <span class="name">audioBusChannels</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default number of audio bus channels is <code>128</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default number of audio bus channels is <code>128</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default number of audio bus channels is <code>128</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default number of audio bus channels is <code>128</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#blockSize" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="blockSize:Int"></a>
       <a id="blockSize:Int"></a>
@@ -206,9 +180,7 @@
         <span class="name">blockSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default calculation block size is <code>64</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default calculation block size is <code>64</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default calculation block size is <code>64</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default calculation block size is <code>64</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#build" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="build:de.sciss.synth.Server.Config"></a>
       <a id="build:Config"></a>
@@ -253,9 +225,7 @@
         <span class="name">controlBusChannels</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default number of control bus channels is <code>4096</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default number of control bus channels is <code>4096</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default number of control bus channels is <code>4096</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default number of control bus channels is <code>4096</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#deviceName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="deviceName:Option[String]"></a>
       <a id="deviceName:Option[String]"></a>
@@ -417,9 +387,7 @@ scsynth uses the hardware's current block size; scsynth default)
         <span class="name">host</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default host name is <code>127.0.0.1</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default host name is <code>127.0.0.1</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The default host name is <code>127.0.0.1</code></p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default host name is <code>127.0.0.1</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#inputBusChannels" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="inputBusChannels:Int"></a>
       <a id="inputBusChannels:Int"></a>
@@ -432,9 +400,7 @@ scsynth uses the hardware's current block size; scsynth default)
         <span class="name">inputBusChannels</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default number of input bus channels is <code>8</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default number of input bus channels is <code>8</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The default number of input bus channels is <code>8</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default number of input bus channels is <code>8</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#inputStreamsEnabled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="inputStreamsEnabled:Option[String]"></a>
       <a id="inputStreamsEnabled:Option[String]"></a>
@@ -447,9 +413,7 @@ scsynth uses the hardware's current block size; scsynth default)
         <span class="name">inputStreamsEnabled</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default settings for enabled input streams is <code>None</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default settings for enabled input streams is <code>None</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The default settings for enabled input streams is <code>None</code></p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default settings for enabled input streams is <code>None</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigLike#internalBusIndex" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="internalBusIndex:Int"></a>
       <a id="internalBusIndex:Int"></a>
@@ -504,9 +468,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">loadSynthDefs</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default setting for loading synth defs is <code>true</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default setting for loading synth defs is <code>true</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default setting for loading synth defs is <code>true</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default setting for loading synth defs is <code>true</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#machPortName" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="machPortName:Option[(String,String)]"></a>
       <a id="machPortName:Option[(String,String)]"></a>
@@ -519,9 +481,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">machPortName</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[(<span class="extype" name="scala.Predef.String">String</span>, <span class="extype" name="scala.Predef.String">String</span>)]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default settings for mach port name is <code>None</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default settings for mach port name is <code>None</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default settings for mach port name is <code>None</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default settings for mach port name is <code>None</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#maxLogins" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="maxLogins:Int"></a>
       <a id="maxLogins:Int"></a>
@@ -534,9 +494,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">maxLogins</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The maximum number of TCP clients is <code>64</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The maximum number of TCP clients is <code>64</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The maximum number of TCP clients is <code>64</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The maximum number of TCP clients is <code>64</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#maxNodes" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="maxNodes:Int"></a>
       <a id="maxNodes:Int"></a>
@@ -549,9 +507,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">maxNodes</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default maximum number of nodes is <code>1024</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default maximum number of nodes is <code>1024</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default maximum number of nodes is <code>1024</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default maximum number of nodes is <code>1024</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#maxSynthDefs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="maxSynthDefs:Int"></a>
       <a id="maxSynthDefs:Int"></a>
@@ -564,9 +520,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">maxSynthDefs</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default maximum number of synth defs is <code>1024</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default maximum number of synth defs is <code>1024</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default maximum number of synth defs is <code>1024</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default maximum number of synth defs is <code>1024</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#memorySize" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="memorySize:Int"></a>
       <a id="memorySize:Int"></a>
@@ -579,9 +533,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">memorySize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default memory size is <code>65536</code> (64 KB) (higher than scsynth's default of 8 KB)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default memory size is <code>65536</code> (64 KB) (higher than scsynth's default of 8 KB)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default memory size is <code>65536</code> (64 KB) (higher than scsynth's default of 8 KB)</p><div class="fullcomment"><div class="comment cmt"><p>The default memory size is <code>65536</code> (64 KB) (higher than scsynth's default of 8 KB)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -633,8 +585,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">nrtCommandPath</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Non-Realtime) Path to the binary OSC file.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Path to the binary OSC file.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Non-Realtime) Path to the binary OSC file.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Path to the binary OSC file.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#nrtHeaderFormat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="nrtHeaderFormat:de.sciss.synth.io.AudioFileType"></a>
       <a id="nrtHeaderFormat:AudioFileType"></a>
@@ -647,8 +598,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">nrtHeaderFormat</span><span class="result">: <a href="io/AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Non-Realtime) Audio file format for writing the output.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Audio file format for writing the output.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Non-Realtime) Audio file format for writing the output.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Audio file format for writing the output.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#nrtInputPath" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="nrtInputPath:Option[String]"></a>
       <a id="nrtInputPath:Option[String]"></a>
@@ -661,8 +611,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">nrtInputPath</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Non-Realtime) Path to the audio input file used as audio input bus supplement.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Path to the audio input file used as audio input bus supplement.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Non-Realtime) Path to the audio input file used as audio input bus supplement.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Path to the audio input file used as audio input bus supplement.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#nrtOutputPath" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="nrtOutputPath:String"></a>
       <a id="nrtOutputPath:String"></a>
@@ -675,8 +624,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">nrtOutputPath</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Non-Realtime) Path to the audio output file used as audio output bus supplement.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Path to the audio output file used as audio output bus supplement.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Non-Realtime) Path to the audio output file used as audio output bus supplement.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Path to the audio output file used as audio output bus supplement.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#nrtSampleFormat" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="nrtSampleFormat:de.sciss.synth.io.SampleFormat"></a>
       <a id="nrtSampleFormat:SampleFormat"></a>
@@ -689,8 +637,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">nrtSampleFormat</span><span class="result">: <a href="io/SampleFormat.html" class="extype" name="de.sciss.synth.io.SampleFormat">SampleFormat</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Non-Realtime) Audio sample format for writing the output.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Audio sample format for writing the output.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Non-Realtime) Audio sample format for writing the output.</p><div class="fullcomment"><div class="comment cmt"><p>(Non-Realtime) Audio sample format for writing the output.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#outputBusChannels" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="outputBusChannels:Int"></a>
       <a id="outputBusChannels:Int"></a>
@@ -703,9 +650,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">outputBusChannels</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default number of output bus channels is <code>8</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default number of output bus channels is <code>8</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default number of output bus channels is <code>8</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default number of output bus channels is <code>8</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#outputStreamsEnabled" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="outputStreamsEnabled:Option[String]"></a>
       <a id="outputStreamsEnabled:Option[String]"></a>
@@ -718,9 +663,7 @@ the internal channels. (simply the sum of <code>outputBusChannels</code> and <co
         <span class="name">outputStreamsEnabled</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default settings for enabled output streams is <code>None</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default settings for enabled output streams is <code>None</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The default settings for enabled output streams is <code>None</code></p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default settings for enabled output streams is <code>None</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#pickPort" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="pickPort():Unit"></a>
       <a id="pickPort():Unit"></a>
@@ -768,23 +711,22 @@ will render the result invalid.</p><p>This method will fail with runtime excepti
         <span class="name">port</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default port is <code>57110</code>.</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default port is <code>57110</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
-    </li><li name="de.sciss.synth.Server.ConfigBuilder#programPath" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="programPath:String"></a>
-      <a id="programPath:String"></a>
+      <p class="shortcomment cmt">(Realtime) The default port is <code>57110</code>.</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default port is <code>57110</code>.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+    </li><li name="de.sciss.synth.Server.ConfigBuilder#program" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="program:String"></a>
+      <a id="program:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">var</span>
       </span>
       <span class="symbol">
-        <span class="name">programPath</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
+        <span class="name">program</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default <code>programPath</code> is read from <code>defaultProgramPath</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>The default <code>programPath</code> is read from <code>defaultProgramPath</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="Server.html" class="extype" name="de.sciss.synth.Server">d e f a u l t P r o g r a m P a t h</a>
+      <p class="shortcomment cmt">The default <code>program</code> is read from <code>defaultProgram</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>The default <code>program</code> is read from <code>defaultProgram</code>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd><dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="de.sciss.synth.Server#defaultProgramPath">de.sciss.synth.Server#defaultProgramPath</span>
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#randomSeeds" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="randomSeeds:Int"></a>
@@ -798,9 +740,7 @@ will render the result invalid.</p><p>This method will fail with runtime excepti
         <span class="name">randomSeeds</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default number of random number generators is <code>64</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default number of random number generators is <code>64</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default number of random number generators is <code>64</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default number of random number generators is <code>64</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#read" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="read(config:de.sciss.synth.Server.Config):Unit"></a>
       <a id="read(Config):Unit"></a>
@@ -826,9 +766,7 @@ will render the result invalid.</p><p>This method will fail with runtime excepti
         <span class="name">restrictedPath</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default setting for restricting file access is <code>None</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default setting for restricting file access is <code>None</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default setting for restricting file access is <code>None</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default setting for restricting file access is <code>None</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#sampleRate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="sampleRate:Int"></a>
       <a id="sampleRate:Int"></a>
@@ -858,9 +796,7 @@ the sound card's current rate; scsynth default)
         <span class="name">sessionPassword</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default TCP session password is <code>None</code>
-</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default TCP session password is <code>None</code>
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The default TCP session password is <code>None</code></p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default TCP session password is <code>None</code></p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -886,8 +822,7 @@ the sound card's current rate; scsynth default)
         <span class="name">toNonRealtimeArgs</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Produces a command line for booting scsynth in non-realtime mode.</p><div class="fullcomment"><div class="comment cmt"><p>Produces a command line for booting scsynth in non-realtime mode.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">Produces a command line for booting scsynth in non-realtime mode.</p><div class="fullcomment"><div class="comment cmt"><p>Produces a command line for booting scsynth in non-realtime mode.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigLike#toRealtimeArgs" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toRealtimeArgs:List[String]"></a>
       <a id="toRealtimeArgs:List[String]"></a>
@@ -900,8 +835,7 @@ the sound card's current rate; scsynth default)
         <span class="name">toRealtimeArgs</span><span class="result">: <span class="extype" name="scala.List">List</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Produces a command line for booting scsynth in realtime mode.</p><div class="fullcomment"><div class="comment cmt"><p>Produces a command line for booting scsynth in realtime mode.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">Produces a command line for booting scsynth in realtime mode.</p><div class="fullcomment"><div class="comment cmt"><p>Produces a command line for booting scsynth in realtime mode.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
@@ -927,8 +861,7 @@ the sound card's current rate; scsynth default)
         <span class="name">transport</span><span class="result">: <a href="../osc/Transport$$Net.html" class="extype" name="de.sciss.osc.Transport.Net">Net</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">(Realtime) The default transport is <code>UDP</code>.</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default transport is <code>UDP</code>.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">(Realtime) The default transport is <code>UDP</code>.</p><div class="fullcomment"><div class="comment cmt"><p>(Realtime) The default transport is <code>UDP</code>.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#verbosity" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="verbosity:Int"></a>
       <a id="verbosity:Int"></a>
@@ -941,9 +874,7 @@ the sound card's current rate; scsynth default)
         <span class="name">verbosity</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default verbosity level is <code>0</code> (scsynth default)
-</p><div class="fullcomment"><div class="comment cmt"><p>The default verbosity level is <code>0</code> (scsynth default)
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default verbosity level is <code>0</code> (scsynth default)</p><div class="fullcomment"><div class="comment cmt"><p>The default verbosity level is <code>0</code> (scsynth default)</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
@@ -1013,8 +944,7 @@ the sound card's current rate; scsynth default)
         <span class="name">wireBuffers</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">The default number of wire buffers is <code>256</code> (higher than scsynth's default of <code>64</code>).</p><div class="fullcomment"><div class="comment cmt"><p>The default number of wire buffers is <code>256</code> (higher than scsynth's default of <code>64</code>).
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
+      <p class="shortcomment cmt">The default number of wire buffers is <code>256</code> (higher than scsynth's default of <code>64</code>).</p><div class="fullcomment"><div class="comment cmt"><p>The default number of wire buffers is <code>256</code> (higher than scsynth's default of <code>64</code>).</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server.ConfigBuilder">ConfigBuilder</a> → <a href="Server$$ConfigLike.html" class="extype" name="de.sciss.synth.Server.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server.ConfigBuilder#zeroConf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="zeroConf:Boolean"></a>
       <a id="zeroConf:Boolean"></a>
@@ -1063,6 +993,7 @@ scsynth's default which is <code>true</code>)
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

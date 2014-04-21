@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>CanWrite - de.sciss.synth.io.AudioFileType.CanWrite</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -43,9 +47,9 @@
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="AudioFileType$$AIFF$.html" class="extype" name="de.sciss.synth.io.AudioFileType.AIFF">AIFF</a>, <a href="AudioFileType$$IRCAM$.html" class="extype" name="de.sciss.synth.io.AudioFileType.IRCAM">IRCAM</a>, <a href="AudioFileType$$NeXT$.html" class="extype" name="de.sciss.synth.io.AudioFileType.NeXT">NeXT</a>, <a href="AudioFileType$$Raw$.html" class="extype" name="de.sciss.synth.io.AudioFileType.Raw">Raw</a>, <a href="AudioFileType$$Wave$.html" class="extype" name="de.sciss.synth.io.AudioFileType.Wave">Wave</a>, <a href="AudioFileType$$Wave64$.html" class="extype" name="de.sciss.synth.io.AudioFileType.Wave64">Wave64</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="AudioFileType$$AIFF$.html" class="extype" name="de.sciss.synth.io.AudioFileType.AIFF">AIFF</a>, <a href="AudioFileType$$IRCAM$.html" class="extype" name="de.sciss.synth.io.AudioFileType.IRCAM">IRCAM</a>, <a href="AudioFileType$$NeXT$.html" class="extype" name="de.sciss.synth.io.AudioFileType.NeXT">NeXT</a>, <a href="AudioFileType$$Raw$.html" class="extype" name="de.sciss.synth.io.AudioFileType.Raw">Raw</a>, <a href="AudioFileType$$Wave$.html" class="extype" name="de.sciss.synth.io.AudioFileType.Wave">Wave</a>, <a href="AudioFileType$$Wave64$.html" class="extype" name="de.sciss.synth.io.AudioFileType.Wave64">Wave64</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -98,8 +102,7 @@
         <span class="name">extension</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the default extension (period not included)
-</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the default extension (period not included)</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFileType#extensions" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="extensions:scala.collection.immutable.IndexedSeq[String]"></a>
       <a id="extensions:IndexedSeq[String]"></a>
@@ -112,8 +115,7 @@
         <span class="name">extensions</span><span class="result">: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a list of alternative extensions, including the default <code>extension</code>
-</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>a list of alternative extensions, including the default <code>extension</code></p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFileType#id" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="id:String"></a>
       <a id="id:String"></a>
@@ -126,8 +128,7 @@
         <span class="name">id</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the unique identifier of the file type
-</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the unique identifier of the file type</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFileType#name" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
       <a id="name:String"></a>
@@ -140,9 +141,7 @@
         <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Human readable name of the format
-</p><div class="fullcomment"><div class="comment cmt"><p>Human readable name of the format
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
+      <p class="shortcomment cmt">Human readable name of the format.</p><div class="fullcomment"><div class="comment cmt"><p>Human readable name of the format.</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFileType#supportedFormats" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="supportedFormats:scala.collection.immutable.IndexedSeq[de.sciss.synth.io.SampleFormat]"></a>
       <a id="supportedFormats:IndexedSeq[SampleFormat]"></a>
@@ -162,19 +161,6 @@
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -186,7 +172,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -201,19 +187,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -225,7 +198,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -495,6 +468,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

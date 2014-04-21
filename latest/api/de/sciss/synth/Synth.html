@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Synth - de.sciss.synth.Synth</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -102,19 +106,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -126,7 +117,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -141,19 +132,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -165,17 +143,17 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.model.impl.ModelImpl#addListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="addListener(pf:de.sciss.model.Model.Listener[U]):pf.type"></a>
-      <a id="addListener(model.Model.Listener[NodeChange]):pf.type"></a>
+      <a id="addListener(Listener[NodeChange]):pf.type"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">addListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">model.Model.Listener</span>[<a href="NodeManager$$NodeChange.html" class="extype" name="de.sciss.synth.NodeManager.NodeChange">NodeChange</a>]</span>)</span><span class="result">: <span class="extype" name="de.sciss.model.impl.ModelImpl.addListener.pf">pf</span>.type</span>
+        <span class="name">addListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">Listener</span>[<a href="NodeManager$$NodeChange.html" class="extype" name="de.sciss.synth.NodeManager.NodeChange">NodeChange</a>]</span>)</span><span class="result">: <span class="extype" name="de.sciss.model.impl.ModelImpl.addListener.pf">pf</span>.type</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelImpl → Model</dd></dl></div>
@@ -251,28 +229,15 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="de.sciss.synth.Node#fillMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="fillMsg(fillings:de.sciss.synth.message.NodeFill.Info*):de.sciss.synth.message.NodeFill"></a>
-      <a id="fillMsg(Info*):NodeFill"></a>
+      <a id="fillMsg(data:de.sciss.synth.ControlFillRange*):de.sciss.synth.message.NodeFill"></a>
+      <a id="fillMsg(ControlFillRange*):NodeFill"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">fillMsg</span><span class="params">(<span name="fillings">fillings: <a href="message/NodeFill$$Info.html" class="extype" name="de.sciss.synth.message.NodeFill.Info">Info</a>*</span>)</span><span class="result">: <a href="message/NodeFill.html" class="extype" name="de.sciss.synth.message.NodeFill">NodeFill</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd></dl></div>
-    </li><li name="de.sciss.synth.Node#fillMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="fillMsg(control:Any,numChannels:Int,value:Float):de.sciss.synth.message.NodeFill"></a>
-      <a id="fillMsg(Any,Int,Float):NodeFill"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">fillMsg</span><span class="params">(<span name="control">control: <span class="extype" name="scala.Any">Any</span></span>, <span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="value">value: <span class="extype" name="scala.Float">Float</span></span>)</span><span class="result">: <a href="message/NodeFill.html" class="extype" name="de.sciss.synth.message.NodeFill">NodeFill</a></span>
+        <span class="name">fillMsg</span><span class="params">(<span name="data">data: <a href="ControlFillRange.html" class="extype" name="de.sciss.synth.ControlFillRange">ControlFillRange</a>*</span>)</span><span class="result">: <a href="message/NodeFill.html" class="extype" name="de.sciss.synth.message.NodeFill">NodeFill</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd></dl></div>
@@ -481,15 +446,15 @@ If it was written before, no delay is introduced, otherwise a delay of one contr
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="de.sciss.synth.Synth#newMsg" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="newMsg(defName:String,target:de.sciss.synth.Node,args:Seq[de.sciss.synth.ControlSetMap],addAction:de.sciss.synth.AddAction):de.sciss.synth.message.SynthNew"></a>
-      <a id="newMsg(String,Node,Seq[ControlSetMap],AddAction):SynthNew"></a>
+      <a id="newMsg(defName:String,target:de.sciss.synth.Node,args:Seq[de.sciss.synth.ControlSet],addAction:de.sciss.synth.AddAction):de.sciss.synth.message.SynthNew"></a>
+      <a id="newMsg(String,Node,Seq[ControlSet],AddAction):SynthNew"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">newMsg</span><span class="params">(<span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a> = <span class="symbol"><span class="name"><a href="#server:de.sciss.synth.Server">server.defaultGroup</a></span></span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>] = <span class="symbol">Nil</span></span>, <span name="addAction">addAction: <a href="AddAction.html" class="extype" name="de.sciss.synth.AddAction">AddAction</a> = <span class="symbol"><span class="name"><a href="addToHead$.html">addToHead</a></span></span></span>)</span><span class="result">: <a href="message/SynthNew.html" class="extype" name="de.sciss.synth.message.SynthNew">SynthNew</a></span>
+        <span class="name">newMsg</span><span class="params">(<span name="defName">defName: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="target">target: <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a> = <span class="symbol"><span class="name"><a href="#server:de.sciss.synth.Server">server.defaultGroup</a></span></span></span>, <span name="args">args: <span class="extype" name="scala.Seq">Seq</span>[<a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>] = <span class="symbol">Nil</span></span>, <span name="addAction">addAction: <a href="AddAction.html" class="extype" name="de.sciss.synth.AddAction">AddAction</a> = <span class="symbol"><span class="name"><a href="addToHead$.html">addToHead</a></span></span></span>)</span><span class="result">: <a href="message/SynthNew.html" class="extype" name="de.sciss.synth.message.SynthNew">SynthNew</a></span>
       </span>
       </h4>
       
@@ -591,29 +556,16 @@ an <code>EnvGen</code> UGen. This is the case for synths created with the packag
                      has a <code>doneAction</code> of <code>freeSelf</code>, the synth will be freed after the release phase.
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd><dt>See also</dt><dd><span class="cmt"><p><a href="message/NodeSet.html" class="extype" name="de.sciss.synth.message.NodeSet">de.sciss.synth.message.NodeSet</a>
 </p></span><span class="cmt"><p><a href="ugen/EnvGen.html" class="extype" name="de.sciss.synth.ugen.EnvGen">de.sciss.synth.ugen.EnvGen</a></p></span></dd></dl></div>
-    </li><li name="de.sciss.synth.Node#releaseMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="releaseMsg:de.sciss.synth.message.NodeSet"></a>
-      <a id="releaseMsg:NodeSet"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">releaseMsg</span><span class="result">: <a href="message/NodeSet.html" class="extype" name="de.sciss.synth.message.NodeSet">NodeSet</a></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd></dl></div>
     </li><li name="de.sciss.model.impl.ModelImpl#removeListener" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="removeListener(pf:de.sciss.model.Model.Listener[U]):Unit"></a>
-      <a id="removeListener(model.Model.Listener[NodeChange]):Unit"></a>
+      <a id="removeListener(Listener[NodeChange]):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">removeListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">model.Model.Listener</span>[<a href="NodeManager$$NodeChange.html" class="extype" name="de.sciss.synth.NodeManager.NodeChange">NodeChange</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">removeListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">Listener</span>[<a href="NodeManager$$NodeChange.html" class="extype" name="de.sciss.synth.NodeManager.NodeChange">NodeChange</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>ModelImpl → Model</dd></dl></div>
@@ -662,28 +614,28 @@ an <code>EnvGen</code> UGen. This is the case for synths created with the packag
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Synth">Synth</a> → <a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd></dl></div>
     </li><li name="de.sciss.synth.Node#setMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setMsg(pairs:de.sciss.synth.ControlSetMap*):de.sciss.synth.message.NodeSet"></a>
-      <a id="setMsg(ControlSetMap*):NodeSet"></a>
+      <a id="setMsg(pairs:de.sciss.synth.ControlSet*):de.sciss.synth.message.NodeSet"></a>
+      <a id="setMsg(ControlSet*):NodeSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setMsg</span><span class="params">(<span name="pairs">pairs: <a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>*</span>)</span><span class="result">: <a href="message/NodeSet.html" class="extype" name="de.sciss.synth.message.NodeSet">NodeSet</a></span>
+        <span class="name">setMsg</span><span class="params">(<span name="pairs">pairs: <a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>*</span>)</span><span class="result">: <a href="message/NodeSet.html" class="extype" name="de.sciss.synth.message.NodeSet">NodeSet</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd></dl></div>
     </li><li name="de.sciss.synth.Node#setnMsg" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="setnMsg(pairs:de.sciss.synth.ControlSetMap*):de.sciss.synth.message.NodeSetn"></a>
-      <a id="setnMsg(ControlSetMap*):NodeSetn"></a>
+      <a id="setnMsg(pairs:de.sciss.synth.ControlSet*):de.sciss.synth.message.NodeSetn"></a>
+      <a id="setnMsg(ControlSet*):NodeSetn"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">setnMsg</span><span class="params">(<span name="pairs">pairs: <a href="ControlSetMap.html" class="extype" name="de.sciss.synth.ControlSetMap">ControlSetMap</a>*</span>)</span><span class="result">: <a href="message/NodeSetn.html" class="extype" name="de.sciss.synth.message.NodeSetn">NodeSetn</a></span>
+        <span class="name">setnMsg</span><span class="params">(<span name="pairs">pairs: <a href="ControlSet.html" class="extype" name="de.sciss.synth.ControlSet">ControlSet</a>*</span>)</span><span class="result">: <a href="message/NodeSetn.html" class="extype" name="de.sciss.synth.message.NodeSetn">NodeSetn</a></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Node.html" class="extype" name="de.sciss.synth.Node">Node</a></dd></dl></div>
@@ -865,6 +817,7 @@ an <code>EnvGen</code> UGen. This is the case for synths created with the packag
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

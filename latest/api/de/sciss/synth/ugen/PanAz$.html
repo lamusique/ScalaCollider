@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>PanAz - de.sciss.synth.ugen.PanAz</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -42,12 +46,12 @@
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An azimuth-based panorama UGen. It uses vector-based-amplitude panning where
 the arbitrary number of speakers is supposed to be distributed in a circle with
 even spacing between them. It uses an equal-power-curve to transition between
-adjectant speakers. <b>Note</b> the different default value for the <code>orient</code>
+adjacent speakers. <b>Note</b> the different default value for the <code>orient</code>
 argument!</p><p>Use case: To spread an multi-channel input signal across an output bus with a
 different number of channels, such that the first input channel is played on the
-first output channel (no spread to adjectant channels) and the last input
-channel is played to the last output channel (no spread to adjectant channels),
-you would create a dedicated <code>PanAz</code> per input channel where the pan position is
+first output channel (no spread to adjacent channels) and the last input channel
+is played to the last output channel (no spread to adjacent channels), you would
+create a dedicated <code>PanAz</code> per input channel where the pan position is
 <code>inChanIdx * 2f / (inChannels - 1) * (outChannels - 1) / outChannels</code> .
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -96,19 +100,6 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -120,7 +111,7 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -135,19 +126,6 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -159,7 +137,7 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.PanAz#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(numChannels:Int,in:de.sciss.synth.GE,pos:de.sciss.synth.GE,level:de.sciss.synth.GE,width:de.sciss.synth.GE,orient:de.sciss.synth.GE):de.sciss.synth.ugen.PanAz"></a>
       <a id="ar(Int,GE,GE,GE,GE,GE):PanAz"></a>
@@ -193,7 +171,7 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
                         signal exactly on the first output channel. This is
                         different in sclang where the default is 0.5 which means
                         that a pan position of zero will output the signal
-                        inbetween the first and second speaker. Accordingly, an
+                        between the first and second speaker. Accordingly, an
                         <code>orient</code> of <code>1.0</code> would result in a channel offset of
                         one, where a pan position of zero would output the
                         signal exactly on the second output channel, and so
@@ -348,7 +326,7 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
                         signal exactly on the first output channel. This is
                         different in sclang where the default is 0.5 which means
                         that a pan position of zero will output the signal
-                        inbetween the first and second speaker. Accordingly, an
+                        between the first and second speaker. Accordingly, an
                         <code>orient</code> of <code>1.0</code> would result in a channel offset of
                         one, where a pan position of zero would output the
                         signal exactly on the second output channel, and so
@@ -509,6 +487,7 @@ you would create a dedicated <code>PanAz</code> per input channel where the pan 
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

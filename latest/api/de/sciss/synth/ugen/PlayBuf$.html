@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>PlayBuf - de.sciss.synth.ugen.PlayBuf</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -92,19 +96,6 @@ interpolation.
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -116,7 +107,7 @@ interpolation.
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -131,19 +122,6 @@ interpolation.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -155,9 +133,9 @@ interpolation.
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.PlayBuf#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="ar(numChannels:Int,buf:de.sciss.synth.GE,speed:de.sciss.synth.GE,trig:de.sciss.synth.GE,startPos:de.sciss.synth.GE,loop:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.PlayBuf"></a>
+      <a id="ar(numChannels:Int,buf:de.sciss.synth.GE,speed:de.sciss.synth.GE,trig:de.sciss.synth.GE,offset:de.sciss.synth.GE,loop:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.PlayBuf"></a>
       <a id="ar(Int,GE,GE,GE,GE,GE,GE):PlayBuf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -165,7 +143,7 @@ interpolation.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ar</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="speed">speed: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="startPos">startPos: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result">: <a href="PlayBuf.html" class="extype" name="de.sciss.synth.ugen.PlayBuf">PlayBuf</a></span>
+        <span class="name">ar</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="speed">speed: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="offset">offset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result">: <a href="PlayBuf.html" class="extype" name="de.sciss.synth.ugen.PlayBuf">PlayBuf</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">numChannels</dt><dd class="cmt"><p>the number of channels that the buffer will be. Since
@@ -179,11 +157,12 @@ interpolation.
                         can be used for backwards playback. If the underlying
                         buffer represents a sound at a different sample rate,
                         the rate should be multiplied by
-                        <code>BufRateScale.kr( bufID )</code> to obtain the correct speed.</p></dd><dt class="param">trig</dt><dd class="cmt"><p>a trigger which causes a jump to the given startPos. A
+                        <code>BufRateScale.kr(bufID)</code> to obtain the correct speed.</p></dd><dt class="param">trig</dt><dd class="cmt"><p>a trigger which causes a jump to the given <code>offset</code> . A
                         trigger occurs when a signal changes from non-positive
-                        to positive (e.g. &lt;= 0 to &gt; 0).</p></dd><dt class="param">startPos</dt><dd class="cmt"><p>sample frame to start playback. This is read when a
+                        to positive (e.g. &lt;= 0 to &gt; 0).</p></dd><dt class="param">offset</dt><dd class="cmt"><p>sample frame to start playback. This is read when a
                         trigger occurs. It may be fractional.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to loop after the play head reaches the buffer end, 0
-                        to not loop. this can be modulated.</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>what to do when the play head reaches the buffer end.
+                        to not loop. This can be modulated.</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>what to do when the play head reaches the buffer end.
+                        This is only effective when <code>loop</code> is zero.
 </p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
@@ -302,7 +281,7 @@ interpolation.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.PlayBuf#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="kr(numChannels:Int,buf:de.sciss.synth.GE,speed:de.sciss.synth.GE,trig:de.sciss.synth.GE,startPos:de.sciss.synth.GE,loop:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.PlayBuf"></a>
+      <a id="kr(numChannels:Int,buf:de.sciss.synth.GE,speed:de.sciss.synth.GE,trig:de.sciss.synth.GE,offset:de.sciss.synth.GE,loop:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.PlayBuf"></a>
       <a id="kr(Int,GE,GE,GE,GE,GE,GE):PlayBuf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -310,7 +289,7 @@ interpolation.
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">kr</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="speed">speed: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="startPos">startPos: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result">: <a href="PlayBuf.html" class="extype" name="de.sciss.synth.ugen.PlayBuf">PlayBuf</a></span>
+        <span class="name">kr</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="speed">speed: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="offset">offset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="loop">loop: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result">: <a href="PlayBuf.html" class="extype" name="de.sciss.synth.ugen.PlayBuf">PlayBuf</a></span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">numChannels</dt><dd class="cmt"><p>the number of channels that the buffer will be. Since
@@ -324,11 +303,12 @@ interpolation.
                         can be used for backwards playback. If the underlying
                         buffer represents a sound at a different sample rate,
                         the rate should be multiplied by
-                        <code>BufRateScale.kr( bufID )</code> to obtain the correct speed.</p></dd><dt class="param">trig</dt><dd class="cmt"><p>a trigger which causes a jump to the given startPos. A
+                        <code>BufRateScale.kr(bufID)</code> to obtain the correct speed.</p></dd><dt class="param">trig</dt><dd class="cmt"><p>a trigger which causes a jump to the given <code>offset</code> . A
                         trigger occurs when a signal changes from non-positive
-                        to positive (e.g. &lt;= 0 to &gt; 0).</p></dd><dt class="param">startPos</dt><dd class="cmt"><p>sample frame to start playback. This is read when a
+                        to positive (e.g. &lt;= 0 to &gt; 0).</p></dd><dt class="param">offset</dt><dd class="cmt"><p>sample frame to start playback. This is read when a
                         trigger occurs. It may be fractional.</p></dd><dt class="param">loop</dt><dd class="cmt"><p>1 to loop after the play head reaches the buffer end, 0
-                        to not loop. this can be modulated.</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>what to do when the play head reaches the buffer end.
+                        to not loop. This can be modulated.</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>what to do when the play head reaches the buffer end.
+                        This is only effective when <code>loop</code> is zero.
 </p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -485,6 +465,7 @@ interpolation.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

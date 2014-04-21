@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>GEOps - de.sciss.synth.GEOps</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -41,7 +45,7 @@
       
           <div id="comment" class="fullcommenttop"><dl class="attributes block"> <dt>Self Type</dt><dd><a href="" class="extype" name="de.sciss.synth.GEOps">GEOps</a></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.NotNull">NotNull</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyVal">AnyVal</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.GEOps"><span>GEOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.NotNull"><span>NotNull</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.GEOps"><span>GEOps</span></li><li class="in" name="scala.AnyVal"><span>AnyVal</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -80,7 +84,7 @@
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.GEOps#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(self:de.sciss.synth.GE):de.sciss.synth.GEOps"></a>
+      <a id="&lt;init&gt;(this:de.sciss.synth.GE):de.sciss.synth.GEOps"></a>
       <a id="&lt;init&gt;:GEOps"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -88,7 +92,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">GEOps</span><span class="params">(<span name="self">self: <a href="GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span>
+        <span class="name">GEOps</span><span class="params">(<span name="this">this: <a href="GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span>
       </span>
       </h4>
       
@@ -1072,19 +1076,6 @@ This is a convenient method for wrapping this graph element in a <code>Poll</cod
       </span>
       </h4>
       
-    </li><li name="de.sciss.synth.GEOps#self" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="self:de.sciss.synth.GE"></a>
-      <a id="self:GE"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">self</span><span class="result">: <a href="GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
-      </span>
-      </h4>
-      
     </li><li name="de.sciss.synth.GEOps#sig_!=" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="sig_!=(b:de.sciss.synth.GE):de.sciss.synth.GE"></a>
       <a id="sig_!=(GE):GE"></a>
@@ -1254,6 +1245,19 @@ This is a convenient method for wrapping this graph element in a <code>Poll</cod
       </span>
       </h4>
       
+    </li><li name="de.sciss.synth.GEOps#this" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="this:de.sciss.synth.GE"></a>
+      <a id="this:GE"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">this</span><span class="result">: <a href="GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
+      </span>
+      </h4>
+      
     </li><li name="de.sciss.synth.GEOps#thresh" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="thresh(b:de.sciss.synth.GE):de.sciss.synth.GE"></a>
       <a id="thresh(GE):GE"></a>
@@ -1356,8 +1360,6 @@ This is a convenient method for wrapping this graph element in a <code>Poll</cod
         <div id="inheritedMembers">
         <div class="parent" name="scala.AnyVal">
               <h3>Inherited from <span class="extype" name="scala.AnyVal">AnyVal</span></h3>
-            </div><div class="parent" name="scala.NotNull">
-              <h3>Inherited from <span class="extype" name="scala.NotNull">NotNull</span></h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
             </div>
@@ -1376,6 +1378,7 @@ This is a convenient method for wrapping this graph element in a <code>Poll</cod
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

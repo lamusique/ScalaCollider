@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>AudioRated - de.sciss.synth.AudioRated</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -43,9 +47,9 @@
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="ugen/AudioControl.html" class="extype" name="de.sciss.synth.ugen.AudioControl">AudioControl</a>, <a href="ugen/AudioControlProxy.html" class="extype" name="de.sciss.synth.ugen.AudioControlProxy">AudioControlProxy</a>, <a href="ugen/BAllPass.html" class="extype" name="de.sciss.synth.ugen.BAllPass">BAllPass</a>, <a href="ugen/BBandPass.html" class="extype" name="de.sciss.synth.ugen.BBandPass">BBandPass</a>, <a href="ugen/BBandStop.html" class="extype" name="de.sciss.synth.ugen.BBandStop">BBandStop</a>, <a href="ugen/BHiPass.html" class="extype" name="de.sciss.synth.ugen.BHiPass">BHiPass</a>, <a href="ugen/BHiShelf.html" class="extype" name="de.sciss.synth.ugen.BHiShelf">BHiShelf</a>, <a href="ugen/BLowPass.html" class="extype" name="de.sciss.synth.ugen.BLowPass">BLowPass</a>, <a href="ugen/BLowShelf.html" class="extype" name="de.sciss.synth.ugen.BLowShelf">BLowShelf</a>, <a href="ugen/BPeakEQ.html" class="extype" name="de.sciss.synth.ugen.BPeakEQ">BPeakEQ</a>, <a href="ugen/FreeVerb.html" class="extype" name="de.sciss.synth.ugen.FreeVerb">FreeVerb</a>, <a href="ugen/FreeVerb2.html" class="extype" name="de.sciss.synth.ugen.FreeVerb2">FreeVerb2</a>, <a href="ugen/GVerb.html" class="extype" name="de.sciss.synth.ugen.GVerb">GVerb</a>, <a href="ugen/GrainBuf.html" class="extype" name="de.sciss.synth.ugen.GrainBuf">GrainBuf</a>, <a href="ugen/GrainFM.html" class="extype" name="de.sciss.synth.ugen.GrainFM">GrainFM</a>, <a href="ugen/GrainIn.html" class="extype" name="de.sciss.synth.ugen.GrainIn">GrainIn</a>, <a href="ugen/GrainSin.html" class="extype" name="de.sciss.synth.ugen.GrainSin">GrainSin</a>, <a href="ugen/InFeedback.html" class="extype" name="de.sciss.synth.ugen.InFeedback">InFeedback</a>, <a href="ugen/K2A.html" class="extype" name="de.sciss.synth.ugen.K2A">K2A</a>, <a href="ugen/Klang.html" class="extype" name="de.sciss.synth.ugen.Klang">Klang</a>, <a href="ugen/Klank.html" class="extype" name="de.sciss.synth.ugen.Klank">Klank</a>, <a href="ugen/OffsetOut.html" class="extype" name="de.sciss.synth.ugen.OffsetOut">OffsetOut</a>, <a href="ugen/PhysicalIn.html" class="extype" name="de.sciss.synth.ugen.PhysicalIn">PhysicalIn</a>, <a href="ugen/PhysicalOut.html" class="extype" name="de.sciss.synth.ugen.PhysicalOut">PhysicalOut</a>, <a href="ugen/PitchShift.html" class="extype" name="de.sciss.synth.ugen.PitchShift">PitchShift</a>, <a href="ugen/Pluck.html" class="extype" name="de.sciss.synth.ugen.Pluck">Pluck</a>, <a href="ugen/ReplaceOut.html" class="extype" name="de.sciss.synth.ugen.ReplaceOut">ReplaceOut</a>, <a href="ugen/Silent.html" class="extype" name="de.sciss.synth.ugen.Silent">Silent</a>, <a href="ugen/T2A.html" class="extype" name="de.sciss.synth.ugen.T2A">T2A</a>, <a href="ugen/TGrains.html" class="extype" name="de.sciss.synth.ugen.TGrains">TGrains</a>, <a href="ugen/Warp1.html" class="extype" name="de.sciss.synth.ugen.Warp1">Warp1</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="ugen/AudioControl.html" class="extype" name="de.sciss.synth.ugen.AudioControl">AudioControl</a>, <a href="ugen/AudioControlProxy.html" class="extype" name="de.sciss.synth.ugen.AudioControlProxy">AudioControlProxy</a>, <a href="ugen/BAllPass.html" class="extype" name="de.sciss.synth.ugen.BAllPass">BAllPass</a>, <a href="ugen/BBandPass.html" class="extype" name="de.sciss.synth.ugen.BBandPass">BBandPass</a>, <a href="ugen/BBandStop.html" class="extype" name="de.sciss.synth.ugen.BBandStop">BBandStop</a>, <a href="ugen/BHiPass.html" class="extype" name="de.sciss.synth.ugen.BHiPass">BHiPass</a>, <a href="ugen/BHiShelf.html" class="extype" name="de.sciss.synth.ugen.BHiShelf">BHiShelf</a>, <a href="ugen/BLowPass.html" class="extype" name="de.sciss.synth.ugen.BLowPass">BLowPass</a>, <a href="ugen/BLowShelf.html" class="extype" name="de.sciss.synth.ugen.BLowShelf">BLowShelf</a>, <a href="ugen/BPeakEQ.html" class="extype" name="de.sciss.synth.ugen.BPeakEQ">BPeakEQ</a>, <a href="ugen/FreeVerb.html" class="extype" name="de.sciss.synth.ugen.FreeVerb">FreeVerb</a>, <a href="ugen/FreeVerb2.html" class="extype" name="de.sciss.synth.ugen.FreeVerb2">FreeVerb2</a>, <a href="ugen/GVerb.html" class="extype" name="de.sciss.synth.ugen.GVerb">GVerb</a>, <a href="ugen/GrainBuf.html" class="extype" name="de.sciss.synth.ugen.GrainBuf">GrainBuf</a>, <a href="ugen/GrainFM.html" class="extype" name="de.sciss.synth.ugen.GrainFM">GrainFM</a>, <a href="ugen/GrainIn.html" class="extype" name="de.sciss.synth.ugen.GrainIn">GrainIn</a>, <a href="ugen/GrainSin.html" class="extype" name="de.sciss.synth.ugen.GrainSin">GrainSin</a>, <a href="ugen/InFeedback.html" class="extype" name="de.sciss.synth.ugen.InFeedback">InFeedback</a>, <a href="ugen/K2A.html" class="extype" name="de.sciss.synth.ugen.K2A">K2A</a>, <a href="ugen/Klang.html" class="extype" name="de.sciss.synth.ugen.Klang">Klang</a>, <a href="ugen/Klank.html" class="extype" name="de.sciss.synth.ugen.Klank">Klank</a>, <a href="ugen/OffsetOut.html" class="extype" name="de.sciss.synth.ugen.OffsetOut">OffsetOut</a>, <a href="ugen/PhysicalIn.html" class="extype" name="de.sciss.synth.ugen.PhysicalIn">PhysicalIn</a>, <a href="ugen/PhysicalOut.html" class="extype" name="de.sciss.synth.ugen.PhysicalOut">PhysicalOut</a>, <a href="ugen/PitchShift.html" class="extype" name="de.sciss.synth.ugen.PitchShift">PitchShift</a>, <a href="ugen/Pluck.html" class="extype" name="de.sciss.synth.ugen.Pluck">Pluck</a>, <a href="ugen/ReplaceOut.html" class="extype" name="de.sciss.synth.ugen.ReplaceOut">ReplaceOut</a>, <a href="ugen/Silent.html" class="extype" name="de.sciss.synth.ugen.Silent">Silent</a>, <a href="ugen/T2A.html" class="extype" name="de.sciss.synth.ugen.T2A">T2A</a>, <a href="ugen/TGrains.html" class="extype" name="de.sciss.synth.ugen.TGrains">TGrains</a>, <a href="ugen/Warp1.html" class="extype" name="de.sciss.synth.ugen.Warp1">Warp1</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -89,19 +93,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -113,7 +104,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -128,19 +119,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -152,7 +130,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -433,6 +411,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

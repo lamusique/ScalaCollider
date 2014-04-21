@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>DemandRated - de.sciss.synth.DemandRated</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -43,9 +47,9 @@
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="ugen/Dbrown.html" class="extype" name="de.sciss.synth.ugen.Dbrown">Dbrown</a>, <a href="ugen/Dbufrd.html" class="extype" name="de.sciss.synth.ugen.Dbufrd">Dbufrd</a>, <a href="ugen/Dbufwr.html" class="extype" name="de.sciss.synth.ugen.Dbufwr">Dbufwr</a>, <a href="ugen/Dgeom.html" class="extype" name="de.sciss.synth.ugen.Dgeom">Dgeom</a>, <a href="ugen/Dibrown.html" class="extype" name="de.sciss.synth.ugen.Dibrown">Dibrown</a>, <a href="ugen/Diwhite.html" class="extype" name="de.sciss.synth.ugen.Diwhite">Diwhite</a>, <a href="ugen/Donce.html" class="extype" name="de.sciss.synth.ugen.Donce">Donce</a>, <a href="ugen/Dpoll.html" class="extype" name="de.sciss.synth.ugen.Dpoll">Dpoll</a>, <a href="ugen/Drand.html" class="extype" name="de.sciss.synth.ugen.Drand">Drand</a>, <a href="ugen/Dreset.html" class="extype" name="de.sciss.synth.ugen.Dreset">Dreset</a>, <a href="ugen/Dseq.html" class="extype" name="de.sciss.synth.ugen.Dseq">Dseq</a>, <a href="ugen/Dser.html" class="extype" name="de.sciss.synth.ugen.Dser">Dser</a>, <a href="ugen/Dseries.html" class="extype" name="de.sciss.synth.ugen.Dseries">Dseries</a>, <a href="ugen/Dshuf.html" class="extype" name="de.sciss.synth.ugen.Dshuf">Dshuf</a>, <a href="ugen/Dstutter.html" class="extype" name="de.sciss.synth.ugen.Dstutter">Dstutter</a>, <a href="ugen/Dswitch.html" class="extype" name="de.sciss.synth.ugen.Dswitch">Dswitch</a>, <a href="ugen/Dswitch1.html" class="extype" name="de.sciss.synth.ugen.Dswitch1">Dswitch1</a>, <a href="ugen/Dwhite.html" class="extype" name="de.sciss.synth.ugen.Dwhite">Dwhite</a>, <a href="ugen/Dxrand.html" class="extype" name="de.sciss.synth.ugen.Dxrand">Dxrand</a>, <a href="ugen/Unpack1FFT.html" class="extype" name="de.sciss.synth.ugen.Unpack1FFT">Unpack1FFT</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="ugen/Dbrown.html" class="extype" name="de.sciss.synth.ugen.Dbrown">Dbrown</a>, <a href="ugen/Dbufrd.html" class="extype" name="de.sciss.synth.ugen.Dbufrd">Dbufrd</a>, <a href="ugen/Dbufwr.html" class="extype" name="de.sciss.synth.ugen.Dbufwr">Dbufwr</a>, <a href="ugen/Dgeom.html" class="extype" name="de.sciss.synth.ugen.Dgeom">Dgeom</a>, <a href="ugen/Dibrown.html" class="extype" name="de.sciss.synth.ugen.Dibrown">Dibrown</a>, <a href="ugen/Diwhite.html" class="extype" name="de.sciss.synth.ugen.Diwhite">Diwhite</a>, <a href="ugen/Donce.html" class="extype" name="de.sciss.synth.ugen.Donce">Donce</a>, <a href="ugen/Dpoll.html" class="extype" name="de.sciss.synth.ugen.Dpoll">Dpoll</a>, <a href="ugen/Drand.html" class="extype" name="de.sciss.synth.ugen.Drand">Drand</a>, <a href="ugen/Dreset.html" class="extype" name="de.sciss.synth.ugen.Dreset">Dreset</a>, <a href="ugen/Dseq.html" class="extype" name="de.sciss.synth.ugen.Dseq">Dseq</a>, <a href="ugen/Dser.html" class="extype" name="de.sciss.synth.ugen.Dser">Dser</a>, <a href="ugen/Dseries.html" class="extype" name="de.sciss.synth.ugen.Dseries">Dseries</a>, <a href="ugen/Dshuf.html" class="extype" name="de.sciss.synth.ugen.Dshuf">Dshuf</a>, <a href="ugen/Dstutter.html" class="extype" name="de.sciss.synth.ugen.Dstutter">Dstutter</a>, <a href="ugen/Dswitch.html" class="extype" name="de.sciss.synth.ugen.Dswitch">Dswitch</a>, <a href="ugen/Dswitch1.html" class="extype" name="de.sciss.synth.ugen.Dswitch1">Dswitch1</a>, <a href="ugen/Dwhite.html" class="extype" name="de.sciss.synth.ugen.Dwhite">Dwhite</a>, <a href="ugen/Dxrand.html" class="extype" name="de.sciss.synth.ugen.Dxrand">Dxrand</a>, <a href="ugen/Unpack1FFT.html" class="extype" name="de.sciss.synth.ugen.Unpack1FFT">Unpack1FFT</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -89,19 +93,6 @@
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -113,7 +104,7 @@
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -128,19 +119,6 @@
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -152,7 +130,7 @@
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -433,6 +411,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

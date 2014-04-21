@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>AudioFile - de.sciss.synth.io.AudioFile</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -41,7 +45,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span class="extype" name="java.nio.channels.Channel">Channel</span>, <span class="extype" name="java.io.Closeable">Closeable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="java.nio.channels.Channel">Channel</span>, <span class="extype" name="java.io.Closeable">Closeable</span>, <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
         
 
@@ -59,7 +63,7 @@
                 <span class="filtertype">Inherited<br />
                 </span>
                 <ol id="linearization">
-                  <li class="in" name="de.sciss.synth.io.AudioFile"><span>AudioFile</span></li><li class="in" name="java.nio.channels.Channel"><span>Channel</span></li><li class="in" name="java.io.Closeable"><span>Closeable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                  <li class="in" name="de.sciss.synth.io.AudioFile"><span>AudioFile</span></li><li class="in" name="java.nio.channels.Channel"><span>Channel</span></li><li class="in" name="java.io.Closeable"><span>Closeable</span></li><li class="in" name="java.lang.AutoCloseable"><span>AutoCloseable</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
                 </ol>
               </div><div id="ancestors">
             <span class="filtertype"></span>
@@ -95,7 +99,7 @@
         <span class="name">cleanUp</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Flushes and closes the file.</p><div class="fullcomment"><div class="comment cmt"><p> Flushes and closes the file. As opposed
+      <p class="shortcomment cmt">Flushes and closes the file.</p><div class="fullcomment"><div class="comment cmt"><p>Flushes and closes the file. As opposed
 to <code>close()</code>, this does not
 throw any exceptions but simply ignores any errors.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>#close()
@@ -112,16 +116,16 @@ throw any exceptions but simply ignores any errors.
         <span class="name">close</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Flushes and closes the file
-</p><div class="fullcomment"><div class="comment cmt"><p> Flushes and closes the file
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a> → Channel → Closeable</dd><dt>Annotations</dt><dd>
+      <p class="shortcomment cmt">Flushes and closes the file
+</p><div class="fullcomment"><div class="comment cmt"><p>Flushes and closes the file
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a> → Channel → Closeable → AutoCloseable</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if an error occurs during buffer flush
-		or closing the file.
+                    or closing the file.
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFile#copyTo" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="copyTo(target:de.sciss.synth.io.AudioFile,numFrames:Long):de.sciss.synth.io.AudioFile"></a>
@@ -144,12 +148,12 @@ or any other class implementing the
 <code>InterleavedStreamFile</code> interface).
 Both files must have the same number of channels.
 </p></div><dl class="paramcmts block"><dt class="param">target</dt><dd class="cmt"><p>to file to copy to from this audio file</p></dd><dt class="param">numFrames</dt><dd class="cmt"><p>the number of frames to copy. Reading
-				and writing begins at the current positions
-			of both files.
+                   and writing begins at the current positions
+                   of both files.
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if a reador writer error occurs
@@ -166,11 +170,11 @@ Both files must have the same number of channels.
         <span class="name">file</span><span class="result">: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.io.File">File</span>]</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Returns the underlying <code>File</code> if it was
- provided to the <code>AudioFile</code> constructor.</code></code></p><div class="fullcomment"><div class="comment cmt"><p> Returns the underlying <code>File</code> if it was
- provided to the <code>AudioFile</code> constructor.
- For an <code>AudioFile</code> created from an <code>InputStream</code>
- this will return <code>None</code>.
+      <p class="shortcomment cmt">Returns the underlying <code>File</code> if it was
+provided to the <code>AudioFile</code> constructor.</code></code></p><div class="fullcomment"><div class="comment cmt"><p>Returns the underlying <code>File</code> if it was
+provided to the <code>AudioFile</code> constructor.
+For an <code>AudioFile</code> created from an <code>InputStream</code>
+this will return <code>None</code>.
 </p></div></div>
     </li><li name="de.sciss.synth.io.AudioFile#flush" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="flush():de.sciss.synth.io.AudioFile"></a>
@@ -249,11 +253,11 @@ as accurate as possible.
 in the file.</p><div class="fullcomment"><div class="comment cmt"><p>Returns the number of frames
 in the file.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the number of sample frames
-	in the file. includes pending
-		buffer content
+         in the file. includes pending
+         buffer content
 </p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>this is never thrown
-		but declared as of the <code>InterleavedStreamFile</code>
-		interface
+                      but declared as of the <code>InterleavedStreamFile</code>
+                      interface
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFile#position" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="position:Long"></a>
@@ -267,10 +271,10 @@ in the file.
         <span class="name">position</span><span class="result">: <span class="extype" name="scala.Long">Long</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Returns the current file pointer in sample frames
-</p><div class="fullcomment"><div class="comment cmt"><p> Returns the current file pointer in sample frames
+      <p class="shortcomment cmt">Returns the current file pointer in sample frames
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns the current file pointer in sample frames
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the sample frame index which is the off
-			for the next reader or writer operation.
+           for the next reader or writer operation.
 </p></dd></dl><dl class="attributes block"> <dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>when the position cannot be queried
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFile#read" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -288,18 +292,18 @@ in the file.
       <p class="shortcomment cmt">Reads sample frames from the current position
 </p><div class="fullcomment"><div class="comment cmt"><p>Reads sample frames from the current position
 </p></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>buffer to hold the frames reader from harddisc.
-				the samples will be deinterleaved such that
-				data[0][] holds the first channel, data[1][]
-				holds the second channel etc.
-				; it is allowed to have null arrays in the data
-				(e.g. data[0] == null), in which case these channels
-				are skipped when reading</p></dd><dt class="param">off</dt><dd class="cmt"><p>off in the buffer in sample frames, such
-				that he first frame of the first channel will
-				be placed in data[0][off] etc.</p></dd><dt class="param">len</dt><dd class="cmt"><p>number of continuous frames to reader.
+              the samples will be deinterleaved such that
+              data[0][] holds the first channel, data[1][]
+              holds the second channel etc.
+              ; it is allowed to have null arrays in the data
+              (e.g. data[0] == null), in which case these channels
+              are skipped when reading</p></dd><dt class="param">off</dt><dd class="cmt"><p>off in the buffer in sample frames, such
+             that he first frame of the first channel will
+             be placed in data[0][off] etc.</p></dd><dt class="param">len</dt><dd class="cmt"><p>number of continuous frames to reader.
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if a reader error or end-of-file occurs.
@@ -316,19 +320,19 @@ in the file.
         <span class="name">seek</span><span class="params">(<span name="frame">frame: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <a href="" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Moves the file pointer to a specific
- frame.</p><div class="fullcomment"><div class="comment cmt"><p> Moves the file pointer to a specific
- frame.
+      <p class="shortcomment cmt">Moves the file pointer to a specific
+frame.</p><div class="fullcomment"><div class="comment cmt"><p>Moves the file pointer to a specific
+frame.
 </p></div><dl class="paramcmts block"><dt class="param">frame</dt><dd class="cmt"><p>the sample frame which should be
-				the new file position. this is really
-				the sample index and not the physical file pointer.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
+              the new file position. this is really
+              the sample index and not the physical file pointer.</p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>when a seek error occurs or you try to
-					seek past the file's end.
+                    seek past the file's end.
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFile#spec" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="spec:de.sciss.synth.io.AudioFileSpec"></a>
@@ -342,7 +346,7 @@ in the file.
         <span class="name">spec</span><span class="result">: <a href="AudioFileSpec.html" class="extype" name="de.sciss.synth.io.AudioFileSpec">AudioFileSpec</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Returns a description of the audio file's specification.</p>
+      <p class="shortcomment cmt">Returns a description of the audio file's specification.</p>
     </li><li name="de.sciss.synth.io.AudioFile#write" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="write(data:de.sciss.synth.io.Frames,off:Int,len:Int):de.sciss.synth.io.AudioFile"></a>
       <a id="write(Frames,Int,Int):AudioFile"></a>
@@ -355,17 +359,17 @@ in the file.
         <span class="name">write</span><span class="params">(<span name="data">data: <a href="package.html#Frames=Array[Array[Float]]" class="extmbr" name="de.sciss.synth.io.Frames">Frames</a></span>, <span name="off">off: <span class="extype" name="scala.Int">Int</span></span>, <span name="len">len: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="" class="extype" name="de.sciss.synth.io.AudioFile">AudioFile</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt"> Writes sample frames to the file starting at the current position.</p><div class="fullcomment"><div class="comment cmt"><p> Writes sample frames to the file starting at the current position.
+      <p class="shortcomment cmt">Writes sample frames to the file starting at the current position.</p><div class="fullcomment"><div class="comment cmt"><p>Writes sample frames to the file starting at the current position.
 </p></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>buffer holding the frames to writer to harddisc.
-				the samples must be deinterleaved such that
-				data[0][] holds the first channel, data[1][]
-				holds the second channel etc.</p></dd><dt class="param">off</dt><dd class="cmt"><p>off in the buffer in sample frames, such
-				that he first frame of the first channel will
-				be reader from data[0][off] etc.</p></dd><dt class="param">len</dt><dd class="cmt"><p>number of continuous frames to writer.
+              the samples must be deinterleaved such that
+              data[0][] holds the first channel, data[1][]
+              holds the second channel etc.</p></dd><dt class="param">off</dt><dd class="cmt"><p>off in the buffer in sample frames, such
+             that he first frame of the first channel will
+             be reader from data[0][off] etc.</p></dd><dt class="param">len</dt><dd class="cmt"><p>number of continuous frames to writer.
 </p></dd></dl><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd><dt>Exceptions thrown</dt><dd><span class="cmt">IOException<p>if a writer error occurs.
@@ -376,19 +380,6 @@ in the file.
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -400,7 +391,7 @@ in the file.
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -415,19 +406,6 @@ in the file.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -439,7 +417,7 @@ in the file.
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -653,7 +631,7 @@ in the file. Same as <code>spec.numChannels</code>.
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -672,7 +650,7 @@ in the file. Same as <code>spec.numChannels</code>.
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -800,7 +778,7 @@ in the file. Same as <code>spec.numChannels</code>.
       <div class="fullcomment"><dl class="attributes block"> <dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
-      <span class="symbol">classOf[ IOException ]</span>
+      <span class="symbol">classOf[IOException]</span>
     </span>)</span>
               
         </dd></dl></div>
@@ -817,6 +795,8 @@ in the file. Same as <code>spec.numChannels</code>.
               <h3>Inherited from <span class="extype" name="java.nio.channels.Channel">Channel</span></h3>
             </div><div class="parent" name="java.io.Closeable">
               <h3>Inherited from <span class="extype" name="java.io.Closeable">Closeable</span></h3>
+            </div><div class="parent" name="java.lang.AutoCloseable">
+              <h3>Inherited from <span class="extype" name="java.lang.AutoCloseable">AutoCloseable</span></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
             </div><div class="parent" name="scala.Any">
@@ -837,6 +817,7 @@ in the file. Same as <code>spec.numChannels</code>.
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>
