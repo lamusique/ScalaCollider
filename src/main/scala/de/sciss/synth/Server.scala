@@ -815,7 +815,7 @@ trait Server extends ServerLike with Model[Server.Update] {
     * the future fails with a `Timeout` exception, and the handler is removed.
     *
     * @param   packet    the packet to send out
-    * @param   timeout   the timeout in milliseconds
+    * @param   timeout   the timeout duration
     * @param   handler   the handler to match against incoming messages
     * @return   a future of the successfully completed handler or timeout exception
     *
@@ -839,8 +839,7 @@ trait Server extends ServerLike with Model[Server.Update] {
 
   def syncMsg(): message.Sync
 
-  def dumpOSC(mode: osc.Dump, filter: osc.Packet => Boolean = _ => true): Unit
-
+  def dumpOSC   (mode: osc.Dump = osc.Dump.Text, filter: osc.Packet => Boolean = _ => true): Unit
   def dumpInOSC (mode: osc.Dump = osc.Dump.Text, filter: osc.Packet => Boolean = _ => true): Unit
   def dumpOutOSC(mode: osc.Dump = osc.Dump.Text, filter: osc.Packet => Boolean = _ => true): Unit
 

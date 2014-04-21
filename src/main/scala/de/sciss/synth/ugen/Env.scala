@@ -14,7 +14,7 @@
 package de.sciss.synth
 package ugen
 
-import collection.immutable.{IndexedSeq => Vec, Seq => ISeq}
+import collection.immutable.{IndexedSeq => Vec}
 import de.sciss.synth.Curve.{sine => sin, _}
 import language.implicitConversions
 
@@ -121,7 +121,7 @@ sealed trait EnvLike extends GE {
   def isSustained: Boolean
 }
 
-final case class Env(startLevel: GE, segments: ISeq[Env.Segment],
+final case class Env(startLevel: GE, segments: Seq[Env.Segment],
                      releaseNode: GE = -99, loopNode: GE = -99)
   extends EnvLike {
 
@@ -144,7 +144,7 @@ object IEnv extends EnvFactory[IEnv] {
   protected def create(startLevel: GE, segments: Vec[Env.Segment]) = new IEnv(startLevel, segments)
 }
 
-final case class IEnv(startLevel: GE, segments: ISeq[Env.Segment], offset: GE = 0)
+final case class IEnv(startLevel: GE, segments: Seq[Env.Segment], offset: GE = 0)
   extends EnvLike {
 
   private[synth] def expand: UGenInLike = toGE

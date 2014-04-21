@@ -15,7 +15,7 @@ package de.sciss
 
 import language.implicitConversions
 
-/** The `synth` package provides some type enrichments. In particular converting numbers to
+/** The `synth` package provides some extension methods. In particular converting numbers to
   * constant graph elements, operators on graph elements and allowing succinct creation of named controls.
   * Furthermore, it contains the `play` function to quickly test graph functions.
   */
@@ -48,6 +48,38 @@ package object synth {
   // XXX TODO: ControlProxyFactory could be implicit class?
   /** Allows the construction or named controls, for example via `"freq".kr`. */
   implicit def stringToControlProxyFactory(name: String): ugen.ControlProxyFactory = new ugen.ControlProxyFactory(name)
+
+  implicit class rangeOps(val `this`: Range) extends AnyVal { me =>
+    import me.{`this` => r}
+
+    /** Creates a new `Range` shifted by the given offset. */
+    def shift(n: Int): Range = {
+      val start0  = r.start
+      val end0    = r.end
+      val start1  = start0 + n
+      val end1    = end0   + n
+
+      // overflow check
+      if ((n > 0 && (start1 < start0 || end1 < end0)) ||
+          (n < 0 && (start1 > start0 || end1 > end0)))
+        throw new IllegalArgumentException(s"$r.shift($n) causes number overflow")
+
+      if (r.isInclusive)
+        new Range.Inclusive(start1, end1, r.step)
+      else
+        new Range          (start1, end1, r.step)
+    }
+
+    private[synth] def toGetnSeq: List[Int] =
+      if (r.isEmpty) Nil
+      else if (r.step == 1)
+        r.start :: r.length :: Nil
+      else if (r.step == -1)
+        (r.start - r.length + 1) :: r.length :: Nil
+      else {
+        r.toList.flatMap(off => off:: 1 :: Nil)
+      }
+  }
 
   // ---- explicit ----
 

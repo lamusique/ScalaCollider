@@ -15,8 +15,8 @@ package de.sciss.synth
 
 import de.sciss.synth.ugen.{Wrap, Fold, Clip, UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd, Constant}
 
-final class GEOps(val self: GE ) extends AnyVal { me =>
-  import me.{self => g}
+final class GEOps(val `this`: GE ) extends AnyVal { me =>
+  import me.{`this` => g}
 
   def `\\`(index: Int)      : GE = ChannelProxy(g, index)
   def madd(mul: GE, add: GE): GE = MulAdd(g, mul, add)

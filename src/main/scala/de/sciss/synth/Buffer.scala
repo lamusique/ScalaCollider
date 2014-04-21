@@ -13,7 +13,7 @@
 
 package de.sciss.synth
 
-import de.sciss.osc.{Bundle, Packet}
+import de.sciss.osc.Packet
 import de.sciss.model.Model
 import de.sciss.model.impl.ModelImpl
 import de.sciss.synth
@@ -142,9 +142,9 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
     message.BufferReadChannel(id, path, fileStartFrame, numFrames, bufStartFrame, leaveOpen, channels.toList,
       completion)
 
-  def setMsg(pairs: (Int, Float)*) = message.BufferSet(id, pairs: _*)
+  def setMsg(pairs: FillValue*) = message.BufferSet(id, pairs: _*)
 
-  def setnMsg(v: IndexedSeq[Float]) = message.BufferSetn(id, (0, v))
+  def setnMsg(values: IndexedSeq[Float]) = message.BufferSetn(id, (0, values))
 
   def setnMsg(pairs: (Int, IndexedSeq[Float])*) = {
     //    val numSmp = numChannels * numFrames
@@ -155,12 +155,14 @@ final case class Buffer(server: Server, id: Int) extends ModelImpl[BufferManager
 
   def getMsg(indices: Int*) = message.BufferGet(id, indices: _*)
 
-  def getnMsg(pairs: (Int, Int)*) = message.BufferGetn(id, pairs: _*)
+  def getnMsg(ranges: Range*) = message.BufferGetn(id, ranges: _*)
 
-  /** Convenience method for creating a fill message for one given range */
-  def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, message.BufferFill.Data(index, num, value))
+  //  /** Convenience method for creating a fill message for one given range */
+  //  def fillMsg(index: Int, num: Int, value: Float) = message.BufferFill(id, FillRange(index, num, value))
 
-  def fillMsg(data: message.BufferFill.Data*) = message.BufferFill(id, data: _*)
+  def fillMsg(value: Float) = message.BufferFill(id, FillRange(0, numFrames * numChannels, value))
+
+  def fillMsg(ranges: FillRange*) = message.BufferFill(id, ranges: _*)
 
   def zeroMsg: message.BufferZero = zeroMsg(None)
 

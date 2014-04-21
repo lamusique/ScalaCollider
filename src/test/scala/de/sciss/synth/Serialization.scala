@@ -3,7 +3,7 @@ package de.sciss.synth
 object Serialization extends App {
    import java.io._
    import ugen._
-   println( "Start" )
+   println("Start")
    val in = SynthGraph {
 //       val f1 = "freq1".kr( 0.4 )
 //       val f2 = "freq2".kr( 8 )

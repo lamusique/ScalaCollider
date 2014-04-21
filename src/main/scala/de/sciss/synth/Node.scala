@@ -75,13 +75,13 @@ abstract class Node extends ModelImpl[NodeManager.NodeChange] {
     */
   def runMsg(flag: Boolean) = message.NodeRun(id -> flag)
 
-  def setMsg(pairs: ControlSetMap*) = message.NodeSet(id, pairs: _*)
+  def setMsg(pairs: ControlSet*) = message.NodeSet(id, pairs: _*)
 
-  def setnMsg(pairs: ControlSetMap*) = message.NodeSetn(id, pairs: _*)
+  def setnMsg(pairs: ControlSet*) = message.NodeSetn(id, pairs: _*)
 
   def traceMsg = message.NodeTrace(id)
 
-  def releaseMsg: message.NodeSet = releaseMsg(None)
+  // def releaseMsg: message.NodeSet = releaseMsg(None)
 
   /** A utility method which calls `setMsg` assuming a control named `gate`. The release time
     * argument is modified to correspond with the interpretation of the `gate` argument in
@@ -124,10 +124,10 @@ abstract class Node extends ModelImpl[NodeManager.NodeChange] {
   def mapanMsg(mappings: ControlABusMap*) =
     message.NodeMapan(id, mappings: _*)
 
-  def fillMsg(control: Any, numChannels: Int, value: Float) =
-    message.NodeFill(id, message.NodeFill.Data(control, numChannels, value))
+  //  def fillMsg(control: Any, numChannels: Int, value: Float) =
+  //    message.NodeFill(id, message.NodeFill.Data(control, numChannels, value))
 
-  def fillMsg(fillings: message.NodeFill.Data*) = message.NodeFill(id, fillings: _*)
+  def fillMsg(data: ControlFillRange*) = message.NodeFill(id, data: _*)
 
   /** Creates an OSC message to move this node before another node
     *

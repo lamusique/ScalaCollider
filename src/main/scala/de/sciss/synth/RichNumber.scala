@@ -83,10 +83,10 @@ object RichNumber {
 
 // ---------------------------- Int ----------------------------
 
-final class RichInt private[synth](val toInt: Int)
+final class RichInt private[synth](val `this`: Int)
   extends AnyVal with RichNumber.NAryGEOps { me =>
 
-  import me.{toInt => i}
+  import me.{`this` => i}
 
   protected def f   = i.toFloat
   protected def d   = i.toDouble
@@ -97,10 +97,10 @@ final class RichInt private[synth](val toInt: Int)
 
 // ---------------------------- Float ----------------------------
 
-final class RichFloat private[synth](val toFloat: Float)
+final class RichFloat private[synth](val `this`: Float)
   extends AnyVal with RichNumber.NAryGEOps { me =>
 
-  import me.{toFloat => f}
+  import me.{`this` => f}
 
   protected def d  = f.toDouble
   protected def cn = Constant(f)
@@ -110,10 +110,10 @@ final class RichFloat private[synth](val toFloat: Float)
 
 // ---------------------------- Double ----------------------------
 
-final class RichDouble private[synth](val toDouble: Double)
+final class RichDouble private[synth](val `this`: Double)
   extends AnyVal with RichNumber.NAryGEOps { me =>
 
-  import me.{toDouble => d}
+  import me.{`this` => d}
 
   protected def cn = Constant(d.toFloat)
 

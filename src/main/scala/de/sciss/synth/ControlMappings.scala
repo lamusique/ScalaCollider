@@ -16,44 +16,54 @@ package de.sciss.synth
 import collection.immutable.{IndexedSeq => Vec}
 import language.implicitConversions
 
-object ControlSetMap extends SingleControlSetMapImplicits with MultiControlSetMapImplicits {
+object ControlSet extends ControlSetValueImplicits with ControlSetVectorImplicits {
 
-  object Single extends SingleControlSetMapImplicits
+  object Value extends ControlSetValueImplicits {
+    def apply(key: String, value: Float): Value = new Value(key, value)
+    def apply(key: Int   , value: Float): Value = new Value(key, value)
+  }
+  final case class Value private(key: Any, value: Float)
+    extends ControlSet {
 
-  final case class Single(key: Any, value: Float)
-    extends ControlSetMap {
-
-    def toSetSeq : Vec[Any] = Vector(key,    value)
-    def toSetnSeq: Vec[Any] = Vector(key, 1, value)
+    private[sciss] def toSetSeq : IndexedSeq[Any] = scala.Vector(key,    value)
+    private[sciss] def toSetnSeq: IndexedSeq[Any] = scala.Vector(key, 1, value)
   }
 
-  object Multi extends MultiControlSetMapImplicits
+  object Vector extends ControlSetVectorImplicits {
+    def apply(key: String, values: IndexedSeq[Float]): Vector = new Vector(key, values)
+    def apply(key: Int   , values: IndexedSeq[Float]): Vector = new Vector(key, values)
+  }
+  final case class Vector private(key: Any, values: IndexedSeq[Float])
+    extends ControlSet {
 
-  final case class Multi(key: Any, values: IndexedSeq[Float])
-    extends ControlSetMap {
-
-    def toSetSeq : Vec[Any] = Vector(key, values)
-    def toSetnSeq: Vec[Any] = key +: values.size +: values.toIndexedSeq
+    private[sciss] def toSetSeq : IndexedSeq[Any] = scala.Vector(key, values)
+    private[sciss] def toSetnSeq: IndexedSeq[Any] = key +: values.size +: values
   }
 }
 
-sealed trait ControlSetMap {
-  def toSetSeq : Vec[Any]
-  def toSetnSeq: Vec[Any]
+sealed trait ControlSet {
+  private[sciss] def toSetSeq : IndexedSeq[Any]
+  private[sciss] def toSetnSeq: IndexedSeq[Any]
 }
 
-private[synth] sealed trait SingleControlSetMapImplicits {
-  implicit def intFloatControlSet    (tup: (Int   , Float )) = ControlSetMap.Single(tup._1, tup._2)
-  implicit def intIntControlSet      (tup: (Int   , Int   )) = ControlSetMap.Single(tup._1, tup._2.toFloat)
-  implicit def intDoubleControlSet   (tup: (Int   , Double)) = ControlSetMap.Single(tup._1, tup._2.toFloat)
-  implicit def stringFloatControlSet (tup: (String, Float )) = ControlSetMap.Single(tup._1, tup._2)
-  implicit def stringIntControlSet   (tup: (String, Int   )) = ControlSetMap.Single(tup._1, tup._2.toFloat)
-  implicit def stringDoubleControlSet(tup: (String, Double)) = ControlSetMap.Single(tup._1, tup._2.toFloat)
+private[synth] sealed trait ControlSetValueImplicits {
+  implicit def intFloatControlSet    (tup: (Int   , Float )) = ControlSet.Value(tup._1, tup._2)
+  implicit def intIntControlSet      (tup: (Int   , Int   )) = ControlSet.Value(tup._1, tup._2.toFloat)
+  implicit def intDoubleControlSet   (tup: (Int   , Double)) = ControlSet.Value(tup._1, tup._2.toFloat)
+  implicit def stringFloatControlSet (tup: (String, Float )) = ControlSet.Value(tup._1, tup._2)
+  implicit def stringIntControlSet   (tup: (String, Int   )) = ControlSet.Value(tup._1, tup._2.toFloat)
+  implicit def stringDoubleControlSet(tup: (String, Double)) = ControlSet.Value(tup._1, tup._2.toFloat)
 }
 
-private[synth] sealed trait MultiControlSetMapImplicits {
-  implicit def intFloatsControlSet   (tup: (Int   , Seq[Float])) = ControlSetMap.Multi(tup._1, tup._2.toIndexedSeq)
-  implicit def stringFloatsControlSet(tup: (String, Seq[Float])) = ControlSetMap.Multi(tup._1, tup._2.toIndexedSeq)
+private[synth] sealed trait ControlSetVectorImplicits {
+  // leaves stuff like ArrayWrapper untouched
+  private[this] def carefulIndexed(xs: Seq[Float]): IndexedSeq[Float] = xs match {
+    case indexed: IndexedSeq[Float] => indexed
+    case _                          => xs.toIndexedSeq
+  }
+
+  implicit def intFloatsControlSet   (tup: (Int   , Seq[Float])) = ControlSet.Vector(tup._1, carefulIndexed(tup._2))
+  implicit def stringFloatsControlSet(tup: (String, Seq[Float])) = ControlSet.Vector(tup._1, carefulIndexed(tup._2))
 }
 
 object ControlKBusMap {
@@ -92,8 +102,8 @@ object ControlABusMap {
   final case class Single(key: Any, index: Int)
     extends ControlABusMap {
 
-    def toMapaSeq : Vec[Any] = Vector(key, index)
-    def toMapanSeq: Vec[Any] = Vector(key, index, 1)
+    private[sciss] def toMapaSeq : Vec[Any] = Vector(key, index)
+    private[sciss] def toMapanSeq: Vec[Any] = Vector(key, index, 1)
   }
 
   implicit def intABusControlABus   (tup: (Int   , AudioBus)) = Multi(tup._1, tup._2.index, tup._2.numChannels)
@@ -103,7 +113,7 @@ object ControlABusMap {
   final case class Multi(key: Any, index: Int, numChannels: Int)
     extends ControlABusMap {
 
-    def toMapanSeq: Vec[Any] = Vector(key, index, numChannels)
+    private[sciss] def toMapanSeq: Vec[Any] = Vector(key, index, numChannels)
   }
 }
 
@@ -116,5 +126,20 @@ object ControlABusMap {
   * @see  [[de.sciss.synth.ugen.InFeedback]]
   */
 sealed trait ControlABusMap {
-  def toMapanSeq: Vec[Any]
+  private[sciss] def toMapanSeq: Vec[Any]
+}
+
+object ControlFillRange {
+  def apply(key: String, numChannels: Int, value: Float) = new ControlFillRange(key, numChannels, value)
+  def apply(key: Int   , numChannels: Int, value: Float) = new ControlFillRange(key, numChannels, value)
+
+  implicit def intFloatControlFill    (tup: (Int   , Int, Float )) = apply(tup._1, tup._2, tup._3)
+  implicit def intIntControlFill      (tup: (Int   , Int, Int   )) = apply(tup._1, tup._2, tup._3.toFloat)
+  implicit def intDoubleControlFill   (tup: (Int   , Int, Double)) = apply(tup._1, tup._2, tup._3.toFloat)
+  implicit def stringFloatControlFill (tup: (String, Int, Float )) = apply(tup._1, tup._2, tup._3)
+  implicit def stringIntControlFill   (tup: (String, Int, Int   )) = apply(tup._1, tup._2, tup._3.toFloat)
+  implicit def stringDoubleControlFill(tup: (String, Int, Double)) = apply(tup._1, tup._2, tup._3.toFloat)
+}
+final case class ControlFillRange private(key: Any, numChannels: Int, value: Float) {
+  private[sciss] def toList: List[Any] = key :: numChannels :: value :: Nil
 }

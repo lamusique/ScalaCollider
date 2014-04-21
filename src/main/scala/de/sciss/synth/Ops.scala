@@ -97,7 +97,7 @@ object Ops {
       sendWithAction(d, server, loadMsg(dir, _), completion, "SynthDef.load")
     }
 
-    def play(target: Node = Server.default, args: Seq[ControlSetMap] = Nil, addAction: AddAction = addToHead): Synth = {
+    def play(target: Node = Server.default, args: Seq[ControlSet] = Nil, addAction: AddAction = addToHead): Synth = {
       val synth   = Synth(target.server)
       val newMsg  = synth.newMsg(name, target, args, addAction)
       target.server ! recvMsg(newMsg)
@@ -119,9 +119,9 @@ object Ops {
       */
     def run(flag: Boolean = true): Unit = server ! runMsg(flag)
 
-    def set(pairs: ControlSetMap*): Unit = server ! setMsg(pairs: _*)
+    def set(pairs: ControlSet*): Unit = server ! setMsg(pairs: _*)
 
-    def setn(pairs: ControlSetMap*): Unit = server ! setnMsg(pairs: _*)
+    def setn(pairs: ControlSet*): Unit = server ! setnMsg(pairs: _*)
 
     def trace(): Unit = server ! traceMsg
 
@@ -151,9 +151,9 @@ object Ops {
       */
     def mapan(mappings: ControlABusMap*): Unit = server ! mapanMsg(mappings: _*)
 
-    def fill(control: Any, numChannels: Int, value: Float): Unit = server ! fillMsg(control, numChannels, value)
+    // def fill(control: Any, numChannels: Int, value: Float): Unit = server ! fillMsg(control, numChannels, value)
 
-    def fill(fillings: message.NodeFill.Data*): Unit = server ! fillMsg(fillings: _*)
+    def fill(data: ControlFillRange*): Unit = server ! fillMsg(data: _*)
 
     /** Moves this node before another node
       *
@@ -220,26 +220,26 @@ object Ops {
   implicit final class SynthConstructors(val `this`: Synth.type) extends AnyVal {
     import Synth._
 
-    def play(defName: String, args: Seq[ControlSetMap] = Nil, target: Node = Server.default.defaultGroup,
+    def play(defName: String, args: Seq[ControlSet] = Nil, target: Node = Server.default.defaultGroup,
              addAction: AddAction = addToHead): Synth = {
       val synth = apply(target.server)
       synth.server ! synth.newMsg(defName, target, args, addAction)
       synth
     }
 
-    def after(target: Node, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+    def after(target: Node, defName: String, args: Seq[ControlSet] = Nil): Synth =
       play(defName, args, target, addAfter)
 
-    def before(target: Node, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+    def before(target: Node, defName: String, args: Seq[ControlSet] = Nil): Synth =
       play(defName, args, target, addBefore)
 
-    def head(target: Group, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+    def head(target: Group, defName: String, args: Seq[ControlSet] = Nil): Synth =
       play(defName, args, target, addToHead)
 
-    def tail(target: Group, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+    def tail(target: Group, defName: String, args: Seq[ControlSet] = Nil): Synth =
       play(defName, args, target, addToTail)
 
-    def replace(target: Node, defName: String, args: Seq[ControlSetMap] = Nil): Synth =
+    def replace(target: Node, defName: String, args: Seq[ControlSet] = Nil): Synth =
       play(defName, args, target, addReplace)
   }
 
@@ -274,6 +274,60 @@ object Ops {
       createAsync(server, b => b.allocReadChannel(path, startFrame, numFrames, channels, _), completion)
   }
 
+  // ---- the following have to be outside the value class due to a Scala 2.10 ----
+  // ---- restriction that seems to extend to function arguments. After we     ----
+  // ---- drop Scala 2.10 support, we can move these back into the classes     ----
+
+  private def buf_sendAsync(b: Buffer)(msgFun: Packet => osc.Message, completion: Optional[Packet]): Future[Unit] = {
+    import b._
+    register()
+    val p = Promise[Unit]()
+    lazy val l: Buffer.Listener = {
+      case BufferManager.BufferInfo(_, _) =>
+        removeListener(l)
+        p.complete(Success(()))
+    }
+    addListener(l)
+
+    val c1 = completion.fold[Packet](queryMsg)(p => osc.Bundle.now(p, queryMsg))
+    server ! msgFun(c1)
+    p.future
+  }
+
+  private def buf_get(b: Buffer)(indices: Int*): Future[Vec[Float]] = {
+    import b._
+    val msg = getMsg(indices: _*)
+    server.!!(msg) {
+      case m: message.BufferSet if m.id == id && sameIndices(m.pairs, indices) =>
+        m.pairs.map(_.value)(breakOut): Vec[Float]
+    }
+  }
+
+  private def buf_sendSyncBundle(b: Buffer)(m: osc.Message): Future[Unit] = {
+    import b._
+    val sync  = server.syncMsg()
+    val reply = sync.reply
+    val p     = osc.Bundle.now(m, sync)
+    server.!!(p) { case `reply` => }
+  }
+
+  private def buf_getn(b: Buffer)(pairs: Range*): Future[Vec[Float]] = {
+    import b._
+    val rangeSeq = pairs.flatMap(_.toGetnSeq)  // XXX TODO: this is called again in `getnMsg`
+    server.!!(getnMsg(pairs: _*)) {
+      case m: message.BufferSetn if m.id == id && sameIndicesAndSizes(m.indicesAndValues, rangeSeq) =>
+        m.indicesAndValues.flatMap(_._2.toIndexedSeq)(breakOut): Vec[Float]
+
+      //      case message.BufferSetn(`id`, sq @ _*) if {
+      //        println("Missed it.")
+      //        val found     = sq.map(tup => (tup._1, tup._2.size))
+      //        println(s"Found   : $found")
+      //        println(s"Expected: $rangeSeq")
+      //        false
+      //      } => ...
+    }
+  }
+
   implicit final class BufferOps(val `this`: Buffer) extends AnyVal { me =>
     import me.{`this` => b}
     import b._
@@ -281,20 +335,8 @@ object Ops {
     //    def alloc(numFrames: Int, numChannels: Int = 1, completion: Buffer.Completion = Completion.None): Unit =
     //      server ! allocMsg(numFrames, numChannels, makePacket(completion))
 
-    private def sendAsync(msgFun: Packet => osc.Message, completion: Optional[Packet]): Future[Unit] = {
-      register()
-      val p = Promise[Unit]()
-      lazy val l: Buffer.Listener = {
-        case BufferManager.BufferInfo(_, _) =>
-          removeListener(l)
-          p.complete(Success(()))
-      }
-      addListener(l)
-
-      val c1 = completion.fold[Packet](queryMsg)(p => osc.Bundle.now(p, queryMsg))
-      server ! msgFun(c1)
-      p.future
-    }
+    @inline private def sendAsync(msgFun: Packet => osc.Message, completion: Optional[Packet]): Future[Unit] =
+      buf_sendAsync(b)(msgFun, completion)
 
     def alloc(numFrames: Int, numChannels: Int = 1, completion: Optional[Packet] = None): Future[Unit] =
       sendAsync(allocMsg(numFrames, numChannels, _), completion)
@@ -329,7 +371,7 @@ object Ops {
       *                `numChannels * numFrames`. For instance, in a stereo-buffer, the offset
       *                for the right channel's fifth frame is `(5-1) * 2 + 1 = 9`.
       */
-    def set(pairs: (Int, Float)*): Unit = server ! setMsg(pairs: _*)
+    def set(pairs: FillValue*): Unit = server ! setMsg(pairs: _*)
 
     /** Sets the entire contents of the buffer.
       * An error is thrown if the number of given values does not match the number
@@ -360,9 +402,11 @@ object Ops {
       */
     def setn(pairs: (Int, IndexedSeq[Float])*): Unit = server ! setnMsg(pairs: _*)
 
-    def fill(index: Int, num: Int, value: Float): Unit = server ! fillMsg(index, num, value)
+    // def fill(index: Int, num: Int, value: Float): Unit = server ! fillMsg(index, num, value)
 
-    def fill(data: message.BufferFill.Data*): Unit = server ! fillMsg(data: _*)
+    def fill(value: Double): Unit = server ! fillMsg(value.toFloat)
+
+    def fill(data: FillRange*): Unit = server ! fillMsg(data: _*)
 
     def zero(completion: Optional[Packet] = None): Future[Unit] = sendAsync(zeroMsg(_), completion)
 
@@ -371,17 +415,65 @@ object Ops {
               leaveOpen: Boolean = false, completion: Optional[Packet] = None): Future[Unit] =
       sendAsync(writeMsg(path, fileType, sampleFormat, numFrames, startFrame, leaveOpen, _), completion)
 
-    def get(indices: Int*): Future[Vec[Float]] =
-      server.!!(getMsg(indices: _*)) {
-        case message.BufferSet(`id`, sq @ _*) if sq.map(_._1) == indices =>
-          sq.map(_._2)(breakOut): Vec[Float]
+    def get(indices: Int*): Future[Vec[Float]] = buf_get(b)(indices: _*)
+
+    /** Retrieves the entire buffer contents. This is similar to `getToFloatArray` in sclang.
+      * If multiple packets must be sent due to the size, they will be scheduled strictly sequentially.
+      * This is safe but potentially slow for large buffers.
+      *
+      * @param  offset  offset into the buffer in samples; for multi-channel buffers to indicate a specific
+      *                 frame the frame index must be multiplied by the number of channels
+      * @param  num     the number of samples to get; for multi-channel buffers to indicate a specific
+      *                 number of frames, the number must be multiplied by the number of channels.
+      *                 The special value `-1` means that all samples should be retrieved
+      */
+    def getData(offset: Int = 0, num: Int = -1): Future[Vec[Float]] = {
+      val num1 = if (num >= 0) num else {
+        if (numFrames < 0) sys.error(s"Buffer size not known: $b")
+        numFrames * numChannels - offset
       }
 
-    def getn(pairs: (Int, Int)*): Future[Vec[Vec[Float]]] =
-      server.!!(getnMsg(pairs: _*)) {
-        case message.BufferSetn(`id`, sq @ _*) if sq.map(tup => (tup._1, tup._2.size)) == pairs =>
-          sq.map(_._2.toIndexedSeq)(breakOut): Vec[Vec[Float]]
+      def loop(off: Int, rem: Int): Future[Vec[Float]] = {
+        import server.clientConfig.executionContext
+        val lim   = math.min(rem, 1633)
+        val fut   = getn(off until (off + lim))
+        val rem1  = rem - lim
+        if (rem1 == 0) fut else fut.flatMap { pred =>
+          // is this good? should we internally produce Future[Unit] and a Vector.newBuilder?
+          // ...because we can easily end up with hundreds of chunks at this size
+          loop(off + lim, rem1).map(pred ++ _)
+        }
       }
+
+      loop(offset, num1)
+    }
+
+    /** Transmits a collection to fill the entire buffer contents. This is similar to `sendCollection` in sclang,
+      * If multiple packets must be sent due to the size, they will be scheduled strictly sequentially.
+      * This is safe but potentially slow for large buffers.
+      *
+      * @param  values  the collection to copy into the buffer; values are assumed to be de-interleaved if
+      *                 the buffer has multiple channels.
+      * @param  offset  offset into the buffer in samples; for multi-channel buffers to indicate a specific
+      *                 frame the frame index must be multiplied by the number of channels
+      */
+    def setData(values: IndexedSeq[Float], offset: Int = 0): Future[Unit] = {
+      def loop(off: Int, rem: IndexedSeq[Float]): Future[Unit] = {
+        import server.clientConfig.executionContext
+        val remSz     = rem.size
+        val lim       = math.min(remSz, 1600) // 1626 minus space for bundle and sync-message
+        val (c1, c2)  = rem.splitAt(lim)
+        val msg       = setnMsg(off -> c1)
+        val fut       = sendSyncBundle(msg)
+        val rem1      = remSz - lim
+        if (rem1 == 0) fut else fut.flatMap { _ => loop(off + lim, c2) }
+      }
+
+      loop(offset, values)
+    }
+
+    /** Gets ranges of the buffer content and returns them as a future flattened collection. */
+    def getn(pairs: Range*): Future[Vec[Float]] = buf_getn(b)(pairs: _*)
 
     def gen(command: message.BufferGen.Command): Future[Unit] = {
       val m = genMsg(command)
@@ -389,38 +481,111 @@ object Ops {
         server ! m
         Future.successful(())
       } else {
-        val sync  = server.syncMsg()
-        val reply = sync.reply
-        val p     = osc.Bundle.now(m, sync)
-        server.!!(p) { case `reply` => }
+        sendSyncBundle(m)
       }
     }
+
+    @inline private def sendSyncBundle(m: osc.Message): Future[Unit] = buf_sendSyncBundle(b)(m)
 
     // ---- utility methods ----
     //    def play: Synth = play()
 
-    def play(loop: Boolean = false, amp: Float = 1f, out: Int = 0): Synth = {
+    def play(loop: Boolean = false, amp: Double = 1.0, out: Int = 0): Synth = {
       import de.sciss.synth
       import ugen._
       synth.play(server, out) {
         // working around nasty compiler bug
         val ply = PlayBuf.ar(numChannels, id, BufRateScale.kr(id), loop = if (loop) 1 else 0)
         if (!loop) FreeSelfWhenDone.kr(ply)
-        val ampCtl = "amp".kr(amp) // XXX TODO: scalac 2.10.0 inference bug
+        val ampCtl = "amp".kr(amp) // note: scalac 2.10.0 inference bug
         ply * ampCtl
       }
     }
   }
 
-  implicit final class ControlBusOps(val b: ControlBus) extends AnyVal {
+  // ---- the following have to be outside the value class due to a Scala 2.10 ----
+  // ---- restriction that seems to extend to function arguments. After we     ----
+  // ---- drop Scala 2.10 support, we can move these back into the classes     ----
+
+  private def cbus_get1(b: ControlBus)(): Future[Float] = {
+    import b._
+    val msg = getMsg
+    server.!!(msg) {
+      case message.ControlBusSet(FillValue(`index`, value)) => value: Float
+    }
+  }
+
+  private def sameIndices(a: Seq[FillValue], b: Seq[Int]): Boolean = {
+    val ai = a.iterator
+    val bi = b.iterator
+    while (ai.hasNext && bi.hasNext) {
+      val an = ai.next().index
+      val bn = bi.next()
+      if (an != bn) return false
+    }
+    ai.isEmpty && bi.isEmpty
+  }
+
+  private def sameIndicesAndSizes(a: Seq[(Int, IndexedSeq[Float])], b: Seq[Int]): Boolean = {
+    val ai = a.iterator
+    val bi = b.iterator
+    while (ai.hasNext && bi.hasNext) {
+      val an  = ai.next()
+      val bn0 = bi.next()
+      val bn1 = bi.next()
+      if (an._1 != bn0 || an._2.size != bn1) return false
+    }
+    ai.isEmpty && bi.isEmpty
+  }
+
+  private def cbus_get(b: ControlBus)(indices: Int*): Future[Vec[Float]] = {
+    import b._
+    val msg = getMsg(indices: _*)
+    server.!!(msg) {
+      case m: message.ControlBusSet if sameIndices(m.pairs, msg.index) =>
+        m.pairs.map(_.value)(breakOut): Vec[Float]
+    }
+  }
+
+  private def cbus_getn(b: ControlBus)(pairs: Range*): Future[Vec[Float]] = {
+    import b._
+    val rangeSeq  = pairs.flatMap(_.toGetnSeq)  // XXX TODO: this is called again in `getnMsg`
+    val msg       = getnMsg(pairs: _*)
+    server.!!(msg) {
+      case m: message.ControlBusSetn if sameIndicesAndSizes(m.indicesAndValues, rangeSeq) =>
+        m.indicesAndValues.flatMap(_._2.toIndexedSeq)(breakOut): Vec[Float]
+    }
+  }
+
+  implicit final class ControlBusOps(val `this`: ControlBus) extends AnyVal { me =>
+    import me.{`this` => b}
     import b._
 
-    def set(v: Float): Unit = server ! setMsg(v)
+    /** Convenience method that sets a single bus value.
+      * The bus must have exactly one channel, otherwise an exception is thrown.
+      */
+    def set(value: Double): Unit = server ! setMsg(value.toFloat)
 
-    def set(pairs: (Int, Float)*): Unit = server ! setMsg(pairs: _*)
+    def set(pairs: FillValue*): Unit = server ! setMsg(pairs: _*)
 
-    def setn(v: IndexedSeq[Float]): Unit = server ! setnMsg(v)
+    def setData(values: IndexedSeq[Float]): Unit = server ! setnMsg(values)
 
     def setn(pairs: (Int, IndexedSeq[Float])*): Unit = server ! setnMsg(pairs: _*)
+
+    /** Convenience method that gets a single bus value.
+      * The bus must have exactly one channel, otherwise an exception is thrown.
+      */
+    def get(): Future[Float] = cbus_get1(b)()
+
+    /** Gets multiple bus values specified as relative channel offsets. */
+    def get(indices: Int*): Future[Vec[Float]] = cbus_get(b)(indices: _*)
+
+    def getData(): Future[Vec[Float]] = getn(0 until numChannels)
+
+    def getn(pairs: Range*): Future[Vec[Float]] = cbus_getn(b)(pairs: _*)
+
+    def fill(value: Float): Unit = server ! b.fillMsg(value)
+
+    def fill(data: FillRange*): Unit = server ! b.fillMsg(data: _*)
   }
 }

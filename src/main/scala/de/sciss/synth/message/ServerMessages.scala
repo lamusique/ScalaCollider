@@ -18,6 +18,7 @@ import java.nio.ByteBuffer
 import collection.breakOut
 import de.sciss.osc.{Message, Packet}
 import de.sciss.osc
+import language.implicitConversions
 
 /** Identifies messages received or sent by the SuperCollider server. */
 sealed trait ServerMessage
@@ -449,10 +450,10 @@ final case class BufferWrite(id: Int, path: String, fileType: io.AudioFileType, 
 
 /** The `/b_set` message sets individual samples of the buffer to given values.
   *
-  * @param  id                the identifier of the buffer whose contents to write.
-  * @param  indicesAndValues  pairs of sample offsets and sample values. The offsets are de-interleaved samples,
-  *                           so for multi-channel buffers, to address a particular frame, the frame index must
-  *                           be multiplied by the number of channels and offset by the channel to write into.
+  * @param  id      the identifier of the buffer whose contents to write.
+  * @param  pairs   pairs of sample offsets and sample values. The offsets are de-interleaved samples,
+  *                 so for multi-channel buffers, to address a particular frame, the frame index must
+  *                 be multiplied by the number of channels and offset by the channel to write into.
   *
   * @see [[Buffer#setMsg]]
   * @see [[BufferSetn]]
@@ -460,8 +461,8 @@ final case class BufferWrite(id: Int, path: String, fileType: io.AudioFileType, 
   * @see [[BufferZero]]
   * @see [[BufferGen]]
   */
-final case class BufferSet(id: Int, indicesAndValues: (Int, Float)*)
-  extends Message("/b_set", id :: (indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil)(breakOut): List[Any]): _*)
+final case class BufferSet(id: Int, pairs: FillValue*)
+  extends Message("/b_set", id :: (pairs.flatMap(_.toList)(breakOut): List[Any]): _*)
   with SyncCmd
 
 /** The `/b_setn` message sets individual ranges of samples of the buffer to given values.
@@ -482,23 +483,11 @@ final case class BufferSetn(id: Int, indicesAndValues: (Int, IndexedSeq[Float])*
   extends Message("/b_setn", id +: indicesAndValues.flatMap(iv => iv._1 +: iv._2.size +: iv._2): _*)
   with SyncCmd
 
-object BufferFill {
-
-  /** A fill range
-    *
-    * @param index  sample offset into the buffer. for multi channel buffers,
-    *               multiply the frame offset by the number of channels
-    * @param num    the number of samples to fill. for multi channel buffers,
-    *               multiple the number of frames by the number of channels
-    * @param value  the value to write to the buffer in the given range
-    */
-  final case class Data(index: Int, num: Int, value: Float)
-}
 /** The `/b_fill` message sets individual ranges of samples of the buffer to given values.
   *
-  * @param  id    the identifier of the buffer whose contents to write.
-  * @param  data  tuples which specify the offset into the buffer, the number of samples to overwrite and the
-  *               value with which to overwrite.
+  * @param  id      the identifier of the buffer whose contents to write.
+  * @param  ranges  tuples which specify the offset into the buffer, the number of samples to overwrite and the
+  *                 value with which to overwrite.
   *
   * @see [[Buffer#fillMsg]]
   * @see [[BufferSet]]
@@ -506,8 +495,8 @@ object BufferFill {
   * @see [[BufferZero]]
   * @see [[BufferGen]]
   */
-final case class BufferFill(id: Int, data: BufferFill.Data*)
-  extends Message("/b_fill", id :: (data.flatMap(i => i.index :: i.num :: i.value :: Nil)(breakOut): List[Any]): _*)
+final case class BufferFill(id: Int, ranges: FillRange*)
+  extends Message("/b_fill", id :: (ranges.flatMap(_.toList)(breakOut): List[Any]): _*)
   with SyncCmd
 
 object BufferGen {
@@ -618,8 +607,8 @@ final case class BufferGet(id: Int, index: Int*) // `indices` is taken by SeqLik
   * @see [[BufferGet]]
   * @see [[BufferSetn]]
   */
-final case class BufferGetn(id: Int, indicesAndSizes: (Int, Int)*)
-  extends Message("/b_getn", id +: indicesAndSizes.flatMap(tup => tup._1 :: tup._2 :: Nil): _*)
+final case class BufferGetn(id: Int, ranges: Range*)
+  extends Message("/b_getn", id +: ranges.flatMap(_.toGetnSeq): _*)
   with SyncQuery
 
 /** The `/c_set` message.
@@ -629,8 +618,8 @@ final case class BufferGetn(id: Int, indicesAndSizes: (Int, Int)*)
   * @see [[ControlBusGet]]
   * @see [[ControlBusFill]]
   */
-final case class ControlBusSet(indicesAndValues: (Int, Float)*)
-  extends Message("/c_set", indicesAndValues.flatMap(iv => iv._1 :: iv._2 :: Nil): _*)
+final case class ControlBusSet(pairs: FillValue*)
+  extends Message("/c_set", pairs.flatMap(_.toList): _*)
   with SyncCmd
 
 /** The `/c_setn` message.
@@ -660,13 +649,9 @@ final case class ControlBusGet(index: Int*) // `indices` is taken by SeqLike
   * @see [[ControlBusGet]]
   * @see [[ControlBusSetn]]
   */
-final case class ControlBusGetn(indicesAndSizes: (Int, Int)*)
-  extends Message("/c_getn", indicesAndSizes.flatMap(i => i._1 :: i._2 :: Nil): _*)
+final case class ControlBusGetn(ranges: Range*)
+  extends Message("/c_getn", ranges.flatMap(_.toGetnSeq): _*)
   with SyncQuery
-
-object ControlBusFill {
-  final case class Data(index: Int, num: Int, value: Float)
-}
 
 /** The `/c_fill` message.
   *
@@ -674,16 +659,18 @@ object ControlBusFill {
   * @see [[ControlBusSet]]
   * @see [[ControlBusSetn]]
   */
-final case class ControlBusFill(data: ControlBusFill.Data*)
-  extends Message("/c_fill", data.flatMap(i => i.index :: i.num :: i.value :: Nil): _*)
+final case class ControlBusFill(ranges: FillRange*)
+  extends Message("/c_fill", ranges.flatMap(_.toList): _*)
   with SyncCmd
 
 object GroupNew {
-  final case class Data(groupID: Int, addAction: Int, targetID: Int)
+  final case class Data(groupID: Int, addAction: Int, targetID: Int) {
+    def toList: List[Int] = groupID :: addAction :: targetID :: Nil
+  }
 }
 /** The `/g_new` message. */
 final case class GroupNew(groups: GroupNew.Data*)
-  extends Message("/g_new", groups.flatMap(g => g.groupID :: g.addAction :: g.targetID :: Nil): _*)
+  extends Message("/g_new", groups.flatMap(_.toList): _*)
   with SyncCmd
 
 /** The `/g_dumpTree` message. */
@@ -736,11 +723,11 @@ final case class GroupDeepFree(ids: Int*)
 
 /** The `/p_new` message. */
 final case class ParGroupNew(groups: GroupNew.Data*)
-  extends Message("/p_new", groups.flatMap(g => g.groupID :: g.addAction :: g.targetID :: Nil): _*)
+  extends Message("/p_new", groups.flatMap(_.toList): _*)
   with SyncCmd
 
 /** The `/s_new` message. */
-final case class SynthNew(defName: String, id: Int, addAction: Int, targetID: Int, controls: ControlSetMap*)
+final case class SynthNew(defName: String, id: Int, addAction: Int, targetID: Int, controls: ControlSet*)
   extends Message("/s_new",
     defName +: id +: addAction +: targetID +: controls.flatMap(_.toSetSeq): _*)
   with SyncCmd
@@ -761,12 +748,12 @@ final case class NodeRun(nodes: (Int, Boolean)*)
   with SyncCmd
 
 /** The `/n_set` message. */
-final case class NodeSet(id: Int, pairs: ControlSetMap*)
+final case class NodeSet(id: Int, pairs: ControlSet*)
   extends Message("/n_set", id +: pairs.flatMap(_.toSetSeq): _*)
   with SyncCmd
 
 /** The `/n_setn` message. */
-final case class NodeSetn(id: Int, pairs: ControlSetMap*)
+final case class NodeSetn(id: Int, pairs: ControlSet*)
   extends Message("/n_setn", id +: pairs.flatMap(_.toSetnSeq): _*)
   with SyncCmd
 
@@ -805,14 +792,9 @@ final case class NodeMapan(id: Int, mappings: ControlABusMap*)
   extends Message("/n_mapan", id +: mappings.flatMap(_.toMapanSeq): _*)
   with SyncCmd
 
-object NodeFill {
-  final case class Data(control: Any, numChannels: Int, value: Float)
-}
 /** The `/n_fill` message. */
-final case class NodeFill(id: Int, data: NodeFill.Data*)
-  extends Message("/n_fill",
-    id :: (data.flatMap(f => f.control :: f.numChannels :: f.value :: Nil)(breakOut): List[Any]): _*
-  )
+final case class NodeFill(id: Int, data: ControlFillRange*)
+  extends Message("/n_fill", id :: (data.flatMap(_.toList)(breakOut): List[Any]): _*)
   with SyncCmd
 
 /** The `/n_before` message pair-wise places nodes before other nodes.

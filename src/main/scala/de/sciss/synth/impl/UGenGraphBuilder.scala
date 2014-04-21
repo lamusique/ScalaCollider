@@ -65,7 +65,7 @@ object UGenGraphBuilderLike {
     def create          = (-1, constIdx)
     def makeEffective() = 0
 
-    override def toString = "RichConstant(" + constIdx + ")"
+    override def toString = s"RichConstant($constIdx)"
   }
 
   private final class RichUGenProxyBuilder(iu: IndexedUGen, outIdx: Int) extends RichUGenInBuilder {
@@ -91,11 +91,10 @@ trait BasicUGenGraphBuilder extends UGenGraphBuilderLike {
   protected var sourceMap     = Map    .empty[AnyRef, Any]
 }
 
-/**
-* Complete implementation of a ugen graph builder, except for the actual code that
-* calls `force` on the sources of a `SynthGraph`. Implementations should call
-* the `build` method passing in the control proxies for all involved synth graphs.
-*/
+/** Complete implementation of a ugen graph builder, except for the actual code that
+  * calls `force` on the sources of a `SynthGraph`. Implementations should call
+  * the `build` method passing in the control proxies for all involved synth graphs.
+  */
 trait UGenGraphBuilderLike extends UGenGraph.Builder {
   builder =>
 

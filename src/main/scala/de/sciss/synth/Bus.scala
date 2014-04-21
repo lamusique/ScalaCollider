@@ -78,32 +78,48 @@ final case class ControlBus(server: Server, index: Int, numChannels: Int) extend
     * It requires that the bus has exactly one channel, otherwise
     * an exception is thrown.
     *
-    * @param v  the value to set the bus to
+    * @param value  the value to set the bus to
     */
-  def setMsg(v: Float) = {
+  def setMsg(value: Float) = {
     require(numChannels == 1)
-    message.ControlBusSet((index, v))
+    message.ControlBusSet((index, value))
   }
 
-  def setMsg(pairs: (Int, Float)*) = {
-    require(pairs.forall(tup => tup._1 >= 0 && tup._1 < numChannels))
-    message.ControlBusSet(pairs.map(tup => (tup._1 + index, tup._2)): _*)
-  }
-
-  /** A convenience method that sets the control bus to a sequence of values.
-    * It requires that the bus's number of channels is equal to the argument's size, otherwise
-    * an exception is thrown.
+  /** Creates a `ControlBusSet` message using relative offsets.
     *
-    * @param xs  the vector of values to set the bus to
+    * @param pairs    pairs of offsets and values. the offsets are relative to the index of this bus.
+    *                 All offsets must be >= 0 and less than the number
+    *                 of channels, otherwise an exception is thrown
+    *
+    * @return the `ControlBusSet` message with absolute indices
     */
-  def setnMsg(xs: IndexedSeq[Float]) = {
-    require(xs.size == numChannels)
-    message.ControlBusSetn((index, xs.toIndexedSeq))
+  def setMsg(pairs: FillValue*) = {
+    require(pairs.forall(tup => tup.index >= 0 && tup.index < numChannels))
+    message.ControlBusSet(pairs.map(tup => tup.copy(index = tup.index + index)): _*)
   }
 
+  /** A convenience method that creates a `ControlBusSetn` message for setting the control bus to a
+    * sequence of values. It requires that the bus's number of channels is equal to the argument's
+    * size, otherwise an exception is thrown.
+    *
+    * @param values  the vector of values to set the bus to
+    */
+  def setnMsg(values: IndexedSeq[Float]) = {
+    require(values.size == numChannels)
+    message.ControlBusSetn((index, values))
+  }
+
+  /** Creates a `ControlBusSetn` message using relative offsets.
+    *
+    * @param pairs    pairs of offsets and values. the offsets are relative to the index of this bus.
+    *                 All offsets must be >= 0 and less than the number
+    *                 of channels, otherwise an exception is thrown
+    *
+    * @return the `ControlBusSetn` message with absolute indices
+    */
   def setnMsg(pairs: (Int, IndexedSeq[Float])*) = {
     require(pairs.forall(tup => tup._1 >= 0 && (tup._1 + tup._2.size) <= numChannels))
-    val ipairs = pairs.map(tup => (tup._1 + index, tup._2.toIndexedSeq))
+    val ipairs = pairs.map(tup => (tup._1 + index, tup._2))
     message.ControlBusSetn(ipairs: _*)
   }
 
@@ -116,41 +132,58 @@ final case class ControlBus(server: Server, index: Int, numChannels: Int) extend
     message.ControlBusGet(index)
   }
 
-  def getMsg(offset: Int = 0) = {
-    require(offset >= 0 && offset < numChannels)
-    message.ControlBusGet(offset + index)
-  }
-
+  /** Creates a `ControlBusGet` message using relative offsets.
+    *
+    * @param offsets  the offsets are relative to the index of this bus.
+    *                 All offsets must be >= 0 and less than the number
+    *                 of channels, otherwise an exception is thrown
+    *
+    * @return the `ControlBusGet` message with absolute indices
+    */
   def getMsg(offsets: Int*) = {
     require(offsets.forall(o => o >= 0 && o < numChannels))
     message.ControlBusGet(offsets.map(_ + index): _*)
   }
 
   /** A convenience method that queries all channels of the control bus. */
-  def getnMsg = {
-    message.ControlBusGetn(0 -> numChannels)
-  }
+  def getnMsg = message.ControlBusGetn(index until (index + numChannels))
 
-  def getnMsg(pairs: (Int, Int)*) = {
-    require(pairs.forall(tup => tup._1 >= 0 && (tup._1 + tup._2) <= numChannels))
-    message.ControlBusGetn(pairs: _*)
-  }
-
-  /** A convenience method that fills all channels of the control bus with one value.
+  /** Creates a `ControlBusGetn` message using relative offsets.
+    *
+    * @param ranges   ranges of offsets and number of consecutive channels to read.
+    *                 The offsets are relative to the index of this bus.
+    *                 All offsets must be >= 0 and less than the number
+    *                 of channels, otherwise an exception is thrown
+    *
+    * @return the `ControlBusGetn` message with absolute indices
     */
-  def fillMsg(v: Float) = {
-    val data = message.ControlBusFill.Data(index = 0, num = numChannels, value = v)
+  def getnMsg(ranges: Range*) = {
+    require(ranges.forall(r => r.start >= 0 && r.last <= numChannels))
+    message.ControlBusGetn(ranges.map(_.shift(index)): _*)
+  }
+
+  /** A convenience method that fills all channels of the control bus with one value. */
+  def fillMsg(value: Float) = {
+    val data = FillRange(index = index, num = numChannels, value = value)
     message.ControlBusFill(data)
   }
 
-  def fillMsg(data: message.ControlBusFill.Data*) = {
+  /** Creates a `ControlBusFill` message using relative offsets.
+    *
+    * @param data     tuples of offsets, number of consecutive channels and fill values.
+    *                 The offsets are relative to the index of this bus.
+    *                 All offsets must be >= 0 and less than the number
+    *                 of channels, otherwise an exception is thrown
+    *
+    * @return the `ControlBusFill` message with absolute indices
+    */
+  def fillMsg(data: FillRange*) = {
     require(data.forall(d => d.index >= 0 && (d.index + d.num) < numChannels))
-    message.ControlBusFill(data: _*)
+    message.ControlBusFill(data.map(d => d.copy(index = d.index + index)): _*)
   }
 }
 
 final case class AudioBus(server: Server, index: Int, numChannels: Int) extends Bus {
-
   /** Audio buses always run at `audio` rate. */
   def rate: Rate = audio
 

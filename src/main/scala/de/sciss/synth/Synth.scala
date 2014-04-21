@@ -25,7 +25,7 @@ final case class Synth(server: Server, id: Int)
 //
 //  def this() = this(Server.default)
 
-  def newMsg(defName: String, target: Node = server.defaultGroup, args: Seq[ControlSetMap] = Nil,
+  def newMsg(defName: String, target: Node = server.defaultGroup, args: Seq[ControlSet] = Nil,
              addAction: AddAction = addToHead) = {
     defNameVar = defName
     message.SynthNew(defName, id, addAction.id, target.id, args: _*)
