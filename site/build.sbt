@@ -1,12 +1,12 @@
-scalaVersion  in ThisBuild := "2.10.3"
+scalaVersion  in ThisBuild := "2.11.0"
 
-val lOSC       = RootProject(uri("git://github.com/Sciss/ScalaOSC.git#v1.1.2"))
+val lOSC       = RootProject(uri("git://github.com/Sciss/ScalaOSC.git#v1.1.3"))
 
-val lAudioFile = RootProject(uri("git://github.com/Sciss/ScalaAudioFile.git#v1.4.1"))
+val lAudioFile = RootProject(uri("git://github.com/Sciss/ScalaAudioFile.git#v1.4.2"))
 
-val lUGens     = RootProject(uri("git://github.com/Sciss/ScalaColliderUGens.git#v1.7.2"))
+val lUGens     = RootProject(uri("git://github.com/Sciss/ScalaColliderUGens.git#v1.9.0"))
 
-val lMain      = RootProject(uri("git://github.com/Sciss/ScalaCollider.git#v1.10.0"))
+val lMain      = RootProject(uri("git://github.com/Sciss/ScalaCollider.git#v1.12.0"))
 
 git.gitCurrentBranch in ThisBuild := "master"
 
