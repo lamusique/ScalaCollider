@@ -20,6 +20,7 @@ import collection.mutable.{Map => MMap, Buffer => MBuffer, Stack => MStack}
 import collection.immutable.{IndexedSeq => Vec, Set => ISet}
 import UGenGraph.RichUGen
 import de.sciss.synth.ugen.{Constant, UGenProxy, ControlUGenOutProxy, ControlProxyLike}
+import scala.annotation.elidable
 
 object DefaultUGenGraphBuilderFactory extends UGenGraph.BuilderFactory {
   def build(graph: SynthGraph) = {
@@ -30,7 +31,7 @@ object DefaultUGenGraphBuilderFactory extends UGenGraph.BuilderFactory {
   private final class Impl(graph: SynthGraph) extends BasicUGenGraphBuilder {
     builder =>
 
-    override def toString = "UGenGraph.Builder@" + hashCode.toHexString
+    override def toString = s"UGenGraph.Builder@${hashCode.toHexString}"
 
     def build: UGenGraph = {
       var g = graph
@@ -88,7 +89,7 @@ trait BasicUGenGraphBuilder extends UGenGraphBuilderLike {
   protected var ugens         = Vec.empty[UGen]
   protected var controlValues = Vec.empty[Float]
   protected var controlNames  = Vec.empty[(String, Int)]
-  protected var sourceMap     = Map    .empty[AnyRef, Any]
+  protected var sourceMap     = Map.empty[AnyRef, Any]
 }
 
 /** Complete implementation of a ugen graph builder, except for the actual code that
@@ -214,21 +215,35 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     sorted
   }
 
-  final def visit[U](ref: AnyRef, init: => U): U = {
-    sourceMap.getOrElse(ref, {
-      val exp    = init // .asInstanceOf[ U ]
-      sourceMap += ref -> exp
-      // exp.foreach( addUGen( _ ))
-      exp
-    }).asInstanceOf[U] // XXX hmmm, not so pretty...
+  private def printSmart(x: Any): String = x match {
+    case u: UGen  => u.name
+    case _        => x.toString
   }
 
-  final def addUGen(ugen: UGen): Unit = ugens :+= ugen
+  final def visit[U](ref: AnyRef, init: => U): U = {
+    debug(s"visit  ${ref.hashCode.toHexString}")
+    sourceMap.getOrElse(ref, {
+      debug(s"expand ${ref.hashCode.toHexString}...")
+      val exp    = init
+      debug(s"...${ref.hashCode.toHexString} -> ${exp.hashCode.toHexString} ${printSmart(exp)}")
+      sourceMap += ref -> exp
+      exp
+    }).asInstanceOf[U] // not so pretty...
+  }
+
+  @elidable(elidable.CONFIG) private def debug(what: => String): Unit =
+    println(s"<ugen-graph> $what")
+
+  final def addUGen(ugen: UGen): Unit = {
+    ugens :+= ugen
+    debug(s"addUGen ${ugen.name} @ ${ugen.hashCode.toHexString} ${if (ugen.isIndividual) "indiv" else ""}")
+  }
 
   final def addControl(values: Vec[Float], name: Option[String]): Int = {
     val specialIndex = controlValues.size
     controlValues  ++= values
     name.foreach(n => controlNames :+= n -> specialIndex)
+    debug(s"addControl ${name.getOrElse("<unnamed>")} num = ${values.size}, idx = $specialIndex")
     specialIndex
   }
 

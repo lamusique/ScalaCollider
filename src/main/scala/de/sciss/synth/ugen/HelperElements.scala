@@ -63,7 +63,8 @@ object Mix {
     * }}}
     *
     * It is often used in the SuperCollider examples to apply a filtering process such as reverberation
-    * several times,
+    * several times. For cases where the iteration index is needed, the full form as shown above
+    * can be used instead.
     *
     * @param elem the input element
     * @param n    the number of iterations
