@@ -1,14 +1,14 @@
 name               := "ScalaCollider"
 
-version            := "1.12.1-SNAPSHOT"
+version            := "1.13.0-SNAPSHOT"
 
 organization       := "de.sciss"
 
-// note SI-7436! Scala is broken throughout 2.10.x except for 2.10.0; might be fixed in 2.10.5
+scalaVersion       := "2.11.2"
 
-scalaVersion       := "2.11.0"
-
-crossScalaVersions := Seq("2.11.0", "2.10.0")
+// note SI-7436! Affects Scala throughout 2.10.x except for 2.10.0; might be fixed in 2.10.5
+// https://issues.scala-lang.org/browse/SI-7436
+crossScalaVersions := Seq("2.11.2", "2.10.0")
 
 description        := "A sound synthesis library for the SuperCollider server"
 
@@ -16,7 +16,7 @@ homepage           := Some(url("https://github.com/Sciss/" + name.value))
 
 licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val ugensVersion     = "1.9.1-SNAPSHOT"
+lazy val ugensVersion     = "1.10.0-SNAPSHOT"
 
 lazy val oscVersion       = "1.1.3"
 
@@ -24,7 +24,7 @@ lazy val audioFileVersion = "1.4.3"
 
 lazy val processorVersion = "0.3.0"
 
-lazy val scalaTestVersion = "2.1.3"
+lazy val scalaTestVersion = "2.2.2"
 
 libraryDependencies ++= Seq(
   "de.sciss"      %% "scalaosc"                % oscVersion,
@@ -36,9 +36,11 @@ libraryDependencies ++= Seq(
 
 retrieveManaged := true
 
-scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfuture")
+scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture")
 
-scalacOptions ++= Seq("-Xelide-below", "INFO")     // elide debug logging!
+scalacOptions ++= {
+  if (isSnapshot.value) Nil else Seq("-Xelide-below", "INFO")  // elide logging in stable versions
+}
 
 // ---- console ----
 
@@ -70,7 +72,7 @@ buildInfoPackage := "de.sciss.synth"
 publishMavenStyle := true
 
 publishTo :=
-  Some(if (version.value endsWith "-SNAPSHOT")
+  Some(if (isSnapshot.value)
     "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   else
     "Sonatype Releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"

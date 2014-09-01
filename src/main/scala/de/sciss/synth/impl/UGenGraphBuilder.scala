@@ -151,13 +151,13 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
       // might be http://lampsvn.epfl.ch/trac/scala/ticket/4020
       iu.richInputs = iu.ugen.inputs.map {
         // don't worry -- the match _is_ exhaustive
-        case Constant(value) => constantMap.get(value) getOrElse {
+        case Constant(value) => constantMap.getOrElse(value, {
           val rc        = new RichConstant(numConstants)
           constantMap  += value -> rc
           constants    += value
           numConstants += 1
           rc
-        }
+        })
 
         case up: UGenProxy =>
           val iui       = ugenMap(up.source /* .ref */)
@@ -221,29 +221,36 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
   }
 
   final def visit[U](ref: AnyRef, init: => U): U = {
-    debug(s"visit  ${ref.hashCode.toHexString}")
+    log(s"visit  ${ref.hashCode.toHexString}")
     sourceMap.getOrElse(ref, {
-      debug(s"expand ${ref.hashCode.toHexString}...")
+      log(s"expand ${ref.hashCode.toHexString}...")
       val exp    = init
-      debug(s"...${ref.hashCode.toHexString} -> ${exp.hashCode.toHexString} ${printSmart(exp)}")
+      log(s"...${ref.hashCode.toHexString} -> ${exp.hashCode.toHexString} ${printSmart(exp)}")
       sourceMap += ref -> exp
       exp
     }).asInstanceOf[U] // not so pretty...
   }
 
-  @elidable(elidable.CONFIG) private def debug(what: => String): Unit =
-    println(s"<ugen-graph> $what")
+  var showLog = false
+
+  @elidable(elidable.CONFIG) private def log(what: => String): Unit =
+    if (showLog) println(s"<ugen-graph> $what")
 
   final def addUGen(ugen: UGen): Unit = {
     ugens :+= ugen
-    debug(s"addUGen ${ugen.name} @ ${ugen.hashCode.toHexString} ${if (ugen.isIndividual) "indiv" else ""}")
+    log(s"addUGen ${ugen.name} @ ${ugen.hashCode.toHexString} ${if (ugen.isIndividual) "indiv" else ""}")
+  }
+
+  final def prependUGen(ugen: UGen): Unit = {
+    ugens +:= ugen
+    log(s"prependUGen ${ugen.name} @ ${ugen.hashCode.toHexString} ${if (ugen.isIndividual) "indiv" else ""}")
   }
 
   final def addControl(values: Vec[Float], name: Option[String]): Int = {
     val specialIndex = controlValues.size
     controlValues  ++= values
     name.foreach(n => controlNames :+= n -> specialIndex)
-    debug(s"addControl ${name.getOrElse("<unnamed>")} num = ${values.size}, idx = $specialIndex")
+    log(s"addControl ${name.getOrElse("<unnamed>")} num = ${values.size}, idx = $specialIndex")
     specialIndex
   }
 

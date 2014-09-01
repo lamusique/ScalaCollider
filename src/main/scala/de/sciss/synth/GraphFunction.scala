@@ -20,17 +20,16 @@ object GraphFunction {
   private var uniqueIDCnt = 0
   private final val uniqueSync = new AnyRef
 
-  private def uniqueID(): Int = {
-    uniqueSync.synchronized {
-      uniqueIDCnt += 1
-      val result = uniqueIDCnt
-      result
-    }
+  private def uniqueID(): Int = uniqueSync.synchronized {
+    uniqueIDCnt += 1
+    val result = uniqueIDCnt
+    result
   }
 
   object Result {
-    implicit def in[T](implicit view: T => GE) = In(view)
-    implicit case object Out extends Result[UGenSource.ZeroOut]
+    implicit def in[T](implicit view: T => GE): In[T] = In(view)
+    implicit case object Out  extends Result[UGenSource.ZeroOut]
+    implicit case object Unit extends Result[scala.Unit]
     /* implicit */ final case class In[T](view: T => GE) extends Result[T]  // Scala doesn't allow case class and implicit
   }
   sealed trait Result[-T]

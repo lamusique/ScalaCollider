@@ -2,6 +2,13 @@
 
 This document only highlights major changes which probably require some adjustments when upgrading.
 
+## changes in v1.13.0
+
+* fixes a bug with `Ringz`; more UGen documentation
+* `GraphFunction` (`play { ... }`) supports thunk ending in `()`
+* the `play` command must be imported now from `Ops` like other imperative commands
+* adds support for `LocalBuf`
+
 ## changes in v1.12.0
 
 * fixes #31, #36, #40, UGens #10, more UGen docs and examples

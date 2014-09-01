@@ -593,6 +593,18 @@ x.free()
 val x = Synth.play("multi-con", Seq("harm" -> Vector(2f, 3f, 4f, 5f)))
 x.free()
 
+//////////////
+// LocalBuf //
+//////////////
+
+val x = play {
+  val in  = WhiteNoise.ar(Seq(0.1, 0.1))
+  val buf = Seq.fill(2)(LocalBuf(2048, 1))
+  val fft = FFT(buf, in)
+  val z   = PV_BrickWall(fft, SinOsc.kr(Seq(0.1, 0.11)))
+  IFFT.ar(z) // inverse FFT
+}
+
 ///////////////////////////////
 // Some translated SC tweets //
 ///////////////////////////////

@@ -32,7 +32,30 @@ import scala.collection.breakOut
   * such as SoundProcesses to avoid side-effects which they handle differently (e.g., using STM).
   */
 object Ops {
-  //   implicit def nodeOps( n: Node ) : NodeOps = new NodeOps( n )
+  /** Wraps the body of the thunk argument in a `SynthGraph`, adds an output UGen, and plays the graph
+    * on the default group of the default server.
+    *
+    * @param  thunk   the thunk which produces the UGens to play
+    * @return         a reference to the spawned Synth
+    */
+  def play[T: GraphFunction.Result](thunk: => T): Synth = play()(thunk)
+
+  /** Wraps the body of the thunk argument in a `SynthGraph`, adds an output UGen, and plays the graph
+    * in a synth attached to a given target.
+    *
+    * @param  target      the target with respect to which to place the synth
+    * @param  addAction   the relation between the new synth and the target
+    * @param  outBus      audio bus index which is used for the synthetically generated `Out` UGen.
+    * @param  fadeTime    if defined, specifies the fade-in time for a synthetically added amplitude envelope.
+    * @param  thunk       the thunk which produces the UGens to play
+    * @return             a reference to the spawned Synth
+    */
+  def play[T: GraphFunction.Result](target: Node = Server.default, outBus: Int = 0,
+                                    fadeTime: Optional[Float] = Some(0.02f),
+                                    addAction: AddAction = addToHead)(thunk: => T): Synth = {
+    val fun = new GraphFunction[T](thunk)
+    fun.play(target, outBus, fadeTime, addAction)
+  }
 
   /** This allows conversions to Group so that something like Server.default.freeAll becomes possible. */
   implicit def groupOps[G](g: G)(implicit view: G => Group): GroupOps = new GroupOps(g)
@@ -493,7 +516,7 @@ object Ops {
     def play(loop: Boolean = false, amp: Double = 1.0, out: Int = 0): Synth = {
       import de.sciss.synth
       import ugen._
-      synth.play(server, out) {
+      Ops.play(server, out) {
         // working around nasty compiler bug
         val ply = PlayBuf.ar(numChannels, id, BufRateScale.kr(id), loop = if (loop) 1 else 0)
         if (!loop) FreeSelfWhenDone.kr(ply)

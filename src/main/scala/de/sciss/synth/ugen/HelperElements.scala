@@ -17,6 +17,10 @@ package ugen
 import collection.breakOut
 import collection.immutable.{IndexedSeq => Vec}
 
+/** A graph element that flattens the channels from a nested multi-channel structure.
+  *
+  * @param elem the element to flatten
+  */
 final case class Flatten(elem: GE) extends GE.Lazy {
 
   def rate              = elem.rate
@@ -42,6 +46,7 @@ final case class Flatten(elem: GE) extends GE.Lazy {
 //  }
 //}
 
+/** Contains several helper methods to produce mixed (summed) signals. */
 object Mix {
   /** A mixing idiom that corresponds to `Seq.tabulate` and to `Array.fill` in sclang. */
   def tabulate(n: Int)(fun: Int => GE): GE =
@@ -167,21 +172,32 @@ final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.Single
     }
 }
 
+/** An element which writes an input signal to a bus, optionally applying a short fade-in.
+  * This is automatically added when using the `play { ... }` syntax. If the fade time is
+  * given, an envelope is added with a control named `"gate"` which can be used to release
+  * the synth. The bus is given by a control named `"out"` and defaults to zero.
+  */
 object WrapOut {
   private def makeFadeEnv(fadeTime: Float): UGenIn = {
-    val cFadeTime = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(fadeTime), Some("fadeTime"))).outputs(0)
-    val cGate     = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(1), Some("gate"))).outputs(0)
-    val startVal  = BinaryOpUGen.Leq.make1(cFadeTime, 0)
+    //    val cFadeTime = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(fadeTime), Some("fadeTime"))).outputs(0)
+    //    val cGate     = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(1), Some("gate"))).outputs(0)
+    val cFadeTime = "fadeTime".kr(fadeTime)
+    val cGate     = "gate".kr(1f)
+    // val startVal  = BinaryOpUGen.Leq.make1(cFadeTime, 0)
+    val startVal  = cFadeTime <= 0
 
     // Env( startVal, List( Env.Seg( 1, 1, curveShape( -4 )), Env.Seg( 1, 0, sinShape )), 1 )
-    val env = Vec[UGenIn](startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0)
+    // val env = Vec[UGenIn](startVal, 2, 1, -99, 1, 1, 5, -4, 0, 1, 3, 0)
+    val env = Env(startVal, List(Env.Segment(1, 1, Curve.parametric(-4)), Env.Segment(1, 0, Curve.sine)), 1)
 
     // this is slightly more costly than what sclang does
     // (using non-linear shape plus an extra unary op),
     // but it fadeout is much smoother this way...
     //EnvGen.kr( env, gate, timeScale = dt, doneAction = freeSelf ).squared
 
-    new UGen.SingleOut("EnvGen", control, Vec[UGenIn](cGate, 1, 0, cFadeTime, freeSelf) ++ env)
+    // new UGen.SingleOut("EnvGen", control, Vec[UGenIn](cGate, 1, 0, cFadeTime, freeSelf) ++ env)
+    val res = EnvGen.kr(env, gate = cGate, timeScale = cFadeTime, doneAction = freeSelf)
+    res.expand.flatOutputs.head
   }
 }
 
@@ -207,13 +223,35 @@ final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends 
           if (rate == audio) replaceZeroesWithSilence(ins2) else ins2
         case None => ins
       }
-      val cOut = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(0), Some("out"))).outputs(0)
-      new UGen.ZeroOut("Out", rate, cOut +: ins3) // with WritesBus {}
+      // val cOut = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(0), Some("out"))).outputs(0)
+      // UGen.ZeroOut("Out", rate, cOut +: ins3) // with WritesBus {}
+      val cOut = "out".kr(0f)
+      Out.ar(cOut, ins3)
     }
   }
 }
 
+/** A graph element that spreads a sequence of input channels across a ring of output channels.
+  * This works by feeding each input channel through a dedicated `PanAz` UGen, and mixing the
+  * results together.
+  *
+  * The panning position of each input channel with index `ch` is calculated by the formula:
+  * {{{
+  * val pf = (0.5 * spread) / number-of-input-channels
+  * ch * pf + center
+  * }}}
+  */
 object SplayAz {
+  /** @param numChannels  the number of output channels
+    * @param in           the input signal
+    * @param spread       the spacing between input channels with respect to the output panning
+    * @param center       the position of the first channel (see `PanAz`)
+    * @param level        a global gain factor (see `PanAz`)
+    * @param width        the `width` parameter for each `PanAz`
+    * @param orient       the `orient` parameter for each `PanAz`
+    *
+    * @see  [[de.sciss.synth.ugen.PanAz]]
+    */
   def ar(numChannels: Int, in: GE, spread: GE = 1f, center: GE = 0f, level: GE = 1f, width: GE = 2f, orient: GE = 0f) =
     apply(audio, numChannels, in, spread, center, level, width, orient)
 }

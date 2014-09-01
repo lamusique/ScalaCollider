@@ -80,31 +80,4 @@ package object synth {
         r.toList.flatMap(off => off:: 1 :: Nil)
       }
   }
-
-  // ---- explicit ----
-
-  /** Wraps the body of the thunk argument in a `SynthGraph`, adds an output UGen, and plays the graph
-    * on the default group of the default server.
-    *
-    * @param  thunk   the thunk which produces the UGens to play
-    * @return         a reference to the spawned Synth
-    */
-  def play[T: GraphFunction.Result](thunk: => T): Synth = play()(thunk)
-
-  /** Wraps the body of the thunk argument in a `SynthGraph`, adds an output UGen, and plays the graph
-    * in a synth attached to a given target.
-    *
-    * @param  target      the target with respect to which to place the synth
-    * @param  addAction   the relation between the new synth and the target
-    * @param  outBus      audio bus index which is used for the synthetically generated `Out` UGen.
-    * @param  fadeTime    if defined, specifies the fade-in time for a synthetically added amplitude envelope.
-    * @param  thunk       the thunk which produces the UGens to play
-    * @return             a reference to the spawned Synth
-    */
-  def play[T: GraphFunction.Result](target: Node = Server.default, outBus: Int = 0,
-                                    fadeTime: Optional[Float] = Some(0.02f),
-                                    addAction: AddAction = addToHead)(thunk: => T): Synth = {
-    val fun = new GraphFunction[T](thunk)
-    fun.play(target, outBus, fadeTime, addAction)
-  }
 }
