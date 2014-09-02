@@ -29,17 +29,20 @@ import de.sciss.model.impl.ModelImpl
 import util.{Failure, Success}
 import util.control.NonFatal
 
-private[synth] object ConnectionLike {
-  case object Ready
-  case object Abort
-  case object QueryServer
+object ConnectionLike {
+  private[synth] case object Ready
+  private[synth] case object Abort
+  private[synth] case object QueryServer
 
-  final case class AddListener   (l: ServerConnection.Listener)
-  final case class RemoveListener(l: ServerConnection.Listener)
+  private[synth] final case class AddListener   (l: ServerConnection.Listener)
+  private[synth] final case class RemoveListener(l: ServerConnection.Listener)
 
-  @elidable(elidable.CONFIG) def debug(what: => String): Unit = println(s"<connect> $what")
+  var showLog = false
+
+  @elidable(elidable.CONFIG) private[synth] def log(what: => String): Unit =
+    if (showLog) println(s"ScalaCollider <connect> $what")
 }
-import ConnectionLike.debug
+import ConnectionLike.log
 
 private[synth] sealed trait ConnectionLike extends ServerConnection with ModelImpl[ServerConnection.Condition] {
   conn =>
@@ -60,17 +63,17 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
     private val beginCond = Promise[Unit]()
 
     def begin(): Unit = {
-      debug("begin")
+      log("begin")
       beginCond.trySuccess(())
     }
 
     override def notifyAborted(): Unit = {
-      debug("notifyAborted")
+      log("notifyAborted")
       beginCond.tryFailure(Processor.Aborted())
     }
 
     def body(): ServerImpl = {
-      debug("body")
+      log("body")
       Await.result(beginCond.future, Duration.Inf)
 
       if (!connectionAlive) throw new IllegalStateException("Connection closed")
@@ -117,7 +120,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
 
   Handshake.addListener {
     case Processor.Result(_, Success(s)) =>
-      debug("success")
+      log("success")
       dispatch(Preparing(s))
       s.initTree()
       dispatch(SCRunning(s))
@@ -125,7 +128,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
     case Processor.Result(_, Failure(e)) =>
       e match {
         case Processor.Aborted() =>
-          debug("failure: aborted")
+          log("failure: aborted")
         case NonFatal(n) =>
           n.printStackTrace()
       }
@@ -186,16 +189,16 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
     // setDaemon(true)
     override def run(): Unit =
       try {
-        debug("enter waitFor")
+        log("enter waitFor")
         val res = p.waitFor()
-        debug("exit waitFor")
+        log("exit waitFor")
         println(s"scsynth terminated ($res)")
       } catch {
         case e: InterruptedException =>
-          debug("InterruptedException")
+          log("InterruptedException")
           p.destroy()
       } finally {
-        debug("abort")
+        log("abort")
         abort()
       }
   }
@@ -205,7 +208,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
     val postThread = new Thread {
       setDaemon(true)
       override def run(): Unit = {
-        debug("postThread")
+        log("postThread")
         val inReader  = new BufferedReader(new InputStreamReader(p.getInputStream))
         var isOpen    = true
         var isBooting = true
@@ -225,7 +228,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
           case NonFatal(e) => isOpen = false
         }
         if (isOpen) { // if `false`, `processThread` will terminate and invoke `abort()`
-          debug("isOpen")
+          log("isOpen")
           Handshake.begin()
         }
         while (isOpen) {
@@ -238,7 +241,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
 
     // make sure to begin with firing up Handshake, so that an immediate
     // failure of precessThread does not call abort prematurely
-    debug("start")
+    log("start")
     Handshake    .start()
     postThread   .start()
     processThread.start()

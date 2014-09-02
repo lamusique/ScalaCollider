@@ -234,7 +234,7 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
   var showLog = false
 
   @elidable(elidable.CONFIG) private def log(what: => String): Unit =
-    if (showLog) println(s"<ugen-graph> $what")
+    if (showLog) println(s"ScalaCollider <ugen-graph> $what")
 
   final def addUGen(ugen: UGen): Unit = {
     ugens :+= ugen
