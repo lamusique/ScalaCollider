@@ -56,6 +56,10 @@ object Env extends EnvFactory[Env] {
     implicit def const(peer: de.sciss.synth.Curve): Curve = Const(peer)
 
     final case class Const(peer: de.sciss.synth.Curve) extends Curve {
+      override def productPrefix = "Env$Curve$Const"
+
+      override def toString = s"Env.Curve.Const($peer)"
+
       def id       : GE = Constant(peer.id)
       def curvature: GE = peer match {
         case parametric(c)  => Constant(c)
@@ -67,7 +71,9 @@ object Env extends EnvFactory[Env] {
     def unapply(s: Curve): Option[(GE, GE)] = Some(s.id, s.curvature)
 
     private final case class Apply(id: GE, curvature: GE) extends Curve {
-      override def productPrefix = "Env$Curve"
+      override def productPrefix = "Env$Curve$Apply"
+
+      override def toString = s"Env.Curve($id, $curvature)"
     }
   }
   sealed trait Curve {
@@ -83,7 +89,11 @@ object Env extends EnvFactory[Env] {
     implicit def fromTuple2[D, L](tup: (D, L))(implicit durView: D => GE, levelView: L => GE): Segment =
       Segment(tup._1, tup._2, linear)
   }
-  final case class Segment(dur: GE, targetLevel: GE, curve: Curve = linear)
+  final case class Segment(dur: GE, targetLevel: GE, curve: Curve = linear) {
+    override def productPrefix = "Env$Segment"
+
+    override def toString = s"Env.Segment($dur, $targetLevel, $curve"
+  }
 
   protected def create(startLevel: GE, segments: Vec[Segment]) = new Env(startLevel, segments)
 
