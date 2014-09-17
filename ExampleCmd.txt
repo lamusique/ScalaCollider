@@ -505,7 +505,7 @@ stream.close()
 // FFT example //
 /////////////////
 
-val b = Buffer.alloc(s, 2048)  // LocalBuf not yet implemented
+val b = Buffer.alloc(s, 2048)  // see also LocalBuf further down
 val df = SynthDef("mag-above") {
   val in   = WhiteNoise.ar(0.2)
   val fft  = FFT("buf".kr, in)

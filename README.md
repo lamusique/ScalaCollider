@@ -4,6 +4,26 @@
 
 ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008&ndash;2014 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/LICENSE) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
 
+SuperCollider is one of the most elaborate open source sound synthesis frameworks. It comes with its own language 'SCLang' that controls the sound synthesis processes on a server, 'scsynth'. ScalaCollider is an alternative to 'SCLang', giving you the (perhaps) familiar Scala language to express these sound synthesis processes, and letting you hook up any other Scala, Java or JVM-based libraries. ScalaCollider's function is more reduced than 'SCLang', focusing on UGen graphs and server-side resources such as buses and buffers. Other functionality is part of the standard Scala library, e.g. collections and GUI. Other functionality, such as plotting, MIDI, client-side sequencing (Pdefs, Routines, etc.) must be added through dedicated libraries (see section 'packages' below).
+
+While ScalaCollider itself is in the form of a _library_ (although you can use it from the REPL with `sbt console`), you may want to have a look at the [ScalaCollider-Swing](http://github.com/Sciss/ScalaColliderSwing) project that adds an easy-to-use standalone application or mini-IDE. On the ScalaCollider-Swing page, you'll find a link to download a readily compiled binary for this standalone version.
+
+A still experimental system on top of ScalaCollider, providing higher level abstractions, is [SoundProcesses](http://github.com/Sciss/SoundProcesses) and its graphical front-end [Mellite](http://github.com/Sciss/Mellite). Please get in touch if you intend to use these, as the documentation is still sparse, and the system and API is still a moving target.
+
+## download and resources
+
+The current version of ScalaCollider (the library) can be downloaded from [github.com/Sciss/ScalaCollider](http://github.com/Sciss/ScalaCollider).
+
+More information is available from the wiki at [github.com/Sciss/ScalaCollider/wiki](http://github.com/Sciss/ScalaCollider/wiki). The API documentation is available at [sciss.github.io/ScalaCollider/latest/api](http://sciss.github.io/ScalaCollider/latest/api/).
+
+The best way to ask questions, no matter if newbie or expert, is to use the mailing list at [groups.google.com/group/scalacollider](http://groups.google.com/group/scalacollider). To subscribe, simply send a mail to `ScalaCollider+subscribe@googlegroups.com` (you will receive a mail asking for confirmation).
+
+The early architectural design of ScalaCollider is documented in the SuperCollider 2010 symposium proceedings: [H.H.Rutz, Rethinking the SuperCollider Client...](http://cmr.soc.plymouth.ac.uk/publications/Rutz_SuperCollider2010.pdf). However, many design decisions have been revised or refined in the meantime.
+
+The file [ExampleCmd.txt](https://raw.githubusercontent.com/Sciss/ScalaCollider/master/ExampleCmd.txt) is a good starting point for understanding how UGen graphs are written in ScalaCollider. You can directly copy and paste these examples into the ScalaCollider-Swing application's interpreter window.
+
+See the section 'starting a SuperCollider server' below, for another simple example of running a server (possibly from your own application code).
+
 ## building
 
 ScalaCollider currently builds with sbt 0.13 against Scala 2.11, 2.10. It requires SuperCollider 3.5 or higher. Note that the UGens are provided by the separate [ScalaColliderUGens](http://github.com/Sciss/ScalaColliderUGens) project. A simple Swing front end is provided by the [ScalaColliderSwing](http://github.com/Sciss/ScalaColliderSwing) project.
@@ -55,6 +75,8 @@ The following short example illustrates how a server can be launched and a synth
 
 ### Specifying SC_HOME
 
+__Note__: This section is mostly irrelevant on Linux, where `scsynth` is normally found on `$PATH`, and thus no further customisation is needed.
+
 You might omit to set the `program` of the server's configuration, as ScalaCollider will by default read the system property `SC_HOME`, and if that is not set, the environment variable `SC_HOME`. Environment variables are stored depending on your operating system. On OS X, if you use the app-bundle of ScalaCollider-Swing, you can access them from the terminal:
 
     $ mkdir ~/.MacOSX
@@ -77,14 +99,18 @@ For more sound examples, see `ExampleCmd.txt`. There is also an introductory vid
 
 ## packages
 
+ScalaCollider's core functionality may be extended by other libraries I or other people wrote. The following two libraries are dependencies and therefore always available in ScalaCollider:
+
 - Audio file functionality is provided by the [ScalaAudioFile](http://github.com/Sciss/ScalaAudioFile) library.
 - Open Sound Control functionality is provided by the [ScalaOSC](http://github.com/Sciss/ScalaOSC) library.
+
+Here are some examples for libraries not included:
+
 - MIDI functionality is not included, but can be added with the [ScalaMIDI](http://github.com/Sciss/ScalaMIDI) library.
+- Plotting is most easily achieved through [Scala-Chart](https://github.com/wookietreiber/scala-chart), which is conveniently included in ScalaCollider-Swing.
 
-## download and resources
+## projects using ScalaCollider
 
-The current version can be downloaded from [github.com/Sciss/ScalaCollider](http://github.com/Sciss/ScalaCollider).
+Please let me know if you are developing an interesting project that involves ScalaCollider, and I am happy to add a link to it here.
 
-More information is available from the wiki at [github.com/Sciss/ScalaCollider/wiki](http://github.com/Sciss/ScalaCollider/wiki). The API documentation is available at [sciss.github.io/ScalaCollider/latest/api](http://sciss.github.io/ScalaCollider/latest/api/).
-
-A mailing list is available at [groups.google.com/group/scalacollider](http://groups.google.com/group/scalacollider).
+- [UltraCom](https://github.com/lodsb/UltraCom/) - a framework for multi-interface application
