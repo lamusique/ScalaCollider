@@ -2,6 +2,12 @@
 
 This document only highlights major changes which probably require some adjustments when upgrading.
 
+## changes in v1.14.0
+
+* `LocalBuf` arguments are reversed, allowing to leave out the number of channels
+* Added `Sum3`, `Sum4` UGens, cleaned up `Mix` implementation
+* Fixed zero-outputs property of `SendTrig`, `SendReply`
+
 ## changes in v1.13.0
 
 * fixes a bug with `Ringz`; more UGen documentation

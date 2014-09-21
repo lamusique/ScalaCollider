@@ -16,6 +16,7 @@ package ugen
 
 import collection.breakOut
 import collection.immutable.{IndexedSeq => Vec}
+import scala.annotation.{tailrec, switch}
 
 /** A graph element that flattens the channels from a nested multi-channel structure.
   *
@@ -49,15 +50,16 @@ final case class Flatten(elem: GE) extends GE.Lazy {
 /** Contains several helper methods to produce mixed (summed) signals. */
 object Mix {
   /** A mixing idiom that corresponds to `Seq.tabulate` and to `Array.fill` in sclang. */
-  def tabulate(n: Int)(fun: Int => GE): GE =
-    Mix.Seq(Vector.tabulate(n)(i => fun(i)))
+  def tabulate(n: Int)(fun: Int => GE): GE = Mix(GESeq(Vector.tabulate(n)(i => fun(i))))
 
   /** A mixing idiom that corresponds to `Seq.fill`. */
-  def fill(n: Int)(thunk: => GE): GE =
-    Mix.Seq(Vector.fill(n)(thunk))
+  def fill(n: Int)(thunk: => GE): GE = Mix(GESeq(Vector.fill(n)(thunk)))
 
-  def seq(elems: Vec[GE]): GE = Seq(elems)
+  def seq(elems: GE*): GE = Mix(GESeq(elems.toIndexedSeq))
 
+  /** A special mix that flattens all input elements before summing them,
+    * guaranteeing that result is monophonic.
+    */
   def mono(elem: GE): GE = Mono(elem)
 
   /** A mixing idiom that is not actually adding elements, but recursively folding them.
@@ -77,18 +79,6 @@ object Mix {
     */
   def fold(elem: GE, n: Int)(fun: GE => GE): GE = (elem /: (1 to n)){ (res, _) => fun(res) }
 
-  final case class Seq(elems: Vec[GE]) extends GE.Lazy {
-
-    def numOutputs  = if (elems.isEmpty) 0 else 1
-    // XXX correct?
-    def rate                    = MaybeRate.reduce(elems.map(_.rate): _*)
-    override def productPrefix  = "Mix$Seq"
-
-    override def toString = elems.mkString(s"$productPrefix(", ",", ")")
-
-    def makeUGens: UGenInLike = if (elems.nonEmpty) elems.reduceLeft(_ + _).expand else UGenInGroup.empty
-  }
-
   final case class Mono(elem: GE) extends GE.Lazy {
     def numOutputs  = 1
     def rate        = elem.rate
@@ -98,9 +88,38 @@ object Mix {
 
     def makeUGens: UGenInLike = {
       val flat = elem.expand.flatOutputs
-      if (flat.nonEmpty) {
-        flat.reduceLeft(BinaryOpUGen.Plus.make1)
-      } else UGenInGroup.empty
+      Mix.makeUGen(flat)
+    }
+  }
+
+  @tailrec private def makeUGen(args: Vec[UGenIn]): UGenInLike = {
+    val sz = args.size
+    if (sz == 0) UGenInGroup.empty else if (sz <= 4) make1(args) else {
+      val mod = sz % 4
+      if (mod == 0) {
+        makeUGen(args.grouped(4).map(make1).toIndexedSeq)
+      } else {
+        // we keep the 1 to 3 tail elements, because
+        // then the nested `makeUGen` call may again
+        // call `make1` with the `Sum4` instances included.
+        // E.g., if args.size is 6, we get `Sum3(Sum4(_,_,_,_),_,_)`,
+        // whereas we would get `Plus(Plus(Sum4(_,_,_,_),_),_)`
+        // if we just used the mod-0 branch.
+        val (init, tail) = args.splitAt(sz - mod)
+        val quad = init.grouped(4).map(make1).toIndexedSeq
+        makeUGen(quad ++ tail)
+      }
+    }
+  }
+
+  private def make1(args: Vec[UGenIn]): UGenIn = {
+    import BinaryOpUGen.Plus
+    val sz = args.size
+    (sz: @switch) match {
+      case 1 => args.head
+      case 2 => Plus.make1(args(0), args(1))
+      case 3 => Sum3.make1(args)
+      case 4 => Sum4.make1(args)
     }
   }
 }
@@ -122,10 +141,11 @@ final case class Mix(elem: GE) extends UGenSource.SingleOut {  // XXX TODO: shou
 
   protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
 
-  protected def makeUGen(args: Vec[UGenIn]): UGenInLike = {
-    if (args.nonEmpty) {
-      args.reduceLeft(BinaryOpUGen.Plus.make1)
-    } else UGenInGroup.empty
+  protected def makeUGen(args: Vec[UGenIn]): UGenInLike = Mix.makeUGen(args)
+
+  override def toString: String = elem match {
+    case GESeq(elems) => elems.mkString(s"$productPrefix.seq(", ", ", ")")
+    case _            => s"$productPrefix($elem)"
   }
 }
 
@@ -137,10 +157,7 @@ final case class Zip(elems: GE*) extends GE.Lazy {
     val exp: Vec[UGenInLike] = elems.map(_.expand)(breakOut)
     val sz    = exp.map(_.outputs.size) // exp.view.map ?
     val minSz = sz.min
-    //      val res = UGenInGroup( Vector.tabulate( minSz )( i => UGenInGroup( exp.map( _.apply( i ))( breakOut ))))
-    /* val res = */ UGenInGroup((0 until minSz).flatMap(i => exp.map(_.unwrap(i))))
-    //println( "Zip.expand = " + res )
-    //      res
+    UGenInGroup((0 until minSz).flatMap(i => exp.map(_.unwrap(i))))
   }
 }
 

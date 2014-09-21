@@ -1,7 +1,7 @@
 package de.sciss.synth
 
 import org.scalatest.FunSpec
-import ugen.{BinaryOpUGen, Constant}
+import ugen.Constant
 import language.implicitConversions
 import de.sciss.numbers.Implicits._
 
@@ -16,7 +16,7 @@ class LocalBufSuite extends FunSpec {
     it("should properly expand") {
       val df = SynthDef("test") {
         import ugen._
-        val bufs = Seq.fill(2)(LocalBuf(2048, 1))
+        val bufs = Seq.fill(2)(LocalBuf(2048))
         Out.kr(0, bufs)
       }
 
@@ -29,8 +29,8 @@ class LocalBufSuite extends FunSpec {
 
       assert(out === Vector(
         "MaxLocalBufs" -> Vector(2),
-        "LocalBuf"     -> Vector(2048, 1, 0),
-        "LocalBuf"     -> Vector(2048, 1, 1),
+        "LocalBuf"     -> Vector(1, 2048, 0),
+        "LocalBuf"     -> Vector(1, 2048, 1),
         "Out"          -> Vector(0, "U", "U")
       ))
     }
