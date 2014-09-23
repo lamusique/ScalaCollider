@@ -181,12 +181,10 @@ final case class Reduce(elem: GE, op: BinaryOpUGen.Op) extends UGenSource.Single
 
   protected def makeUGens: UGenInLike = unwrap(elem.expand.outputs)
 
-  protected def makeUGen(args: Vec[UGenIn]): UGenInLike =
-    if (args.nonEmpty) {
-      args.reduceLeft(op.make1)
-    } else {
-      UGenInGroup.empty
-    }
+  protected def makeUGen(args: Vec[UGenIn]): UGenInLike = args match {
+    case head +: tail => (head /: tail)(op.make1)
+    case _ => UGenInGroup.empty
+  }
 }
 
 /** An element which writes an input signal to a bus, optionally applying a short fade-in.
