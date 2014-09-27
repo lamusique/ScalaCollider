@@ -149,6 +149,13 @@ final class GEOps(val `this`: GE ) extends AnyVal { me =>
   def atan2   (b: GE): GE = binOp(Atan2   , b)
   def hypot   (b: GE): GE = binOp(Hypot   , b)
   def hypotx  (b: GE): GE = binOp(Hypotx  , b)
+
+  /** '''Warning:''' Unlike a normal power operation, the signum of the
+    * left operand is always preserved. I.e. `DC.kr(-0.5).pow(2)` will
+    * not output `0.25` but `-0.25`. This is to avoid problems with
+    * floating point noise and negative input numbers, so
+    * `DC.kr(-0.5).pow(2.001)` does not result in a `NaN`, for example.
+    */
   def pow     (b: GE): GE = binOp(Pow     , b)
 
   // def <<(b: GE): GE = ...
