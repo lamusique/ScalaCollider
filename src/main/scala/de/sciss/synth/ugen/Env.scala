@@ -97,7 +97,10 @@ object Env extends EnvFactory[Env] {
 
   protected def create(startLevel: GE, segments: Vec[Segment]) = new Env(startLevel, segments)
 
-  // envelopes with sustain
+  // ---- envelopes with sustain ----
+
+  def cutoff: Env = cutoff()
+
   def cutoff(release: GE = 0.1f, level: GE = 1, curve: Curve = linear): Env = {
     val releaseLevel: GE = curve match {
       case Curve.Const(`exponential`) => 1e-05f // dbamp( -100 )
@@ -105,6 +108,8 @@ object Env extends EnvFactory[Env] {
     }
     new Env(level, (release, releaseLevel, curve) :: Nil, 0)
   }
+
+  def dadsr: Env = dadsr()
 
   def dadsr(delay: GE = 0.1f, attack: GE = 0.01f, decay: GE = 0.3f, sustainLevel: GE = 0.5f, release: GE = 1,
             peakLevel: GE = 1, curve: Curve = parametric(-4), bias: GE = 0): Env =
@@ -114,12 +119,16 @@ object Env extends EnvFactory[Env] {
       (decay, peakLevel * sustainLevel + bias, curve),
       (release, bias, curve)), 3)
 
+  def adsr: Env = adsr()
+
   def adsr(attack: GE = 0.01f, decay: GE = 0.3f, sustainLevel: GE = 0.5f, release: GE = 1, peakLevel: GE = 1,
            curve: Curve = parametric(-4), bias: GE = 0): Env =
     new Env(bias, Vector[Segment](
       (attack, bias, curve),
       (decay, peakLevel * sustainLevel + bias, curve),
       (release, bias, curve)), 2)
+
+  def asr: Env = asr()
 
   def asr(attack: GE = 0.01f, level: GE = 1, release: GE = 1, curve: Curve = parametric(-4)): Env =
     new Env(0, Vector[Segment]((attack, level, curve), (release, 0, curve)), 1)
