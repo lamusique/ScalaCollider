@@ -47,7 +47,21 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that continually reports the peak amplitude of the signal received at
+the input. If the absolute input level drops below the observed peak value, this
+value decreases by the factor given as <code>decay</code> parameter (but no more than the
+current absolute input level).</p><h5>Examples</h5><pre><span class="cmt">// mouse-controlled decay</span>
+play {
+  <span class="kw">val</span> in    = Impulse.ar(<span class="num">2</span>)
+  <span class="kw">val</span> decay = MouseX.kr(<span class="num">0.995</span>, <span class="num">1.0001</span>, <span class="num">1</span>).min(<span class="num">1.0</span>)
+  decay.poll(HPZ1.kr(decay).abs, <span class="lit">"decay"</span>)
+  <span class="kw">val</span> p     = PeakFollower.ar(in, decay)
+  <span class="kw">val</span> tr    = Impulse.ar(<span class="num">20</span>)
+  <span class="kw">val</span> pm    = RunningMax.ar(p, tr)
+  pm.roundTo(<span class="num">0.001</span>).poll(<span class="num">20</span>, <span class="lit">"peak"</span>)
+  in
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="LagUD$.html" class="extype" name="de.sciss.synth.ugen.LagUD">LagUD</a>
+</p></span><span class="cmt"><p><a href="RunningSum$.html" class="extype" name="de.sciss.synth.ugen.RunningSum">RunningSum</a></p></span><span class="cmt"><p><a href="Amplitude$.html" class="extype" name="de.sciss.synth.ugen.Amplitude">Amplitude</a></p></span><span class="cmt"><p><a href="Peak$.html" class="extype" name="de.sciss.synth.ugen.Peak">Peak</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -160,7 +174,7 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -325,7 +339,7 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

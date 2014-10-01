@@ -48,8 +48,10 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A non-band-limited pulse oscillator UGen. Outputs a high value of one and a low
-value of zero.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Pulse$.html" class="extype" name="de.sciss.synth.ugen.Pulse">Pulse</a>
+value of zero.</p><h5>Examples</h5><pre><span class="cmt">// modulating frequency</span>
+play { LFPulse.ar(XLine.kr(<span class="num">1</span>, <span class="num">200</span>, <span class="num">10</span>), <span class="num">0</span>, <span class="num">0.2</span>) * <span class="num">0.1</span> }</pre><pre><span class="cmt">// modulating amplitude</span>
+play { LFPulse.kr(XLine.kr(<span class="num">1</span>, <span class="num">200</span>, <span class="num">10</span>), <span class="num">0</span>, <span class="num">0.2</span>) * SinOsc.ar(<span class="num">440</span>) * <span class="num">0.1</span> }</pre><pre><span class="cmt">// used as both oscillator and LFO</span>
+play { LFPulse.ar(LFPulse.kr(<span class="num">3</span>, <span class="num">0</span>, <span class="num">0.3</span>).madd(<span class="num">200</span>, <span class="num">200</span>), <span class="num">0</span>, <span class="num">0.2</span>) * <span class="num">0.1</span> }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Pulse$.html" class="extype" name="de.sciss.synth.ugen.Pulse">Pulse</a>
 </p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>

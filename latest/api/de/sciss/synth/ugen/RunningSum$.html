@@ -48,8 +48,16 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen calculating the running sum of an input signal over a given number of
-samples.
-</p></div><div class="toggleContainer block">
+samples.</p><h5>Examples</h5><pre><span class="cmt">// poll waveform's DC offset</span>
+play {
+  <span class="kw">val</span> freq = <span class="num">441</span>
+  <span class="kw">val</span> n    = SampleRate.ir / freq
+  <span class="cmt">// mean over period of a pulse with 50% duty is 0.5</span>
+  <span class="kw">val</span> mean = RunningSum.ar(LFPulse.ar(freq), n) / n
+  mean.roundTo(<span class="num">0.01</span>).poll(label = <span class="lit">"mean"</span>)
+  ()
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="PulseCount$.html" class="extype" name="de.sciss.synth.ugen.PulseCount">PulseCount</a>
+</p></span><span class="cmt"><p><a href="Median$.html" class="extype" name="de.sciss.synth.ugen.Median">Median</a></p></span><span class="cmt"><p><a href="Integrator$.html" class="extype" name="de.sciss.synth.ugen.Integrator">Integrator</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

@@ -47,7 +47,15 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that counts the number of triggers observed.</p><h5>Examples</h5><pre><span class="cmt">// count mouse clicks, reset at 10</span>
+play {
+  <span class="kw">val</span> tr    = MouseButton.kr(lag = <span class="num">0</span>)
+  <span class="kw">val</span> reset = PulseDivider.kr(tr, <span class="num">10</span>)
+  <span class="kw">val</span> c     = PulseCount.kr(tr, reset)
+  c.poll(tr + Impulse.kr(<span class="num">0</span>), <span class="lit">"count"</span>)
+  ()
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Stepper$.html" class="extype" name="de.sciss.synth.ugen.Stepper">Stepper</a>
+</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +152,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.PulseCount#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.PulseCount#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(trig:de.sciss.synth.GE,reset:de.sciss.synth.GE):de.sciss.synth.ugen.PulseCount"></a>
       <a id="ar(GE,GE):PulseCount"></a>
       <h4 class="signature">
@@ -160,7 +168,11 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">trig</dt><dd class="cmt"><p>a trigger happens when the signal changes from
+                        non-positive to positive</p></dd><dt class="param">reset</dt><dd class="cmt"><p>when triggered, resets the counter to zero. When both
+                        <code>trig</code> and <code>reset</code> are triggered at the same time, the
+                        <code>reset</code> takes precedence (output will be zero).
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -309,7 +321,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.PulseCount#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.PulseCount#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(trig:de.sciss.synth.GE,reset:de.sciss.synth.GE):de.sciss.synth.ugen.PulseCount"></a>
       <a id="kr(GE,GE):PulseCount"></a>
       <h4 class="signature">
@@ -325,7 +337,11 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">trig</dt><dd class="cmt"><p>a trigger happens when the signal changes from
+                        non-positive to positive</p></dd><dt class="param">reset</dt><dd class="cmt"><p>when triggered, resets the counter to zero. When both
+                        <code>trig</code> and <code>reset</code> are triggered at the same time, the
+                        <code>reset</code> takes precedence (output will be zero).
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

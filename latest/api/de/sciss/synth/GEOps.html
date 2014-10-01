@@ -1176,7 +1176,7 @@ This is a convenient method for wrapping this graph element in a <code>Poll</cod
       </a>
     </span>
       
-    </li><li name="de.sciss.synth.GEOps#pow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.GEOps#pow" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="pow(b:de.sciss.synth.GE):de.sciss.synth.GE"></a>
       <a id="pow(GE):GE"></a>
       <h4 class="signature">
@@ -1192,7 +1192,13 @@ This is a convenient method for wrapping this graph element in a <code>Poll</cod
         <img src="../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"><b>Warning:</b> Unlike a normal power operation, the signum of the
+left operand is always preserved.</p><div class="fullcomment"><div class="comment cmt"><p><b>Warning:</b> Unlike a normal power operation, the signum of the
+left operand is always preserved. I.e. <code>DC.kr(-0.5).pow(2)</code> will
+not output <code>0.25</code> but <code>-0.25</code>. This is to avoid problems with
+floating point noise and negative input numbers, so
+<code>DC.kr(-0.5).pow(2.001)</code> does not result in a <code>NaN</code>, for example.
+</p></div></div>
     </li><li name="de.sciss.synth.GEOps#ramp" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ramp:de.sciss.synth.GE"></a>
       <a id="ramp:GE"></a>

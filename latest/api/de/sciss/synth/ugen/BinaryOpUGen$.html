@@ -47,7 +47,7 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>   Binary operations are generally constructed by calling one of the methods of <code>GEOps</code>.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Binary operations are generally constructed by calling one of the methods of <code>GEOps</code>.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p>UnaryOpUGen
 </p></span><span class="cmt"><p>GEOps</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -608,7 +608,7 @@
       </a>
     </span>
       
-    </li><li name="de.sciss.synth.ugen.BinaryOpUGen.Pow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.BinaryOpUGen.Pow" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Pow"></a>
       <a id="Pow:Pow"></a>
       <h4 class="signature">
@@ -624,7 +624,13 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"><b>Warning:</b> Unlike a normal power operation, the signum of the
+left operand is always preserved.</p><div class="fullcomment"><div class="comment cmt"><p><b>Warning:</b> Unlike a normal power operation, the signum of the
+left operand is always preserved. I.e. <code>DC.kr(-0.5).pow(2)</code> will
+not output <code>0.25</code> but <code>-0.25</code>. This is to avoid problems with
+floating point noise and negative input numbers, so
+<code>DC.kr(-0.5).pow(2.001)</code> does not result in a <code>NaN</code>, for example.
+</p></div></div>
     </li><li name="de.sciss.synth.ugen.BinaryOpUGen.Ring1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Ring1"></a>
       <a id="Ring1:Ring1"></a>

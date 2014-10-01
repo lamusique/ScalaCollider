@@ -43,13 +43,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">LocalBuf</span><span class="params">(<span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numFrames">numFrames: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../ScalarRated.html" class="extype" name="de.sciss.synth.ScalarRated">ScalarRated</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">LocalBuf</span><span class="params">(<span name="numFrames">numFrames: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../ScalarRated.html" class="extype" name="de.sciss.synth.ScalarRated">ScalarRated</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that allocates a buffer local to the synth.
 This is convenient for example when using an <code>FFT</code> chain.
-</p></div><dl class="paramcmts block"><dt class="param">numChannels</dt><dd class="cmt"><p>number of channels for the buffer</p></dd><dt class="param">numFrames</dt><dd class="cmt"><p>number of sample frames for the buffer
+</p></div><dl class="paramcmts block"><dt class="param">numFrames</dt><dd class="cmt"><p>number of sample frames for the buffer</p></dd><dt class="param">numChannels</dt><dd class="cmt"><p>number of channels for the buffer
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="FFT.html" class="extype" name="de.sciss.synth.ugen.FFT">de.sciss.synth.ugen.FFT</a>
 </p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
@@ -92,7 +92,7 @@ This is convenient for example when using an <code>FFT</code> chain.
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.ugen.LocalBuf#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(numChannels:de.sciss.synth.GE,numFrames:de.sciss.synth.GE):de.sciss.synth.ugen.LocalBuf"></a>
+      <a id="&lt;init&gt;(numFrames:de.sciss.synth.GE,numChannels:de.sciss.synth.GE):de.sciss.synth.ugen.LocalBuf"></a>
       <a id="&lt;init&gt;:LocalBuf"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -100,14 +100,14 @@ This is convenient for example when using an <code>FFT</code> chain.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">LocalBuf</span><span class="params">(<span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numFrames">numFrames: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span>
+        <span class="name">LocalBuf</span><span class="params">(<span name="numFrames">numFrames: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="numChannels">numChannels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#de.sciss.synth.ugen.LocalBuf@&lt;init&gt;(numChannels:de.sciss.synth.GE,numFrames:de.sciss.synth.GE):de.sciss.synth.ugen.LocalBuf" title="Permalink" target="_top">
+      <a href="../../../../index.html#de.sciss.synth.ugen.LocalBuf@&lt;init&gt;(numFrames:de.sciss.synth.GE,numChannels:de.sciss.synth.GE):de.sciss.synth.ugen.LocalBuf" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">numChannels</dt><dd class="cmt"><p>number of channels for the buffer</p></dd><dt class="param">numFrames</dt><dd class="cmt"><p>number of sample frames for the buffer
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">numFrames</dt><dd class="cmt"><p>number of sample frames for the buffer</p></dd><dt class="param">numChannels</dt><dd class="cmt"><p>number of channels for the buffer
 </p></dd></dl></div>
     </li></ol>
             </div>
@@ -406,7 +406,8 @@ expansion
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">number of channels for the buffer</p>
+      <p class="shortcomment cmt">number of channels for the buffer
+</p>
     </li><li name="de.sciss.synth.ugen.LocalBuf#numFrames" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="numFrames:de.sciss.synth.GE"></a>
       <a id="numFrames:GE"></a>
@@ -423,8 +424,7 @@ expansion
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      <p class="shortcomment cmt">number of sample frames for the buffer
-</p>
+      <p class="shortcomment cmt">number of sample frames for the buffer</p>
     </li><li name="de.sciss.synth.ScalarRated#rate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="rate:de.sciss.synth.Rate"></a>
       <a id="rate:Rate"></a>

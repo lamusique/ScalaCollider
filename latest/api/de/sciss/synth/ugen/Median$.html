@@ -49,14 +49,14 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A filter UGen that calculates the median of a running window over its input
 signal. This non-linear filter can be used to reduce impulse noise from a
-signal.
-</p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>The argument order is different from its sclang counterpart.</p><h5>Examples</h5><pre><span class="cmt">// engage with mouse button</span>
+signal.</p><h5>Examples</h5><pre><span class="cmt">// engage with mouse button</span>
 play {
   <span class="kw">val</span> in  = Saw.ar(<span class="num">500</span>) * <span class="num">0.1</span> + Dust2.ar(<span class="num">100</span>) * <span class="num">0.9</span> <span class="cmt">// signal plus noise</span>
   <span class="kw">val</span> flt = Median.ar(in, <span class="num">3</span>)
   LinXFade2.ar(in, flt, MouseButton.kr(-<span class="num">1</span>, <span class="num">1</span>))
 }</pre><pre><span class="cmt">// long filter distorts by chopping off peaks in input</span>
-play { Median.ar(SinOsc.ar(<span class="num">1000</span>) * <span class="num">0.2</span>, <span class="num">31</span>) }</pre></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="RunningSum$.html" class="extype" name="de.sciss.synth.ugen.RunningSum">RunningSum</a>
+play { Median.ar(SinOsc.ar(<span class="num">1000</span>) * <span class="num">0.2</span>, <span class="num">31</span>) }</pre></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>The argument order is different from its sclang counterpart.
+</p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="RunningSum$.html" class="extype" name="de.sciss.synth.ugen.RunningSum">RunningSum</a>
 </p></span><span class="cmt"><p><a href="LeakDC$.html" class="extype" name="de.sciss.synth.ugen.LeakDC">LeakDC</a></p></span><span class="cmt"><p><a href="LPF$.html" class="extype" name="de.sciss.synth.ugen.LPF">LPF</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>

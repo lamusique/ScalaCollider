@@ -49,7 +49,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen which sends an sequence of values from the server to all notified
 clients upon receiving triggers. The message sent is
-<code>OSCMessage(&lt;(String) msgName&gt;, &lt;(Int) nodeID&gt;, &lt;(Int) replyID&gt;, &lt;(Float) values&gt;*)</code>
+<code>osc.Message(&lt;(String) msgName&gt;, &lt;(Int) nodeID&gt;, &lt;(Int) replyID&gt;, &lt;(Float) values&gt;*)</code>
 .</p><p>For sending a single value, <code>SendTrig</code> provides an alternative.
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>The argument order is different from its sclang counterpart.
 </p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="SendTrig$.html" class="extype" name="de.sciss.synth.ugen.SendTrig">SendTrig</a>
@@ -167,13 +167,13 @@ clients upon receiving triggers. The message sent is
       </a>
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">trig</dt><dd class="cmt"><p>a non-positive to positive transition triggers a message</p></dd><dt class="param">values</dt><dd class="cmt"><p>a graph element comprising the signal channels to be
-                        polled</p></dd><dt class="param">msgName</dt><dd class="cmt"><p>a string specifying the OSCMessage's name. by
+                        polled</p></dd><dt class="param">msgName</dt><dd class="cmt"><p>a string specifying the OSC message's name. by
                         convention, this should start with a forward slash and
                         contain only 7-bit ascii characters.</p></dd><dt class="param">id</dt><dd class="cmt"><p>an integer identifier which is contained in the reply
                         message. While you can distinguish different <code>SendReply</code>
-                        instances from the same Synth by choosing different
-                        OSCMessage names, depending on the application you may
-                        use the same message name but different ids (similar to
+                        instances from the same Synth by choosing different OSC
+                        message names, depending on the application you may use
+                        the same message name but different ids (similar to
                         <code>SendTrig</code> ).
 </p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -341,13 +341,13 @@ clients upon receiving triggers. The message sent is
       </a>
     </span>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">trig</dt><dd class="cmt"><p>a non-positive to positive transition triggers a message</p></dd><dt class="param">values</dt><dd class="cmt"><p>a graph element comprising the signal channels to be
-                        polled</p></dd><dt class="param">msgName</dt><dd class="cmt"><p>a string specifying the OSCMessage's name. by
+                        polled</p></dd><dt class="param">msgName</dt><dd class="cmt"><p>a string specifying the OSC message's name. by
                         convention, this should start with a forward slash and
                         contain only 7-bit ascii characters.</p></dd><dt class="param">id</dt><dd class="cmt"><p>an integer identifier which is contained in the reply
                         message. While you can distinguish different <code>SendReply</code>
-                        instances from the same Synth by choosing different
-                        OSCMessage names, depending on the application you may
-                        use the same message name but different ids (similar to
+                        instances from the same Synth by choosing different OSC
+                        message names, depending on the application you may use
+                        the same message name but different ids (similar to
                         <code>SendTrig</code> ).
 </p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">

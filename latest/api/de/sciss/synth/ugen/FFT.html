@@ -69,13 +69,13 @@ make sure you change the window type accordingly.
                         sample frames. The default of 0.5 means thus a 50%
                         overlap, while a hope of 1.0 means no overlapping.
                         Choosing 0.0 will most likely crash the server!</p></dd><dt class="param">winType</dt><dd class="cmt"><p>The window function applied before each FFT is taken.
-                        The default of 0 is a sine window which is good for
+                        The default of <code>0</code> is a sine window which is good for
                         phase vocoder applications (using the <code>PV_...</code> UGens).
-                        For analysis applications, you may want to use -1 which
-                        is a rectangle window (effectively no windowing) or 1
-                        which is a Hann window. A Hann window gives perfect
-                        overlap-add reconstruction for a hope size of 0.5 (or
-                        0.25 etc.)</p></dd><dt class="param">active</dt><dd class="cmt"><p>This parameter can be temporarily set to &lt;= 0 to pause
+                        For analysis applications, you may want to use <code>-1</code>
+                        which is a rectangle window (effectively no windowing)
+                        or <code>1</code> which is a Hann window. A Hann window gives
+                        perfect overlap-add reconstruction for a hope size of
+                        0.5 (or 0.25 etc.)</p></dd><dt class="param">active</dt><dd class="cmt"><p>This parameter can be temporarily set to &lt;= 0 to pause
                         the FFT operation.</p></dd><dt class="param">winSize</dt><dd class="cmt"><p>With the default value of zero, the window size equals
                         the fft size. If you wish to perform zero padding, an
                         explicit window size can be specified.
@@ -145,13 +145,13 @@ make sure you change the window type accordingly.
                         sample frames. The default of 0.5 means thus a 50%
                         overlap, while a hope of 1.0 means no overlapping.
                         Choosing 0.0 will most likely crash the server!</p></dd><dt class="param">winType</dt><dd class="cmt"><p>The window function applied before each FFT is taken.
-                        The default of 0 is a sine window which is good for
+                        The default of <code>0</code> is a sine window which is good for
                         phase vocoder applications (using the <code>PV_...</code> UGens).
-                        For analysis applications, you may want to use -1 which
-                        is a rectangle window (effectively no windowing) or 1
-                        which is a Hann window. A Hann window gives perfect
-                        overlap-add reconstruction for a hope size of 0.5 (or
-                        0.25 etc.)</p></dd><dt class="param">active</dt><dd class="cmt"><p>This parameter can be temporarily set to &lt;= 0 to pause
+                        For analysis applications, you may want to use <code>-1</code>
+                        which is a rectangle window (effectively no windowing)
+                        or <code>1</code> which is a Hann window. A Hann window gives
+                        perfect overlap-add reconstruction for a hope size of
+                        0.5 (or 0.25 etc.)</p></dd><dt class="param">active</dt><dd class="cmt"><p>This parameter can be temporarily set to &lt;= 0 to pause
                         the FFT operation.</p></dd><dt class="param">winSize</dt><dd class="cmt"><p>With the default value of zero, the window size equals
                         the fft size. If you wish to perform zero padding, an
                         explicit window size can be specified.
@@ -690,13 +690,13 @@ expansion
       </a>
     </span>
       <p class="shortcomment cmt">The window function applied before each FFT is taken.</p><div class="fullcomment"><div class="comment cmt"><p>The window function applied before each FFT is taken.
-                        The default of 0 is a sine window which is good for
+                        The default of <code>0</code> is a sine window which is good for
                         phase vocoder applications (using the <code>PV_...</code> UGens).
-                        For analysis applications, you may want to use -1 which
-                        is a rectangle window (effectively no windowing) or 1
-                        which is a Hann window. A Hann window gives perfect
-                        overlap-add reconstruction for a hope size of 0.5 (or
-                        0.25 etc.)</p></div></div>
+                        For analysis applications, you may want to use <code>-1</code>
+                        which is a rectangle window (effectively no windowing)
+                        or <code>1</code> which is a Hann window. A Hann window gives
+                        perfect overlap-add reconstruction for a hope size of
+                        0.5 (or 0.25 etc.)</p></div></div>
     </li></ol>
             </div>
 

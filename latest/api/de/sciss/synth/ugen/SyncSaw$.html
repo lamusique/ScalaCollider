@@ -47,7 +47,13 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A sawtooth oscillator UGen that is hard sync'ed to a fundamental pitch. That
+is, a sawtooth waveform is produced at one frequency, <code>sawFreq</code> , whereas a
+trigger at a another frequency, <code>syncFreq</code> , resets the phase of the sawtooth to
+zero.</p><p>This produces an effect similar to moving formants or pulse width modulation.
+This is not a band limited waveform, so it may alias.</p><h5>Examples</h5><pre><span class="cmt">// modulate saw frequency</span>
+play { SyncSaw.ar(<span class="num">100</span>, Line.kr(<span class="num">100</span>, <span class="num">800</span>, <span class="num">12</span>)) * <span class="num">0.2</span> }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="LFSaw$.html" class="extype" name="de.sciss.synth.ugen.LFSaw">LFSaw</a>
+</p></span><span class="cmt"><p><a href="VarSaw$.html" class="extype" name="de.sciss.synth.ugen.VarSaw">VarSaw</a></p></span><span class="cmt"><p><a href="Saw$.html" class="extype" name="de.sciss.synth.ugen.Saw">Saw</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +150,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.SyncSaw#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.SyncSaw#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(syncFreq:de.sciss.synth.GE,sawFreq:de.sciss.synth.GE):de.sciss.synth.ugen.SyncSaw"></a>
       <a id="ar(GE,GE):SyncSaw"></a>
       <h4 class="signature">
@@ -160,7 +166,10 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">syncFreq</dt><dd class="cmt"><p>synchronizing (master) frequency which is the perceived
+                        fundamental</p></dd><dt class="param">sawFreq</dt><dd class="cmt"><p>sawtooth (slave) frequency. It should typically be
+                        greater than <code>syncFreq</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.SyncSaw#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ar:de.sciss.synth.ugen.SyncSaw"></a>
       <a id="ar:SyncSaw"></a>
@@ -326,7 +335,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.SyncSaw#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.SyncSaw#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(syncFreq:de.sciss.synth.GE,sawFreq:de.sciss.synth.GE):de.sciss.synth.ugen.SyncSaw"></a>
       <a id="kr(GE,GE):SyncSaw"></a>
       <h4 class="signature">
@@ -342,7 +351,10 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">syncFreq</dt><dd class="cmt"><p>synchronizing (master) frequency which is the perceived
+                        fundamental</p></dd><dt class="param">sawFreq</dt><dd class="cmt"><p>sawtooth (slave) frequency. It should typically be
+                        greater than <code>syncFreq</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.SyncSaw#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="kr:de.sciss.synth.ugen.SyncSaw"></a>
       <a id="kr:SyncSaw"></a>

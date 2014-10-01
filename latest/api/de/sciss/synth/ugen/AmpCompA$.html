@@ -47,7 +47,18 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that produces a psychoacoustic amplitude compensation factor for a given
+frequency. It uses the A-weighting curve that is based on the Fletcher-Munson
+curve for rather low volume sounds (40 phon).</p><p>Only the <code>freq</code> parameter can be modulated, the other parameters are read at
+initialization time only.</p><h5>Examples</h5><pre><span class="cmt">// activate with mouse button</span>
+play {
+  <span class="kw">val</span> freq = MouseX.kr(<span class="num">300</span>, <span class="num">15000</span>, <span class="num">1</span>)
+  <span class="kw">val</span> mod  = freq * SinOsc.ar(MouseY.kr(<span class="num">3</span>, <span class="num">200</span>, <span class="num">1</span>)).madd(<span class="num">0.5</span>, <span class="num">1</span>)
+  <span class="kw">val</span> corr = AmpCompA.ar(mod, <span class="num">300</span>) * <span class="num">2</span>
+  <span class="kw">val</span> amp  = Select.ar(MouseButton.kr(lag = <span class="num">0</span>), <span class="std">Seq</span>(DC.ar(<span class="num">1</span>), corr))
+  SinOsc.ar(mod) * <span class="num">0.1</span> * amp
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="AmpComp$.html" class="extype" name="de.sciss.synth.ugen.AmpComp">AmpComp</a>
+</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +155,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.AmpCompA#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.AmpCompA#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(freq:de.sciss.synth.GE,root:de.sciss.synth.GE,minAmp:de.sciss.synth.GE,rootAmp:de.sciss.synth.GE):de.sciss.synth.ugen.AmpCompA"></a>
       <a id="ar(GE,GE,GE,GE):AmpCompA"></a>
       <h4 class="signature">
@@ -160,7 +171,13 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>the frequency in Hertz for which to determine the
+                        compensation factor</p></dd><dt class="param">root</dt><dd class="cmt"><p>the root frequency in Hertz, relative to which the
+                        curve is calculated. This is usually lowest expected
+                        frequency.</p></dd><dt class="param">minAmp</dt><dd class="cmt"><p>amplitude at the minimum point of the curve. This is
+                        the factor output when <code>freq</code> is approx. 2512 Hz.</p></dd><dt class="param">rootAmp</dt><dd class="cmt"><p>amplitude at the root frequency of the curve. This is
+                        the factor output when <code>freq == root</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.AmpCompA#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ar:de.sciss.synth.ugen.AmpCompA"></a>
       <a id="ar:AmpCompA"></a>
@@ -309,7 +326,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.AmpCompA#ir" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.AmpCompA#ir" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ir(freq:de.sciss.synth.GE,root:de.sciss.synth.GE,minAmp:de.sciss.synth.GE,rootAmp:de.sciss.synth.GE):de.sciss.synth.ugen.AmpCompA"></a>
       <a id="ir(GE,GE,GE,GE):AmpCompA"></a>
       <h4 class="signature">
@@ -325,7 +342,13 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>the frequency in Hertz for which to determine the
+                        compensation factor</p></dd><dt class="param">root</dt><dd class="cmt"><p>the root frequency in Hertz, relative to which the
+                        curve is calculated. This is usually lowest expected
+                        frequency.</p></dd><dt class="param">minAmp</dt><dd class="cmt"><p>amplitude at the minimum point of the curve. This is
+                        the factor output when <code>freq</code> is approx. 2512 Hz.</p></dd><dt class="param">rootAmp</dt><dd class="cmt"><p>amplitude at the root frequency of the curve. This is
+                        the factor output when <code>freq == root</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.AmpCompA#ir" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ir:de.sciss.synth.ugen.AmpCompA"></a>
       <a id="ir:AmpCompA"></a>
@@ -360,7 +383,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.AmpCompA#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.AmpCompA#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(freq:de.sciss.synth.GE,root:de.sciss.synth.GE,minAmp:de.sciss.synth.GE,rootAmp:de.sciss.synth.GE):de.sciss.synth.ugen.AmpCompA"></a>
       <a id="kr(GE,GE,GE,GE):AmpCompA"></a>
       <h4 class="signature">
@@ -376,7 +399,13 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">freq</dt><dd class="cmt"><p>the frequency in Hertz for which to determine the
+                        compensation factor</p></dd><dt class="param">root</dt><dd class="cmt"><p>the root frequency in Hertz, relative to which the
+                        curve is calculated. This is usually lowest expected
+                        frequency.</p></dd><dt class="param">minAmp</dt><dd class="cmt"><p>amplitude at the minimum point of the curve. This is
+                        the factor output when <code>freq</code> is approx. 2512 Hz.</p></dd><dt class="param">rootAmp</dt><dd class="cmt"><p>amplitude at the root frequency of the curve. This is
+                        the factor output when <code>freq == root</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.AmpCompA#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="kr:de.sciss.synth.ugen.AmpCompA"></a>
       <a id="kr:AmpCompA"></a>
