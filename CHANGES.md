@@ -7,6 +7,7 @@ This document only highlights major changes which probably require some adjustme
 * `LocalBuf` arguments are reversed, allowing to leave out the number of channels
 * Added `Sum3`, `Sum4` UGens, cleaned up `Mix` implementation
 * Fixed zero-outputs property of `SendTrig`, `SendReply`
+* Fixed non-variadic input of `DC`
 
 ## changes in v1.13.0
 
