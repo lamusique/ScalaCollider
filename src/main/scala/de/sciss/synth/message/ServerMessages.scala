@@ -500,7 +500,7 @@ final case class BufferFill(id: Int, ranges: FillRange*)
   with SyncCmd
 
 object BufferGen {
-  sealed trait Command {
+  /* sealed */ trait Command {
     def name: String
     def args: Seq[Any]
     def isSynchronous: Boolean
