@@ -1,10 +1,14 @@
 name               := "ScalaCollider"
 
-version            := "1.14.1-SNAPSHOT"
+version            := "1.14.1"
 
 organization       := "de.sciss"
 
 scalaVersion       := "2.11.2"
+
+// sbt 0.13.6 starts to upgrade Scala version!
+// we must ensure 2.10.0 is used not 2.10.4
+ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 // note SI-7436! Affects Scala throughout 2.10.x except for 2.10.0; might be fixed in 2.10.5
 // https://issues.scala-lang.org/browse/SI-7436
@@ -16,7 +20,7 @@ homepage           := Some(url("https://github.com/Sciss/" + name.value))
 
 licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val ugensVersion     = "1.11.0"
+lazy val ugensVersion     = "1.11.1"
 
 lazy val oscVersion       = "1.1.3"
 
