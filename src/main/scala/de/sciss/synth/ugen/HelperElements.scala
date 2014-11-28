@@ -252,7 +252,7 @@ final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends 
   *
   * The panning position of each input channel with index `ch` is calculated by the formula:
   * {{{
-  * val pf = 2 * spread / number-of-input-channels
+  * val pf = 2.0 / (number-of-input-channels - 1) * (number-of-output-channels - 1) / number-of-output-channels
   * ch * pf + center
   * }}}
   */
@@ -273,13 +273,14 @@ object SplayAz {
 final case class SplayAz(rate: Rate, numChannels: Int, in: GE, spread: GE, center: GE, level: GE, width: GE, orient: GE)
   extends GE.Lazy {
 
-  def numOutputs  = numChannels
+  def numOutputs = numChannels
 
   protected def makeUGens: UGenInLike = {
-    val _in = in.expand
-    val n   = _in.outputs.size
-    val pf  = 2 * spread / n
-    val pos = Seq.tabulate(n)(_ * pf + center)
+    val _in     = in.expand
+    val numIn   = _in.outputs.size
+    // last channel must have position (2 * i / (numIn - 1) * (numOut - 1) / numOut)
+    val pf  = if (numIn < 2 || numOutputs == 0) 0.0 else 2.0 / (numIn - 1) * (numOutputs - 1) / numOutputs
+    val pos = Seq.tabulate(numIn)(center + _ * pf)
     val mix = Mix(PanAz(rate, numChannels, _in, pos, level, width, orient))
     mix
   }
