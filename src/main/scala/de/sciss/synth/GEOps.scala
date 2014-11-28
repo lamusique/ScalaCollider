@@ -15,11 +15,20 @@ package de.sciss.synth
 
 import de.sciss.synth.ugen.{Wrap, Fold, Clip, UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd, Constant}
 
-final class GEOps(val `this`: GE ) extends AnyVal { me =>
+final class GEOps(val `this`: GE) extends AnyVal { me =>
   import me.{`this` => g}
 
+  /** Creates a proxy that represents a specific output channel of the element.
+    *
+    * @param index  channel-index, zero-based. Indices which are greater than or equal
+    *               to the number of outputs are wrapped around.
+    *
+    * @return a monophonic element that represents the given channel of the receiver
+    */
   def `\\`(index: Int)      : GE = ChannelProxy(g, index)
+
   def madd(mul: GE, add: GE): GE = MulAdd(g, mul, add)
+
   def flatten               : GE = Flatten(g)
 
   def poll: Poll = poll()
