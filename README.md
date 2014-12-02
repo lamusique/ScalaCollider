@@ -36,7 +36,7 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-__Note__: Due to [SI-7268](https://issues.scala-lang.org/browse/SI-7268), the project must be currently compiled against Scala 2.10.0 and not 2.10.1 through 2.10.3. It can be used, however, with any Scala 2.10 version.
+__Note__: Due to [SI-7436](https://issues.scala-lang.org/browse/SI-7436), the project must be currently compiled against Scala 2.10.0 and not 2.10.1 through 2.10.4. It can be used, however, with any Scala 2.10 version.
 
 ## linking
 
