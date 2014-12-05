@@ -47,7 +47,19 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that returns a unique output value from zero to one for each input value
+according to a hash function. The same input value will always produce the same
+output value. The input values can have any range.</p><h5>Examples</h5><pre><span class="cmt">// scramble mouse motion</span>
+play {
+  SinOsc.ar(
+    Hasher.kr(MouseX.kr(<span class="num">0</span>,<span class="num">10</span>)).madd(<span class="num">300</span>, <span class="num">500</span>)
+  ) * <span class="num">0.2</span>
+}</pre><pre><span class="cmt">// distort pulse wave</span>
+play {
+  <span class="kw">val</span> lag  = MouseY.kr(<span class="num">0.001</span>, <span class="num">0.1</span>, <span class="num">1</span>)
+  <span class="kw">val</span> freq = MouseX.kr(<span class="num">1</span>, <span class="num">500</span>, <span class="num">1</span>)
+  Hasher.ar(Lag.ar(LFPulse.ar(freq), lag)) * <span class="num">0.2</span>
+}</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +156,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Hasher#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Hasher#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(in:de.sciss.synth.GE):de.sciss.synth.ugen.Hasher"></a>
       <a id="ar(GE):Hasher"></a>
       <h4 class="signature">
@@ -160,7 +172,8 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>input to calculate the hash function for
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -309,7 +322,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Hasher#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Hasher#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(in:de.sciss.synth.GE):de.sciss.synth.ugen.Hasher"></a>
       <a id="kr(GE):Hasher"></a>
       <h4 class="signature">
@@ -325,7 +338,8 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>input to calculate the hash function for
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

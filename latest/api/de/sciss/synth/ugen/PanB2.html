@@ -47,7 +47,16 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A two dimensional Ambisonics B-format encoding UGen. B-format is the name for
+first order Ambisonics which normally has four channels W, X, Y, Z. By omitting
+the elevation control, we get a two dimensional planar encoded signal consisting
+only of the W, X and Y channels.</p><p>Note that unlike <code>PanB</code>, azimuth is normalized between -1 and +1.
+</p></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>(monophonic) input signal to be encoded</p></dd><dt class="param">azimuth</dt><dd class="cmt"><p>position around the circle from -1 to +1. -1 and +1
+                        correspond to -180/+180 degrees (behind), -0.5 is 90
+                        degrees to the left, 0 is frontal, +0.5 is 90 degrees to
+                        the right.</p></dd><dt class="param">level</dt><dd class="cmt"><p>additional gain control
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Pan2$.html" class="extype" name="de.sciss.synth.ugen.Pan2">Pan2</a>
+</p></span><span class="cmt"><p><a href="DecodeB2$.html" class="extype" name="de.sciss.synth.ugen.DecodeB2">DecodeB2</a></p></span><span class="cmt"><p><a href="BiPanB2$.html" class="extype" name="de.sciss.synth.ugen.BiPanB2">BiPanB2</a></p></span><span class="cmt"><p><a href="PanB$.html" class="extype" name="de.sciss.synth.ugen.PanB">PanB</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="../UGenSource$$MultiOut.html" class="extype" name="de.sciss.synth.UGenSource.MultiOut">MultiOut</a>, <a href="../UGenSource$$SomeOut.html" class="extype" name="de.sciss.synth.UGenSource.SomeOut">SomeOut</a>, <a href="../GE$$Lazy.html" class="extype" name="de.sciss.synth.GE.Lazy">GE.Lazy</a>, <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a>, <a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>], <a href="../Lazy$$Expander.html" class="extype" name="de.sciss.synth.Lazy.Expander">Expander</a>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>], <a href="../Lazy.html" class="extype" name="de.sciss.synth.Lazy">Lazy</a>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -87,7 +96,7 @@
         <div id="allMembers">
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li name="de.sciss.synth.ugen.PanB2#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="de.sciss.synth.ugen.PanB2#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="&lt;init&gt;(rate:de.sciss.synth.Rate,in:de.sciss.synth.GE,azimuth:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.PanB2"></a>
       <a id="&lt;init&gt;:PanB2"></a>
       <h4 class="signature">
@@ -103,7 +112,11 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>(monophonic) input signal to be encoded</p></dd><dt class="param">azimuth</dt><dd class="cmt"><p>position around the circle from -1 to +1. -1 and +1
+                        correspond to -180/+180 degrees (behind), -0.5 is 90
+                        degrees to the left, 0 is frontal, +0.5 is 90 degrees to
+                        the right.</p></dd><dt class="param">level</dt><dd class="cmt"><p>additional gain control
+</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -181,7 +194,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.PanB2#azimuth" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.PanB2#azimuth" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="azimuth:de.sciss.synth.GE"></a>
       <a id="azimuth:GE"></a>
       <h4 class="signature">
@@ -197,7 +210,10 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">position around the circle from -1 to +1.</p><div class="fullcomment"><div class="comment cmt"><p>position around the circle from -1 to +1. -1 and +1
+                        correspond to -180/+180 degrees (behind), -0.5 is 90
+                        degrees to the left, 0 is frontal, +0.5 is 90 degrees to
+                        the right.</p></div></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -294,7 +310,7 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">(monophonic) input signal to be encoded</p>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -328,7 +344,8 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">additional gain control
+</p>
     </li><li name="de.sciss.synth.ugen.PanB2#makeUGen" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="makeUGen(_args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenIn]):de.sciss.synth.UGenInLike"></a>
       <a id="makeUGen(IndexedSeq[UGenIn]):UGenInLike"></a>

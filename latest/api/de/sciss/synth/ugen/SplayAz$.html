@@ -49,7 +49,7 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A graph element that spreads a sequence of input channels across a ring of output channels.
 This works by feeding each input channel through a dedicated <code>PanAz</code> UGen, and mixing the
-results together.</p><p>The panning position of each input channel with index <code>ch</code> is calculated by the formula:</p><pre><span class="kw">val</span> pf = (<span class="num">0.5</span> * spread) / number-of-input-channels
+results together.</p><p>The panning position of each input channel with index <code>ch</code> is calculated by the formula:</p><pre><span class="kw">val</span> pf = <span class="num">2.0</span> / (number-of-input-channels - <span class="num">1</span>) * (number-of-output-channels - <span class="num">1</span>) / number-of-output-channels
 ch * pf + center</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>

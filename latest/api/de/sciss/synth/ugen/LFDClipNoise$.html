@@ -48,14 +48,16 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that randomly generates the values -1 or +1 at a rate given by the
-nearest integer division of the sample rate by the frequency argument.</p><h5>Examples</h5><pre><span class="cmt">// generator</span>
-play { LFClipNoise.ar(<span class="num">500</span>) * <span class="num">0.2</span> }</pre><pre><span class="cmt">// random panning</span>
+nearest integer division of the sample rate by the frequency argument. The
+difference to <code>LFClipNoise</code> is that this UGen does not quantize time and
+recovers fast from frequency input changes.</p><h5>Examples</h5><pre><span class="cmt">// generator</span>
+play { LFDClipNoise.ar(<span class="num">500</span>) * <span class="num">0.2</span> }</pre><pre><span class="cmt">// random panning</span>
 play {
-  <span class="kw">val</span> pos = LFClipNoise.ar(<span class="num">4</span>)
+  <span class="kw">val</span> pos = LFDClipNoise.ar(<span class="num">4</span>)
   Pan2.ar(PinkNoise.ar, pos)
 }</pre><pre><span class="cmt">// modulate frequency</span>
-play { LFClipNoise.ar(XLine.kr(<span class="num">100</span>, <span class="num">10000</span>, <span class="num">20</span>)) * <span class="num">0.2</span> }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="GrayNoise$.html" class="extype" name="de.sciss.synth.ugen.GrayNoise">GrayNoise</a>
-</p></span><span class="cmt"><p><a href="Schmidt$.html" class="extype" name="de.sciss.synth.ugen.Schmidt">Schmidt</a></p></span><span class="cmt"><p><a href="CoinGate$.html" class="extype" name="de.sciss.synth.ugen.CoinGate">CoinGate</a></p></span><span class="cmt"><p><a href="LFNoise1$.html" class="extype" name="de.sciss.synth.ugen.LFNoise1">LFNoise1</a></p></span><span class="cmt"><p><a href="LFNoise0$.html" class="extype" name="de.sciss.synth.ugen.LFNoise0">LFNoise0</a></p></span></dd></dl><div class="toggleContainer block">
+play { LFDClipNoise.ar(XLine.kr(<span class="num">100</span>, <span class="num">10000</span>, <span class="num">20</span>)) * <span class="num">0.2</span> }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="GrayNoise$.html" class="extype" name="de.sciss.synth.ugen.GrayNoise">GrayNoise</a>
+</p></span><span class="cmt"><p><a href="Schmidt$.html" class="extype" name="de.sciss.synth.ugen.Schmidt">Schmidt</a></p></span><span class="cmt"><p><a href="CoinGate$.html" class="extype" name="de.sciss.synth.ugen.CoinGate">CoinGate</a></p></span><span class="cmt"><p><a href="LFNoise1$.html" class="extype" name="de.sciss.synth.ugen.LFNoise1">LFNoise1</a></p></span><span class="cmt"><p><a href="LFNoise0$.html" class="extype" name="de.sciss.synth.ugen.LFNoise0">LFNoise0</a></p></span><span class="cmt"><p><a href="LFClipNoise$.html" class="extype" name="de.sciss.synth.ugen.LFClipNoise">LFClipNoise</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

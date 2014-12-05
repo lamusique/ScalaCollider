@@ -173,7 +173,8 @@ should make sure this property is met.</p><p>The signal output by the UGen repre
                         argument is true. Note that the number of channels of
                         the buffer and of the input signal must be the same,
                         otherwise <code>DiskOut</code> will fail silently (and not write
-                        anything to the file).</p></dd><dt class="param">in</dt><dd class="cmt"><p>the signal to be recorded
+                        anything to the file). <b>Warning</b>: Crashes the server
+                        if the number of channels exceeds 32.</p></dd><dt class="param">in</dt><dd class="cmt"><p>the signal to be recorded
 </p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>

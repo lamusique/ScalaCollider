@@ -52,8 +52,8 @@ chosen randomly between <code>-1</code> and <code>+1</code> . New breakpoints ar
 specified frequency.</p><p>The frequency is quantized to the nearest integer division of the sample rate,
 and changes in frequency are only picked up at the next trigger. In contrast,
 variant <code>LFDNoise1</code> has precise frequency and reacts to frequency changes
-instantly.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Ramp$.html" class="extype" name="de.sciss.synth.ugen.Ramp">Ramp</a>
+instantly.</p><h5>Examples</h5><pre><span class="cmt">// plain noise</span>
+play { LFNoise1.ar(<span class="num">1000</span>) * <span class="num">0.25</span> }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Ramp$.html" class="extype" name="de.sciss.synth.ugen.Ramp">Ramp</a>
 </p></span><span class="cmt"><p><a href="LFNoise2$.html" class="extype" name="de.sciss.synth.ugen.LFNoise2">LFNoise2</a></p></span><span class="cmt"><p><a href="LFNoise0$.html" class="extype" name="de.sciss.synth.ugen.LFNoise0">LFNoise0</a></p></span><span class="cmt"><p><a href="LFDNoise1$.html" class="extype" name="de.sciss.synth.ugen.LFDNoise1">LFDNoise1</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>

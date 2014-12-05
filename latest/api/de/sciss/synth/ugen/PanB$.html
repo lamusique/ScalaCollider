@@ -47,7 +47,12 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An Ambisonics B-format encoding UGen. B-format is the name for first order
+Ambisonics which has four channels W, X, Y, Z. By omitting the elevation
+control, we get a two dimensional planar encoded signal consisting only of the X
+and Y channels.</p><p>Note that unlike <code>PanB2</code>, azimuth is in radians.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="DecodeB2$.html" class="extype" name="de.sciss.synth.ugen.DecodeB2">DecodeB2</a>
+</p></span><span class="cmt"><p><a href="PanB2$.html" class="extype" name="de.sciss.synth.ugen.PanB2">PanB2</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +149,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.PanB#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.PanB#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(in:de.sciss.synth.GE,azimuth:de.sciss.synth.GE,elevation:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.PanB"></a>
       <a id="ar(GE,GE,GE,GE):PanB"></a>
       <h4 class="signature">
@@ -160,7 +165,9 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>(monophonic) input signal to be encoded</p></dd><dt class="param">azimuth</dt><dd class="cmt"><p>position around the circle in radians. -Pi/+Pi is
+                        behind, -Pi/2 is left, 0 is front, +Pi/2 is right.</p></dd><dt class="param">elevation</dt><dd class="cmt"><p>elevation in radians, from -Pi/2 (bottom) to +Pi/2 (top)</p></dd><dt class="param">level</dt><dd class="cmt"><p>additional gain control
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -309,7 +316,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.PanB#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.PanB#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(in:de.sciss.synth.GE,azimuth:de.sciss.synth.GE,elevation:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.PanB"></a>
       <a id="kr(GE,GE,GE,GE):PanB"></a>
       <h4 class="signature">
@@ -325,7 +332,9 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>(monophonic) input signal to be encoded</p></dd><dt class="param">azimuth</dt><dd class="cmt"><p>position around the circle in radians. -Pi/+Pi is
+                        behind, -Pi/2 is left, 0 is front, +Pi/2 is right.</p></dd><dt class="param">elevation</dt><dd class="cmt"><p>elevation in radians, from -Pi/2 (bottom) to +Pi/2 (top)</p></dd><dt class="param">level</dt><dd class="cmt"><p>additional gain control
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

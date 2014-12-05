@@ -47,8 +47,11 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Triggers generate grains from a buffer. Each grain has a Hanning envelope</p><pre>(sin2(x) <span class="kw">for</span> x from <span class="num">0</span> to ￏﾀ)</pre><p> and is panned between two channels of multiple outputs.
-</p></div><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Triggers generate grains from a buffer. Each grain has a Hanning envelope</p><pre>(sin2(x) <span class="kw">for</span> x from <span class="num">0</span> to pi)</pre><p> and is panned between two channels of multiple outputs.
+<b>Warning</b>: Due to a bug (SC 3.6.6), this UGen does not work with <code>LocalBuf</code>
+but requires a regular buffer.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="GrainBuf$.html" class="extype" name="de.sciss.synth.ugen.GrainBuf">GrainBuf</a>
+</p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

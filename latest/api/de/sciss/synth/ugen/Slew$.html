@@ -48,8 +48,9 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A slew rate limiter UGen. Limits the slope of an input signal. The slope is
-expressed in units per second.
-</p></div><div class="toggleContainer block">
+expressed in units per second.</p><p>Since the UGen is initialized with the initial value of the input signal, some
+tricks must be applied to set it to an alternative start value. For example:</p><pre><span class="kw">val</span> in = Select.kr(ToggleFF.kr(<span class="num">1</span>), <span class="std">Seq</span>(<span class="lit">"start"</span>.ir, <span class="lit">"target"</span>.kr))
+Slew.kr(in)  <span class="cmt">// begins at "start" and moves towards "target"</span></pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

@@ -51,9 +51,9 @@
 and <code>+1</code> at a rate given by the <code>freq</code> argument.</p><p>The frequency is quantized to the nearest integer division of the sample rate,
 and changes in frequency are only picked up at the next trigger. In contrast,
 variant <code>LFDNoise0</code> has precise frequency and reacts to frequency changes
-instantly.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="TRand$.html" class="extype" name="de.sciss.synth.ugen.TRand">TRand</a>
-</p></span><span class="cmt"><p><a href="LFNoise2$.html" class="extype" name="de.sciss.synth.ugen.LFNoise2">LFNoise2</a></p></span><span class="cmt"><p><a href="LFNoise1$.html" class="extype" name="de.sciss.synth.ugen.LFNoise1">LFNoise1</a></p></span><span class="cmt"><p><a href="LFDNoise0$.html" class="extype" name="de.sciss.synth.ugen.LFDNoise0">LFDNoise0</a></p></span></dd></dl><div class="toggleContainer block">
+instantly.</p><h5>Examples</h5><pre><span class="cmt">// plain noise</span>
+play { LFNoise0.ar(<span class="num">1000</span>) * <span class="num">0.25</span> }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="RandSeed$.html" class="extype" name="de.sciss.synth.ugen.RandSeed">RandSeed</a>
+</p></span><span class="cmt"><p><a href="Dust$.html" class="extype" name="de.sciss.synth.ugen.Dust">Dust</a></p></span><span class="cmt"><p><a href="WhiteNoise$.html" class="extype" name="de.sciss.synth.ugen.WhiteNoise">WhiteNoise</a></p></span><span class="cmt"><p><a href="TRand$.html" class="extype" name="de.sciss.synth.ugen.TRand">TRand</a></p></span><span class="cmt"><p><a href="LFNoise2$.html" class="extype" name="de.sciss.synth.ugen.LFNoise2">LFNoise2</a></p></span><span class="cmt"><p><a href="LFNoise1$.html" class="extype" name="de.sciss.synth.ugen.LFNoise1">LFNoise1</a></p></span><span class="cmt"><p><a href="LFDNoise0$.html" class="extype" name="de.sciss.synth.ugen.LFDNoise0">LFDNoise0</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>

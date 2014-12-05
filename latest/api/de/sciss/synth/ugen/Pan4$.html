@@ -47,7 +47,18 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A four channel equal-power panorama UGen. The outputs are in order <code>leftFront</code>
+, <code>rightFront</code> , <code>leftBack</code> , <code>rightBack</code> .</p><h5>Examples</h5><pre><span class="cmt">// mouse controlled pan position</span>
+play {
+  <span class="kw">val</span> x = MouseX.kr(-<span class="num">1</span>, <span class="num">1</span>)
+  <span class="kw">val</span> y = MouseY.kr(-<span class="num">1</span>, <span class="num">1</span>)
+  <span class="kw">val</span> p = Pan4.ar(PinkNoise.ar, x, y)
+  <span class="cmt">// make a stereo mix with different timbre front and back</span>
+  <span class="kw">val</span> f = Resonz.ar(<span class="std">Seq</span>(p.leftFront, p.rightFront), <span class="num">4000</span>, <span class="num">0.2</span>) * <span class="num">4</span>
+  <span class="kw">val</span> r = Resonz.ar(<span class="std">Seq</span>(p.leftBack , p.rightBack ), <span class="num">1500</span>, <span class="num">0.2</span>) * <span class="num">4</span>
+  f + r
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="PanAz$.html" class="extype" name="de.sciss.synth.ugen.PanAz">PanAz</a>
+</p></span><span class="cmt"><p><a href="Pan2$.html" class="extype" name="de.sciss.synth.ugen.Pan2">Pan2</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +155,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Pan4#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Pan4#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(in:de.sciss.synth.GE,xpos:de.sciss.synth.GE,ypos:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.Pan4"></a>
       <a id="ar(GE,GE,GE,GE):Pan4"></a>
       <h4 class="signature">
@@ -160,7 +171,10 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>(monophonic) input signal to be panned</p></dd><dt class="param">xpos</dt><dd class="cmt"><p>horizontal panorama position from -1 (left) to +1
+                        (right)</p></dd><dt class="param">ypos</dt><dd class="cmt"><p>front-to-back panorama position from -1 (back) to +1
+                        (front)</p></dd><dt class="param">level</dt><dd class="cmt"><p>additional gain control
+</p></dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -309,7 +323,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Pan4#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Pan4#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(in:de.sciss.synth.GE,xpos:de.sciss.synth.GE,ypos:de.sciss.synth.GE,level:de.sciss.synth.GE):de.sciss.synth.ugen.Pan4"></a>
       <a id="kr(GE,GE,GE,GE):Pan4"></a>
       <h4 class="signature">
@@ -325,7 +339,10 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>(monophonic) input signal to be panned</p></dd><dt class="param">xpos</dt><dd class="cmt"><p>horizontal panorama position from -1 (left) to +1
+                        (right)</p></dd><dt class="param">ypos</dt><dd class="cmt"><p>front-to-back panorama position from -1 (back) to +1
+                        (front)</p></dd><dt class="param">level</dt><dd class="cmt"><p>additional gain control
+</p></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

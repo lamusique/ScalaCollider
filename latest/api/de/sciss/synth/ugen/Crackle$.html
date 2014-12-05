@@ -47,7 +47,14 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A noise generator UGen based on a chaotic function. Output values lie between
+zero and one. Although this is a deterministic process, it is randomly seeded.</p><h5>Examples</h5><pre><span class="cmt">// increasing parameter</span>
+play {
+  <span class="kw">val</span> chaos = Line.kr(<span class="num">1.0</span>, <span class="num">2.01</span>, <span class="num">15</span>)
+  chaos.poll(<span class="num">2</span>, <span class="lit">"chaos"</span>)
+  Crackle.ar(<span class="std">Seq</span>(chaos, chaos)) * <span class="num">0.5</span>
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="Logistic$.html" class="extype" name="de.sciss.synth.ugen.Logistic">Logistic</a>
+</p></span><span class="cmt"><p><a href="LatoocarfianN$.html" class="extype" name="de.sciss.synth.ugen.LatoocarfianN">LatoocarfianN</a></p></span><span class="cmt"><p><a href="Dust$.html" class="extype" name="de.sciss.synth.ugen.Dust">Dust</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -144,7 +151,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Crackle#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Crackle#ar" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ar(chaos:de.sciss.synth.GE):de.sciss.synth.ugen.Crackle"></a>
       <a id="ar(GE):Crackle"></a>
       <h4 class="signature">
@@ -160,7 +167,12 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">chaos</dt><dd class="cmt"><p>A parameter of the chaotic function with useful values
+                        from just below 1.0 to just above 2.0. Towards 2.0 the
+                        sound crackles. Values greater than 2.01 are not safe,
+                        as the UGen can switch to outputting NaNs. A early more
+                        crackling sound appears with a value of <code>1.33</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Crackle#ar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="ar:de.sciss.synth.ugen.Crackle"></a>
       <a id="ar:Crackle"></a>
@@ -326,7 +338,7 @@
       </a>
     </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Crackle#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Crackle#kr" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="kr(chaos:de.sciss.synth.GE):de.sciss.synth.ugen.Crackle"></a>
       <a id="kr(GE):Crackle"></a>
       <h4 class="signature">
@@ -342,7 +354,12 @@
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">chaos</dt><dd class="cmt"><p>A parameter of the chaotic function with useful values
+                        from just below 1.0 to just above 2.0. Towards 2.0 the
+                        sound crackles. Values greater than 2.01 are not safe,
+                        as the UGen can switch to outputting NaNs. A early more
+                        crackling sound appears with a value of <code>1.33</code> .
+</p></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Crackle#kr" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="kr:de.sciss.synth.ugen.Crackle"></a>
       <a id="kr:Crackle"></a>
