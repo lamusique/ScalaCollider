@@ -1,6 +1,6 @@
 name               := "ScalaCollider"
 
-version            := "1.14.3"
+version            := "1.15.0"
 
 organization       := "de.sciss"
 
@@ -20,7 +20,7 @@ homepage           := Some(url("https://github.com/Sciss/" + name.value))
 
 licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val ugensVersion     = "1.11.2"
+lazy val ugensVersion     = "1.12.0"
 
 lazy val oscVersion       = "1.1.3"
 
@@ -37,8 +37,6 @@ libraryDependencies ++= Seq(
   "de.sciss"      %% "scalacolliderugens-core" % ugensVersion,
   "org.scalatest" %% "scalatest"               % scalaTestVersion % "test"
 )
-
-// retrieveManaged := true
 
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-encoding", "utf8", "-Xfuture")
 

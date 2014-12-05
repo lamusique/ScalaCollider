@@ -234,12 +234,9 @@ final case class WrapOut(in: GE, fadeTime: Option[Float] = Some(0.02f)) extends 
       val ins3 = fadeTime match {
         case Some(fdt) =>
           val env = makeFadeEnv(fdt)
-          val ins2 = ins.map(BinaryOpUGen.Times.make1(_, env))
-          if (rate == audio) replaceZeroesWithSilence(ins2) else ins2
+          ins.map(BinaryOpUGen.Times.make1(_, env))
         case None => ins
       }
-      // val cOut = new Control.UGen(control, 1, UGenGraph.builder.addControl(Vec(0), Some("out"))).outputs(0)
-      // UGen.ZeroOut("Out", rate, cOut +: ins3) // with WritesBus {}
       val cOut = "out".kr(0f)
       Out.ar(cOut, ins3)
     }
