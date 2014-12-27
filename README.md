@@ -44,33 +44,32 @@ To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `1.15.0`
+The current version `v` is `"1.15.0"`
 
 ## starting a SuperCollider server
 
 The following short example illustrates how a server can be launched and a synth played:
 
 ```scala
-    
-    import de.sciss.synth._
-    import ugen._
-    
-    val cfg = Server.Config()
-    cfg.program = "/path/to/scsynth"
-    // runs a server and executes the function
-    // when the server is booted, with the
-    // server as its argument 
-    Server.run(cfg) { s =>
-      // play is imported from package de.sciss.synth.
-      // it provides a convenience method for wrapping
-      // a synth graph function in an `Out` element
-      // and playing it back.
-      play {
-        val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(Seq(8, 7.23)).madd(3, 80)).midicps
-        CombN.ar(SinOsc.ar(f) * 0.04, 0.2, 0.2, 4)
-      }
-    }
-    
+import de.sciss.synth._
+import ugen._
+import Ops._
+
+val cfg = Server.Config()
+cfg.program = "/path/to/scsynth"
+// runs a server and executes the function
+// when the server is booted, with the
+// server as its argument 
+Server.run(cfg) { s =>
+  // play is imported from package de.sciss.synth.
+  // it provides a convenience method for wrapping
+  // a synth graph function in an `Out` element
+  // and playing it back.
+  play {
+    val f = LFSaw.kr(0.4).madd(24, LFSaw.kr(Seq(8, 7.23)).madd(3, 80)).midicps
+    CombN.ar(SinOsc.ar(f) * 0.04, 0.2, 0.2, 4)
+  }
+}    
 ```
 
 ### Specifying SC_HOME
