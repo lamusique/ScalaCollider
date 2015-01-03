@@ -426,7 +426,7 @@ object Server {
                                      val nrtHeaderFormat: AudioFileType,
                                      val nrtSampleFormat: SampleFormat)
     extends ConfigLike {
-    override def toString = "ServerOptions"
+    override def toString = "Server.Config"
   }
 
   object ConfigBuilder {
