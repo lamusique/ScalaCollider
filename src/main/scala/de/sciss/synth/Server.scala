@@ -13,6 +13,7 @@
 
 package de.sciss.synth
 
+import de.sciss.processor.{Processor, GenericProcessor}
 import impl.ServerImpl
 import io.{AudioFileType, SampleFormat}
 import java.io.File
@@ -719,11 +720,11 @@ object Server {
   }
 
   def printError(name: String, t: Throwable): Unit = {
-    println(name + " : ")
+    println(s"$name :")
     t.printStackTrace()
   }
 
-  implicit def defaultGroup(s: Server) = s.defaultGroup
+  implicit def defaultGroup(s: Server): Group = s.defaultGroup
 
   type Listener = Model.Listener[Update]
 
@@ -735,21 +736,32 @@ object Server {
 
   final case class Counts(c: message.StatusReply) extends Update
 
+  /** Starts an NRT rendering process based on the NRT parameters of the configuration argument.
+    * The returned process must be explicitly started by calling `start()`
+    *
+    * @param dur      the duration of the bounce, used to emit process updates
+    * @param config   the server configuration in which `nrtCommandPath` must be set
+    *
+    * @return   the process whose return value is the process exit code of scsynth (0 indicating success)
+    */
+  def nrt(dur: Double, config: Server.Config): GenericProcessor[Int] with Processor.Prepared =
+    new impl.NRTImpl(dur, config)
+
   private def createClient(transport: osc.Transport.Net, serverAddr: InetSocketAddress,
                            clientAddr: InetSocketAddress): osc.Client = {
-    val client = transport match {
+    val client: osc.Client = transport match {
       case UDP =>
         val cfg = UDP.Config()
-        cfg.localSocketAddress = clientAddr
-        cfg.codec = message.ServerCodec
-        cfg.bufferSize = 0x10000
-        UDP.Client(serverAddr, cfg): osc.Client
+        cfg.localSocketAddress  = clientAddr
+        cfg.codec               = message.ServerCodec
+        cfg.bufferSize          = 0x10000
+        UDP.Client(serverAddr, cfg)
       case TCP =>
-        val cfg = TCP.Config()
-        cfg.codec = message.ServerCodec
-        cfg.localSocketAddress = clientAddr
-        cfg.bufferSize = 0x10000
-        TCP.Client(serverAddr, cfg): osc.Client
+        val cfg                 = TCP.Config()
+        cfg.codec               = message.ServerCodec
+        cfg.localSocketAddress  = clientAddr
+        cfg.bufferSize          = 0x10000
+        TCP.Client(serverAddr, cfg)
     }
     client
   }

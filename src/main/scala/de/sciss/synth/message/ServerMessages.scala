@@ -69,7 +69,14 @@ final case class StatusReply(numUGens: Int, numSynths: Int, numGroups: Int, numD
                              peakCPU: Float, sampleRate: Double, actualSampleRate: Double)
   extends Message("/status.reply", 1, numUGens, numSynths, numGroups, numDefs, avgCPU, peakCPU,
                                       sampleRate, actualSampleRate)
-  with Receive
+  with Receive {
+
+  override def toString(): String = {
+    val s1 = f"numUGens = $numUGens, numSynths = $numSynths, numGroups = $numGroups"
+    val s2 = f"cpu = ${avgCPU*100}%1.1f%%/${peakCPU*100}%1.1f%%, sampleRate = $sampleRate%1.0f/$actualSampleRate%1.2f"
+    s"$productPrefix($s1, $s2)"
+  }
+}
 
 /** The `/status` message that queries the current statistics from the server. */
 case object Status extends Message("/status") with SyncQuery
@@ -851,7 +858,7 @@ final case class SynthDefFree(names: String*)
   * @param path   the path to the file that stores the definition. This can be a pattern
   *               like `"synthdefs/perc-*"`
   *
-  * @see [[SynthDef$.loadMsg]]
+  * @see [[SynthDef.loadMsg]]
   */
 final case class SynthDefLoad(path: String, completion: Option[Packet])
   extends Message("/d_load", path :: completion.toList: _*)

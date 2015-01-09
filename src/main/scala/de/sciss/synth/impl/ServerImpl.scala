@@ -14,15 +14,20 @@
 package de.sciss.synth
 package impl
 
+import java.io.{File, IOException}
 import java.net.InetSocketAddress
-import java.util.{TimerTask, Timer}
-import java.io.IOException
+import java.util.{Timer, TimerTask}
+
 import de.sciss.model.impl.ModelImpl
-import message.StatusReply
 import de.sciss.osc
-import util.control.NonFatal
-import concurrent.duration._
-import concurrent.{Await, Promise, Future, TimeoutException}
+import de.sciss.processor.GenericProcessor
+import de.sciss.processor.impl.ProcessorImpl
+import de.sciss.synth.message.StatusReply
+
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future, Promise, TimeoutException, blocking}
+import scala.sys.process.{Process, ProcessLogger}
+import scala.util.control.NonFatal
 
 private[synth] object ServerImpl {
   @volatile private var _default: Server = null
@@ -45,14 +50,64 @@ private[synth] object ServerImpl {
     }
 }
 
+private[synth] final class NRTImpl(dur: Double, sCfg: Server.Config)
+  extends ProcessorImpl[Int, GenericProcessor[Int]] with GenericProcessor[Int] {
+
+  @volatile private var proc: Process = null
+
+  private def killProc(): Unit = {
+    val _proc = proc
+    proc      = null
+    if (_proc != null) _proc.destroy()
+  }
+
+  override protected def cleanUp(): Unit = killProc()
+
+  override protected def notifyAborted(): Unit = killProc()
+
+  protected def body(): Int = {
+    val procArgs    = sCfg.toNonRealtimeArgs
+    val procBuilder = Process(procArgs, Some(new File(sCfg.program).getParentFile))
+
+    val log: ProcessLogger = new ProcessLogger {
+      def buffer[A](f: => A): A = f
+
+      def out(lineL: => String): Unit = {
+        val line: String = lineL
+        if (line.startsWith("nextOSCPacket")) {
+          val time = line.substring(14).toFloat
+          val prog = time / dur
+          progress = prog
+        } else {
+          // ignore the 'start time <num>' message, and also the 'Found <num> LADSPA plugins' on Linux
+          if (!line.startsWith("start time ") && !line.endsWith(" LADSPA plugins")) {
+            Console.out.println(line)
+          }
+        }
+      }
+
+      def err(line: => String): Unit = Console.err.println(line)
+    }
+
+    val _proc = procBuilder.run(log)
+    proc = _proc
+    checkAborted()
+    val res = blocking(_proc.exitValue()) // blocks
+    proc = null
+
+    checkAborted()
+    res // if (res != 0) throw Bounce.ServerFailed(res)
+  }
+}
+
 private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr: InetSocketAddress,
                                       val config: Server.Config, val clientConfig: Client.Config,
                                       var countsVar: StatusReply)
   extends Server with ModelImpl[Server.Update] {
   server =>
 
-  import Server._
   import clientConfig.executionContext
+  import de.sciss.synth.Server._
 
   private var aliveThread: Option[StatusWatcher] = None
   private val condSync = new AnyRef
@@ -74,7 +129,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
   // ---- constructor ----
   //   OSCReceiverActor.start()
   c.action = OSCReceiverActor ! _
-  ServerImpl.add(server)
+  if (isConnected) ServerImpl.add(server) // don't do that for a dummy server
 
   def isLocal: Boolean = {
     val host = addr.getAddress
@@ -127,7 +182,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
   def sampleRate = counts.sampleRate
 
   def dumpTree(controls: Boolean = false): Unit = {
-    import Ops._
+    import de.sciss.synth.Ops._
     rootNode.dumpTree(controls)
   }
 
@@ -294,7 +349,7 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
   }
 
   private object OSCReceiverActor /* extends DaemonActor */ {
-    import concurrent._
+    import scala.concurrent._
 
     //    private case object Clear
     //

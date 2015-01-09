@@ -20,7 +20,7 @@ The best way to ask questions, no matter if newbie or expert, is to use the mail
 
 The early architectural design of ScalaCollider is documented in the SuperCollider 2010 symposium proceedings: [H.H.Rutz, Rethinking the SuperCollider Client...](http://cmr.soc.plymouth.ac.uk/publications/Rutz_SuperCollider2010.pdf). However, many design decisions have been revised or refined in the meantime.
 
-The file [ExampleCmd.txt](https://raw.githubusercontent.com/Sciss/ScalaCollider/master/ExampleCmd.txt) is a good starting point for understanding how UGen graphs are written in ScalaCollider. You can directly copy and paste these examples into the ScalaCollider-Swing application's interpreter window.
+The file [ExampleCmd.sc](https://raw.githubusercontent.com/Sciss/ScalaCollider/master/ExampleCmd.sc) is a good starting point for understanding how UGen graphs are written in ScalaCollider. You can directly copy and paste these examples into the ScalaCollider-Swing application's interpreter window.
 
 See the section 'starting a SuperCollider server' below, for another simple example of running a server (possibly from your own application code).
 
@@ -94,7 +94,7 @@ On the other hand, if you run ScalaCollider from a Bash terminal, you edit `~/.b
 
 On linux, the environment variables probably go in `~/.profile`.
 
-For more sound examples, see `ExampleCmd.txt`. There is also an introductory video for the [Swing frontend](http://github.com/Sciss/ScalaColliderSwing) at [www.screencast.com/t/YjUwNDZjMT](http://www.screencast.com/t/YjUwNDZjMT).
+For more sound examples, see `ExampleCmd.sc`. There is also an introductory video for the [Swing frontend](http://github.com/Sciss/ScalaColliderSwing) at [www.screencast.com/t/YjUwNDZjMT](http://www.screencast.com/t/YjUwNDZjMT).
 
 ## packages
 
