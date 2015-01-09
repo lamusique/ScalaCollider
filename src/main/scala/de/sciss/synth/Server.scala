@@ -737,7 +737,8 @@ object Server {
   final case class Counts(c: message.StatusReply) extends Update
 
   /** Starts an NRT rendering process based on the NRT parameters of the configuration argument.
-    * The returned process must be explicitly started by calling `start()`
+    *
+    * '''Note:''' The returned process must be explicitly started by calling `start()`
     *
     * @param dur      the duration of the bounce, used to emit process updates
     * @param config   the server configuration in which `nrtCommandPath` must be set
