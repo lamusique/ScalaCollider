@@ -20,12 +20,12 @@ import java.util.{Timer, TimerTask}
 
 import de.sciss.model.impl.ModelImpl
 import de.sciss.osc
-import de.sciss.processor.GenericProcessor
+import de.sciss.processor.Processor
 import de.sciss.processor.impl.ProcessorImpl
 import de.sciss.synth.message.StatusReply
 
 import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future, Promise, TimeoutException, blocking}
+import scala.concurrent.{Await, Future, Promise, TimeoutException}
 import scala.sys.process.{Process, ProcessLogger}
 import scala.util.control.NonFatal
 
@@ -51,19 +51,7 @@ private[synth] object ServerImpl {
 }
 
 private[synth] final class NRTImpl(dur: Double, sCfg: Server.Config)
-  extends ProcessorImpl[Int, GenericProcessor[Int]] with GenericProcessor[Int] {
-
-  @volatile private var proc: Process = null
-
-  private def killProc(): Unit = {
-    val _proc = proc
-    proc      = null
-    if (_proc != null) _proc.destroy()
-  }
-
-  override protected def cleanUp(): Unit = killProc()
-
-  override protected def notifyAborted(): Unit = killProc()
+  extends ProcessorImpl[Int, Processor[Int]] with Processor[Int] {
 
   protected def body(): Int = {
     val procArgs    = sCfg.toNonRealtimeArgs
@@ -90,13 +78,8 @@ private[synth] final class NRTImpl(dur: Double, sCfg: Server.Config)
     }
 
     val _proc = procBuilder.run(log)
-    proc = _proc
     checkAborted()
-    val res = blocking(_proc.exitValue()) // blocks
-    proc = null
-
-    checkAborted()
-    res // if (res != 0) throw Bounce.ServerFailed(res)
+    await(Processor.fromProcess("scsynth -N", _proc))
   }
 }
 

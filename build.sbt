@@ -26,7 +26,7 @@ lazy val oscVersion       = "1.1.3"
 
 lazy val audioFileVersion = "1.4.3"
 
-lazy val processorVersion = "0.3.1"
+lazy val processorVersion = "0.4.0-SNAPSHOT"
 
 lazy val scalaTestVersion = "2.2.3"
 

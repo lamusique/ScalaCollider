@@ -13,7 +13,7 @@
 
 package de.sciss.synth
 
-import de.sciss.processor.{Processor, GenericProcessor}
+import de.sciss.processor.Processor
 import impl.ServerImpl
 import io.{AudioFileType, SampleFormat}
 import java.io.File
@@ -744,7 +744,7 @@ object Server {
     *
     * @return   the process whose return value is the process exit code of scsynth (0 indicating success)
     */
-  def nrt(dur: Double, config: Server.Config): GenericProcessor[Int] with Processor.Prepared =
+  def renderNRT(dur: Double, config: Server.Config): Processor[Int] with Processor.Prepared =
     new impl.NRTImpl(dur, config)
 
   private def createClient(transport: osc.Transport.Net, serverAddr: InetSocketAddress,
