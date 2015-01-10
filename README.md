@@ -1,5 +1,7 @@
 # ScalaCollider
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ScalaCollider/ScalaCollider?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## statement
 
 ScalaCollider is a [SuperCollider](http://supercollider.sf.net) client for the Scala programming language. It is (C)opyright 2008&ndash;2015 by Hanns Holger Rutz. All rights reserved. ScalaCollider is released under the [GNU General Public License](http://github.com/Sciss/ScalaCollider/blob/master/LICENSE) and comes with absolutely no warranties. To contact the author, send an email to `contact at sciss.de`
