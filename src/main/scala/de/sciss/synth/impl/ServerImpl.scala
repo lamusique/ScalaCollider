@@ -22,7 +22,7 @@ import de.sciss.model.impl.ModelImpl
 import de.sciss.osc
 import de.sciss.processor.Processor
 import de.sciss.processor.impl.ProcessorImpl
-import de.sciss.synth.message.StatusReply
+import de.sciss.synth.message
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, Promise, TimeoutException}
@@ -83,137 +83,56 @@ private[synth] final class NRTImpl(dur: Double, sCfg: Server.Config)
   }
 }
 
-private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr: InetSocketAddress,
-                                      val config: Server.Config, val clientConfig: Client.Config,
-                                      var countsVar: StatusReply)
-  extends Server with ModelImpl[Server.Update] {
-  server =>
+private[synth] final class OnlineServerImpl(val name: String, c: osc.Client, val addr: InetSocketAddress,
+                                            val config: Server.Config, val clientConfig: Client.Config,
+                                            var countsVar: message.StatusReply)
+  extends ServerImpl { server =>
 
   import clientConfig.executionContext
-  import de.sciss.synth.Server._
 
-  private var aliveThread: Option[StatusWatcher] = None
   private val condSync = new AnyRef
-  @volatile private var _condition: Condition = Running
-  private var pendingCondition    : Condition = NoPending
-
-  val rootNode      = Group(this, 0)
-  val defaultGroup  = Group(this, 1)
-  val nodeManager   = new NodeManager  (this)
-  val bufManager    = new BufferManager(this)
-
-  private val nodeAllocator        = new NodeIDAllocator(clientConfig.clientID, clientConfig.nodeIDOffset)
-  private val controlBusAllocator  = new ContiguousBlockAllocator(config.controlBusChannels)
-  private val audioBusAllocator    = new ContiguousBlockAllocator(config.audioBusChannels, config.internalBusIndex)
-  private val bufferAllocator      = new ContiguousBlockAllocator(config.audioBuffers)
-  private var uniqueID             = 0
-  private val uniqueSync           = new AnyRef
+  @volatile private var _condition: Server.Condition = Server.Running
+  private var pendingCondition    : Server.Condition = Server.NoPending
+  private var aliveThread: Option[StatusWatcher] = None
 
   // ---- constructor ----
   //   OSCReceiverActor.start()
   c.action = OSCReceiverActor ! _
-  if (isConnected) ServerImpl.add(server) // don't do that for a dummy server
-
-  def isLocal: Boolean = {
-    val host = addr.getAddress
-    host.isLoopbackAddress || host.isSiteLocalAddress
-  }
+  ServerImpl.add(server)
 
   def isConnected = c.isConnected
-  def isRunning   = _condition == Running
-  def isOffline   = _condition == Offline
 
-  def nextNodeID(): Int = nodeAllocator.alloc()
-
-  def allocControlBus(numChannels: Int): Int = controlBusAllocator.alloc(numChannels)
-  def allocAudioBus  (numChannels: Int): Int = audioBusAllocator  .alloc(numChannels)
-  def allocBuffer    (numChannels: Int): Int = bufferAllocator    .alloc(numChannels)
-
-  def freeControlBus(index: Int): Unit = controlBusAllocator.free(index)
-  def freeAudioBus  (index: Int): Unit = audioBusAllocator  .free(index)
-  def freeBuffer    (index: Int): Unit = bufferAllocator    .free(index)
-
-  def nextSyncID(): Int = uniqueSync.synchronized {
-    val res = uniqueID; uniqueID += 1; res
-  }
+  def condition = _condition
 
   def !(p: osc.Packet): Unit = c ! p
 
-   def !![A](p: osc.Packet, timeout: Duration)(handler: PartialFunction[osc.Message, A]): Future[A] = {
-     val promise  = Promise[A]()
-     val res      = promise.future
-     val oh       = new OSCTimeOutHandler(handler, promise)
-     OSCReceiverActor.addHandler(oh)
-     server ! p // only after addHandler!
-     Future {
-       try {
-         Await.ready(res, timeout)
-       } catch {
-         case _: TimeoutException => promise.tryFailure(message.Timeout())
-       }
-     }
-     res
-   }
+  def !![A](p: osc.Packet, timeout: Duration)(handler: PartialFunction[osc.Message, A]): Future[A] = {
+    val promise  = Promise[A]()
+    val res      = promise.future
+    val oh       = new OSCTimeOutHandler(handler, promise)
+    OSCReceiverActor.addHandler(oh)
+    server ! p // only after addHandler!
+    Future {
+      try {
+        Await.ready(res, timeout)
+      } catch {
+        case _: TimeoutException => promise.tryFailure(message.Timeout())
+      }
+    }
+    res
+  }
+
+  def serverOffline(): Unit =
+    condSync.synchronized {
+      stopAliveThread()
+      condition = Server.Offline
+    }
 
   def counts = countsVar
 
   private[synth] def counts_=(newCounts: message.StatusReply): Unit = {
     countsVar = newCounts
-    dispatch(Counts(newCounts))
-  }
-
-  def sampleRate = counts.sampleRate
-
-  def dumpTree(controls: Boolean = false): Unit = {
-    import de.sciss.synth.Ops._
-    rootNode.dumpTree(controls)
-  }
-
-  def condition = _condition
-
-  private[synth] def condition_=(newCondition: Condition): Unit =
-    condSync.synchronized {
-      if (newCondition != _condition) {
-        _condition = newCondition
-        if (newCondition == Offline) {
-          pendingCondition = Server.NoPending
-          serverLost()
-        }
-           //            else if( newCondition == Running ) {
-           //               if( pendingCondition == Booting ) {
-           //                  pendingCondition = NoPending
-           //                  collBootCompletion.foreach( action => try {
-           //                        action.apply( this )
-           //                     }
-           //                     catch { case e => e.printStackTrace() }
-           //                  )
-           //                  collBootCompletion = Queue.empty
-           //               }
-           //            }
-           dispatch( newCondition )
-         }
-      }
-
-  def startAliveThread(delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25): Unit =
-    condSync.synchronized {
-      if (aliveThread.isEmpty) {
-        val statusWatcher = new StatusWatcher(delay, period, deathBounces)
-        aliveThread = Some(statusWatcher)
-        statusWatcher.start()
-      }
-    }
-
-  def stopAliveThread(): Unit =
-    condSync.synchronized {
-      aliveThread.foreach(_.stop())
-      aliveThread = None
-    }
-
-  def queryCounts(): Unit = this ! message.Status
-
-  def dumpOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit = {
-    dumpInOSC (mode, filter)
-    dumpOutOSC(mode, filter)
+    dispatch(Server.Counts(newCounts))
   }
 
   def dumpInOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit =
@@ -234,23 +153,15 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
     OSCReceiverActor.clear()
   }
 
-  def serverOffline(): Unit =
-    condSync.synchronized {
-      stopAliveThread()
-      condition = Offline
-    }
-
-  def quit(): Unit = {
-    this ! quitMsg
-    dispose()
-  }
+  def isRunning   = _condition == Server.Running
+  def isOffline   = _condition == Server.Offline
 
   def addResponder   (resp: message.Responder): Unit = OSCReceiverActor.addHandler   (resp)
   def removeResponder(resp: message.Responder): Unit = OSCReceiverActor.removeHandler(resp)
 
-  def initTree(): Unit = {
-    nodeManager.register(defaultGroup)
-    server ! defaultGroup.newMsg(rootNode, addToHead)
+  def quit(): Unit = {
+    this ! quitMsg
+    dispose()
   }
 
   def dispose(): Unit =
@@ -261,75 +172,49 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
       OSCReceiverActor.dispose()
     }
 
-  def syncMsg(): message.Sync = message.Sync(nextSyncID())
-  def quitMsg = message.ServerQuit
-
-
-  // -------- internal class StatusWatcher --------
-
-  private final class StatusWatcher(delay: Float, period: Float, deathBounces: Int)
-    extends Runnable {
-    watcher =>
-
-    private var	alive			          = deathBounces
-    private val delayMillis         = (delay  * 1000).toInt
-    private val periodMillis        = (period * 1000).toInt
-    //      private val	timer			   = new SwingTimer( periodMillis, this )
-    private var timer               = Option.empty[Timer]
-    private var callServerContacted = true
-    private val sync                = new AnyRef
-
-    //      // ---- constructor ----
-    //      timer.setInitialDelay( delayMillis )
-
-    def start(): Unit = {
-      stop()
-      val t = new Timer("StatusWatcher", true)
-      t.schedule(new TimerTask {
-        def run(): Unit = watcher.run()
-      }, delayMillis, periodMillis)
-      Some(t)
-      timer = Some(t)
-    }
-
-    def stop(): Unit = {
-      //         timer.stop
-      timer.foreach { t =>
-        t.cancel()
-        timer = None
-      }
-    }
-
-    def run(): Unit = {
-      sync.synchronized {
-        alive -= 1
-        if (alive < 0) {
-          callServerContacted = true
-          condition = Offline
-        }
-      }
-      try {
-        queryCounts()
-      }
-      catch {
-        case e: IOException => printError("Server.status", e)
-      }
-    }
-
-    def statusReply(msg: message.StatusReply): Unit =
-      sync.synchronized {
-        alive = deathBounces
-        // note: put the counts before running
-        // because that way e.g. the sampleRate
-        // is instantly available
-        counts = msg
-        if (!isRunning && callServerContacted) {
-          callServerContacted = false
-          //               serverContacted
-          condition = Running
-        }
-      }
+  def initTree(): Unit = {
+    nodeManager.register(defaultGroup)
+    server ! defaultGroup.newMsg(rootNode, addToHead)
   }
+
+  private[synth] def condition_=(newCondition: Server.Condition): Unit =
+    condSync.synchronized {
+      if (newCondition != _condition) {
+        _condition = newCondition
+        if (newCondition == Server.Offline) {
+          pendingCondition = Server.NoPending
+          serverLost()
+        }
+        //            else if( newCondition == Running ) {
+        //               if( pendingCondition == Booting ) {
+        //                  pendingCondition = NoPending
+        //                  collBootCompletion.foreach( action => try {
+        //                        action.apply( this )
+        //                     }
+        //                     catch { case e => e.printStackTrace() }
+        //                  )
+        //                  collBootCompletion = Queue.empty
+        //               }
+        //            }
+        dispatch( newCondition )
+      }
+    }
+
+  def startAliveThread(delay: Float = 0.25f, period: Float = 0.25f, deathBounces: Int = 25): Unit =
+    condSync.synchronized {
+      if (aliveThread.isEmpty) {
+        val statusWatcher = new StatusWatcher(delay, period, deathBounces)
+        aliveThread = Some(statusWatcher)
+        statusWatcher.start()
+      }
+    }
+
+  def stopAliveThread(): Unit =
+    condSync.synchronized {
+      aliveThread.foreach(_.stop())
+      aliveThread = None
+    }
+
 
   private object OSCReceiverActor /* extends DaemonActor */ {
     import scala.concurrent._
@@ -409,4 +294,154 @@ private[synth] final class ServerImpl(val name: String, c: osc.Client, val addr:
 
     def removed() = ()
   }
+
+  // -------- internal class StatusWatcher --------
+
+  private final class StatusWatcher(delay: Float, period: Float, deathBounces: Int)
+    extends Runnable {
+    watcher =>
+
+    private var	alive			          = deathBounces
+    private val delayMillis         = (delay  * 1000).toInt
+    private val periodMillis        = (period * 1000).toInt
+    //      private val	timer			   = new SwingTimer( periodMillis, this )
+    private var timer               = Option.empty[Timer]
+    private var callServerContacted = true
+    private val sync                = new AnyRef
+
+    //      // ---- constructor ----
+    //      timer.setInitialDelay( delayMillis )
+
+    def start(): Unit = {
+      stop()
+      val t = new Timer("StatusWatcher", true)
+      t.schedule(new TimerTask {
+        def run(): Unit = watcher.run()
+      }, delayMillis, periodMillis)
+      timer = Some(t)
+    }
+
+    def stop(): Unit = {
+      //         timer.stop
+      timer.foreach { t =>
+        t.cancel()
+        timer = None
+      }
+    }
+
+    def run(): Unit = {
+      sync.synchronized {
+        alive -= 1
+        if (alive < 0) {
+          callServerContacted = true
+          condition = Server.Offline
+        }
+      }
+      try {
+        queryCounts()
+      }
+      catch {
+        case e: IOException => Server.printError("Server.status", e)
+      }
+    }
+
+    def statusReply(msg: message.StatusReply): Unit =
+      sync.synchronized {
+        alive = deathBounces
+        // note: put the counts before running
+        // because that way e.g. the sampleRate
+        // is instantly available
+        counts = msg
+        if (!isRunning && callServerContacted) {
+          callServerContacted = false
+          //               serverContacted
+          condition = Server.Running
+        }
+      }
+  }
+}
+
+private[synth] final class OfflineServerImpl(val name: String, val config: Server.Config,
+                                             val clientConfig: Client.Config,
+                                             val counts: message.StatusReply) extends ServerImpl {
+  def isConnected = false
+  def isRunning   = true
+  def isOffline   = false
+
+  private def offlineException() = new Exception("Server is not connected")
+
+  def !(p: osc.Packet): Unit = throw offlineException()
+
+  def !![A](packet: osc.Packet, timeout: Duration)(handler: PartialFunction[osc.Message, A]): Future[A] =
+    Future.failed(offlineException())
+
+  def condition: Server.Condition = Server.Running
+
+  def startAliveThread(delay: Float, period: Float, deathBounces: Int): Unit = ()
+  def stopAliveThread(): Unit = ()
+
+  def dumpInOSC (mode: osc.Dump, filter: osc.Packet => Boolean): Unit = ()
+  def dumpOutOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit = ()
+
+  private[synth] def addResponder   (resp: message.Responder): Unit = ()
+  private[synth] def removeResponder(resp: message.Responder): Unit = ()
+
+  def dispose(): Unit = ()
+  def quit   (): Unit = ()
+
+  def addr: InetSocketAddress = new InetSocketAddress(config.host, config.port)
+}
+
+private[synth] abstract class ServerImpl
+  extends Server with ModelImpl[Server.Update] {
+
+  server =>
+
+  val rootNode      = Group(this, 0)
+  val defaultGroup  = Group(this, 1)
+  val nodeManager   = new NodeManager  (this)
+  val bufManager    = new BufferManager(this)
+
+  private val nodeAllocator        = new NodeIDAllocator(clientConfig.clientID, clientConfig.nodeIDOffset)
+  private val controlBusAllocator  = new ContiguousBlockAllocator(config.controlBusChannels)
+  private val audioBusAllocator    = new ContiguousBlockAllocator(config.audioBusChannels, config.internalBusIndex)
+  private val bufferAllocator      = new ContiguousBlockAllocator(config.audioBuffers)
+  private var uniqueID             = 0
+  private val uniqueSync           = new AnyRef
+
+  def isLocal: Boolean = {
+    val host = addr.getAddress
+    host.isLoopbackAddress || host.isSiteLocalAddress
+  }
+
+  def nextNodeID(): Int = nodeAllocator.alloc()
+
+  def allocControlBus(numChannels: Int): Int = controlBusAllocator.alloc(numChannels)
+  def allocAudioBus  (numChannels: Int): Int = audioBusAllocator  .alloc(numChannels)
+  def allocBuffer    (numChannels: Int): Int = bufferAllocator    .alloc(numChannels)
+
+  def freeControlBus(index: Int): Unit = controlBusAllocator.free(index)
+  def freeAudioBus  (index: Int): Unit = audioBusAllocator  .free(index)
+  def freeBuffer    (index: Int): Unit = bufferAllocator    .free(index)
+
+  def nextSyncID(): Int = uniqueSync.synchronized {
+    val res = uniqueID; uniqueID += 1; res
+  }
+
+  def sampleRate = counts.sampleRate
+
+  def dumpTree(controls: Boolean = false): Unit = {
+    import de.sciss.synth.Ops._
+    rootNode.dumpTree(controls)
+  }
+
+  def queryCounts(): Unit = this ! message.Status
+
+  def dumpOSC(mode: osc.Dump, filter: osc.Packet => Boolean): Unit = {
+    dumpInOSC (mode, filter)
+    dumpOutOSC(mode, filter)
+  }
+
+  def syncMsg(): message.Sync = message.Sync(nextSyncID())
+  def quitMsg = message.ServerQuit
 }

@@ -13,19 +13,20 @@
 
 package de.sciss.synth
 
-import de.sciss.processor.Processor
-import impl.ServerImpl
-import io.{AudioFileType, SampleFormat}
 import java.io.File
 import java.net.{DatagramSocket, InetAddress, InetSocketAddress, ServerSocket}
-import collection.mutable
-import language.implicitConversions
+
 import de.sciss.model.Model
-import message.StatusReply
 import de.sciss.osc
-import osc.{TCP, UDP}
-import concurrent.duration._
-import concurrent.Future
+import de.sciss.osc.{TCP, UDP}
+import de.sciss.processor.Processor
+import de.sciss.synth.impl.ServerImpl
+import de.sciss.synth.io.{AudioFileType, SampleFormat}
+
+import scala.collection.mutable
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.language.implicitConversions
 
 object Server {
   def default: Server = ServerImpl.default
@@ -470,8 +471,8 @@ object Server {
     var wireBuffers: Int = 256 // 64
     /** The default number of random number generators is `64` (scsynth default) */
     var randomSeeds: Int = 64
-    /** The default setting for loading synth defs is `true` (scsynth default) */
-    var loadSynthDefs: Boolean = true
+    /** The default setting for loading synth defs is `false` (this is not the scsynth default!) */
+    var loadSynthDefs: Boolean = false
     /** The default settings for mach port name is `None` (scsynth default) */
     var machPortName: Option[(String, String)] = None
     /** The default verbosity level is `0` (scsynth default) */
@@ -526,7 +527,7 @@ object Server {
     /** (Realtime) The default setting for zero-conf is `false` (other than
       * scsynth's default which is `true`)
       */
-    var zeroConf: Boolean = false // true
+    var zeroConf: Boolean = false
     /** (Realtime) The maximum number of TCP clients is `64` (scsynth default) */
     var maxLogins: Int = 64
     /** (Realtime) The default TCP session password is `None` */
@@ -678,11 +679,11 @@ object Server {
     */
   def dummy(name: String = "dummy", config: Config = Config().build,
             clientConfig: Client.Config = Client.Config().build): Server = {
-    val (addr, c) = prepareConnection(config, clientConfig)
+    // val (addr, c) = prepareConnection(config, clientConfig)
     val sr        = config.sampleRate
-    val status    = StatusReply(numUGens = 0, numSynths = 0, numGroups = 0, numDefs = 0, avgCPU = 0f, peakCPU = 0f,
-                                sampleRate = sr, actualSampleRate = sr)
-    new impl.ServerImpl(name, c, addr, config, clientConfig, status)
+    val status    = message.StatusReply(numUGens = 0, numSynths = 0, numGroups = 0, numDefs = 0,
+      avgCPU = 0f, peakCPU = 0f, sampleRate = sr, actualSampleRate = sr)
+    new impl.OfflineServerImpl(name, /* c, addr, */ config, clientConfig, status)
   }
 
   private def prepareConnection(config: Config, clientConfig: Client.Config): (InetSocketAddress, osc.Client) = {
@@ -790,7 +791,7 @@ trait ServerConnection extends ServerLike with Model[ServerConnection.Condition]
 trait Server extends ServerLike with Model[Server.Update] {
   server =>
 
-  import Server._
+  import de.sciss.synth.Server._
 
   val clientConfig : Client.Config
 
@@ -816,7 +817,7 @@ trait Server extends ServerLike with Model[Server.Update] {
   def allocBuffer(numChannels: Int): Int
   def freeBuffer (index      : Int): Unit
 
-  def !(p: osc.Packet): Unit
+  def ! (p: osc.Packet): Unit
 
   /** Sends out an OSC packet that generates some kind of reply, and
     * returns immediately. It registers a handler to parse that reply.
@@ -834,9 +835,9 @@ trait Server extends ServerLike with Model[Server.Update] {
     *
     * @see  [[de.sciss.synth.message.Timeout]]
     */
-  def !![A](packet: osc.Packet, timeout: Duration = 6.seconds)(handler: PartialFunction[osc.Message, A]): Future[A]
+  def !! [A](packet: osc.Packet, timeout: Duration = 6.seconds)(handler: PartialFunction[osc.Message, A]): Future[A]
 
-  def counts: StatusReply
+  def counts: message.StatusReply
 
   def sampleRate: Double
 
