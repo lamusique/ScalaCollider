@@ -59,7 +59,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
     }
   }
 
-  object Handshake extends ProcessorImpl[ServerImpl, Any] {
+  object Handshake extends ProcessorImpl[OnlineServerImpl, Any] {
     private val beginCond = Promise[Unit]()
 
     def begin(): Unit = {
@@ -72,7 +72,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       beginCond.tryFailure(Processor.Aborted())
     }
 
-    def body(): ServerImpl = {
+    def body(): OnlineServerImpl = {
       log("body")
       Await.result(beginCond.future, Duration.Inf)
 
@@ -84,7 +84,7 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       val cnt = ping(Status) {
         case m: StatusReply => m
       }
-      new ServerImpl(name, c, addr, config, clientConfig, cnt)
+      new OnlineServerImpl(name, c, addr, config, clientConfig, cnt)
     }
 
     private def ping[A](message: Message)(reply: PartialFunction[osc.Packet, A]): A = {

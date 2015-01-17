@@ -1,6 +1,6 @@
 name               := "ScalaCollider"
 
-version            := "1.16.0"
+version            := "1.17.0-SNAPSHOT"
 
 organization       := "de.sciss"
 
@@ -24,7 +24,7 @@ lazy val ugensVersion     = "1.13.0"
 
 lazy val oscVersion       = "1.1.3"
 
-lazy val audioFileVersion = "1.4.3"
+lazy val audioFileVersion = "1.4.4-SNAPSHOT"
 
 lazy val processorVersion = "0.4.0"
 
