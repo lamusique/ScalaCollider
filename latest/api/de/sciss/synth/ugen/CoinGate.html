@@ -30,7 +30,11 @@
       <div id="definition">
         <a href="CoinGate$.html" title="Go to companion"><img src="../../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a>.<a href="package.html" class="extype" name="de.sciss.synth.ugen">ugen</a></p>
-        <h1><a href="CoinGate$.html" title="Go to companion">CoinGate</a></h1> <span class="permalink">
+        <h1><a href="CoinGate$.html" title="Go to companion">CoinGate</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="CoinGate$.html" title="See companion">object CoinGate</a>
+            | <a href="package.html" class="extype" name="de.sciss.synth.ugen">package ugen</a>
+          </div></span></h3><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.CoinGate" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
@@ -43,7 +47,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">CoinGate</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="prob">prob: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">CoinGate</span><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="prob">prob: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -94,7 +98,7 @@ it may pass with a probability given by the <code>prob</code> argument.
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="de.sciss.synth.ugen.CoinGate#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(rate:de.sciss.synth.Rate,in:de.sciss.synth.GE,prob:de.sciss.synth.GE):de.sciss.synth.ugen.CoinGate"></a>
+      <a id="&lt;init&gt;(rate:de.sciss.synth.MaybeRate,in:de.sciss.synth.GE,prob:de.sciss.synth.GE):de.sciss.synth.ugen.CoinGate"></a>
       <a id="&lt;init&gt;:CoinGate"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -102,10 +106,10 @@ it may pass with a probability given by the <code>prob</code> argument.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">CoinGate</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="prob">prob: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>)</span>
+        <span class="name">CoinGate</span><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="prob">prob: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>)</span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#de.sciss.synth.ugen.CoinGate@&lt;init&gt;(rate:de.sciss.synth.Rate,in:de.sciss.synth.GE,prob:de.sciss.synth.GE):de.sciss.synth.ugen.CoinGate" title="Permalink" target="_top">
+      <a href="../../../../index.html#de.sciss.synth.ugen.CoinGate@&lt;init&gt;(rate:de.sciss.synth.MaybeRate,in:de.sciss.synth.GE,prob:de.sciss.synth.GE):de.sciss.synth.ugen.CoinGate" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
@@ -430,18 +434,18 @@ expansion
                         (all triggers passed)
 </p>
     </li><li name="de.sciss.synth.ugen.CoinGate#rate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="rate:de.sciss.synth.Rate"></a>
-      <a id="rate:Rate"></a>
+      <a id="rate:de.sciss.synth.MaybeRate"></a>
+      <a id="rate:MaybeRate"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">rate</span><span class="result">: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>
+        <span class="name">rate</span><span class="result">: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>
       </span>
       </h4><span class="permalink">
-      <a href="../../../../index.html#de.sciss.synth.ugen.CoinGate@rate:de.sciss.synth.Rate" title="Permalink" target="_top">
+      <a href="../../../../index.html#de.sciss.synth.ugen.CoinGate@rate:de.sciss.synth.MaybeRate" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>

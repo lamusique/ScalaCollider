@@ -30,7 +30,7 @@
       <div id="definition">
         <img src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a></p>
-        <h1>ugen</h1> <span class="permalink">
+        <h1>ugen</h1><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
@@ -273,7 +273,7 @@ initialization time only.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Amplitude.html"><span class="name">Amplitude</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="attack">attack: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>, <span name="release">release: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Amplitude.html"><span class="name">Amplitude</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="attack">attack: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>, <span name="release">release: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@AmplitudeextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -690,7 +690,7 @@ stereophonic output.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Ball.html"><span class="name">Ball</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="g">g: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="damp">damp: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="friction">friction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Ball.html"><span class="name">Ball</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="g">g: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="damp">damp: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="friction">friction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@BallextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -1445,7 +1445,7 @@ console along with a given identifier.
     </span>
       <p class="shortcomment cmt">A scalar (init-time) UGen that fills the contents of a buffer with zeroes.</p><div class="fullcomment"><div class="comment cmt"><p>A scalar (init-time) UGen that fills the contents of a buffer with zeroes.
 </p></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>the buffer to clear
-</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="de.sciss.synth.ugen.SetBuf$">SetBuf</span>
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="SetBuf$.html" class="extype" name="de.sciss.synth.ugen.SetBuf">SetBuf</a>
 </p></span><span class="cmt"><p><a href="LocalBuf$.html" class="extype" name="de.sciss.synth.ugen.LocalBuf">LocalBuf</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Clip" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ClipextendsUGenSource.SingleOutwithProductwithSerializable"></a>
@@ -1505,7 +1505,7 @@ least peak to peak amplitude.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="CoinGate.html"><span class="name">CoinGate</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="prob">prob: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="CoinGate.html"><span class="name">CoinGate</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="prob">prob: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.5f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@CoinGateextendsUGenSource.SingleOutwithIsIndividualwithProductwithSerializable" title="Permalink" target="_top">
@@ -2197,7 +2197,7 @@ position of the first speaker is specified by the <code>orient</code> argument.
                         channel corresponds to the speaker left of the center.
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="PanB2$.html" class="extype" name="de.sciss.synth.ugen.PanB2">PanB2</a>
 </p></span><span class="cmt"><p><a href="PanB$.html" class="extype" name="de.sciss.synth.ugen.PanB">PanB</a></p></span></dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.DegreeToKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.DegreeToKey" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="DegreeToKeyextendsUGenSource.SingleOutwithIsIndividualwithProductwithSerializable"></a>
       <a id="DegreeToKey:DegreeToKey"></a>
       <h4 class="signature">
@@ -2213,7 +2213,13 @@ position of the first speaker is specified by the <code>orient</code> argument.
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A UGen that uses an input signal as an index into an octave repeating table of
+pitch classes.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that uses an input signal as an index into an octave repeating table of
+pitch classes. The input is truncated to an integer, and indices wrap around the
+table and shift octaves as they do.
+</p></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>buffer which contains the steps for each scale degree.</p></dd><dt class="param">in</dt><dd class="cmt"><p>input index signal</p></dd><dt class="param">octave</dt><dd class="cmt"><p>number of steps per octave in the scale.
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="WrapIndex$.html" class="extype" name="de.sciss.synth.ugen.WrapIndex">WrapIndex</a>
+</p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DelTapRd" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="DelTapRdextendsUGenSource.SingleOutwithIsIndividualwithProductwithSerializable"></a>
       <a id="DelTapRd:DelTapRd"></a>
@@ -2270,7 +2276,7 @@ position of the first speaker is specified by the <code>orient</code> argument.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Delay1.html"><span class="name">Delay1</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Delay1.html"><span class="name">Delay1</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@Delay1extendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -2291,7 +2297,7 @@ the delay is 1 control period.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Delay2.html"><span class="name">Delay2</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Delay2.html"><span class="name">Delay2</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@Delay2extendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -3542,7 +3548,7 @@ server if <code>roomSize</code> becomes larger than <code>maxRoomSize</code> .
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Gate.html"><span class="name">Gate</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="gate">gate: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Gate.html"><span class="name">Gate</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="gate">gate: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@GateextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -3831,7 +3837,7 @@ emphasized towards lower frequencies.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Hasher.html"><span class="name">Hasher</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Hasher.html"><span class="name">Hasher</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@HasherextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -5172,7 +5178,7 @@ experimental and not optimized currently, so is rather hoggish of CPU.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="LeastChange.html"><span class="name">LeastChange</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="b">b: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="LeastChange.html"><span class="name">LeastChange</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="a">a: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="b">b: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@LeastChangeextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -5739,7 +5745,7 @@ blocks.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="MantissaMask.html"><span class="name">MantissaMask</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="bits">bits: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">3</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="MantissaMask.html"><span class="name">MantissaMask</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="bits">bits: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">3</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@MantissaMaskextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -7152,6 +7158,33 @@ copies over the corresponding bins of the second fft input buffer.
                         passed from the first input).
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="PV_RectComb$.html" class="extype" name="de.sciss.synth.ugen.PV_RectComb">PV_RectComb</a>
 </p></span></dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.PackFFT" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="PackFFTextendsUGenSource.SingleOutwithControlRatedwithHasSideEffectwithIsIndividualwithProductwithSerializable"></a>
+      <a id="PackFFT:PackFFT"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="PackFFT.html"><span class="name">PackFFT</span></a><span class="params">(<span name="chain">chain: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="fftSize">fftSize: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="values">values: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="from">from: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>, <span name="to">to: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="clear">clear: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../ControlRated.html" class="extype" name="de.sciss.synth.ControlRated">ControlRated</a> with <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.package@PackFFTextendsUGenSource.SingleOutwithControlRatedwithHasSideEffectwithIsIndividualwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A UGen that writes a complex input signal into an FFT buffer.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that writes a complex input signal into an FFT buffer. The input is a
+sequence of interleaved magnitudes and phases. It is written to an FFT buffer
+ready for transforming it back into time-domain audio using IFFT.
+</p></div><dl class="paramcmts block"><dt class="param">values</dt><dd class="cmt"><p>input data to pack. It should be a flat sequence
+                        containing interleaved magnitude and phase components of
+                        all bins in ascending order. E.g. [mag0, phase0, mag1,
+                        phase1, mag2, phase2, ... magN, phaseN]. This input is
+                        typically demand-rate.</p></dd><dt class="param">from</dt><dd class="cmt"><p>index of lower bin</p></dd><dt class="param">to</dt><dd class="cmt"><p>index of upper bin (inclusive)</p></dd><dt class="param">clear</dt><dd class="cmt"><p>if <code>1</code> , clears the buffer before packing the values,
+                        setting its contents to zero.
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="SetBuf$.html" class="extype" name="de.sciss.synth.ugen.SetBuf">SetBuf</a>
+</p></span><span class="cmt"><p><a href="IFFT$.html" class="extype" name="de.sciss.synth.ugen.IFFT">IFFT</a></p></span><span class="cmt"><p><a href="FFT$.html" class="extype" name="de.sciss.synth.ugen.FFT">FFT</a></p></span><span class="cmt"><p><a href="Unpack1FFT$.html" class="extype" name="de.sciss.synth.ugen.Unpack1FFT">Unpack1FFT</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Pan2" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Pan2extendsUGenSource.MultiOutwithProductwithSerializable"></a>
       <a id="Pan2:Pan2"></a>
@@ -7437,7 +7470,7 @@ the outside at trigger time is the correct peak value up to that moment. See the
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="PeakFollower.html"><span class="name">PeakFollower</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="decay">decay: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.999f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="PeakFollower.html"><span class="name">PeakFollower</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="decay">decay: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.999f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@PeakFollowerextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -7449,7 +7482,8 @@ the input.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that c
 the input. If the absolute input level drops below the observed peak value, this
 value decreases by the factor given as <code>decay</code> parameter (but no more than the
 current absolute input level).
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="LagUD$.html" class="extype" name="de.sciss.synth.ugen.LagUD">LagUD</a>
+</p></div><dl class="paramcmts block"><dt class="param">in</dt><dd class="cmt"><p>input signal to trace</p></dd><dt class="param">decay</dt><dd class="cmt"><p>feedback coefficient controlling the release rate
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="LagUD$.html" class="extype" name="de.sciss.synth.ugen.LagUD">LagUD</a>
 </p></span><span class="cmt"><p><a href="RunningSum$.html" class="extype" name="de.sciss.synth.ugen.RunningSum">RunningSum</a></p></span><span class="cmt"><p><a href="Amplitude$.html" class="extype" name="de.sciss.synth.ugen.Amplitude">Amplitude</a></p></span><span class="cmt"><p><a href="Peak$.html" class="extype" name="de.sciss.synth.ugen.Peak">Peak</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Phasor" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="PhasorextendsUGenSource.SingleOutwithProductwithSerializable"></a>
@@ -7770,7 +7804,7 @@ interpolation.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="PulseDivider.html"><span class="name">PulseDivider</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="div">div: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">2</a></span></span></span>, <span name="start">start: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="PulseDivider.html"><span class="name">PulseDivider</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="div">div: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">2</a></span></span></span>, <span name="start">start: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@PulseDividerextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -8339,7 +8373,7 @@ equivalent to the reciprocal of <code>SampleDur</code>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Schmidt.html"><span class="name">Schmidt</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="lo">lo: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="hi">hi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Schmidt.html"><span class="name">Schmidt</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="lo">lo: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="hi">hi: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@SchmidtextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -8405,7 +8439,7 @@ occur with a single-threshold trigger.
     </span>
       <p class="shortcomment cmt">A UGen which selects among a sequence of inputs, according to an index signal.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen which selects among a sequence of inputs, according to an index signal.
 Note that, although only one signal of the <code>multi</code> input is let through at a
-time, sill all ugens are continuously running.
+time, still all ugens are continuously running.
 </p></div><dl class="paramcmts block"><dt class="param">index</dt><dd class="cmt"><p>an index signal into the channels of the <code>in</code> argument.
                         The index is automatically clipped to lie between <code>0</code>
                         and <code>in.numOutputs - 1</code> . The index is truncated to its
@@ -8478,6 +8512,28 @@ receiving triggers. The message sent is
 </p></dd></dl><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>The argument order is different from its sclang counterpart.
 </p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="SendReply$.html" class="extype" name="de.sciss.synth.ugen.SendReply">SendReply</a>
 </p></span></dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.SetBuf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SetBufextendsUGenSource.SingleOutwithScalarRatedwithHasSideEffectwithIsIndividualwithProductwithSerializable"></a>
+      <a id="SetBuf:SetBuf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="SetBuf.html"><span class="name">SetBuf</span></a><span class="params">(<span name="buf">buf: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="values">values: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="offset">offset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../ScalarRated.html" class="extype" name="de.sciss.synth.ScalarRated">ScalarRated</a> with <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <a href="../IsIndividual.html" class="extype" name="de.sciss.synth.IsIndividual">IsIndividual</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.package@SetBufextendsUGenSource.SingleOutwithScalarRatedwithHasSideEffectwithIsIndividualwithProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A scalar (init-time) UGen that overwrites contents of a buffer with given
+values.</p><div class="fullcomment"><div class="comment cmt"><p>A scalar (init-time) UGen that overwrites contents of a buffer with given
+values.
+</p></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>the buffer to write the values into</p></dd><dt class="param">values</dt><dd class="cmt"><p>values to write into the buffer</p></dd><dt class="param">offset</dt><dd class="cmt"><p>frame offset into the buffer
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ClearBuf$.html" class="extype" name="de.sciss.synth.ugen.ClearBuf">ClearBuf</a>
+</p></span><span class="cmt"><p><a href="LocalBuf$.html" class="extype" name="de.sciss.synth.ugen.LocalBuf">LocalBuf</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.SetResetFF" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SetResetFFextendsUGenSource.SingleOutwithProductwithSerializable"></a>
       <a id="SetResetFF:SetResetFF"></a>
@@ -8487,7 +8543,7 @@ receiving triggers. The message sent is
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SetResetFF.html"><span class="name">SetResetFF</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="SetResetFF.html"><span class="name">SetResetFF</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@SetResetFFextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -8504,7 +8560,7 @@ time, the <i>reset</i> input takes precedence.
                         the signal changes from non-positive to positive.
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ToggleFF$.html" class="extype" name="de.sciss.synth.ugen.ToggleFF">ToggleFF</a>
 </p></span></dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Shaper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Shaper" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ShaperextendsUGenSource.SingleOutwithIsIndividualwithProductwithSerializable"></a>
       <a id="Shaper:Shaper"></a>
       <h4 class="signature">
@@ -8520,7 +8576,15 @@ time, the <i>reset</i> input takes precedence.
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A waveshaping UGen.</p><div class="fullcomment"><div class="comment cmt"><p>A waveshaping UGen. Waveshaping is a the process of translating an input signal
+by indexing a table (buffer).</p><p><b>Advanced notes:</b> wavetable format:</p><pre>Signal: [a0, a1, a2...]
+Wavetable: [<span class="num">2</span>*a0-a1, a1-a0, <span class="num">2</span>*a1-a2, a2-a1, <span class="num">2</span>*a2-a3, a3-a2...]</pre><p>This strange format is not a standard linear interpolation (integer + frac),
+but for (integer part -1) and (1+frac)) due to some efficient maths for integer
+to float conversion in the underlying C code.
+</p></div><dl class="paramcmts block"><dt class="param">buf</dt><dd class="cmt"><p>buffer filled in wavetable format containing the
+                        transfer function.</p></dd><dt class="param">in</dt><dd class="cmt"><p>signal to be fed into the wave shaper
+</p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="WrapIndex$.html" class="extype" name="de.sciss.synth.ugen.WrapIndex">WrapIndex</a>
+</p></span><span class="cmt"><p><a href="Index$.html" class="extype" name="de.sciss.synth.ugen.Index">Index</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Silent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SilentextendsGE.LazywithAudioRatedwithProductwithSerializable"></a>
       <a id="Silent:Silent"></a>
@@ -8732,7 +8796,7 @@ blocks.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Spring.html"><span class="name">Spring</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="spring">spring: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="damp">damp: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="Spring.html"><span class="name">Spring</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="spring">spring: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="damp">damp: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@SpringextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -9043,7 +9107,7 @@ block maximum value again instead of waiting for a fall to &lt;= 0.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="TBall.html"><span class="name">TBall</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="g">g: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">10.0f</a></span></span></span>, <span name="damp">damp: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="friction">friction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="TBall.html"><span class="name">TBall</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="in">in: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="g">g: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">10.0f</a></span></span></span>, <span name="damp">damp: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="friction">friction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.01f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@TBallextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -9060,7 +9124,7 @@ block maximum value again instead of waiting for a fall to &lt;= 0.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="TDelay.html"><span class="name">TDelay</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="dur">dur: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="TDelay.html"><span class="name">TDelay</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="dur">dur: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.1f</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@TDelayextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -9132,7 +9196,8 @@ reset.
       <p class="shortcomment cmt">A UGen that generates a new random decimal value each time it is triggered,
 using an exponential distribution from <code>lo</code> to <code>hi</code> .</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that generates a new random decimal value each time it is triggered,
 using an exponential distribution from <code>lo</code> to <code>hi</code> . Values <code>lo</code> and <code>hi</code> must
-both have the same sign and be non-zero.
+both have the same sign and be non-zero.</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.
 </p></div><dl class="paramcmts block"><dt class="param">lo</dt><dd class="cmt"><p>lower limit of the output range</p></dd><dt class="param">hi</dt><dd class="cmt"><p>upper limit of the output range</p></dd><dt class="param">trig</dt><dd class="cmt"><p>signal to trigger new random number
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="RandSeed$.html" class="extype" name="de.sciss.synth.ugen.RandSeed">RandSeed</a>
 </p></span><span class="cmt"><p><a href="ExpRand$.html" class="extype" name="de.sciss.synth.ugen.ExpRand">ExpRand</a></p></span><span class="cmt"><p><a href="TRand$.html" class="extype" name="de.sciss.synth.ugen.TRand">TRand</a></p></span></dd></dl></div>
@@ -9186,7 +9251,8 @@ but requires a regular buffer.
       </a>
     </span>
       <p class="shortcomment cmt">A UGen that outputs integer random numbers when triggered.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that outputs integer random numbers when triggered. The values have a
-uniform distribution from <code>lo</code> to <code>hi</code> (inclusive).
+uniform distribution from <code>lo</code> to <code>hi</code> (inclusive).</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.
 </p></div><dl class="paramcmts block"><dt class="param">lo</dt><dd class="cmt"><p>lower limit of the output range</p></dd><dt class="param">hi</dt><dd class="cmt"><p>upper limit of the output range (inclusive)</p></dd><dt class="param">trig</dt><dd class="cmt"><p>signal to trigger new random number
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="TRand$.html" class="extype" name="de.sciss.synth.ugen.TRand">TRand</a>
 </p></span><span class="cmt"><p><a href="IRand$.html" class="extype" name="de.sciss.synth.ugen.IRand">IRand</a></p></span></dd></dl></div>
@@ -9208,7 +9274,8 @@ uniform distribution from <code>lo</code> to <code>hi</code> (inclusive).
     </span>
       <p class="shortcomment cmt">A UGen that generates a new random decimal value each time it is triggered,
 using a uniform distribution from <code>lo</code> to <code>hi</code> .</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that generates a new random decimal value each time it is triggered,
-using a uniform distribution from <code>lo</code> to <code>hi</code> .
+using a uniform distribution from <code>lo</code> to <code>hi</code> .</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.
 </p></div><dl class="paramcmts block"><dt class="param">lo</dt><dd class="cmt"><p>lower limit of the output range</p></dd><dt class="param">hi</dt><dd class="cmt"><p>upper limit of the output range</p></dd><dt class="param">trig</dt><dd class="cmt"><p>signal to trigger new random number
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="RandSeed$.html" class="extype" name="de.sciss.synth.ugen.RandSeed">RandSeed</a>
 </p></span><span class="cmt"><p><a href="ExpRand$.html" class="extype" name="de.sciss.synth.ugen.ExpRand">ExpRand</a></p></span><span class="cmt"><p><a href="TRand$.html" class="extype" name="de.sciss.synth.ugen.TRand">TRand</a></p></span><span class="cmt"><p><a href="IRand$.html" class="extype" name="de.sciss.synth.ugen.IRand">IRand</a></p></span></dd></dl></div>
@@ -9278,7 +9345,7 @@ is 2.26757e-05, followed strangely by 1.00002, and then (as expected) 1.0.
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ToggleFF.html"><span class="name">ToggleFF</span></a><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="ToggleFF.html"><span class="name">ToggleFF</span></a><span class="params">(<span name="rate">rate: <a href="../MaybeRate.html" class="extype" name="de.sciss.synth.MaybeRate">MaybeRate</a></span>, <span name="trig">trig: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.package@ToggleFFextendsUGenSource.SingleOutwithProductwithSerializable" title="Permalink" target="_top">
@@ -11354,7 +11421,7 @@ console along with a given identifier.
       </a>
     </span>
       <p class="shortcomment cmt">A scalar (init-time) UGen that fills the contents of a buffer with zeroes.</p><div class="fullcomment"><div class="comment cmt"><p>A scalar (init-time) UGen that fills the contents of a buffer with zeroes.
-</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><span class="extype" name="de.sciss.synth.ugen.SetBuf$">SetBuf</span>
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="SetBuf$.html" class="extype" name="de.sciss.synth.ugen.SetBuf">SetBuf</a>
 </p></span><span class="cmt"><p><a href="LocalBuf$.html" class="extype" name="de.sciss.synth.ugen.LocalBuf">LocalBuf</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Clip" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Clip"></a>
@@ -12004,7 +12071,7 @@ play {
   DecodeB2.ar(<span class="num">4</span>, w, rot.xr, rot.yr)
 }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="PanB2$.html" class="extype" name="de.sciss.synth.ugen.PanB2">PanB2</a>
 </p></span><span class="cmt"><p><a href="PanB$.html" class="extype" name="de.sciss.synth.ugen.PanB">PanB</a></p></span></dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.DegreeToKey" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.DegreeToKey" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="DegreeToKey"></a>
       <a id="DegreeToKey:DegreeToKey"></a>
       <h4 class="signature">
@@ -12020,7 +12087,29 @@ play {
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A UGen that uses an input signal as an index into an octave repeating table of
+pitch classes.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that uses an input signal as an index into an octave repeating table of
+pitch classes. The input is truncated to an integer, and indices wrap around the
+table and shift octaves as they do.</p><h5>Examples</h5><pre><span class="cmt">// modal space where mouse x controls pitch step</span>
+play {
+  <span class="cmt">// initialize the scale buffer (Dorian)</span>
+  <span class="kw">val</span> scale = Vector(<span class="num">0</span>, <span class="num">2</span>, <span class="num">3.2</span>, <span class="num">5</span>, <span class="num">7</span>, <span class="num">9</span>, <span class="num">10</span>)
+  <span class="kw">val</span> buf   = LocalBuf(scale.size)
+  SetBuf(buf, scale)
+
+  <span class="cmt">// base MIDI pitch</span>
+  <span class="kw">val</span> base  = DegreeToKey.kr(buf, in = MouseX.kr(<span class="num">0</span>, <span class="num">15</span>), octave = <span class="num">12</span>) + <span class="num">72</span>
+  <span class="kw">val</span> noise = LFNoise1.kr(<span class="std">Seq</span>(<span class="num">3</span>, <span class="num">3</span>)) * <span class="num">0.04</span>  <span class="cmt">// low freq stereo detuning</span>
+  <span class="cmt">// lead tone</span>
+  <span class="kw">val</span> lead  = SinOsc.ar((base + noise).midicps)
+  <span class="cmt">// drone 5ths</span>
+  <span class="kw">val</span> drone = RLPF.ar(LFPulse.ar(<span class="std">Seq</span>(<span class="num">48.</span>midicps, <span class="num">55.</span>midicps), <span class="num">0.15</span>),
+                      SinOsc.kr(<span class="num">0.1</span>).madd(<span class="num">10</span>, <span class="num">72</span>).midicps, <span class="num">0.1</span>)
+  <span class="kw">val</span> mix = (lead + drone) * <span class="num">0.1</span>
+  <span class="cmt">// add some 70's euro-space-rock echo</span>
+  CombN.ar(mix, <span class="num">0.31</span>, <span class="num">0.31</span>, <span class="num">2</span>) + mix
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="WrapIndex$.html" class="extype" name="de.sciss.synth.ugen.WrapIndex">WrapIndex</a>
+</p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DelTapRd" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="DelTapRd"></a>
       <a id="DelTapRd:DelTapRd"></a>
@@ -17073,6 +17162,43 @@ the low slopes of the rectangle wave, instead of clearing out the bins, it
 copies over the corresponding bins of the second fft input buffer.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="PV_RectComb$.html" class="extype" name="de.sciss.synth.ugen.PV_RectComb">PV_RectComb</a>
 </p></span></dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.PackFFT" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="PackFFT"></a>
+      <a id="PackFFT:PackFFT"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="PackFFT$.html"><span class="name">PackFFT</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.package@PackFFT" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A UGen that writes a complex input signal into an FFT buffer.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that writes a complex input signal into an FFT buffer. The input is a
+sequence of interleaved magnitudes and phases. It is written to an FFT buffer
+ready for transforming it back into time-domain audio using IFFT.</p><h5>Examples</h5><pre><span class="cmt">// harmonic sound with changing overtone intensities</span>
+play {
+  <span class="cmt">// create simple undulating magnitudes</span>
+  <span class="kw">val</span> m0 = FSinOsc.kr(<span class="std">Seq</span>.fill(<span class="num">100</span>)(ExpRand(<span class="num">0.1</span>, <span class="num">1</span>))) * <span class="num">0.5</span> + <span class="num">0.5</span>
+  <span class="cmt">// give them a "rolloff" to make the sound less unpleasant</span>
+  <span class="kw">val</span> m1 = m0 * <span class="std">Seq</span>.tabulate(<span class="num">100</span>)(_.linlin(<span class="num">0</span>, <span class="num">99</span>, <span class="num">1.0</span>, <span class="num">0.01</span>).squared)
+  <span class="cmt">// turn the bins on and off at different rates</span>
+  <span class="kw">val</span> mags = m1 * LFPulse.kr(<span class="std">Seq</span>.fill(<span class="num">100</span>)(<span class="num">2</span> pow IRand(-<span class="num">3</span>, <span class="num">5</span>)))
+  <span class="cmt">// ignore phase</span>
+  <span class="kw">val</span> phases: GE = <span class="std">Seq</span>.fill(<span class="num">100</span>)(<span class="num">0</span>)
+  <span class="cmt">// We need to create an FFT chain to feed our data in to.</span>
+  <span class="cmt">// The easiest way is to do an FFT on some signal which we then ignore!</span>
+  <span class="kw">val</span> buf = FFT(LocalBuf(<span class="num">512</span>), DC.ar(<span class="num">0</span>))
+  <span class="cmt">// now we can do the packing</span>
+  <span class="kw">val</span> chain = PackFFT(buf, <span class="num">512</span>, Zip(mags, phases), <span class="num">0</span>, <span class="num">99</span>, <span class="num">1</span>)
+  <span class="kw">val</span> sig = IFFT.ar(chain)
+  Pan2.ar(sig)
+}</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="SetBuf$.html" class="extype" name="de.sciss.synth.ugen.SetBuf">SetBuf</a>
+</p></span><span class="cmt"><p><a href="IFFT$.html" class="extype" name="de.sciss.synth.ugen.IFFT">IFFT</a></p></span><span class="cmt"><p><a href="FFT$.html" class="extype" name="de.sciss.synth.ugen.FFT">FFT</a></p></span><span class="cmt"><p><a href="Unpack1FFT$.html" class="extype" name="de.sciss.synth.ugen.Unpack1FFT">Unpack1FFT</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Pan2" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Pan2"></a>
       <a id="Pan2:Pan2"></a>
@@ -18418,7 +18544,7 @@ occur with a single-threshold trigger.
     </span>
       <p class="shortcomment cmt">A UGen which selects among a sequence of inputs, according to an index signal.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen which selects among a sequence of inputs, according to an index signal.
 Note that, although only one signal of the <code>multi</code> input is let through at a
-time, sill all ugens are continuously running.
+time, still all ugens are continuously running.
 </p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="TWindex$.html" class="extype" name="de.sciss.synth.ugen.TWindex">TWindex</a>
 </p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.SendReply" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -18469,6 +18595,27 @@ receiving triggers. The message sent is
 </p></div><dl class="attributes block"> <dt>Note</dt><dd><span class="cmt"><p>The argument order is different from its sclang counterpart.
 </p></span></dd><dt>See also</dt><dd><span class="cmt"><p><a href="SendReply$.html" class="extype" name="de.sciss.synth.ugen.SendReply">SendReply</a>
 </p></span></dd></dl></div>
+    </li><li name="de.sciss.synth.ugen.SetBuf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="SetBuf"></a>
+      <a id="SetBuf:SetBuf"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SetBuf$.html"><span class="name">SetBuf</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.package@SetBuf" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A scalar (init-time) UGen that overwrites contents of a buffer with given
+values.</p><div class="fullcomment"><div class="comment cmt"><p>A scalar (init-time) UGen that overwrites contents of a buffer with given
+values.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ClearBuf$.html" class="extype" name="de.sciss.synth.ugen.ClearBuf">ClearBuf</a>
+</p></span><span class="cmt"><p><a href="LocalBuf$.html" class="extype" name="de.sciss.synth.ugen.LocalBuf">LocalBuf</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.SetResetFF" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="SetResetFF"></a>
       <a id="SetResetFF:SetResetFF"></a>
@@ -18499,7 +18646,7 @@ play {
   SinOsc.ar(ff.madd(<span class="num">400</span>, <span class="num">800</span>)) * <span class="num">0.1</span>
 }</pre></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="ToggleFF$.html" class="extype" name="de.sciss.synth.ugen.ToggleFF">ToggleFF</a>
 </p></span></dd></dl></div>
-    </li><li name="de.sciss.synth.ugen.Shaper" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.ugen.Shaper" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="Shaper"></a>
       <a id="Shaper:Shaper"></a>
       <h4 class="signature">
@@ -18515,7 +18662,13 @@ play {
         <img src="../../../../lib/permalink.png" />
       </a>
     </span>
-      
+      <p class="shortcomment cmt">A waveshaping UGen.</p><div class="fullcomment"><div class="comment cmt"><p>A waveshaping UGen. Waveshaping is a the process of translating an input signal
+by indexing a table (buffer).</p><p><b>Advanced notes:</b> wavetable format:</p><pre>Signal: [a0, a1, a2...]
+Wavetable: [<span class="num">2</span>*a0-a1, a1-a0, <span class="num">2</span>*a1-a2, a2-a1, <span class="num">2</span>*a2-a3, a3-a2...]</pre><p>This strange format is not a standard linear interpolation (integer + frac),
+but for (integer part -1) and (1+frac)) due to some efficient maths for integer
+to float conversion in the underlying C code.
+</p></div><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="WrapIndex$.html" class="extype" name="de.sciss.synth.ugen.WrapIndex">WrapIndex</a>
+</p></span><span class="cmt"><p><a href="Index$.html" class="extype" name="de.sciss.synth.ugen.Index">Index</a></p></span></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.Silent" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Silent"></a>
       <a id="Silent:Silent"></a>
@@ -19067,7 +19220,8 @@ reset.
       <p class="shortcomment cmt">A UGen that generates a new random decimal value each time it is triggered,
 using an exponential distribution from <code>lo</code> to <code>hi</code> .</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that generates a new random decimal value each time it is triggered,
 using an exponential distribution from <code>lo</code> to <code>hi</code> . Values <code>lo</code> and <code>hi</code> must
-both have the same sign and be non-zero.</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
+both have the same sign and be non-zero.</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
 play {
   <span class="kw">val</span> tr = MouseButton.kr(lag = <span class="num">0</span>)
   <span class="kw">val</span> m  = Mix.fill(<span class="num">10</span>)(SinOsc.ar(TExpRand.kr(<span class="num">200.0</span>, <span class="num">800.0</span>, tr)))
@@ -19112,7 +19266,8 @@ but requires a regular buffer.
       </a>
     </span>
       <p class="shortcomment cmt">A UGen that outputs integer random numbers when triggered.</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that outputs integer random numbers when triggered. The values have a
-uniform distribution from <code>lo</code> to <code>hi</code> (inclusive).</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
+uniform distribution from <code>lo</code> to <code>hi</code> (inclusive).</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
 play {
   <span class="kw">val</span> tr = MouseButton.kr(lag = <span class="num">0</span>)
   <span class="kw">val</span> m  = Mix.fill(<span class="num">10</span>)(SinOsc.ar(TIRand.kr(<span class="num">40</span>, <span class="num">100</span>, tr).midicps))
@@ -19137,7 +19292,8 @@ play {
     </span>
       <p class="shortcomment cmt">A UGen that generates a new random decimal value each time it is triggered,
 using a uniform distribution from <code>lo</code> to <code>hi</code> .</p><div class="fullcomment"><div class="comment cmt"><p>A UGen that generates a new random decimal value each time it is triggered,
-using a uniform distribution from <code>lo</code> to <code>hi</code> .</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
+using a uniform distribution from <code>lo</code> to <code>hi</code> .</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
 play {
   <span class="kw">val</span> tr = MouseButton.kr(lag = <span class="num">0</span>)
   <span class="kw">val</span> m  = Mix.fill(<span class="num">10</span>)(SinOsc.ar(TRand.kr(<span class="num">200.0</span>, <span class="num">800.0</span>, tr)))

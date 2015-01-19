@@ -30,7 +30,11 @@
       <div id="definition">
         <a href="TExpRand$.html" title="Go to companion"><img src="../../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a>.<a href="package.html" class="extype" name="de.sciss.synth.ugen">ugen</a></p>
-        <h1><a href="TExpRand$.html" title="Go to companion">TExpRand</a></h1> <span class="permalink">
+        <h1><a href="TExpRand$.html" title="Go to companion">TExpRand</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="TExpRand$.html" title="See companion">object TExpRand</a>
+            | <a href="package.html" class="extype" name="de.sciss.synth.ugen">package ugen</a>
+          </div></span></h3><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.TExpRand" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
@@ -49,7 +53,8 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that generates a new random decimal value each time it is triggered,
 using an exponential distribution from <code>lo</code> to <code>hi</code> . Values <code>lo</code> and <code>hi</code> must
-both have the same sign and be non-zero.
+both have the same sign and be non-zero.</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.
 </p></div><dl class="paramcmts block"><dt class="param">lo</dt><dd class="cmt"><p>lower limit of the output range</p></dd><dt class="param">hi</dt><dd class="cmt"><p>upper limit of the output range</p></dd><dt class="param">trig</dt><dd class="cmt"><p>signal to trigger new random number
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="RandSeed$.html" class="extype" name="de.sciss.synth.ugen.RandSeed">RandSeed</a>
 </p></span><span class="cmt"><p><a href="ExpRand$.html" class="extype" name="de.sciss.synth.ugen.ExpRand">ExpRand</a></p></span><span class="cmt"><p><a href="TRand$.html" class="extype" name="de.sciss.synth.ugen.TRand">TRand</a></p></span></dd></dl><div class="toggleContainer block">

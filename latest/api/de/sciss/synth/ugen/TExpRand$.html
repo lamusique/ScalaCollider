@@ -30,7 +30,11 @@
       <div id="definition">
         <a href="TExpRand.html" title="Go to companion"><img src="../../../../lib/object_to_class_big.png" /></a>
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a>.<a href="package.html" class="extype" name="de.sciss.synth.ugen">ugen</a></p>
-        <h1><a href="TExpRand.html" title="Go to companion">TExpRand</a></h1> <span class="permalink">
+        <h1><a href="TExpRand.html" title="Go to companion">TExpRand</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="TExpRand.html" title="See companion">class TExpRand</a>
+            | <a href="package.html" class="extype" name="de.sciss.synth.ugen">package ugen</a>
+          </div></span></h3><span class="permalink">
       <a href="../../../../index.html#de.sciss.synth.ugen.TExpRand$" title="Permalink" target="_top">
         <img src="../../../../lib/permalink.png" />
       </a>
@@ -49,7 +53,8 @@
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>A UGen that generates a new random decimal value each time it is triggered,
 using an exponential distribution from <code>lo</code> to <code>hi</code> . Values <code>lo</code> and <code>hi</code> must
-both have the same sign and be non-zero.</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
+both have the same sign and be non-zero.</p><p><b>Note</b>: Audio-rate inputs for <code>lo</code> and <code>hi</code> are currently broken in
+SuperCollider, and will therefore be converted to control-rate inputs.</p><h5>Examples</h5><pre><span class="cmt">// random sine frequencies, triggered by mouse button</span>
 play {
   <span class="kw">val</span> tr = MouseButton.kr(lag = <span class="num">0</span>)
   <span class="kw">val</span> m  = Mix.fill(<span class="num">10</span>)(SinOsc.ar(TExpRand.kr(<span class="num">200.0</span>, <span class="num">800.0</span>, tr)))
