@@ -1,6 +1,6 @@
 name               := "ScalaCollider"
 
-version            := "1.17.0-SNAPSHOT"
+version            := "1.17.1"
 
 organization       := "de.sciss"
 
@@ -20,11 +20,11 @@ homepage           := Some(url("https://github.com/Sciss/" + name.value))
 
 licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val ugensVersion     = "1.13.0"
+lazy val ugensVersion     = "1.13.1"
 
 lazy val oscVersion       = "1.1.3"
 
-lazy val audioFileVersion = "1.4.4-SNAPSHOT"
+lazy val audioFileVersion = "1.4.4"
 
 lazy val processorVersion = "0.4.0"
 
