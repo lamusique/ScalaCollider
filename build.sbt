@@ -1,10 +1,10 @@
 name               := "ScalaCollider"
 
-version            := "1.17.1"
+version            := "1.17.2"
 
 organization       := "de.sciss"
 
-scalaVersion       := "2.11.5"
+scalaVersion       := "2.11.6"
 
 // sbt 0.13.6 starts to upgrade Scala version!
 // we must ensure 2.10.0 is used not 2.10.4
@@ -12,7 +12,7 @@ ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
 
 // note SI-7436! Affects Scala throughout 2.10.x except for 2.10.0; might be fixed in 2.10.5
 // https://issues.scala-lang.org/browse/SI-7436
-crossScalaVersions := Seq("2.11.5", "2.10.0")
+crossScalaVersions := Seq("2.11.6", "2.10.0")
 
 description        := "A sound synthesis library for the SuperCollider server"
 
@@ -28,7 +28,7 @@ lazy val audioFileVersion = "1.4.4"
 
 lazy val processorVersion = "0.4.0"
 
-lazy val scalaTestVersion = "2.2.3"
+lazy val scalaTestVersion = "2.2.4"
 
 libraryDependencies ++= Seq(
   "de.sciss"      %% "scalaosc"                % oscVersion,
