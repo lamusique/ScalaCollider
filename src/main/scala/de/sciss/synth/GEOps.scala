@@ -15,8 +15,13 @@ package de.sciss.synth
 
 import de.sciss.synth.ugen.{Wrap, Fold, Clip, UnaryOpUGen, BinaryOpUGen, ChannelProxy, Flatten, Poll, Impulse, LinExp, LinLin, MulAdd, Constant}
 
+object GEOps {
+  private def getRate(g: GE, name: String): Rate =
+    g.rate.getOrElse(throw new UnsupportedOperationException(s"`$name` input rate must be defined"))
+}
 final class GEOps(val `this`: GE) extends AnyVal { me =>
   import me.{`this` => g}
+  import GEOps.getRate
 
   /** Creates a proxy that represents a specific output channel of the element.
     *
@@ -193,28 +198,25 @@ final class GEOps(val `this`: GE) extends AnyVal { me =>
 // def rrand(b: GE): GE    = ...
 // def exprrand(b: GE): GE = ...
 
-  private[this] def getRate(name: String): Rate =
-    g.rate.getOrElse(throw new UnsupportedOperationException(s"`$name` input rate must be defined"))
-
   def clip(low: GE, high: GE): GE = {
-    val r = getRate("clip")
+    val r = getRate(g, "clip")
     if (r == demand) g.max(low).min(high) else Clip(r, g, low, high)
   }
 
   def fold(low: GE, high: GE): GE = {
-    val r = getRate("fold")
+    val r = getRate(g, "fold")
     if (r == demand) throw new UnsupportedOperationException("`fold` not supported for demand rate UGens")
     Fold(r, g, low, high)
   }
 
   def wrap(low: GE, high: GE): GE = {
-    val r = getRate("wrap")
+    val r = getRate(g, "wrap")
     if (r == demand) throw new UnsupportedOperationException("`wrap` not supported for demand rate UGens")
     Wrap(r, g, low, high)
   }
 
   def linlin(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE = {
-    val r = getRate("linlin")
+    val r = getRate(g, "linlin")
     if (r == demand) {
       (g - inLow) / (inHigh - inLow) * (outHigh - outLow) + outLow
     } else {
@@ -223,7 +225,7 @@ final class GEOps(val `this`: GE) extends AnyVal { me =>
   }
 
   def linexp(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE = {
-    val r = getRate("linexp")
+    val r = getRate(g, "linexp")
     if (r == demand) {
       (outHigh / outLow).pow((g - inLow) / (inHigh - inLow)) * outLow
     } else {
