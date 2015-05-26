@@ -193,29 +193,43 @@ final class GEOps(val `this`: GE) extends AnyVal { me =>
 // def rrand(b: GE): GE    = ...
 // def exprrand(b: GE): GE = ...
 
+  private[this] def getRate(name: String): Rate =
+    g.rate.getOrElse(throw new UnsupportedOperationException(s"`$name` input rate must be defined"))
+
   def clip(low: GE, high: GE): GE = {
-    require(g.rate != demand)
-    val r = g.rate.toOption.getOrElse(???)
-    Clip(r, g, low, high)
+    val r = getRate("clip")
+    if (r == demand) g.max(low).min(high) else Clip(r, g, low, high)
   }
 
   def fold(low: GE, high: GE): GE = {
-    require(g.rate != demand)
-    val r = g.rate.toOption.getOrElse(???)
+    val r = getRate("fold")
+    if (r == demand) throw new UnsupportedOperationException("`fold` not supported for demand rate UGens")
     Fold(r, g, low, high)
   }
 
   def wrap(low: GE, high: GE): GE = {
-    require(g.rate != demand)
-    val r = g.rate.toOption.getOrElse(???)
+    val r = getRate("wrap")
+    if (r == demand) throw new UnsupportedOperationException("`wrap` not supported for demand rate UGens")
     Wrap(r, g, low, high)
   }
 
-  def linlin(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
-    LinLin(/* rate, */ g, inLow, inHigh, outLow, outHigh)
+  def linlin(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE = {
+    val r = getRate("linlin")
+    if (r == demand) {
+      (g - inLow) / (inHigh - inLow) * (outHigh - outLow) + outLow
+    } else {
+      LinLin(/* rate, */ g, inLow, inHigh, outLow, outHigh)
+    }
+  }
 
-  def linexp(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
-    LinExp(g.rate, g, inLow, inHigh, outLow, outHigh) // should be highest rate of all inputs? XXX
+  def linexp(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE = {
+    val r = getRate("linexp")
+    if (r == demand) {
+      (outHigh / outLow).pow((g - inLow) / (inHigh - inLow)) * outLow
+    } else {
+      LinExp(g.rate, g, inLow, inHigh, outLow, outHigh) // should be highest rate of all inputs? XXX
+    }
+  }
 
   def explin(inLow: GE, inHigh: GE, outLow: GE, outHigh: GE): GE =
     (g / inLow).log / (inHigh / inLow).log * (outHigh - outLow) + outLow
