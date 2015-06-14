@@ -1,6 +1,6 @@
 name               := "ScalaCollider"
 
-version            := "1.17.2"
+version            := "1.18.0-SNAPSHOT"
 
 organization       := "de.sciss"
 
@@ -21,14 +21,10 @@ homepage           := Some(url("https://github.com/Sciss/" + name.value))
 licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
 lazy val ugensVersion     = "1.13.1"
-
 lazy val oscVersion       = "1.1.3"
-
-lazy val audioFileVersion = "1.4.4"
-
+lazy val audioFileVersion = "1.5.0-SNAPSHOT"
 lazy val processorVersion = "0.4.0"
-
-lazy val scalaTestVersion = "2.2.4"
+lazy val scalaTestVersion = "2.2.5"
 
 libraryDependencies ++= Seq(
   "de.sciss"      %% "scalaosc"                % oscVersion,
@@ -58,9 +54,7 @@ initialCommands in console :=
 
 // ---- build info ----
 
-buildInfoSettings
-
-sourceGenerators in Compile <+= buildInfo
+enablePlugins(BuildInfoPlugin)
 
 buildInfoKeys := Seq(name, organization, version, scalaVersion, description,
   BuildInfoKey.map(homepage) { case (k, opt) => k -> opt.get },
@@ -104,10 +98,7 @@ pomExtra := { val n = name.value
 
 // ---- ls.implicit.ly ----
 
-seq(lsSettings :_*)
-
-(LsKeys.tags   in LsKeys.lsync) := Seq("sound-synthesis", "sound", "music", "supercollider")
-
-(LsKeys.ghUser in LsKeys.lsync) := Some("Sciss")
-
-(LsKeys.ghRepo in LsKeys.lsync) := Some(name.value)
+// seq(lsSettings :_*)
+// (LsKeys.tags   in LsKeys.lsync) := Seq("sound-synthesis", "sound", "music", "supercollider")
+// (LsKeys.ghUser in LsKeys.lsync) := Some("Sciss")
+// (LsKeys.ghRepo in LsKeys.lsync) := Some(name.value)
