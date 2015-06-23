@@ -49,7 +49,7 @@ To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `"1.17.2"`
+The current version `v` is `"1.17.3"`
 
 ## starting a SuperCollider server
 
