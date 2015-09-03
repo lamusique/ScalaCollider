@@ -41,7 +41,7 @@ Targets for sbt:
 * `package` &ndash; packages jar in target/scala-version
 * `console` &ndash; opens a Scala REPL with ScalaCollider on the classpath
 
-__Note__: Due to [SI-7436](https://issues.scala-lang.org/browse/SI-7436), the project must be currently compiled against Scala 2.10.0 and not 2.10.1 through 2.10.4. It can be used, however, with any Scala 2.10 version.
+__Note__: Due to [SI-7436](https://issues.scala-lang.org/browse/SI-7436), the project must be currently compiled against Scala 2.10.0 and not 2.10.1 through 2.10.4. It can be used, however, with any Scala 2.10 version. Another implication is that you cannot build against 2.10.0 using JDK 8, because is sbt is broken here. To build for 2.10.0, you must use JDK 6 or JDK 7.
 
 ## linking
 
@@ -49,7 +49,7 @@ To use this project as a library, use the following artifact:
 
     libraryDependencies += "de.sciss" %% "scalacollider" % v
 
-The current version `v` is `"1.17.3"`
+The current version `v` is `"1.17.4"`
 
 ## starting a SuperCollider server
 
