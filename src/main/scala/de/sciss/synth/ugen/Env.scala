@@ -92,7 +92,7 @@ object Env extends EnvFactory[Env] {
   final case class Segment(dur: GE, targetLevel: GE, curve: Curve = linear) {
     override def productPrefix = "Env$Segment"
 
-    override def toString = s"Env.Segment($dur, $targetLevel, $curve"
+    override def toString = s"Env.Segment($dur, $targetLevel, $curve)"
   }
 
   protected def create(startLevel: GE, segments: Vec[Segment]) = new Env(startLevel, segments)
