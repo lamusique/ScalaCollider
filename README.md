@@ -113,8 +113,3 @@ Here are some examples for libraries not included:
 - MIDI functionality is not included, but can be added with the [ScalaMIDI](http://github.com/Sciss/ScalaMIDI) library.
 - Plotting is most easily achieved through [Scala-Chart](https://github.com/wookietreiber/scala-chart), which is conveniently included in ScalaCollider-Swing.
 
-## projects using ScalaCollider
-
-Please let me know if you are developing an interesting project that involves ScalaCollider, and I am happy to add a link to it here.
-
-- [UltraCom](https://github.com/lodsb/UltraCom/) - a framework for multi-interface application
