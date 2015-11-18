@@ -1,9 +1,8 @@
 package de.sciss.synth
 
 import org.scalatest.FunSpec
-import ugen.Constant
-import language.implicitConversions
-import de.sciss.numbers.Implicits._
+
+import scala.language.implicitConversions
 
 /*
   To run only this test:
@@ -16,14 +15,14 @@ class LocalBufSuite extends FunSpec {
     it("should properly expand") {
       val df = SynthDef("test") {
         import ugen._
-        val bufs = Seq.fill(2)(LocalBuf(2048))
-        Out.kr(0, bufs)
+        val buffers = Seq.fill(2)(LocalBuf(2048))
+        Out.kr(0, buffers)
       }
 
-      val out = df.graph.ugens.map { ru =>
-        ru.ugen.name -> ru.ugen.inputs.map {
-          case Constant(c) => c
-          case _ => "U"
+      val out   = df.graph.ugens.map { ru =>
+        ru.ugen.name -> ru.inputSpecs.map {
+          case (-1, cIdx)   => df.graph.constants(cIdx)
+          case (uIdx, oIdx) => "U"
         }
       }
 

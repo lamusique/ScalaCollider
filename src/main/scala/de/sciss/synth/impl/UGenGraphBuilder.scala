@@ -15,12 +15,13 @@ package de.sciss
 package synth
 package impl
 
-import collection.breakOut
-import collection.mutable.{Map => MMap, Buffer => MBuffer, Stack => MStack}
-import collection.immutable.{IndexedSeq => Vec, Set => ISet}
-import UGenGraph.RichUGen
-import de.sciss.synth.ugen.{Constant, UGenProxy, ControlUGenOutProxy, ControlProxyLike}
+import de.sciss.synth.UGenGraph.IndexedUGen
+import de.sciss.synth.ugen.{Constant, ControlProxyLike, ControlUGenOutProxy, UGenProxy}
+
 import scala.annotation.elidable
+import scala.collection.breakOut
+import scala.collection.immutable.{IndexedSeq => Vec, Set => ISet}
+import scala.collection.mutable.{Buffer => MBuffer, Map => MMap, Stack => MStack}
 
 object DefaultUGenGraphBuilderFactory extends UGenGraph.BuilderFactory {
   def build(graph: SynthGraph) = {
@@ -49,46 +50,46 @@ object DefaultUGenGraphBuilderFactory extends UGenGraph.BuilderFactory {
 object UGenGraphBuilderLike {
 
   // ---- IndexedUGen ----
-  private final class IndexedUGen(val ugen: UGen, var index: Int, var effective: Boolean) {
-    val parents     = MBuffer.empty[IndexedUGen]
-    var children    = MBuffer.empty[IndexedUGen]
-    var richInputs  = List   .empty[RichUGenInBuilder]
+  private final class IndexedUGenBuilder(val ugen: UGen, var index: Int, var effective: Boolean) {
+    val parents       = MBuffer.empty[IndexedUGenBuilder]
+    var children      = MBuffer.empty[IndexedUGenBuilder]
+    var inputIndices  = List   .empty[UGenInIndex]
 
-    override def toString = s"IndexedUGen($ugen, $index, $effective) : richInputs = $richInputs"
+    override def toString = s"IndexedUGen($ugen, $index, $effective) : richInputs = $inputIndices"
   }
 
-  private trait RichUGenInBuilder {
+  private trait UGenInIndex {
     def create: (Int, Int)
     def makeEffective(): Int
   }
 
-  private final class RichConstant(constIdx: Int) extends RichUGenInBuilder {
+  private final class ConstantIndex(constIdx: Int) extends UGenInIndex {
     def create          = (-1, constIdx)
     def makeEffective() = 0
 
-    override def toString = s"RichConstant($constIdx)"
+    override def toString = s"ConstantIndex($constIdx)"
   }
 
-  private final class RichUGenProxyBuilder(iu: IndexedUGen, outIdx: Int) extends RichUGenInBuilder {
+  private final class UGenProxyIndex(iu: IndexedUGenBuilder, outIdx: Int) extends UGenInIndex {
     def create = (iu.index, outIdx)
 
     def makeEffective() = {
       if (!iu.effective) {
         iu.effective = true
         var numEff   = 1
-        iu.richInputs.foreach(numEff += _.makeEffective())
+        iu.inputIndices.foreach(numEff += _.makeEffective())
         numEff
       } else 0
     }
 
-    override def toString = s"RichUGenProxyBuilder($iu, $outIdx)"
+    override def toString = s"UGenProxyIndex($iu, $outIdx)"
   }
 }
 
 trait BasicUGenGraphBuilder extends UGenGraphBuilderLike {
-  protected var ugens         = Vec.empty[UGen]
-  protected var controlValues = Vec.empty[Float]
-  protected var controlNames  = Vec.empty[(String, Int)]
+  protected var ugens         = Vector.empty: Vec[UGen]
+  protected var controlValues = Vector.empty: Vec[Float]
+  protected var controlNames  = Vector.empty: Vec[(String, Int)]
   protected var sourceMap     = Map.empty[AnyRef, Any]
 }
 
@@ -120,39 +121,38 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
     * @return  the completed `UGenGraph` build
     */
   final protected def build(controlProxies: Iterable[ControlProxyLike]): UGenGraph = {
-    //         val ctrlProxyMap        = buildControls( graph.controlProxies )
     val ctrlProxyMap        = buildControls(controlProxies)
-    val (igens, constants)  = indexUGens(ctrlProxyMap)
-    val indexedUGens        = sortUGens(igens)
-    val richUGens: Vec[RichUGen] =
-      indexedUGens.map(iu => RichUGen(iu.ugen, iu.richInputs.map(_.create)))(breakOut)
+    val (iUGens, constants) = indexUGens(ctrlProxyMap)
+    val indexedUGens        = sortUGens(iUGens)
+    val richUGens: Vec[IndexedUGen] =
+      indexedUGens.map(iu => new IndexedUGen(iu.ugen, iu.inputIndices.map(_.create)))(breakOut)
     UGenGraph(constants, controlValues, controlNames, richUGens)
   }
 
-  private def indexUGens(ctrlProxyMap: Map[ControlProxyLike, (UGen, Int)]): (Vec[IndexedUGen], Vec[Float]) = {
-    val constantMap   = MMap.empty[Float, RichConstant]
-    val constants     = Vector.newBuilder[Float]
-    var numConstants  = 0
-    var numIneff      = ugens.size
-    val indexedUGens  = ugens.zipWithIndex.map { case (ugen, idx) =>
+  private def indexUGens(ctrlProxyMap: Map[ControlProxyLike, (UGen, Int)]): (Vec[IndexedUGenBuilder], Vec[Float]) = {
+    val constantMap     = MMap.empty[Float, ConstantIndex]
+    val constants       = Vector.newBuilder[Float]
+    var numConstants    = 0
+    var numIneffective  = ugens.size
+    val indexedUGens    = ugens.zipWithIndex.map { case (ugen, idx) =>
       val eff = ugen.hasSideEffect
-      if (eff) numIneff -= 1
-      new IndexedUGen(ugen, idx, eff)
+      if (eff) numIneffective -= 1
+      new IndexedUGenBuilder(ugen, idx, eff)
     }
     //indexedUGens.foreach( iu => println( iu.ugen.ref ))
     //val a0 = indexedUGens(1).ugen
     //val a1 = indexedUGens(3).ugen
     //val ee = a0.equals(a1)
 
-    val ugenMap: Map[AnyRef, IndexedUGen] = indexedUGens.map(iu => (iu.ugen /* .ref */ , iu))(breakOut)
+    val ugenMap: Map[AnyRef, IndexedUGenBuilder] = indexedUGens.map(iu => (iu.ugen /* .ref */ , iu))(breakOut)
     indexedUGens.foreach { iu =>
       // XXX Warning: match not exhaustive -- "missing combination UGenOutProxy"
       // this is clearly a nasty scala bug, as UGenProxy does catch UGenOutProxy;
       // might be http://lampsvn.epfl.ch/trac/scala/ticket/4020
-      iu.richInputs = iu.ugen.inputs.map {
+      iu.inputIndices = iu.ugen.inputs.map {
         // don't worry -- the match _is_ exhaustive
         case Constant(value) => constantMap.getOrElse(value, {
-          val rc        = new RichConstant(numConstants)
+          val rc        = new ConstantIndex(numConstants)
           constantMap  += value -> rc
           constants    += value
           numConstants += 1
@@ -160,22 +160,22 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
         })
 
         case up: UGenProxy =>
-          val iui       = ugenMap(up.source /* .ref */)
+          val iui       = ugenMap(up.source)
           iu.parents   += iui
           iui.children += iu
-          new RichUGenProxyBuilder(iui, up.outputIndex)
+          new UGenProxyIndex(iui, up.outputIndex)
 
-        case ControlUGenOutProxy(proxy, outputIndex /* , _ */) =>
+        case ControlUGenOutProxy(proxy, outputIndex) =>
           val (ugen, off) = ctrlProxyMap(proxy)
-          val iui         = ugenMap(ugen /* .ref */)
+          val iui         = ugenMap(ugen)
           iu.parents     += iui
           iui.children   += iu
-          new RichUGenProxyBuilder(iui, off + outputIndex)
+          new UGenProxyIndex(iui, off + outputIndex)
 
       } (breakOut)
-      if (iu.effective) iu.richInputs.foreach(numIneff -= _.makeEffective())
+      if (iu.effective) iu.inputIndices.foreach(numIneffective -= _.makeEffective())
     }
-    val filtered: Vec[IndexedUGen] = if (numIneff == 0) indexedUGens
+    val filtered: Vec[IndexedUGenBuilder] = if (numIneffective == 0) indexedUGens
     else indexedUGens.collect {
       case iu if iu.effective =>
         iu.children = iu.children.filter(_.effective)
@@ -194,11 +194,11 @@ trait UGenGraphBuilderLike extends UGenGraph.Builder {
    *    mNumWireBufs might be different, so it's a space not a
    *    time issue.
    */
-  private def sortUGens(indexedUGens: Vec[IndexedUGen]): Array[IndexedUGen] = {
+  private def sortUGens(indexedUGens: Vec[IndexedUGenBuilder]): Array[IndexedUGenBuilder] = {
     indexedUGens.foreach(iu => iu.children = iu.children.sortWith((a, b) => a.index > b.index))
-    val sorted = new Array[IndexedUGen](indexedUGens.size)
+    val sorted = new Array[IndexedUGenBuilder](indexedUGens.size)
     //      val avail   = MStack( indexedUGens.filter( _.parents.isEmpty ) : _* )
-    val avail: MStack[IndexedUGen] = indexedUGens.collect({
+    val avail: MStack[IndexedUGenBuilder] = indexedUGens.collect({
       case iu if iu.parents.isEmpty => iu
     })(breakOut)
     var cnt = 0

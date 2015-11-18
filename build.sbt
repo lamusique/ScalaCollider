@@ -1,6 +1,6 @@
 name               := "ScalaCollider"
 
-version            := "1.17.4"
+version            := "1.18.0"
 
 organization       := "de.sciss"
 
@@ -16,11 +16,11 @@ crossScalaVersions := Seq("2.11.7", "2.10.0")
 
 description        := "A sound synthesis library for the SuperCollider server"
 
-homepage           := Some(url("https://github.com/Sciss/" + name.value))
+homepage           := Some(url(s"https://github.com/Sciss/${name.value}"))
 
 licenses           := Seq("GPL v2+" -> url("http://www.gnu.org/licenses/gpl-2.0.txt"))
 
-lazy val ugensVersion     = "1.13.4"
+lazy val ugensVersion     = "1.14.0"
 lazy val oscVersion       = "1.1.5"
 lazy val audioFileVersion = "1.4.5"
 lazy val processorVersion = "0.4.0"
