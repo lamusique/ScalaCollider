@@ -2,7 +2,7 @@
  *  Connection.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2015 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2016 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU General Public License v2+
  *
@@ -79,7 +79,8 @@ private[synth] sealed trait ConnectionLike extends ServerConnection with ModelIm
       if (!connectionAlive) throw new IllegalStateException("Connection closed")
       if (!c.isConnected) c.connect()
       ping(message.ServerNotify(on = true)) {
-        case Message("/done", "/notify") =>
+        // Note: SC 3.6 sends two args, 3.7 sends a third arg, appending a senseless zero!
+        case msg @ Message("/done", "/notify", _ @ _*) =>
       }
       val cnt = ping(Status) {
         case m: StatusReply => m
@@ -154,7 +155,7 @@ private[synth] final class Connection(val name: String, val c: OSCClient, val ad
     Handshake.begin()
   }
 
-  override def toString = "connect<" + name + ">"
+  override def toString = s"connect<$name>"
 
   def handleAbort() = ()
 
@@ -221,7 +222,8 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
               // of course some sucker screwed it up and added another period in SC 3.4.4
               //                        if( line == "SuperCollider 3 server ready." ) isBooting = false
               // one more... this should allow for debug versions and supernova to be detected, too
-              if (line.startsWith("Super") && line.contains(" ready")) isBooting = false
+              val ready = line.startsWith("Super") && line.contains(" ready")
+              if (ready) isBooting = false
             }
           }
         } catch {
@@ -247,7 +249,7 @@ private[synth] final class Booting(val name: String, val c: OSCClient, val addr:
     processThread.start()
   }
 
-  override def toString = "boot<" + name + ">"
+  override def toString = s"boot<$name>"
 
   def handleAbort()  : Unit     = processThread.interrupt()
   def connectionAlive: Boolean  = processThread.isAlive

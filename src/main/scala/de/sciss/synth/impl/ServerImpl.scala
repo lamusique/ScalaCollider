@@ -2,7 +2,7 @@
  *  ServerImpl.scala
  *  (ScalaCollider)
  *
- *  Copyright (c) 2008-2015 Hanns Holger Rutz. All rights reserved.
+ *  Copyright (c) 2008-2016 Hanns Holger Rutz. All rights reserved.
  *
  *  This software is published under the GNU General Public License v2+
  *
@@ -22,7 +22,6 @@ import de.sciss.model.impl.ModelImpl
 import de.sciss.osc
 import de.sciss.processor.Processor
 import de.sciss.processor.impl.ProcessorImpl
-import de.sciss.synth.message
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future, Promise, TimeoutException}
@@ -31,13 +30,12 @@ import scala.util.control.NonFatal
 
 private[synth] object ServerImpl {
   @volatile private var _default: Server = null
+
   def default: Server = {
     val res = _default
     if (res == null) throw new IllegalStateException("There is no default Server yet")
     res
   }
-//  def default_=(value: Server): Unit =
-//    _default = value
 
   private[impl] def add(s: Server): Unit =
     this.synchronized {
@@ -125,7 +123,7 @@ private[synth] final class OnlineServerImpl(val name: String, c: osc.Client, val
   def serverOffline(): Unit =
     condSync.synchronized {
       stopAliveThread()
-      condition = Server.Offline
+      condition_=(Server.Offline)
     }
 
   def counts = countsVar
@@ -147,10 +145,17 @@ private[synth] final class OnlineServerImpl(val name: String, c: osc.Client, val
       case p => filter(p)
     })
 
-  private def serverLost(): Unit = {
-    nodeManager     .clear()
-    bufManager      .clear()
-    OSCReceiverActor.clear()
+  private def disposeImpl(): Unit = {
+    nodeManager .clear()
+    bufManager  .clear()
+    // OSCReceiverActor.clear()
+    ServerImpl.remove(this)
+    OSCReceiverActor.dispose()
+    try {
+      c.close()
+    } catch {
+      case NonFatal(e) => e.printStackTrace()
+    }
   }
 
   def isRunning   = _condition == Server.Running
@@ -167,9 +172,6 @@ private[synth] final class OnlineServerImpl(val name: String, c: osc.Client, val
   def dispose(): Unit =
     condSync.synchronized {
       serverOffline()
-      ServerImpl.remove(this)
-      c.close()
-      OSCReceiverActor.dispose()
     }
 
   def initTree(): Unit = {
@@ -183,7 +185,7 @@ private[synth] final class OnlineServerImpl(val name: String, c: osc.Client, val
         _condition = newCondition
         if (newCondition == Server.Offline) {
           pendingCondition = Server.NoPending
-          serverLost()
+          disposeImpl()
         }
         //            else if( newCondition == Running ) {
         //               if( pendingCondition == Booting ) {
@@ -196,7 +198,7 @@ private[synth] final class OnlineServerImpl(val name: String, c: osc.Client, val
         //                  collBootCompletion = Queue.empty
         //               }
         //            }
-        dispatch( newCondition )
+        dispatch(newCondition)
       }
     }
 
