@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>io - de.sciss.synth.io</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -26,7 +30,11 @@
       <div id="definition">
         <img src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a></p>
-        <h1>io</h1>
+        <h1>io</h1><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -92,7 +100,11 @@
       <span class="symbol">
         <a href="AudioFile.html"><span class="name">AudioFile</span></a><span class="result"> extends <span class="extype" name="java.nio.channels.Channel">Channel</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@AudioFileextendsChannel" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.io.AudioFileSpec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AudioFileSpecextendsProductwithSerializable"></a>
@@ -103,9 +115,13 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="AudioFileSpec.html"><span class="name">AudioFileSpec</span></a><span class="params">(<span name="fileType">fileType: <a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a> = <span class="symbol">AudioFileType.AIFF</span></span>, <span name="sampleFormat">sampleFormat: <a href="SampleFormat.html" class="extype" name="de.sciss.synth.io.SampleFormat">SampleFormat</a> = <span class="symbol">SampleFormat.Float</span></span>, <span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="sampleRate">sampleRate: <span class="extype" name="scala.Double">Double</span></span>, <span name="byteOrder">byteOrder: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.nio.ByteOrder">ByteOrder</span>] = <span class="symbol">scala.None</span></span>, <span name="numFrames">numFrames: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">0L</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <a href="AudioFileSpec.html"><span class="name">AudioFileSpec</span></a><span class="params">(<span name="fileType">fileType: <a href="AudioFileType.html" class="extype" name="de.sciss.synth.io.AudioFileType">AudioFileType</a> = <span class="symbol"><span class="name"><a href="AudioFileType$.html">AudioFileType.AIFF</a></span></span></span>, <span name="sampleFormat">sampleFormat: <a href="SampleFormat.html" class="extype" name="de.sciss.synth.io.SampleFormat">SampleFormat</a> = <span class="symbol"><span class="name"><a href="SampleFormat$.html">SampleFormat.Float</a></span></span></span>, <span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>, <span name="sampleRate">sampleRate: <span class="extype" name="scala.Double">Double</span></span>, <span name="byteOrder">byteOrder: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="java.nio.ByteOrder">ByteOrder</span>] = <span class="symbol">None</span></span>, <span name="numFrames">numFrames: <span class="extype" name="scala.Long">Long</span> = <span class="symbol">0L</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@AudioFileSpecextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.io.AudioFileType" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="AudioFileTypeextendsAnyRef"></a>
@@ -118,8 +134,12 @@
       <span class="symbol">
         <a href="AudioFileType.html"><span class="name">AudioFileType</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
-      <p class="comment cmt">A recognized audio file type.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@AudioFileTypeextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A recognized audio file type.</p>
     </li><li name="de.sciss.synth.io.Frames" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Frames=Array[Array[Float]]"></a>
       <a id="Frames:Frames"></a>
@@ -131,7 +151,11 @@
       <span class="symbol">
         <span class="name">Frames</span><span class="result"> = <span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Array">Array</span>[<span class="extype" name="scala.Float">Float</span>]]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@Frames=Array[Array[Float]]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.io.ReaderFactory" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="ReaderFactoryextendsAnyRef"></a>
@@ -144,7 +168,11 @@
       <span class="symbol">
         <a href="ReaderFactory.html"><span class="name">ReaderFactory</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@ReaderFactoryextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.io.SampleFormat" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="SampleFormatextendsAnyRef"></a>
@@ -157,7 +185,11 @@
       <span class="symbol">
         <a href="SampleFormat.html"><span class="name">SampleFormat</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@SampleFormatextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -166,7 +198,7 @@
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="de.sciss.synth.io.AudioFile" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="de.sciss.synth.io.AudioFile" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="AudioFile"></a>
       <a id="AudioFile:AudioFile"></a>
       <h4 class="signature">
@@ -177,9 +209,30 @@
       <span class="symbol">
         <a href="AudioFile$.html"><span class="name">AudioFile</span></a><span class="result"> extends <a href="ReaderFactory.html" class="extype" name="de.sciss.synth.io.ReaderFactory">ReaderFactory</a></span>
       </span>
-      </h4>
-      <p class="comment cmt"> The <code>AudioFile</code> allows reading and writing
- of sound files.</code></p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@AudioFile" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">The <code>AudioFile</code> allows reading and writing
+of sound files.</code></p><div class="fullcomment"><div class="comment cmt"><p>The <code>AudioFile</code> allows reading and writing
+of sound files. It can operate both on a <code>RandomAccessFile</code>
+created from a <code>File</code> instance, or on
+an kind of <code>InputStream</code> (not every codec will
+support this though, and functionality might be limited, for example
+seeking is not possible with a plain <code>InputStream</code>).</p><p>The codecs are registered with <code>AudioFileType</code>.
+The codecs that come with ScalaAudioFile are found in the <code>impl</code>
+package.</p><p>Reading and writing data requires a user-buffer which holds de-interleaved
+floating point data, that is a two dimensional <code>Array</code> which
+holds <code>Float</code> data. A type alias <code>Frames</code> is provided
+for this, and two helper methods <code>buffer</code>: one static to
+construct an arbitrary user-buffer, one in class <code>AudioFile</code>
+which creates a buffer with the appropriate channel number.
+</p></div><dl class="attributes block"> <dt>To do</dt><dd><span class="cmt"><p>the copyTo method uses a user-buffer. it should
+        check for the possibility to directly transfer data
+        if input and output are compatible.
+</p></span></dd><dt>See also</dt><dd><span class="cmt"><p>AudioFileType
+</p></span></dd></dl></div>
     </li><li name="de.sciss.synth.io.AudioFileSpec" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AudioFileSpec"></a>
       <a id="AudioFileSpec:AudioFileSpec"></a>
@@ -191,7 +244,11 @@
       <span class="symbol">
         <a href="AudioFileSpec$.html"><span class="name">AudioFileSpec</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@AudioFileSpec" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.io.AudioFileType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="AudioFileType"></a>
@@ -204,7 +261,11 @@
       <span class="symbol">
         <a href="AudioFileType$.html"><span class="name">AudioFileType</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@AudioFileType" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.io.BuildInfo" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="BuildInfo"></a>
@@ -217,8 +278,12 @@
       <span class="symbol">
         <a href="BuildInfo$.html"><span class="name">BuildInfo</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
-      </h4>
-      
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@BuildInfo" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">This object was generated by sbt-buildinfo.</p>
     </li><li name="de.sciss.synth.io.SampleFormat" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="SampleFormat"></a>
       <a id="SampleFormat:SampleFormat"></a>
@@ -230,7 +295,11 @@
       <span class="symbol">
         <a href="SampleFormat$.html"><span class="name">SampleFormat</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.io.package@SampleFormat" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -261,6 +330,7 @@
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>DemandEnvGen - de.sciss.synth.ugen.DemandEnvGen</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="DemandEnvGen$.html" title="Go to companion"><img src="../../../../lib/class_to_object_big.png" /></a>
+        <a href="DemandEnvGen$.html" title="See companion object"><img src="../../../../lib/class_to_object_big.png" /></a>
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a>.<a href="package.html" class="extype" name="de.sciss.synth.ugen">ugen</a></p>
-        <h1><a href="DemandEnvGen$.html" title="Go to companion">DemandEnvGen</a></h1>
+        <h1><a href="DemandEnvGen$.html" title="See companion object">DemandEnvGen</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="DemandEnvGen$.html" title="See companion object">object DemandEnvGen</a>
+            | <a href="package.html" class="extype" name="de.sciss.synth.ugen">package ugen</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -35,14 +47,14 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">DemandEnvGen</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="levels">levels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="durs">durs: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="shapes">shapes: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1)</span></span>, <span name="curvatures">curvatures: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>, <span name="gate">gate: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="levelScale">levelScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="levelBias">levelBias: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>, <span name="timeScale">timeScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="defval" name="synth.this.DoneAction.toGE(doNothing)">...</span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+        <span class="name">DemandEnvGen</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="levels">levels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="durs">durs: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="shapes">shapes: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="curvatures">curvatures: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="gate">gate: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="levelScale">levelScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="levelBias">levelBias: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="timeScale">timeScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span><span class="result"> extends <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a> with <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>An envelope generator UGen using demand-rate inputs for the envelope segments.
 For each parameter of the envelope (levels, durations and shapes), values are
 polled every time a new segment starts.
-</p></div><dl class="paramcmts block"><dt class="param">levels</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning level values</p></dd><dt class="param">durs</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning durational
+</p></div><dl class="paramcmts block"><dt class="param">levels</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning level values</p></dd><dt class="param">durs</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning duration
                         values</p></dd><dt class="param">shapes</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning shape number
                         for the envelope segment.</p></dd><dt class="param">curvatures</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning curvature
                         values. these are used for curveShape segments (shape
@@ -56,7 +68,7 @@ polled every time a new segment starts.
                         amplitude is &gt; 1, the reset is performed immediately.</p></dd><dt class="param">levelScale</dt><dd class="cmt"><p>demand-rate ugen returning level scaling values</p></dd><dt class="param">levelBias</dt><dd class="cmt"><p>demand-rate ugen returning level offset values</p></dd><dt class="param">timeScale</dt><dd class="cmt"><p>demand-rate ugen returning time scaling values</p></dd><dt class="param">doneAction</dt><dd class="cmt"><p>a done action performed when one of the demand-rated
                         series ends
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="../DoneAction.html" class="extype" name="de.sciss.synth.DoneAction">DoneAction</a>
-</p></span><span class="cmt"><p><span class="extype" name="de.sciss.synth.Env.Shape">Shape</span></p></span><span class="cmt"><p><a href="EnvGen$.html" class="extype" name="de.sciss.synth.ugen.EnvGen">EnvGen</a></p></span></dd></dl><div class="toggleContainer block">
+</p></span><span class="cmt"><p><a href="Env$.html" class="extype" name="de.sciss.synth.ugen.Env">Env</a></p></span><span class="cmt"><p><a href="EnvGen$.html" class="extype" name="de.sciss.synth.ugen.EnvGen">EnvGen</a></p></span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <a href="../HasSideEffect.html" class="extype" name="de.sciss.synth.HasSideEffect">HasSideEffect</a>, <a href="../UGenSource$$SingleOut.html" class="extype" name="de.sciss.synth.UGenSource.SingleOut">SingleOut</a>, <a href="../UGenSource$$SomeOut.html" class="extype" name="de.sciss.synth.UGenSource.SomeOut">SomeOut</a>, <a href="../GE$$Lazy.html" class="extype" name="de.sciss.synth.GE.Lazy">GE.Lazy</a>, <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a>, <a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>], <a href="../Lazy$$Expander.html" class="extype" name="de.sciss.synth.Lazy.Expander">Expander</a>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>], <a href="../Lazy.html" class="extype" name="de.sciss.synth.Lazy">Lazy</a>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -105,10 +117,14 @@ polled every time a new segment starts.
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">DemandEnvGen</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="levels">levels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="durs">durs: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="shapes">shapes: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1)</span></span>, <span name="curvatures">curvatures: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>, <span name="gate">gate: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="levelScale">levelScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="levelBias">levelBias: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(0.0)</span></span>, <span name="timeScale">timeScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol">synth.this.GE.const(1.0)</span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="defval" name="synth.this.DoneAction.toGE(doNothing)">...</span></span>)</span>
+        <span class="name">DemandEnvGen</span><span class="params">(<span name="rate">rate: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>, <span name="levels">levels: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="durs">durs: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>, <span name="shapes">shapes: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1</a></span></span></span>, <span name="curvatures">curvatures: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="gate">gate: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="reset">reset: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="levelScale">levelScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="levelBias">levelBias: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">0.0f</a></span></span></span>, <span name="timeScale">timeScale: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../GE$.html">1.0f</a></span></span></span>, <span name="doneAction">doneAction: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a> = <span class="symbol"><span class="name"><a href="../doNothing$.html">doNothing</a></span></span></span>)</span>
       </span>
-      </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">levels</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning level values</p></dd><dt class="param">durs</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning durational
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@&lt;init&gt;(rate:de.sciss.synth.Rate,levels:de.sciss.synth.GE,durs:de.sciss.synth.GE,shapes:de.sciss.synth.GE,curvatures:de.sciss.synth.GE,gate:de.sciss.synth.GE,reset:de.sciss.synth.GE,levelScale:de.sciss.synth.GE,levelBias:de.sciss.synth.GE,timeScale:de.sciss.synth.GE,doneAction:de.sciss.synth.GE):de.sciss.synth.ugen.DemandEnvGen" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">levels</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning level values</p></dd><dt class="param">durs</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning duration
                         values</p></dd><dt class="param">shapes</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning shape number
                         for the envelope segment.</p></dd><dt class="param">curvatures</dt><dd class="cmt"><p>demand-rate ugen (or other ugen) returning curvature
                         values. these are used for curveShape segments (shape
@@ -132,19 +148,6 @@ polled every time a new segment starts.
         <div id="values" class="values members">
               <h3>Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -155,8 +158,12 @@ polled every time a new segment starts.
       <span class="symbol">
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -168,22 +175,13 @@ polled every time a new segment starts.
       <span class="symbol">
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@##():Int" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -194,8 +192,12 @@ polled every time a new segment starts.
       <span class="symbol">
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -207,7 +209,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -220,7 +226,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@clone():Object" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -239,7 +249,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">curvatures</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@curvatures:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">demand-rate ugen (or other ugen) returning curvature
                         values.</p><div class="fullcomment"><div class="comment cmt"><p>demand-rate ugen (or other ugen) returning curvature
                         values. these are used for curveShape segments (shape
@@ -255,7 +269,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">doneAction</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@doneAction:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">a done action performed when one of the demand-rated
                         series ends
 </p>
@@ -270,8 +288,12 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">durs</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
-      <p class="shortcomment cmt">demand-rate ugen (or other ugen) returning durational
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@durs:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">demand-rate ugen (or other ugen) returning duration
                         values</p>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
@@ -284,7 +306,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -297,7 +323,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -316,7 +346,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">gate</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@gate:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">a control rate gate: if gate is x &gt;= 1, the ugen runs.</p><div class="fullcomment"><div class="comment cmt"><p>a control rate gate: if gate is x &gt;= 1, the ugen runs.
                         if gate is 0 &gt; x &gt; 1, the ugen is released at the next
                         level (according to doneAction). if gate is x &lt;= 0, the
@@ -332,7 +366,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -345,7 +383,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#levelBias" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="levelBias:de.sciss.synth.GE"></a>
@@ -358,7 +400,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">levelBias</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@levelBias:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">demand-rate ugen returning level offset values</p>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#levelScale" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="levelScale:de.sciss.synth.GE"></a>
@@ -371,7 +417,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">levelScale</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@levelScale:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">demand-rate ugen returning level scaling values</p>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#levels" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="levels:de.sciss.synth.GE"></a>
@@ -384,7 +434,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">levels</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@levels:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">demand-rate ugen (or other ugen) returning level values</p>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#makeUGen" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="makeUGen(_args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenIn]):de.sciss.synth.UGenInLike"></a>
@@ -397,7 +451,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">makeUGen</span><span class="params">(<span name="_args">_args: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<a href="../UGenIn.html" class="extype" name="de.sciss.synth.UGenIn">UGenIn</a>]</span>)</span><span class="result">: <a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@makeUGen(_args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenIn]):de.sciss.synth.UGenInLike" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.ugen.DemandEnvGen">DemandEnvGen</a> → <a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#makeUGens" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="makeUGens:de.sciss.synth.UGenInLike"></a>
@@ -410,7 +468,11 @@ polled every time a new segment starts.
       <span class="symbol">
         <span class="name">makeUGens</span><span class="result">: <a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@makeUGens:de.sciss.synth.UGenInLike" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Abstract method which must be implemented by creating the actual <code>UGen</code>s
 during expansion.</p><div class="fullcomment"><div class="comment cmt"><p>Abstract method which must be implemented by creating the actual <code>UGen</code>s
 during expansion. This method is at most called once during graph
@@ -428,7 +490,11 @@ expansion
       <span class="symbol">
         <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@name:String" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -441,7 +507,11 @@ expansion
       <span class="symbol">
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -454,7 +524,11 @@ expansion
       <span class="symbol">
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -467,7 +541,11 @@ expansion
       <span class="symbol">
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#rate" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="rate:de.sciss.synth.Rate"></a>
@@ -480,7 +558,11 @@ expansion
       <span class="symbol">
         <span class="name">rate</span><span class="result">: <a href="../Rate.html" class="extype" name="de.sciss.synth.Rate">Rate</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@rate:de.sciss.synth.Rate" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.ugen.DemandEnvGen">DemandEnvGen</a> → <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#reset" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="reset:de.sciss.synth.GE"></a>
@@ -493,7 +575,11 @@ expansion
       <span class="symbol">
         <span class="name">reset</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@reset:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">a trigger signal.</p><div class="fullcomment"><div class="comment cmt"><p>a trigger signal. a trigger occurs when passing from
                         non-positive to positive. when the trigger amplitude is
                         &lt; 1, the input ugens (those that are demand-rated) are
@@ -510,7 +596,11 @@ expansion
       <span class="symbol">
         <span class="name">rewrap</span><span class="params">(<span name="args">args: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>]</span>, <span name="exp">exp: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@rewrap(args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenInLike],exp:Int):de.sciss.synth.UGenInLike" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../UGenSource$$SomeOut.html" class="extype" name="de.sciss.synth.UGenSource.SomeOut">SomeOut</a> → <a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a></dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#shapes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="shapes:de.sciss.synth.GE"></a>
@@ -523,7 +613,11 @@ expansion
       <span class="symbol">
         <span class="name">shapes</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@shapes:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">demand-rate ugen (or other ugen) returning shape number
                         for the envelope segment.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
@@ -537,7 +631,11 @@ expansion
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="de.sciss.synth.ugen.DemandEnvGen#timeScale" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="timeScale:de.sciss.synth.GE"></a>
@@ -550,7 +648,11 @@ expansion
       <span class="symbol">
         <span class="name">timeScale</span><span class="result">: <a href="../GE.html" class="extype" name="de.sciss.synth.GE">GE</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@timeScale:de.sciss.synth.GE" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">demand-rate ugen returning time scaling values</p>
     </li><li name="de.sciss.synth.UGenSource#unwrap" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="unwrap(args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenInLike]):U"></a>
@@ -563,7 +665,11 @@ expansion
       <span class="symbol">
         <span class="name">unwrap</span><span class="params">(<span name="args">args: <span class="extype" name="scala.collection.immutable.IndexedSeq">IndexedSeq</span>[<a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a>]</span>)</span><span class="result">: <a href="../UGenInLike.html" class="extype" name="de.sciss.synth.UGenInLike">UGenInLike</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@unwrap(args:scala.collection.immutable.IndexedSeq[de.sciss.synth.UGenInLike]):U" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a href="../UGenSource.html" class="extype" name="de.sciss.synth.UGenSource">UGenSource</a></dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -576,7 +682,11 @@ expansion
       <span class="symbol">
         <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -595,7 +705,11 @@ expansion
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -614,7 +728,11 @@ expansion
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.ugen.DemandEnvGen@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -675,6 +793,7 @@ expansion
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

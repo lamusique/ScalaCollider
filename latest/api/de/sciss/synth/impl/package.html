@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>impl - de.sciss.synth.impl</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../../index.html';
@@ -26,7 +30,11 @@
       <div id="definition">
         <img src="../../../../lib/package_big.png" />
         <p id="owner"><a href="../../../package.html" class="extype" name="de">de</a>.<a href="../../package.html" class="extype" name="de.sciss">sciss</a>.<a href="../package.html" class="extype" name="de.sciss.synth">synth</a></p>
-        <h1>impl</h1>
+        <h1>impl</h1><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.impl.package" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -69,9 +77,13 @@
       <span class="symbol">
         <a href="BasicUGenGraphBuilder.html"><span class="name">BasicUGenGraphBuilder</span></a><span class="result"> extends <a href="UGenGraphBuilderLike.html" class="extype" name="de.sciss.synth.impl.UGenGraphBuilderLike">UGenGraphBuilderLike</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.impl.package@BasicUGenGraphBuilderextendsUGenGraphBuilderLike" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
-    </li><li name="de.sciss.synth.impl.UGenGraphBuilderLike" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="de.sciss.synth.impl.UGenGraphBuilderLike" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="UGenGraphBuilderLikeextendsUGenGraph.Builder"></a>
       <a id="UGenGraphBuilderLike:UGenGraphBuilderLike"></a>
       <h4 class="signature">
@@ -82,9 +94,16 @@
       <span class="symbol">
         <a href="UGenGraphBuilderLike.html"><span class="name">UGenGraphBuilderLike</span></a><span class="result"> extends <a href="../UGenGraph$$Builder.html" class="extype" name="de.sciss.synth.UGenGraph.Builder">Builder</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">Complete implementation of a ugen graph builder, except for the actual code that
-calls <code>force</code> on the sources of a <code>SynthGraph</code>.</p>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.impl.package@UGenGraphBuilderLikeextendsUGenGraph.Builder" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Complete implementation of a ugen graph builder, except for the actual code that
+calls <code>force</code> on the sources of a <code>SynthGraph</code>.</p><div class="fullcomment"><div class="comment cmt"><p>Complete implementation of a ugen graph builder, except for the actual code that
+calls <code>force</code> on the sources of a <code>SynthGraph</code>. Implementations should call
+the <code>build</code> method passing in the control proxies for all involved synth graphs.
+</p></div></div>
     </li></ol>
             </div>
 
@@ -92,7 +111,24 @@ calls <code>force</code> on the sources of a <code>SynthGraph</code>.</p>
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="de.sciss.synth.impl.DefaultUGenGraphBuilderFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+              <ol><li name="de.sciss.synth.impl.ConnectionLike" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ConnectionLike"></a>
+      <a id="ConnectionLike:ConnectionLike"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ConnectionLike$.html"><span class="name">ConnectionLike</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.impl.package@ConnectionLike" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="de.sciss.synth.impl.DefaultUGenGraphBuilderFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="DefaultUGenGraphBuilderFactory"></a>
       <a id="DefaultUGenGraphBuilderFactory:DefaultUGenGraphBuilderFactory"></a>
       <h4 class="signature">
@@ -103,7 +139,11 @@ calls <code>force</code> on the sources of a <code>SynthGraph</code>.</p>
       <span class="symbol">
         <a href="DefaultUGenGraphBuilderFactory$.html"><span class="name">DefaultUGenGraphBuilderFactory</span></a><span class="result"> extends <a href="../UGenGraph$$BuilderFactory.html" class="extype" name="de.sciss.synth.UGenGraph.BuilderFactory">BuilderFactory</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.impl.package@DefaultUGenGraphBuilderFactory" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.impl.UGenGraphBuilderLike" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="UGenGraphBuilderLike"></a>
@@ -116,7 +156,11 @@ calls <code>force</code> on the sources of a <code>SynthGraph</code>.</p>
       <span class="symbol">
         <a href="UGenGraphBuilderLike$.html"><span class="name">UGenGraphBuilderLike</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../../index.html#de.sciss.synth.impl.package@UGenGraphBuilderLike" title="Permalink" target="_top">
+        <img src="../../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -143,6 +187,7 @@ calls <code>force</code> on the sources of a <code>SynthGraph</code>.</p>
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../../lib/template.js"></script>
+
+
     </body>
       </html>

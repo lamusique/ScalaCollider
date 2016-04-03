@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>ConfigBuilder - de.sciss.osc.Channel.Net.ConfigBuilder</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -26,7 +30,13 @@
       <div id="definition">
         <img src="../../../lib/trait_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="de">de</a>.<a href="../package.html" class="extype" name="de.sciss">sciss</a>.<a href="package.html" class="extype" name="de.sciss.osc">osc</a>.<a href="Channel$.html" class="extype" name="de.sciss.osc.Channel">Channel</a>.<a href="Channel$$Net$.html" class="extype" name="de.sciss.osc.Channel.Net">Net</a></p>
-        <h1>ConfigBuilder</h1>
+        <h1>ConfigBuilder</h1><h3><span class="morelinks"><div>Related Doc:
+            <a href="Channel$$Net$.html" class="extype" name="de.sciss.osc.Channel.Net">package Net</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -43,9 +53,9 @@
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a href="Channel$$Net$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.Net.ConfigLike">ConfigLike</a>, <a href="Channel$$ConfigBuilder.html" class="extype" name="de.sciss.osc.Channel.ConfigBuilder">Channel.ConfigBuilder</a>, <a href="Channel$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.ConfigLike">Channel.ConfigLike</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a href="UDP$$ConfigBuilder.html" class="extype" name="de.sciss.osc.UDP.ConfigBuilder">ConfigBuilder</a>, <a href="TCP$$ConfigBuilder.html" class="extype" name="de.sciss.osc.TCP.ConfigBuilder">ConfigBuilder</a></div>
-        </div></div>
+            <span class="toggle">Known Subclasses</span>
+            <div class="subClasses hiddenContent"><a href="TCP$$ConfigBuilder.html" class="extype" name="de.sciss.osc.TCP.ConfigBuilder">ConfigBuilder</a>, <a href="UDP$$ConfigBuilder.html" class="extype" name="de.sciss.osc.UDP.ConfigBuilder">ConfigBuilder</a></div>
+          </div></div>
         
 
       <div id="mbrsel">
@@ -97,7 +107,11 @@
       <span class="symbol">
         <span class="name">bufferSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@bufferSize:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Queries the buffer size used for coding or decoding OSC messages.</p><div class="fullcomment"><div class="comment cmt"><p>Queries the buffer size used for coding or decoding OSC messages.
 This is the maximum size an OSC packet (bundle or message) can grow to.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the buffer size in bytes.
@@ -114,7 +128,11 @@ This is the maximum size an OSC packet (bundle or message) can grow to.
       <span class="symbol">
         <span title="gt4s: bufferSize_$eq" class="name">bufferSize_=</span><span class="params">(<span name="size">size: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@bufferSize_=(size:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Adjusts the buffer size used by the future channel.</p><div class="fullcomment"><div class="comment cmt"><p>Adjusts the buffer size used by the future channel.
 The minimum allowed size is 16 bytes. Typically, OSC
 applications handle packets up to 8 KB. SuperCollider
@@ -131,7 +149,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">build</span><span class="result">: <a href="Channel$$Net$$Config.html" class="extype" name="de.sciss.osc.Channel.Net.Config">Config</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@build:de.sciss.osc.Channel.Net.Config" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.osc.Channel.Net.ConfigBuilder">ConfigBuilder</a> → <a href="Channel$$ConfigBuilder.html" class="extype" name="de.sciss.osc.Channel.ConfigBuilder">ConfigBuilder</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.ConfigLike#codec" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="codec:de.sciss.osc.PacketCodec"></a>
@@ -144,7 +166,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">codec</span><span class="result">: <a href="PacketCodec.html" class="extype" name="de.sciss.osc.PacketCodec">PacketCodec</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@codec:de.sciss.osc.PacketCodec" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.ConfigBuilder#codec_=" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="codec_=(codec:de.sciss.osc.PacketCodec):Unit"></a>
@@ -157,7 +183,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: codec_$eq" class="name">codec_=</span><span class="params">(<span name="codec">codec: <a href="PacketCodec.html" class="extype" name="de.sciss.osc.PacketCodec">PacketCodec</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@codec_=(codec:de.sciss.osc.PacketCodec):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$ConfigBuilder.html" class="extype" name="de.sciss.osc.Channel.ConfigBuilder">ConfigBuilder</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Net.ConfigBuilder#localAddress_=" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="localAddress_=(address:java.net.InetAddress):Unit"></a>
@@ -170,7 +200,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: localAddress_$eq" class="name">localAddress_=</span><span class="params">(<span name="address">address: <span class="extype" name="java.net.InetAddress">InetAddress</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localAddress_=(address:java.net.InetAddress):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.osc.Channel.Net.ConfigBuilder#localIsLoopback_=" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="localIsLoopback_=(loopback:Boolean):Unit"></a>
@@ -183,7 +217,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: localIsLoopback_$eq" class="name">localIsLoopback_=</span><span class="params">(<span name="loopback">loopback: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localIsLoopback_=(loopback:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.osc.Channel.Net.ConfigBuilder#localPort_=" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="localPort_=(port:Int):Unit"></a>
@@ -196,7 +234,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: localPort_$eq" class="name">localPort_=</span><span class="params">(<span name="port">port: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localPort_=(port:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.osc.Channel.Net.ConfigLike#localSocketAddress" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="localSocketAddress:java.net.InetSocketAddress"></a>
@@ -209,7 +251,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">localSocketAddress</span><span class="result">: <span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localSocketAddress:java.net.InetSocketAddress" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Net$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.Net.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Net.ConfigBuilder#localSocketAddress_=" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="localSocketAddress_=(address:java.net.InetSocketAddress):Unit"></a>
@@ -222,7 +268,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: localSocketAddress_$eq" class="name">localSocketAddress_=</span><span class="params">(<span name="address">address: <span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localSocketAddress_=(address:java.net.InetSocketAddress):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.osc.Channel.Net.ConfigLike#transport" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="transport:de.sciss.osc.Transport.Net"></a>
@@ -235,7 +285,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">transport</span><span class="result">: <a href="Transport$$Net.html" class="extype" name="de.sciss.osc.Transport.Net">Transport.Net</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@transport:de.sciss.osc.Transport.Net" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Queries the transport protocol used by this communicator.</p><div class="fullcomment"><div class="comment cmt"><p>Queries the transport protocol used by this communicator.
 </p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>the transport, such as <code>UDP</code> or <code>TCP</code>
 </p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Net$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.Net.ConfigLike">ConfigLike</a> → <a href="Channel$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.ConfigLike">ConfigLike</a></dd><dt>See also</dt><dd><span class="cmt"><p>#TCP
@@ -246,19 +300,6 @@ Server handles packets up the 64 KB by default (?).
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -269,8 +310,12 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -282,22 +327,13 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -308,8 +344,12 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -321,7 +361,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -334,7 +378,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -353,7 +401,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -366,7 +418,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -379,7 +435,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -398,7 +458,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -411,7 +475,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -424,7 +492,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Net.ConfigLike#localAddress" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="localAddress:java.net.InetAddress"></a>
@@ -437,7 +509,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">localAddress</span><span class="result">: <span class="extype" name="java.net.InetAddress">InetAddress</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localAddress:java.net.InetAddress" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Net$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.Net.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Net.ConfigLike#localIsLoopback" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="localIsLoopback:Boolean"></a>
@@ -450,7 +526,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">localIsLoopback</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localIsLoopback:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Net$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.Net.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="de.sciss.osc.Channel.Net.ConfigLike#localPort" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="localPort:Int"></a>
@@ -463,7 +543,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">localPort</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@localPort:Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="Channel$$Net$$ConfigLike.html" class="extype" name="de.sciss.osc.Channel.Net.ConfigLike">ConfigLike</a></dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -476,7 +560,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -489,7 +577,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -502,7 +594,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -515,7 +611,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -528,7 +628,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -541,7 +645,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -560,7 +668,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -579,7 +691,11 @@ Server handles packets up the 64 KB by default (?).
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.osc.Channel$$Net$$ConfigBuilder@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -622,6 +738,7 @@ Server handles packets up the 64 KB by default (?).
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>

@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
           <title>Server - de.sciss.synth.Server</title>
@@ -9,6 +8,11 @@
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
       <link href="../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../lib/jquery.js" id="jquery-js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
+      
       <script type="text/javascript">
          if(top === self) {
             var url = '../../../index.html';
@@ -24,9 +28,17 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Server$.html" title="Go to companion"><img src="../../../lib/trait_to_object_big.png" /></a>
+        <a href="Server$.html" title="See companion object"><img src="../../../lib/trait_to_object_big.png" /></a>
         <p id="owner"><a href="../../package.html" class="extype" name="de">de</a>.<a href="../package.html" class="extype" name="de.sciss">sciss</a>.<a href="package.html" class="extype" name="de.sciss.synth">synth</a></p>
-        <h1><a href="Server$.html" title="Go to companion">Server</a></h1>
+        <h1><a href="Server$.html" title="See companion object">Server</a></h1><h3><span class="morelinks"><div>
+            Related Docs:
+            <a href="Server$.html" title="See companion object">object Server</a>
+            | <a href="package.html" class="extype" name="de.sciss.synth">package synth</a>
+          </div></span></h3><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -94,7 +106,11 @@
       <span class="symbol">
         <span title="gt4s: $bang" class="name">!</span><span class="params">(<span name="p">p: <a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@!(p:de.sciss.osc.Packet):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#!!" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="!![A](packet:de.sciss.osc.Packet,timeout:scala.concurrent.duration.Duration)(handler:PartialFunction[de.sciss.osc.Message,A]):scala.concurrent.Future[A]"></a>
@@ -107,15 +123,19 @@
       <span class="symbol">
         <span title="gt4s: $bang$bang" class="name">!!</span><span class="tparams">[<span name="A">A</span>]</span><span class="params">(<span name="packet">packet: <a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a></span>, <span name="timeout">timeout: <span class="extype" name="scala.concurrent.duration.Duration">Duration</span> = <span class="symbol">6.seconds</span></span>)</span><span class="params">(<span name="handler">handler: <span class="extype" name="scala.PartialFunction">PartialFunction</span>[<a href="../osc/Message.html" class="extype" name="de.sciss.osc.Message">Message</a>, <span class="extype" name="de.sciss.synth.Server.!!.A">A</span>]</span>)</span><span class="result">: <span class="extype" name="scala.concurrent.Future">Future</span>[<span class="extype" name="de.sciss.synth.Server.!!.A">A</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@!![A](packet:de.sciss.osc.Packet,timeout:scala.concurrent.duration.Duration)(handler:PartialFunction[de.sciss.osc.Message,A]):scala.concurrent.Future[A]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <p class="shortcomment cmt">Sends out an OSC packet that generates some kind of reply, and
 returns immediately.</p><div class="fullcomment"><div class="comment cmt"><p>Sends out an OSC packet that generates some kind of reply, and
 returns immediately. It registers a handler to parse that reply.
 The handler is tested for each incoming OSC message (using its
 <code>isDefinedAt</code> method) and invoked and removed in case of a
-match, completing the returned future.</p><p>If the handler doesn't match in the given timeout period,
+match, completing the returned future.</p><p>If the handler does not match in the given timeout period,
 the future fails with a <code>Timeout</code> exception, and the handler is removed.
-</p></div><dl class="paramcmts block"><dt class="param">packet</dt><dd class="cmt"><p>the packet to send out</p></dd><dt class="param">timeout</dt><dd class="cmt"><p>the timeout in milliseconds</p></dd><dt class="param">handler</dt><dd class="cmt"><p>the handler to match against incoming messages</p></dd><dt>returns</dt><dd class="cmt"><p>a future of the successfully completed handler or timeout exception
+</p></div><dl class="paramcmts block"><dt class="param">packet</dt><dd class="cmt"><p>the packet to send out</p></dd><dt class="param">timeout</dt><dd class="cmt"><p>the timeout duration</p></dd><dt class="param">handler</dt><dd class="cmt"><p>the handler to match against incoming messages</p></dd><dt>returns</dt><dd class="cmt"><p>a future of the successfully completed handler or timeout exception
 </p></dd></dl><dl class="attributes block"> <dt>See also</dt><dd><span class="cmt"><p><a href="message/Timeout.html" class="extype" name="de.sciss.synth.message.Timeout">de.sciss.synth.message.Timeout</a>
 </p></span></dd></dl></div>
     </li><li name="de.sciss.model.Model#addListener" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
@@ -129,7 +149,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">addListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">Listener</span>[<a href="Server$$Update.html" class="extype" name="de.sciss.synth.Server.Update">Update</a>]</span>)</span><span class="result">: <span class="extype" name="de.sciss.model.Model.addListener.pf">pf</span>.type</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@addListener(pf:de.sciss.model.Model.Listener[U]):pf.type" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Model</dd></dl></div>
     </li><li name="de.sciss.synth.ServerLike#addr" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="addr:java.net.InetSocketAddress"></a>
@@ -142,7 +166,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">addr</span><span class="result">: <span class="extype" name="java.net.InetSocketAddress">InetSocketAddress</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@addr:java.net.InetSocketAddress" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ServerLike.html" class="extype" name="de.sciss.synth.ServerLike">ServerLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server#allocAudioBus" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="allocAudioBus(numChannels:Int):Int"></a>
@@ -155,7 +183,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">allocAudioBus</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@allocAudioBus(numChannels:Int):Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#allocBuffer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="allocBuffer(numChannels:Int):Int"></a>
@@ -168,7 +200,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">allocBuffer</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@allocBuffer(numChannels:Int):Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#allocControlBus" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="allocControlBus(numChannels:Int):Int"></a>
@@ -181,7 +217,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">allocControlBus</span><span class="params">(<span name="numChannels">numChannels: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@allocControlBus(numChannels:Int):Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#bufManager" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="bufManager:de.sciss.synth.BufferManager"></a>
@@ -194,7 +234,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">bufManager</span><span class="result">: <a href="BufferManager.html" class="extype" name="de.sciss.synth.BufferManager">BufferManager</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@bufManager:de.sciss.synth.BufferManager" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#clientConfig" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="clientConfig:de.sciss.synth.Client.Config"></a>
@@ -202,12 +246,16 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
-        <span class="kind">def</span>
+        <span class="kind">val</span>
       </span>
       <span class="symbol">
         <span class="name">clientConfig</span><span class="result">: <a href="Client$$Config.html" class="extype" name="de.sciss.synth.Client.Config">Config</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@clientConfig:de.sciss.synth.Client.Config" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#condition" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="condition:de.sciss.synth.Server.Condition"></a>
@@ -220,7 +268,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">condition</span><span class="result">: <a href="Server$$Condition.html" class="extype" name="de.sciss.synth.Server.Condition">Condition</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@condition:de.sciss.synth.Server.Condition" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.ServerLike#config" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="config:de.sciss.synth.Server.Config"></a>
@@ -233,7 +285,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">config</span><span class="result">: <a href="Server$$Config.html" class="extype" name="de.sciss.synth.Server.Config">Config</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@config:de.sciss.synth.Server.Config" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ServerLike.html" class="extype" name="de.sciss.synth.ServerLike">ServerLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server#counts" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="counts:de.sciss.synth.message.StatusReply"></a>
@@ -246,7 +302,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">counts</span><span class="result">: <a href="message/StatusReply.html" class="extype" name="de.sciss.synth.message.StatusReply">StatusReply</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@counts:de.sciss.synth.message.StatusReply" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#defaultGroup" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="defaultGroup:de.sciss.synth.Group"></a>
@@ -259,7 +319,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">defaultGroup</span><span class="result">: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@defaultGroup:de.sciss.synth.Group" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#dispose" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="dispose():Unit"></a>
@@ -272,20 +336,62 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">dispose</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@dispose():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
-    </li><li name="de.sciss.synth.Server#dumpOSC" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="dumpOSC(mode:de.sciss.osc.Dump):Unit"></a>
-      <a id="dumpOSC(Dump):Unit"></a>
+    </li><li name="de.sciss.synth.Server#dumpInOSC" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="dumpInOSC(mode:de.sciss.osc.Dump,filter:de.sciss.osc.Packet=&gt;Boolean):Unit"></a>
+      <a id="dumpInOSC(Dump,(Packet)⇒Boolean):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dumpOSC</span><span class="params">(<span name="mode">mode: <a href="../osc/Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="../../package.html">osc.Dump.Text</a></span></span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">dumpInOSC</span><span class="params">(<span name="mode">mode: <a href="../osc/Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="../../package.html">osc.Dump.Text</a></span></span></span>, <span name="filter">filter: (<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">_ =&gt; true</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@dumpInOSC(mode:de.sciss.osc.Dump,filter:de.sciss.osc.Packet=&gt;Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="de.sciss.synth.Server#dumpOSC" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="dumpOSC(mode:de.sciss.osc.Dump,filter:de.sciss.osc.Packet=&gt;Boolean):Unit"></a>
+      <a id="dumpOSC(Dump,(Packet)⇒Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dumpOSC</span><span class="params">(<span name="mode">mode: <a href="../osc/Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="../../package.html">osc.Dump.Text</a></span></span></span>, <span name="filter">filter: (<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">_ =&gt; true</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@dumpOSC(mode:de.sciss.osc.Dump,filter:de.sciss.osc.Packet=&gt;Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="de.sciss.synth.Server#dumpOutOSC" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="dumpOutOSC(mode:de.sciss.osc.Dump,filter:de.sciss.osc.Packet=&gt;Boolean):Unit"></a>
+      <a id="dumpOutOSC(Dump,(Packet)⇒Boolean):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">dumpOutOSC</span><span class="params">(<span name="mode">mode: <a href="../osc/Dump.html" class="extype" name="de.sciss.osc.Dump">Dump</a> = <span class="symbol"><span class="name"><a href="../../package.html">osc.Dump.Text</a></span></span></span>, <span name="filter">filter: (<a href="../osc/Packet.html" class="extype" name="de.sciss.osc.Packet">Packet</a>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">_ =&gt; true</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@dumpOutOSC(mode:de.sciss.osc.Dump,filter:de.sciss.osc.Packet=&gt;Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#dumpTree" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="dumpTree(controls:Boolean):Unit"></a>
@@ -298,7 +404,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">dumpTree</span><span class="params">(<span name="controls">controls: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@dumpTree(controls:Boolean):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#freeAudioBus" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="freeAudioBus(index:Int):Unit"></a>
@@ -311,7 +421,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">freeAudioBus</span><span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@freeAudioBus(index:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#freeBuffer" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="freeBuffer(index:Int):Unit"></a>
@@ -324,7 +438,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">freeBuffer</span><span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@freeBuffer(index:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#freeControlBus" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="freeControlBus(index:Int):Unit"></a>
@@ -337,7 +455,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">freeControlBus</span><span class="params">(<span name="index">index: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@freeControlBus(index:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#isConnected" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="isConnected:Boolean"></a>
@@ -350,7 +472,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">isConnected</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@isConnected:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#isLocal" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="isLocal:Boolean"></a>
@@ -363,7 +489,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">isLocal</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@isLocal:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#isOffline" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="isOffline:Boolean"></a>
@@ -376,7 +506,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">isOffline</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@isOffline:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#isRunning" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="isRunning:Boolean"></a>
@@ -389,7 +523,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">isRunning</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@isRunning:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.ServerLike#name" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="name:String"></a>
@@ -402,7 +540,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">name</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@name:String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="ServerLike.html" class="extype" name="de.sciss.synth.ServerLike">ServerLike</a></dd></dl></div>
     </li><li name="de.sciss.synth.Server#nextNodeID" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="nextNodeID():Int"></a>
@@ -415,7 +557,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">nextNodeID</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@nextNodeID():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#nextSyncID" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="nextSyncID():Int"></a>
@@ -428,7 +574,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">nextSyncID</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@nextSyncID():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#nodeManager" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="nodeManager:de.sciss.synth.NodeManager"></a>
@@ -441,7 +591,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">nodeManager</span><span class="result">: <a href="NodeManager.html" class="extype" name="de.sciss.synth.NodeManager">NodeManager</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@nodeManager:de.sciss.synth.NodeManager" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#queryCounts" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="queryCounts():Unit"></a>
@@ -454,7 +608,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">queryCounts</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@queryCounts():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#quit" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="quit():Unit"></a>
@@ -467,7 +625,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">quit</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@quit():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#quitMsg" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="quitMsg:de.sciss.synth.message.ServerQuit.type"></a>
@@ -480,7 +642,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">quitMsg</span><span class="result">: <a href="message/ServerQuit$.html" class="extype" name="de.sciss.synth.message.ServerQuit">ServerQuit</a>.type</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@quitMsg:de.sciss.synth.message.ServerQuit.type" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.model.Model#removeListener" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
       <a id="removeListener(pf:de.sciss.model.Model.Listener[U]):Unit"></a>
@@ -493,7 +659,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">removeListener</span><span class="params">(<span name="pf">pf: <span class="extype" name="de.sciss.model.Model.Listener">Listener</span>[<a href="Server$$Update.html" class="extype" name="de.sciss.synth.Server.Update">Update</a>]</span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@removeListener(pf:de.sciss.model.Model.Listener[U]):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Model</dd></dl></div>
     </li><li name="de.sciss.synth.Server#rootNode" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="rootNode:de.sciss.synth.Group"></a>
@@ -506,7 +676,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">rootNode</span><span class="result">: <a href="Group.html" class="extype" name="de.sciss.synth.Group">Group</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@rootNode:de.sciss.synth.Group" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#sampleRate" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="sampleRate:Double"></a>
@@ -519,7 +693,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">sampleRate</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@sampleRate:Double" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#startAliveThread" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="startAliveThread(delay:Float,period:Float,deathBounces:Int):Unit"></a>
@@ -532,7 +710,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">startAliveThread</span><span class="params">(<span name="delay">delay: <span class="extype" name="scala.Float">Float</span> = <span class="symbol">0.25f</span></span>, <span name="period">period: <span class="extype" name="scala.Float">Float</span> = <span class="symbol">0.25f</span></span>, <span name="deathBounces">deathBounces: <span class="extype" name="scala.Int">Int</span> = <span class="symbol">25</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@startAliveThread(delay:Float,period:Float,deathBounces:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#stopAliveThread" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="stopAliveThread():Unit"></a>
@@ -545,7 +727,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">stopAliveThread</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@stopAliveThread():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="de.sciss.synth.Server#syncMsg" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="syncMsg():de.sciss.synth.message.Sync"></a>
@@ -558,7 +744,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">syncMsg</span><span class="params">()</span><span class="result">: <a href="message/Sync.html" class="extype" name="de.sciss.synth.message.Sync">Sync</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@syncMsg():de.sciss.synth.message.Sync" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -566,19 +756,6 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
         <div id="values" class="values members">
               <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="!=(x$1:AnyRef):Boolean"></a>
-      <a id="!=(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
@@ -589,8 +766,12 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@!=(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="##():Int"></a>
       <a id="##():Int"></a>
@@ -602,22 +783,13 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@##():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="==(x$1:AnyRef):Boolean"></a>
-      <a id="==(AnyRef):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier">final </span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
@@ -628,8 +800,12 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@==(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -641,7 +817,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@asInstanceOf[T0]:T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
@@ -654,7 +834,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@clone():Object" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -673,7 +857,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@eq(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#equals" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="equals(x$1:Any):Boolean"></a>
@@ -686,7 +874,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@equals(x$1:Any):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -699,7 +891,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@finalize():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a href="../../../java$lang.html" class="extype" name="java.lang">java.lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -718,7 +914,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@getClass():Class[_]" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
@@ -731,7 +931,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@hashCode():Int" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
     </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="isInstanceOf[T0]:Boolean"></a>
@@ -744,7 +948,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@isInstanceOf[T0]:Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
@@ -757,7 +965,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@ne(x$1:AnyRef):Boolean" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notify():Unit"></a>
@@ -770,7 +982,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@notify():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="notifyAll():Unit"></a>
@@ -783,7 +999,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@notifyAll():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
@@ -796,7 +1016,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@synchronized[T0](x$1:=&gt;T0):T0" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="de.sciss.synth.Server#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
@@ -807,9 +1031,13 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.String">String</span></span>
+        <span class="name">toString</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@toString():String" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="de.sciss.synth.Server">Server</a> → AnyRef → Any</dd></dl></div>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
@@ -822,7 +1050,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@wait():Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -841,7 +1073,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@wait(x$1:Long,x$2:Int):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -860,7 +1096,11 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <span class="symbol">
         <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../../index.html#de.sciss.synth.Server@wait(x$1:Long):Unit" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">(<span>
       
@@ -901,6 +1141,7 @@ the future fails with a <code>Timeout</code> exception, and the handler is remov
       <div id="tooltip"></div>
 
       <div id="footer">  </div>
-      <script defer="defer" type="text/javascript" id="jquery-js" src="../../../lib/jquery.js"></script><script defer="defer" type="text/javascript" id="jquery-ui-js" src="../../../lib/jquery-ui.js"></script><script defer="defer" type="text/javascript" id="tools-tooltip-js" src="../../../lib/tools.tooltip.js"></script><script defer="defer" type="text/javascript" id="template-js" src="../../../lib/template.js"></script>
+
+
     </body>
       </html>
